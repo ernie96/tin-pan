@@ -346,6 +346,131 @@ namespace TinPan.Services
             }
         }
 
+        public async Task DownloadClipDirectAsync(SunoClip clip, string destinationPath, CancellationToken ct = default)
+        {
+            var (mediaUrl, isEncrypted) = SunoDrm.PickMediaUrl(clip, preferUnencrypted: true);
+            if (!isEncrypted && !string.IsNullOrEmpty(mediaUrl) && !SunoDrm.IsForbiddenDecoy(mediaUrl))
+            {
+                try
+                {
+                    await DownloadAsync(mediaUrl, destinationPath, ct);
+                    return;
+                }
+                catch (SunoApiException ex) when (ex.StatusCode == 403)
+                {
+                    Log.Warn($"Unencrypted direct URL was refused (403) for clip {clip.Id}; falling back to Mango DRM.");
+                }
+            }
+
+            await DownloadMangoAsync(clip, mediaUrl, destinationPath, ct);
+        }
+
+        private async Task DownloadMangoAsync(SunoClip clip, string? mediaUrl, string destinationPath, CancellationToken ct)
+        {
+            var token = await _auth.GetTokenAsync(forceRefresh: false, ct);
+            var rights = await FetchRightsAsync(clip.Id, token, ct);
+
+            var targetUrl = !string.IsNullOrEmpty(mediaUrl) && !SunoDrm.IsForbiddenDecoy(mediaUrl)
+                ? mediaUrl
+                : (!string.IsNullOrEmpty(rights.MediaUrl) && !SunoDrm.IsForbiddenDecoy(rights.MediaUrl)
+                    ? rights.MediaUrl
+                    : SunoDrm.DefaultMediaUrl(clip.Id));
+
+            var (contentKey, contentIv) = SunoDrm.UnwrapRights(rights, clip.Id, token);
+
+            var temp = destinationPath + ".part";
+            try
+            {
+                using var response = await _http.GetAsync(targetUrl, HttpCompletionOption.ResponseHeadersRead, ct);
+                if (!response.IsSuccessStatusCode)
+                    throw new SunoApiException(T("The download failed ({0}).", (int)response.StatusCode), (int)response.StatusCode);
+
+                await using (var networkStream = await response.Content.ReadAsStreamAsync(ct))
+                await using (var fileStream = File.Create(temp))
+                {
+                    await SunoDrm.DecryptAesCtrAsync(networkStream, contentKey, contentIv, fileStream, ct);
+                }
+
+                await using (var checkStream = File.OpenRead(temp))
+                {
+                    var header = new byte[32];
+                    var read = await checkStream.ReadAsync(header, ct);
+                    var container = SunoDrm.DetectContainer(header.AsSpan(0, read));
+                    if (container == "unknown")
+                    {
+                        throw new SunoApiException(T("The free file didn't download: {0}", "unrecognized audio format"));
+                    }
+                }
+
+                File.Move(temp, destinationPath, overwrite: true);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                throw new SunoApiException(T("Couldn't save the file. Check the download folder in Settings."), null, ex);
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new SunoApiException(T("Can't reach Suno. Check your internet connection."), null, ex);
+            }
+            catch (TaskCanceledException ex) when (!ct.IsCancellationRequested)
+            {
+                throw new SunoApiException(T("The download didn't start in time. Try again."), null, ex);
+            }
+            finally
+            {
+                try { if (File.Exists(temp)) File.Delete(temp); }
+                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException) { Log.Warn($"Couldn't remove a partial download: {ex.Message}"); }
+            }
+        }
+
+        private async Task<SunoRights> FetchRightsAsync(string clipId, string token, CancellationToken ct)
+        {
+            var shapes = new object[]
+            {
+                new { content_params = new { content_id = clipId, content_type = "clip" } },
+                new { content_id = clipId, content_type = "clip" },
+                new { content_id = clipId }
+            };
+
+            var hosts = new[] { BaseUrl, "https://studio-api-prod.suno.com" };
+            int lastStatus = 0;
+
+            foreach (var host in hosts)
+            {
+                foreach (var body in shapes)
+                {
+                    using var req = new HttpRequestMessage(HttpMethod.Post, host + "/api/mango/rights");
+                    AddSunoHeaders(req, token);
+                    req.Content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
+
+                    HttpResponseMessage resp;
+                    try
+                    {
+                        resp = await _http.SendAsync(req, ct);
+                    }
+                    catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+                    {
+                        continue;
+                    }
+
+                    using (resp)
+                    {
+                        lastStatus = (int)resp.StatusCode;
+                        if (!resp.IsSuccessStatusCode) continue;
+
+                        var json = await resp.Content.ReadAsStringAsync(ct);
+                        var rights = SunoDrm.ParseRights(json, clipId);
+                        if (rights != null && !string.IsNullOrEmpty(rights.Key) && !string.IsNullOrEmpty(rights.Iv))
+                        {
+                            return rights;
+                        }
+                    }
+                }
+            }
+
+            throw new SunoApiException(T("The download failed ({0}).", lastStatus != 0 ? lastStatus : 403), lastStatus != 0 ? lastStatus : 403);
+        }
+
         // ── Plumbing ────────────────────────────────────────────────────────
 
         private async Task<string> SendAsync(HttpMethod method, string path, object? body, CancellationToken ct, bool retryAuth = true)

@@ -152,6 +152,12 @@ namespace TinPan.Services
         /// <summary>Downloads a file from Suno's CDN. Writes to a temporary name first.</summary>
         Task DownloadAsync(string url, string destinationPath, CancellationToken ct = default);
 
+        /// <summary>
+        /// Unmetered direct download for a song without consuming user's downloads quota.
+        /// Uses unencrypted progressive CDN file if available, or Suno's Mango DRM unwrap/decrypt pipeline.
+        /// </summary>
+        Task DownloadClipDirectAsync(SunoClip clip, string destinationPath, CancellationToken ct = default);
+
         // ── Playlists (routes from Suno's web code and chadvis ENDPOINT-INVENTORY.md) ──
 
         Task<IReadOnlyList<Playlist>> GetPlaylistsAsync(CancellationToken ct = default);

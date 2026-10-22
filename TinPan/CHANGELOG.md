@@ -1,5 +1,12 @@
 # Tin Pan changelog
 
+## 1.5.1 (2026-10-22)
+
+### Fixed
+
+- Free song downloads now work for encrypted songs without using metered quota. Direct download transparently fetches rights and decrypts Suno's Mango DRM streams (AES-CTR) locally so you are no longer prompted that "Suno only has an encrypted copy of this song, so there's no free download".
+- Download all includes encrypted songs directly instead of leaving them out.
+
 ## 1.5.0 (2026-10-22)
 
 ### New

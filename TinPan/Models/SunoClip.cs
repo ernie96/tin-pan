@@ -93,6 +93,13 @@ namespace TinPan.Models
         public string? ProgressiveAudioUrl =>
             MediaUrls?.FirstOrDefault(m => !m.IsEncrypted && !m.IsVideo && m.Url?.StartsWith("https://", StringComparison.OrdinalIgnoreCase) == true)?.Url;
 
+        /// <summary>True if audio_url points to Suno's decoy /api/forbidden.</summary>
+        public bool AudioUrlIsDecoy => !string.IsNullOrEmpty(AudioUrl) && AudioUrl.Contains("forbidden", StringComparison.OrdinalIgnoreCase);
+
+        /// <summary>The best media URL: progressive unencrypted first, otherwise encrypted stream.</summary>
+        public string? BestMediaUrl =>
+            ProgressiveAudioUrl ?? MediaUrls?.FirstOrDefault(m => !m.IsVideo && m.Url?.StartsWith("https://", StringComparison.OrdinalIgnoreCase) == true && !m.Url.Contains("forbidden", StringComparison.OrdinalIgnoreCase))?.Url;
+
         /// <summary>True once this song has used a download; downloading it again is free.</summary>
         [JsonPropertyName("is_download_unlocked")]
         public bool? IsDownloadUnlocked { get; set; }

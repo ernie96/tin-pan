@@ -137,17 +137,6 @@ namespace TinPan.ViewModels
                 _ => false
             };
 
-            // No free file at all: say so plainly and go straight to the offer, instead of fetching
-            // Suno's placeholder address and reporting its 403 as a failed download.
-            if (format == "mp3" && DirectAudioUrl(clip) == null)
-            {
-                Log.Info($"Download {clip.Id}: no unencrypted file in media_urls");
-                if (OfferSunoDownload(clip, T("Suno only has an encrypted copy of this song, so there's no free download."))
-                    && await DownloadThroughSunoAsync(clip, format, path) && clean)
-                    await CleanUpAsync(clip, path);
-                return;
-            }
-
             Announcer.Announce(note + (format == "wav" ? T("Asking Suno for a WAV of {0}.", clip.DisplayTitle) : T("Downloading {0}.", clip.DisplayTitle)));
             try
             {
@@ -185,27 +174,55 @@ namespace TinPan.ViewModels
         }
 
         /// <summary>
-        /// The song's own file: the free one from DirectAudioUrl. WAV uses Suno's WAV conversion.
-        /// The file name keeps the real extension, since the free file is often an M4A.
+        /// The song's own file: unmetered direct stream (M4A) via progressive or Mango DRM,
+        /// or official WAV conversion. Avoids the decoy /api/forbidden address.
         /// </summary>
         private string TargetPath(SunoClip clip, string format, out string? directUrl)
         {
-            directUrl = format switch
+            if (format == "wav")
             {
-                "wav" => null,
-                "mp4" => clip.VideoUrl,
-                _ => DirectAudioUrl(clip)
-            };
-            var extension = format == "mp3" ? FileNames.ExtensionOf(directUrl, "mp3") : format;
-            return Path.Combine(DownloadFolder(), FileNames.ForSong(clip.Title, clip.Id, extension));
+                directUrl = null;
+                return Path.Combine(DownloadFolder(), FileNames.ForSong(clip.Title, clip.Id, "wav"));
+            }
+            if (format == "mp4")
+            {
+                directUrl = clip.VideoUrl;
+                return Path.Combine(DownloadFolder(), FileNames.ForSong(clip.Title, clip.Id, "mp4"));
+            }
+
+            var (pickedUrl, _) = SunoDrm.PickMediaUrl(clip, preferUnencrypted: true);
+            directUrl = pickedUrl;
+            var ext = FileNames.ExtensionOf(directUrl, "m4a");
+
+            var folder = DownloadFolder();
+            var primaryPath = Path.Combine(folder, FileNames.ForSong(clip.Title, clip.Id, ext));
+            if (File.Exists(primaryPath)) return primaryPath;
+
+            var altExt = ext == "m4a" ? "mp3" : "m4a";
+            var altPath = Path.Combine(folder, FileNames.ForSong(clip.Title, clip.Id, altExt));
+            if (File.Exists(altPath)) return altPath;
+
+            return primaryPath;
         }
 
         private async Task DownloadDirectAsync(SunoClip clip, string format, string path)
         {
-            TargetPath(clip, format, out var url);
-            if (format == "wav") url = await _api.GetWavUrlAsync(clip.Id);
-            if (string.IsNullOrEmpty(url)) throw new SunoApiException(T("Suno gave no file address for this song."));
-            await _api.DownloadAsync(url, path);
+            if (format == "wav")
+            {
+                var url = await _api.GetWavUrlAsync(clip.Id);
+                if (string.IsNullOrEmpty(url)) throw new SunoApiException(T("Suno gave no file address for this song."));
+                await _api.DownloadAsync(url, path);
+            }
+            else if (format == "mp4")
+            {
+                var url = clip.VideoUrl;
+                if (string.IsNullOrEmpty(url)) throw new SunoApiException(T("Suno gave no file address for this song."));
+                await _api.DownloadAsync(url, path);
+            }
+            else
+            {
+                await _api.DownloadClipDirectAsync(clip, path);
+            }
             await SaveExtrasAsync(clip, path);
         }
 
@@ -263,17 +280,8 @@ namespace TinPan.ViewModels
                 Announcer.Announce(todo.Count == 0 ? T("No finished songs in this list.") : T("Every song in this list is already downloaded."));
                 return;
             }
-            // Only the free route runs here; songs Suno keeps only encrypted would cost a download each, so they're named and left out.
-            var costly = format == "mp3" ? missing.Where(c => DirectAudioUrl(c) == null).ToList() : new List<SunoClip>();
-            missing = missing.Except(costly).ToList();
-            var leftOut = costly.Count == 0 ? "" : " " + T("{0} only have an encrypted copy, so they'd cost a download each; they're left out. Ctrl+D on one offers Suno's own download.", Plural(costly.Count, "{0} song", "{0} songs"));
-            if (missing.Count == 0)
-            {
-                Announcer.Announce(T("None of these songs has a free file to download.") + leftOut, always: true);
-                return;
-            }
             if (!_dialogs.Confirm(T("Download {0} as {1} into {2}? {3} already there will be skipped.",
-                    Plural(missing.Count, "{0} song", "{0} songs"), format.ToUpperInvariant(), DownloadFolder(), todo.Count - missing.Count - costly.Count) + leftOut, T("Download all"))) return;
+                    Plural(missing.Count, "{0} song", "{0} songs"), format.ToUpperInvariant(), DownloadFolder(), todo.Count - missing.Count), T("Download all"))) return;
 
             var clean = _config.Current.Cleanup.AfterDownload;
             Announcer.Announce(T("Downloading {0}.", Plural(missing.Count, "{0} song", "{0} songs")) + (clean ? " " + T("Each one is cleaned up after it downloads.") : ""));
