@@ -163,7 +163,7 @@ namespace TinPan.ViewModels
             entry.Group == "Song" && entry.Parameter == null && entry.Command != PlaySongCommand ? CurrentSong : entry.Parameter;
 
         /// <summary>Plays the selected song of the tab you're on, so the list it's in carries on afterwards.</summary>
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private Task PlaySongAsync() => SelectedTab switch
         {
             PlaylistsTab => PlaylistsVM.PlayCommand.ExecuteAsync(null),

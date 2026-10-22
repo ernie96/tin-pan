@@ -473,7 +473,12 @@ namespace TinPan.Services
 
         // ── Plumbing ────────────────────────────────────────────────────────
 
-        private async Task<string> SendAsync(HttpMethod method, string path, object? body, CancellationToken ct, bool retryAuth = true)
+        /// <summary>How long to wait before retry n (1 or 2) after "too many requests", when Suno doesn't say.</summary>
+        internal Func<int, TimeSpan> RateLimitWait { get; init; } = attempt => TimeSpan.FromSeconds(attempt == 1 ? 2 : 5);
+
+        private const int RateLimitRetries = 2;
+
+        private async Task<string> SendAsync(HttpMethod method, string path, object? body, CancellationToken ct, bool retryAuth = true, int rateLimited = 0)
         {
             var token = await _auth.GetTokenAsync(forceRefresh: !retryAuth, ct);
             using var request = new HttpRequestMessage(method, BaseUrl + path);
@@ -510,7 +515,17 @@ namespace TinPan.Services
 
                 // Suno rejects tokens it considers stale even before they expire; one fresh token fixes it.
                 if (retryAuth && (status is 401 or 403 || LooksLikeStaleToken(text)))
-                    return await SendAsync(method, path, body, ct, retryAuth: false);
+                    return await SendAsync(method, path, body, ct, retryAuth: false, rateLimited);
+
+                // Too many requests (a burst at startup, say): Suno turned it away without doing it, so when it
+                // says it may be retried, wait and try again rather than failing the whole load.
+                if (status == 429 && rateLimited < RateLimitRetries && (RetryableRateLimit(text) || response.Headers.RetryAfter != null))
+                {
+                    var wait = response.Headers.RetryAfter?.Delta is { } delta && delta <= TimeSpan.FromSeconds(10) ? delta : RateLimitWait(rateLimited + 1);
+                    Log.Info($"{method} {Queryless(path)}: too many requests, trying again in {wait.TotalSeconds:0.#} s");
+                    await Task.Delay(wait, ct);
+                    return await SendAsync(method, path, body, ct, retryAuth, rateLimited + 1);
+                }
 
                 throw new SunoApiException(DescribeFailure(response.StatusCode, text), status);
             }
@@ -532,6 +547,21 @@ namespace TinPan.Services
         {
             var payload = $"{{\"timestamp\":{now.ToUnixTimeMilliseconds()}}}";
             return $"{{\"token\":\"{Convert.ToBase64String(Encoding.UTF8.GetBytes(payload))}\"}}";
+        }
+
+        /// <summary>Suno's 429 body says {"retryable": true} when the request may simply be sent again.</summary>
+        public static bool RetryableRateLimit(string body)
+        {
+            try
+            {
+                using var doc = JsonDocument.Parse(body);
+                return doc.RootElement.ValueKind == JsonValueKind.Object
+                       && doc.RootElement.TryGetProperty("retryable", out var r) && r.ValueKind == JsonValueKind.True;
+            }
+            catch (JsonException)
+            {
+                return false;
+            }
         }
 
         public static bool LooksLikeStaleToken(string body)

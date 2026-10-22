@@ -231,8 +231,8 @@ namespace TinPan.ViewModels
         /// <summary>The list that started the current song, or the Library when nothing list-based is playing.</summary>
         private IPlaybackQueue Queue => _audio.CurrentOwner ?? (SelectedTab == PlaylistsTab ? PlaylistsVM : LibraryVM);
 
-        [RelayCommand] private Task NextAsync() => Queue.NextAsync();
+        [RelayCommand(AllowConcurrentExecutions = true)] private Task NextAsync() => Queue.NextAsync();
         [RelayCommand] private void PlayPause() => Queue.PlayPause();
-        [RelayCommand] private Task PreviousAsync() => Queue.PreviousAsync();
+        [RelayCommand(AllowConcurrentExecutions = true)] private Task PreviousAsync() => Queue.PreviousAsync();
     }
 }

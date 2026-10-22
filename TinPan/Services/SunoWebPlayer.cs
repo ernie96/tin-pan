@@ -39,6 +39,8 @@ namespace TinPan.Services
     });
     a.addEventListener('ended', () => post({ type: 'ended' }));
     a.addEventListener('error', () => post({ type: 'error', code: a.error ? a.error.code : 0 }));
+    // Already going by the time it was found: its 'playing' event has been and gone.
+    if (!a.paused && a.currentTime > 0) { started = true; post({ type: 'playing', d: a.duration || 0 }); }
   };
   const timer = setInterval(() => {
     tries++;
@@ -123,14 +125,15 @@ namespace TinPan.Services
             var result = await LoadAndStartAsync(clipId, version);
             if (result == "timeout" && version == _playVersion)
             {
-                Log.Warn("Player didn't start on the first load; trying once more");
+                Log.Warn($"Player didn't start {clipId} on the first load ({await PageStateAsync()}); trying once more");
                 result = await LoadAndStartAsync(clipId, version);
             }
             if (version != _playVersion) return; // replaced by another song or stopped while starting
             if (result != "playing")
             {
+                var state = result == "timeout" ? $" ({await PageStateAsync()})" : "";
                 Stop();
-                Log.Warn($"Player didn't start: {result}");
+                Log.Warn($"Player didn't start {clipId}: {result}{state}");
                 throw new SunoApiException(result == "nobutton"
                     ? T("Suno's player didn't offer this song. It may be private to another account, or still being made.")
                     : T("Suno's player didn't start this song. Try again."));
@@ -275,6 +278,8 @@ namespace TinPan.Services
                 case "time":
                     _position = t;
                     _paused = paused;
+                    // Time moving means it's playing, even if the 'playing' event was missed.
+                    if (!paused && t > 0) _start?.TrySetResult("playing");
                     break;
                 case "nobutton":
                     _start?.TrySetResult("nobutton");
@@ -298,6 +303,26 @@ namespace TinPan.Services
         }
 
         /// <summary>Runs a statement against the page's audio element, if there is one.</summary>
+        /// <summary>What the page showed when the song didn't start, for the log: address, audio element, Play buttons.</summary>
+        private async Task<string> PageStateAsync()
+        {
+            if (_view?.CoreWebView2 == null) return "no page";
+            try
+            {
+                var json = await _view.CoreWebView2.ExecuteScriptAsync(
+                    "(() => { const a = document.getElementById('active-audio-play');" +
+                    " const p = document.querySelectorAll('button[aria-label=\"Play\"]').length;" +
+                    " return location.pathname + ', ' + document.readyState + ', ' + (a ? 'audio paused=' + a.paused" +
+                    " + ' ready=' + a.readyState + ' error=' + (a.error ? a.error.code : 'none') + ' src=' + (a.src ? 'yes' : 'no')" +
+                    " : 'no audio element') + ', play buttons=' + p; })()");
+                return System.Text.Json.JsonSerializer.Deserialize<string>(json) ?? "unknown";
+            }
+            catch (Exception ex) when (ex is System.Text.Json.JsonException or InvalidOperationException or System.Runtime.InteropServices.COMException)
+            {
+                return "page state unreadable";
+            }
+        }
+
         private void Run(string statement)
         {
             if (CurrentClipId == null || _view?.CoreWebView2 == null) return;

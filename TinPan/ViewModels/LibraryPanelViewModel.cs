@@ -334,7 +334,7 @@ namespace TinPan.ViewModels
 
         // ── Playback ────────────────────────────────────────────────────────
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private Task PlayAsync(SunoClip? clip) => StartAsync(clip ?? SelectedClip);
 
         private async Task StartAsync(SunoClip? clip)
@@ -394,7 +394,7 @@ namespace TinPan.ViewModels
         Task IPlaybackQueue.NextAsync() => NextAsync();
         void IPlaybackQueue.PlayPause() => PlayPause();
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private Task PreviousAsync()
         {
             var index = _current == null ? -1 : Songs.IndexOf(_current);
@@ -405,7 +405,7 @@ namespace TinPan.ViewModels
             return Task.CompletedTask;
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task NextAsync()
         {
             var next = await FindNextAsync();

@@ -138,7 +138,7 @@ namespace TinPan.ViewModels
 
         // ── Songs in the playlist ───────────────────────────────────────────
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private Task PlayAsync() => StartAsync(SelectedSong);
 
         private async Task StartAsync(SunoClip? clip)

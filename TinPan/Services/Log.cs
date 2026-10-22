@@ -12,7 +12,10 @@ namespace TinPan.Services
         private static readonly object Gate = new();
         private const long MaxBytes = 1024 * 1024;
 
-        public static string FilePath { get; } = Path.Combine(AppFolders.Local, "logs", "tinpan.log");
+        /// <summary>%LOCALAPPDATA%\Tin Pan\logs\tinpan.log, or TINPAN_LOG when set (the test run sets it).</summary>
+        public static string FilePath { get; } = Environment.GetEnvironmentVariable("TINPAN_LOG") is { Length: > 0 } path
+            ? path
+            : Path.Combine(AppFolders.Local, "logs", "tinpan.log");
 
         static Log()
         {

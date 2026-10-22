@@ -1,5 +1,14 @@
 # Tin Pan changelog
 
+## 1.6.1 (2026-10-22)
+
+### Fixed
+
+- Pressing Enter on another song while one was playing sometimes did nothing, so the old song kept going until you pressed Space. Tin Pan sometimes missed that a song had started, waited up to a minute for it, and ignored Enter in the meantime. It now notices the song playing straight away, and Enter always switches songs.
+- When Suno says "too many requests" (for example, after opening Tin Pan a few times in a row), Tin Pan waits a moment and tries again, up to twice, before telling you.
+- When a song doesn't start, the log now says which song and what Suno's player page showed, to help track down the cause.
+- Running Tin Pan's tests no longer writes test lines into your Tin Pan log.
+
 ## 1.6.0 (2026-10-22)
 
 ### New
