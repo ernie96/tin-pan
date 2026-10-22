@@ -1,6 +1,6 @@
 # Tin Pan changelog
 
-## Unreleased
+## 1.2.0 (2026-10-22)
 
 ### New
 
