@@ -1,5 +1,11 @@
 # Tin Pan changelog
 
+## Unreleased
+
+### New
+
+- Tin Pan updates itself. A few seconds after starting it quietly looks for a new version (Settings can turn that off), and Help, Check for updates looks now. It reads what's new, and on Yes downloads the new TinPan.exe, checks its signature, closes, swaps it in and opens again. If the swap fails the old copy is put back and the next start says so. Updating starts working from this version on; 1.1.0 needs a manual download once.
+
 ## 1.1.0 (2026-10-22)
 
 Suno Companion is now called **Tin Pan**, after Tin Pan Alley. The program is `TinPan.exe`, in `TinPan\bin\Release\net10.0-windows`. Your settings and sign-in carry over by themselves.

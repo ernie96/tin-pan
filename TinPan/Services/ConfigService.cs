@@ -60,6 +60,7 @@ namespace TinPan.Services
             Current.User ??= new UserConfig();
             Current.Library ??= new LibraryConfig();
             Current.Resume ??= new ResumeConfig();
+            Current.Update ??= new UpdateConfig();
             if (string.IsNullOrEmpty(Current.User.DeviceId))
                 Current.User.DeviceId = Guid.NewGuid().ToString();
 

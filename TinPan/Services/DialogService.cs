@@ -12,6 +12,9 @@ namespace TinPan.Services
         /// <summary>Yes/No question; No is the default button.</summary>
         bool Confirm(string message, string title);
 
+        /// <summary>Yes/No question where Yes is the default button (offering an update).</summary>
+        bool Ask(string message, string title);
+
         /// <summary>Read-only text the user can arrow through: lyrics, details, help.</summary>
         void ShowDocument(string title, string text);
 
@@ -35,6 +38,10 @@ namespace TinPan.Services
         public bool Confirm(string message, string title) =>
             MessageBox.Show(Application.Current.MainWindow, message, title,
                 MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes;
+
+        public bool Ask(string message, string title) =>
+            MessageBox.Show(Application.Current.MainWindow, message, title,
+                MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.Yes) == MessageBoxResult.Yes;
 
         public void ShowDocument(string title, string text) =>
             new TextViewerWindow(title, text) { Owner = Application.Current.MainWindow }.ShowDialog();

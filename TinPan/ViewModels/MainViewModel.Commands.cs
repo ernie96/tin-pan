@@ -103,6 +103,7 @@ namespace TinPan.ViewModels
                 new("Help", "Speak e_verything", "", SetSpeechLevelCommand, nameof(SpeechLevel.Everything)),
                 new("Help", "Speak only what I as_k for", "", SetSpeechLevelCommand, nameof(SpeechLevel.AskedFor)),
                 new("Help", "Speak only _errors", "", SetSpeechLevelCommand, nameof(SpeechLevel.ErrorsOnly)),
+                new("Help", "Check for _updates", "", CheckForUpdatesCommand),
                 new("Help", "_Licenses and notices", "", LicensesCommand),
                 new("Help", "About Tin Pa_n", "", AboutCommand)
             };

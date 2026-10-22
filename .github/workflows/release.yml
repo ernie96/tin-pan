@@ -1,0 +1,68 @@
+name: Release
+
+# Push a tag like v1.2.0 (matching <Version> in TinPan/TinPan.csproj, with a "## 1.2.0" entry in
+# TinPan/CHANGELOG.md) to test, build, sign and publish a release. Running copies of Tin Pan then
+# offer it as an update.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Check the tag matches the version
+        shell: pwsh
+        run: |
+          [xml]$project = Get-Content TinPan/TinPan.csproj
+          $version = ($project.Project.PropertyGroup | Where-Object Version | Select-Object -First 1).Version
+          if ("v$version" -ne "${{ github.ref_name }}") { throw "Tag ${{ github.ref_name }} does not match version $version in TinPan.csproj." }
+          "VERSION=$version" | Out-File $env:GITHUB_ENV -Append
+
+      - name: Test
+        run: dotnet test TinPan.Tests -c Release
+
+      - name: Build the one-file TinPan.exe
+        run: dotnet publish TinPan -p:PublishProfile=OneFile
+
+      - name: Sign it, and check the signature against the key built into the app
+        shell: pwsh
+        env:
+          UPDATE_SIGNING_KEY: ${{ secrets.UPDATE_SIGNING_KEY }}
+        run: |
+          if (-not $env:UPDATE_SIGNING_KEY) { throw 'The UPDATE_SIGNING_KEY secret is missing; an unsigned release could not be installed by the updater.' }
+          New-Item -ItemType Directory -Force release | Out-Null
+          Copy-Item TinPan/bin/publish/TinPan.exe release/
+          dotnet run --project build/Signer -c Release -- sign release/TinPan.exe
+          $publicKey = (Select-String -Path TinPan/Services/UpdateService.cs -Pattern 'PublicKey = "([^"]+)"').Matches[0].Groups[1].Value
+          dotnet run --project build/Signer -c Release -- verify $publicKey release/TinPan.exe
+          if ($LASTEXITCODE -ne 0) { throw 'The signature does not match the public key in UpdateService.cs.' }
+          Get-FileHash release/TinPan.exe -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  TinPan.exe" } | Out-File release/SHA256SUMS.txt -Encoding ascii
+
+      - name: Release notes from the changelog
+        shell: pwsh
+        run: |
+          $changelog = Get-Content TinPan/CHANGELOG.md -Raw
+          # Single quotes: in a double-quoted string PowerShell would run "$(...)" as a command.
+          $pattern = '(?ms)^## ' + [regex]::Escape($env:VERSION) + '\b[^\n]*$(.*?)(?=^## |\z)'
+          $match = [regex]::Match($changelog, $pattern)
+          if (-not $match.Success) { throw "TinPan/CHANGELOG.md has no '## $env:VERSION' section." }
+          $intro = "Download **TinPan.exe** below and run it. It is one file and needs nothing installed. If you already have Tin Pan 1.2.0 or later, it offers this update by itself.`n`nTin Pan, like all my apps, is dedicated to Jenni and Diana.`n`n"
+          ($intro + $match.Groups[1].Value.Trim()) | Out-File release-notes.md -Encoding utf8
+
+      - name: Publish the release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ github.ref_name }}" --title "Tin Pan $env:VERSION" --notes-file release-notes.md `
+            release/TinPan.exe release/TinPan.exe.sig release/SHA256SUMS.txt

@@ -86,6 +86,19 @@ dotnet publish TinPan -p:PublishProfile=OneFile
 
 That makes a single `TinPan\bin\publish\TinPan.exe` (about 60 MB) with .NET, WPF, WebView2's loader, NVDA's helper and the license texts inside. Nothing needs installing: WebView2 comes with Windows 10 and 11. On first run Windows unpacks the native parts to a temporary folder and Tin Pan unpacks NVDA's helper to `%LOCALAPPDATA%\Tin Pan\native`, so the second start is quicker. Help, Licenses and notices shows the licenses. A `nvdaControllerClient.dll` placed next to the exe is used instead of the built-in one.
 
+## Updates
+
+Tin Pan looks for a new version on GitHub a few seconds after it starts, and says nothing unless there is one (Settings can turn this off). Help, Check for updates looks now. When there's a new version, Tin Pan reads what's new and asks. Yes downloads the new `TinPan.exe`, checks that it's signed by Tin Pan's publisher (Ed25519, the same scheme as TimePlayer), closes, swaps it in and starts again. If the swap fails, the old exe is put back and the next start says so. Saying No to a version offered at startup means it isn't offered again by itself.
+
+Only the one-file `TinPan.exe` from a release updates itself; a development build offers to open the release page instead.
+
+### Making a release
+
+1. Set `<Version>` in `TinPan/TinPan.csproj` and add a matching `## x.y.z` section to `TinPan/CHANGELOG.md`.
+2. Commit, then push a tag `vx.y.z`. The Release workflow tests, builds the one-file exe, signs it with the `UPDATE_SIGNING_KEY` secret, checks the signature against the public key in `UpdateService.cs`, and publishes `TinPan.exe`, `TinPan.exe.sig` and `SHA256SUMS.txt`.
+
+The signing key's private half is in `%APPDATA%\TinPan-release\update-signing.key` on the publisher's computer and in the repository secret; it is never in the repository. `build/Signer` makes keys (`keygen`), signs (`sign`) and checks (`verify`).
+
 ## Speech
 
 Settings (or the Help menu) sets how much Tin Pan says by itself: everything; what you ask for and errors, without background news; or only errors and what you ask to hear. F1, F2, F3 and Ctrl+R always speak, and every message is kept in the history (Ctrl+Shift+R), so nothing is lost when it isn't spoken.

@@ -104,6 +104,10 @@ Settings, When a list reaches the playing song: a short click (the default), say
 
 Settings
 Sign in opens Suno's own sign-in page; it closes by itself once you're in. It remembers your Google account and can save your password. Sign out only signs out of Suno.
-Download folder, download format, and extra files saved next to each download: lyrics, timed lyrics (LRC), song details and cover art.";
+Download folder, download format, and extra files saved next to each download: lyrics, timed lyrics (LRC), song details and cover art.
+Check for new versions when Tin Pan starts: on by default, and quiet unless there is one.
+
+Updates
+Help, Check for updates looks for a new version now. When one is out, Tin Pan says what's new and asks; Yes downloads it, checks its signature, closes Tin Pan, swaps in the new TinPan.exe and opens it again. Saying No at startup means that version isn't offered again by itself.";
     }
 }

@@ -19,6 +19,7 @@ namespace TinPan.ViewModels
         private readonly IAudioService _audio;
         private readonly IDialogService _dialogs;
         private readonly IConfigService _config;
+        private readonly IUpdateService _updates;
 
         [ObservableProperty] private string title = AppTitle;
         [ObservableProperty] private int selectedTab;
@@ -29,7 +30,7 @@ namespace TinPan.ViewModels
         public PlaylistsViewModel PlaylistsVM { get; }
 
         public MainViewModel(SunoPanelViewModel sunoVM, LibraryPanelViewModel libraryVM, SettingsPanelViewModel settingsVM, PlaylistsViewModel playlistsVM,
-            IAuthService auth, IAudioService audio, IDialogService dialogs, IConfigService config, SongWatcher watcher, IAnnouncer announcer)
+            IAuthService auth, IAudioService audio, IDialogService dialogs, IConfigService config, IUpdateService updates, SongWatcher watcher, IAnnouncer announcer)
             : base(announcer)
         {
             SunoVM = sunoVM;
@@ -40,6 +41,7 @@ namespace TinPan.ViewModels
             _audio = audio;
             _dialogs = dialogs;
             _config = config;
+            _updates = updates;
 
             _auth.AuthStateChanged += (_, _) => OnAuthChanged();
             SunoVM.SongsStarted += (_, clips) => LibraryVM.Upsert(clips);
@@ -59,11 +61,13 @@ namespace TinPan.ViewModels
             catch (SunoApiException ex)
             {
                 Announcer.Announce($"Tin Pan ready. {ex.Message} Press F1 for help.", always: true);
+                _ = AfterStartupUpdatesAsync();
                 return;
             }
             Announcer.Announce(signedIn
                 ? "Tin Pan ready. Press F1 for help."
                 : "Tin Pan ready. Not signed in. Press F1 for help.", interrupt: false, always: true);
+            _ = AfterStartupUpdatesAsync();
         }
 
         private void OnAuthChanged()

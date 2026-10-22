@@ -24,6 +24,7 @@ namespace TinPan.ViewModels
         [ObservableProperty] private bool saveTimedLyrics;
         [ObservableProperty] private bool saveDetails;
         [ObservableProperty] private bool saveCover;
+        [ObservableProperty] private bool checkUpdatesAtStartup;
 
         public IReadOnlyList<string> OutputFormats { get; } = new[] { "mp3", "wav" };
 
@@ -86,6 +87,7 @@ namespace TinPan.ViewModels
             saveTimedLyrics = downloads.SaveTimedLyrics;
             saveDetails = downloads.SaveDetails;
             saveCover = downloads.SaveCover;
+            checkUpdatesAtStartup = config.Current.Update.CheckAtStartup;
             _auth.AuthStateChanged += (_, _) => UpdateSignInText();
         }
 
@@ -131,6 +133,7 @@ namespace TinPan.ViewModels
         partial void OnSaveTimedLyricsChanged(bool value) { _config.Current.Audio.SaveTimedLyrics = value; _config.SaveSoon(); }
         partial void OnSaveDetailsChanged(bool value) { _config.Current.Audio.SaveDetails = value; _config.SaveSoon(); }
         partial void OnSaveCoverChanged(bool value) { _config.Current.Audio.SaveCover = value; _config.SaveSoon(); }
+        partial void OnCheckUpdatesAtStartupChanged(bool value) { _config.Current.Update.CheckAtStartup = value; _config.SaveSoon(); }
 
         partial void OnOutputFormatChanged(string value)
         {

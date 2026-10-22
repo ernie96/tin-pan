@@ -19,6 +19,17 @@ namespace TinPan.Models
 
         /// <summary>The "mv" key of the model picked on the Create tab, reused for extending.</summary>
         public string LastModel { get; set; } = "";
+
+        public UpdateConfig Update { get; set; } = new();
+    }
+
+    public class UpdateConfig
+    {
+        /// <summary>Look for a new version a few seconds after starting; quiet unless there is one.</summary>
+        public bool CheckAtStartup { get; set; } = true;
+
+        /// <summary>A version the user said No to when offered at startup; not offered again by itself.</summary>
+        public string SkippedVersion { get; set; } = "";
     }
 
     public class AudioConfig

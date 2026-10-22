@@ -63,6 +63,7 @@ namespace TinPan
             services.AddSingleton<IAnnouncer, ScreenReaderService>();
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<SongWatcher>();
+            services.AddSingleton<IUpdateService, UpdateService>();
             services.AddSingleton<AccountState>();
 
             services.AddSingleton<MainViewModel>();

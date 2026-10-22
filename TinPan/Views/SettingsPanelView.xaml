@@ -27,6 +27,10 @@
             </StackPanel>
         </GroupBox>
 
+        <GroupBox Header="Updates" Margin="0,0,0,10" Padding="10">
+            <CheckBox Content="Check for _new versions when Tin Pan starts" IsChecked="{Binding CheckUpdatesAtStartup}"/>
+        </GroupBox>
+
         <GroupBox Header="Downloads" Margin="0,0,0,10" Padding="10">
             <StackPanel>
                 <Label Content="_Download folder (empty means Music\Suno)" Target="{Binding ElementName=folder}" Padding="0,0,0,5"/>
