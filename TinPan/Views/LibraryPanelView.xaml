@@ -16,6 +16,7 @@
             <Button Content="{l:T '_Refresh'}" IsTabStop="False" Padding="10,5" Command="{Binding RefreshCommand}"/>
             <Button Content="{l:T '_Filters...'}" IsTabStop="False" Padding="10,5" Margin="8,0,0,0" Command="{Binding FiltersCommand}"/>
             <Button Content="{l:T 'Download a_ll...'}" IsTabStop="False" Padding="10,5" Margin="8,0,0,0" Command="{Binding DownloadAllCommand}"/>
+            <Button Content="{l:T '_Upload...'}" IsTabStop="False" Padding="10,5" Margin="8,0,0,0" Command="{Binding UploadCommand}"/>
         </StackPanel>
 
         <DockPanel Grid.Row="1" Margin="0,0,0,10">

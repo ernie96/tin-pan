@@ -98,6 +98,7 @@ namespace TinPan.ViewModels
                 new("Library", T("_Search"), "Ctrl+F", SearchCommand),
                 new("Library", T("_Filters..."), "", lib.FiltersCommand),
                 new("Library", T("Download _all..."), "", lib.DownloadAllCommand),
+                new("Library", T("_Upload a song..."), "", lib.UploadCommand),
 
                 new("View", T("_Library"), "Ctrl+1", ShowTabCommand, "0"),
                 new("View", T("_Playlists"), "Ctrl+2", ShowTabCommand, "1"),

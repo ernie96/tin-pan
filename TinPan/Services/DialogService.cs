@@ -27,6 +27,9 @@ namespace TinPan.Services
         /// <summary>An MP3 or WAV file, or null on Cancel.</summary>
         string? PickAudioFile(string title);
 
+        /// <summary>A song to upload: any common audio file. Null on Cancel.</summary>
+        string? PickSongToUpload();
+
         /// <summary>
         /// A list of short lines (message history, song information, the command list).
         /// When onEnter is given, Enter closes the window and runs it with the chosen line's index.
@@ -68,6 +71,17 @@ namespace TinPan.Services
             var dialog = new OpenFolderDialog { Title = T("Choose where songs are saved") };
             if (!string.IsNullOrEmpty(startIn)) dialog.InitialDirectory = startIn;
             return dialog.ShowDialog(Application.Current.MainWindow) == true ? dialog.FolderName : null;
+        }
+
+        public string? PickSongToUpload()
+        {
+            var dialog = new OpenFileDialog
+            {
+                Title = T("Choose a song to upload to Suno"),
+                Filter = T("Audio files") + " (*.mp3;*.wav;*.m4a;*.flac;*.aac;*.wma)|*.mp3;*.wav;*.m4a;*.flac;*.aac;*.wma",
+                CheckFileExists = true
+            };
+            return dialog.ShowDialog(Application.Current.MainWindow) == true ? dialog.FileName : null;
         }
 
         public string? PickAudioFile(string title)

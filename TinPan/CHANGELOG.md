@@ -7,6 +7,12 @@
 - Free song downloads now work for encrypted songs without using metered quota. Direct download transparently fetches rights and decrypts Suno's Mango DRM streams (AES-CTR) locally so you are no longer prompted that "Suno only has an encrypted copy of this song, so there's no free download".
 - Download all includes encrypted songs directly instead of leaving them out.
 
+## Unreleased
+
+### New
+
+- Upload a song (Library menu, or Alt+U on the Library page): sends an audio file from this computer to your Suno account, where it becomes a song you can play, extend, cover and remaster. MP3, WAV, M4A, FLAC, AAC and WMA work; anything but M4A is converted to M4A first. You confirm your rights and Suno's upload terms each time. Tin Pan checks your plan's length limits first, says when Suno is checking the upload, and puts the new song at the top of the library.
+
 ## 1.5.0 (2026-10-22)
 
 ### New

@@ -68,6 +68,7 @@ namespace TinPan
             services.AddSingleton<SongWatcher>();
             services.AddSingleton<IUpdateService, UpdateService>();
             services.AddSingleton<ICleanupService, CleanupService>();
+            services.AddSingleton<IUploadService, UploadService>();
             services.AddSingleton<AccountState>();
 
             services.AddSingleton<MainViewModel>();

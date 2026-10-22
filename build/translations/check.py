@@ -88,6 +88,7 @@ FORMS = {
                      "Songs with a _persona", "Songs in a pla_ylist", "Downloaded be_fore", "_Order"],
     'Add to playlist form': ["_Playlist", "Name for a _new playlist"],
     'Edit form': ["_Title", "_Lyrics"],
+    'Upload form': ["_Title", "I _own this audio or have the rights to upload it, and I accept Suno's terms for uploads (suno.com/terms)"],
     'Playlist rename form': ["_Name", "_Description"],
 }
 

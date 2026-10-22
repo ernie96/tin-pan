@@ -48,6 +48,10 @@ namespace TinPan.Models
         [JsonPropertyName("download_usage")]
         public DownloadUsage? DownloadUsage { get; set; }
 
+        /// <summary>Shortest and longest audio upload this account may make (chadvis inventory: numeric min and max).</summary>
+        [JsonPropertyName("audio_upload_limits")]
+        public AudioUploadLimits? AudioUploadLimits { get; set; }
+
         /// <summary>Suno Studio accounts may use Studio's download route. Suno counts it too since 2026-09-09.</summary>
         [JsonIgnore]
         public bool HasStudio => AccessibleFeatures.Any(f => f.Name == "studio");
@@ -67,6 +71,19 @@ namespace TinPan.Models
                 return !(key.Contains("free") || name.Contains("free") || key == "basic" || name == "basic");
             }
         }
+    }
+
+    /// <summary>
+    /// Upload length limits in seconds. The inventory records only that both are numbers, so values
+    /// that can't be seconds (zero, negative, or over 10 hours) are treated as unknown.
+    /// </summary>
+    public class AudioUploadLimits
+    {
+        [JsonPropertyName("min")] public double? Min { get; set; }
+        [JsonPropertyName("max")] public double? Max { get; set; }
+
+        [JsonIgnore] public double? MinSeconds => Min is > 0 and < 36000 ? Min : null;
+        [JsonIgnore] public double? MaxSeconds => Max is > 0 and < 36000 ? Max : null;
     }
 
     /// <summary>Since September 2026: free 7 in total, Pro 20 a month, Premier 60 a month.</summary>

@@ -86,6 +86,12 @@ dotnet publish TinPan -p:PublishProfile=OneFile
 
 That makes a single `TinPan\bin\publish\TinPan.exe` (about 60 MB) with .NET, WPF, WebView2's loader, NVDA's helper and the license texts inside. Nothing needs installing: WebView2 comes with Windows 10 and 11. On first run Windows unpacks the native parts to a temporary folder and Tin Pan unpacks NVDA's helper to `%LOCALAPPDATA%\Tin Pan\native`, so the second start is quicker. Help, Licenses and notices shows the licenses. A `nvdaControllerClient.dll` placed next to the exe is used instead of the built-in one.
 
+## Uploading songs
+
+Library menu, Upload a song (or the Upload button on the Library page, Alt+U) sends an audio file from your computer to your Suno account. There it becomes a song like any other: play it, extend it, cover it, remaster it. Choose the file, give it a title, and confirm you own it or have the rights to upload it and accept Suno's upload terms; Tin Pan never ticks that for you. MP3, WAV, M4A, FLAC, AAC and WMA all work: anything that isn't M4A is converted to M4A first with Windows' own encoder, because M4A is the upload Suno's web app was captured making. Suno checks every upload, which takes a minute or two, and may refuse music it finds is copyrighted. The shortest and longest upload come from your plan, and Tin Pan checks them before sending.
+
+The upload steps follow Nsomnia/chadvis-projectm-qt's captured upload (start, send to Suno's storage, finish). The steps after that, waiting for Suno to process it and turning it into a song, aren't in chadvis yet, so they come from Suno's own web app.
+
 ## Clean-up (sunscreen)
 
 Suno songs carry a faint haze, like a radio slightly off-station, and a steady decoder buzz. [sunscreen](https://github.com/abradburne/sunscreen) by Alan Bradburne measures and removes them, and Tin Pan has it built in (version 0.7.1, MIT license, checked by its SHA-256 before every run). It runs on your computer; nothing is uploaded.

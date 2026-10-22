@@ -484,6 +484,16 @@
   "Виберіть, куди зберігати пісні",
   "Elige dónde se guardan las canciones"
  ],
+ "Choose a song to upload to Suno": [
+  "Alege o melodie de încărcat pe Suno",
+  "Виберіть пісню, щоб надіслати її в Suno",
+  "Elige una canción para subir a Suno"
+ ],
+ "Audio files": [
+  "Fișiere audio",
+  "Аудіофайли",
+  "Archivos de audio"
+ ],
  "MP3 or WAV songs": [
   "Melodii MP3 sau WAV",
   "Пісні MP3 або WAV",
@@ -609,6 +619,11 @@
   "Завантаження не почалося вчасно. Спробуйте ще раз.",
   "La descarga no empezó a tiempo. Vuelve a intentarlo."
  ],
+ "The free file didn't download: {0}": [
+  "Fișierul gratuit nu s-a descărcat: {0}",
+  "Безкоштовний файл не завантажився: {0}",
+  "El archivo gratuito no se descargó: {0}"
+ ],
  "Suno didn't answer in time. Try again.": [
   "Suno nu a răspuns la timp. Încearcă din nou.",
   "Suno не відповів вчасно. Спробуйте ще раз.",
@@ -714,6 +729,26 @@
   "Suno не повернув тексту.",
   "Suno no devolvió ninguna letra."
  ],
+ "Suno doesn't allow uploads from this account right now.": [
+  "Suno nu permite acum încărcări de pe acest cont.",
+  "Suno зараз не дозволяє надсилати файли з цього облікового запису.",
+  "Suno no permite subir archivos desde esta cuenta ahora."
+ ],
+ "Suno didn't start the upload properly. Try again.": [
+  "Suno nu a pornit corect încărcarea. Încearcă din nou.",
+  "Suno не розпочав надсилання як слід. Спробуйте ще раз.",
+  "Suno no inició bien la subida. Vuelve a intentarlo."
+ ],
+ "Suno gave an upload address this app won't use.": [
+  "Suno a dat o adresă de încărcare pe care aplicația nu o folosește.",
+  "Suno надав адресу для надсилання, якою програма не користуватиметься.",
+  "Suno dio una dirección de subida que la app no usará."
+ ],
+ "Suno processed the upload but didn't make a song from it. Refresh the library to check.": [
+  "Suno a procesat încărcarea, dar nu a făcut o melodie din ea. Reîmprospătează biblioteca ca să verifici.",
+  "Suno обробив файл, але не створив із нього пісню. Оновіть бібліотеку, щоб перевірити.",
+  "Suno procesó la subida pero no creó una canción con ella. Actualiza la biblioteca para comprobarlo."
+ ],
  "Suno's player didn't offer this song. It may be private to another account, or still being made.": [
   "Playerul Suno nu a oferit melodia. Poate fi privată pentru alt cont sau încă se creează.",
   "Плеєр Suno не запропонував цю пісню. Можливо, вона приватна для іншого облікового запису або ще створюється.",
@@ -789,6 +824,41 @@
   "Не вдалося запустити оновлення.",
   "No se pudo iniciar la actualización."
  ],
+ "That file is empty or missing.": [
+  "Fișierul e gol sau lipsește.",
+  "Цей файл порожній або його немає.",
+  "Ese archivo está vacío o no existe."
+ ],
+ "That file is over 500 MB, too big to upload.": [
+  "Fișierul are peste 500 MB, prea mare pentru încărcare.",
+  "Цей файл більший за 500 МБ — завеликий для надсилання.",
+  "Ese archivo pesa más de 500 MB, demasiado para subirlo."
+ ],
+ "Windows couldn't turn this file into M4A for uploading. Try an MP3, WAV or M4A file.": [
+  "Windows nu a putut transforma fișierul în M4A pentru încărcare. Încearcă un fișier MP3, WAV sau M4A.",
+  "Windows не зміг перетворити цей файл на M4A для надсилання. Спробуйте файл MP3, WAV або M4A.",
+  "Windows no pudo convertir este archivo a M4A para subirlo. Prueba con un MP3, WAV o M4A."
+ ],
+ "The upload didn't go through. Check your internet connection and try again.": [
+  "Încărcarea nu a reușit. Verifică-ți conexiunea la internet și încearcă din nou.",
+  "Надіслати не вдалося. Перевірте підключення до інтернету й спробуйте ще раз.",
+  "La subida no se completó. Revisa tu conexión a internet y vuelve a intentarlo."
+ ],
+ "Suno couldn't process the upload.": [
+  "Suno nu a putut procesa încărcarea.",
+  "Suno не зміг обробити надісланий файл.",
+  "Suno no pudo procesar la subida."
+ ],
+ "Suno couldn't process the upload: {0}": [
+  "Suno nu a putut procesa încărcarea: {0}",
+  "Suno не зміг обробити надісланий файл: {0}",
+  "Suno no pudo procesar la subida: {0}"
+ ],
+ "Suno took too long processing the upload. It may still appear in your library later.": [
+  "Suno a procesat încărcarea prea încet. Poate apărea totuși mai târziu în bibliotecă.",
+  "Suno надто довго обробляв файл. Пісня ще може з'явитися в бібліотеці пізніше.",
+  "Suno tardó demasiado en procesar la subida. Puede que aparezca más tarde en tu biblioteca."
+ ],
  "Library. Arrow through your songs. Enter plays, Space pauses, Left and Right seek. Applications key for extend, cover, downloads and more. Ctrl+F searches. Ctrl+Shift+F8 resumes where you left off. Alt+F for filters.": [
   "Bibliotecă. Parcurge melodiile cu săgețile. Enter redă, Spațiu pune pauză, stânga și dreapta derulează. Tasta Aplicații pentru extindere, cover, descărcări și altele. Ctrl+F caută. Ctrl+Shift+F8 reia de unde ai rămas. Alt+F pentru filtre.",
   "Бібліотека. Переходьте між піснями стрілками. Enter відтворює, Пробіл ставить на паузу, стрілки вліво і вправо перемотують. Клавіша контекстного меню — продовження, кавер, завантаження та інше. Ctrl+F шукає. Ctrl+Shift+F8 продовжує з місця, де ви зупинилися. Alt+F — фільтри.",
@@ -848,6 +918,11 @@
   "Lista Bibliotecă",
   "Список бібліотеки",
   "Lista de la biblioteca"
+ ],
+ "Enter: play.\nSpace: pause or resume.\nLeft and Right arrows: back and forward 5 seconds.\nCtrl+I: details (style, model, plays, link and lyrics) as one text.\nAlt+Enter: song information, one fact per line.\nCtrl+L: lyrics.\nCtrl+C: copy the song's link.\nCtrl+D: download in the format chosen in Settings. It uses the song's free unencrypted file when Suno has one; if the direct download fails, the app offers Suno's own download instead.\nCtrl+E: extend.\nDelete: move to Suno trash (asks first).\nApplications key or Shift+F10 for everything: Download WAV, Download video, Extend, Cover, Remaster, Get whole song, Stems, Edit title and lyrics, Make public or private, Add to playlist, Copy Suno share link, Allow or stop remixes, Similar songs, Show comments, Write a comment.\nWAV, Cover and Remaster need a Pro or Premier plan. They're unavailable on the free plan, and say so when the plan isn't known yet.\nReaching the end of the list loads more songs.\nAlt+F, Filters: workspace, disliked songs, trash, stems, Suno Studio songs, liked, public or private, uploaded, covers, extended, remasters, whole songs, personas, songs in a playlist and songs downloaded before. Each can show those songs, show only them, or hide them. Sort newest, oldest, most liked or least liked first. Kept between runs.\nAlt+L, Download all: every finished song in the list, using the free direct download only; songs already in the folder are skipped.\nSongs you liked say \"liked\".": [
+  "Enter: redare.\nSpațiu: pauză sau continuare.\nSăgețile stânga și dreapta: înapoi și înainte 5 secunde.\nCtrl+I: detalii (stil, model, redări, link și versuri) într-un singur text.\nAlt+Enter: informații despre melodie, câte una pe rând.\nCtrl+L: versuri.\nCtrl+C: copiază linkul melodiei.\nCtrl+D: descarcă în formatul ales în Setări. Folosește fișierul gratuit, necriptat, când Suno îl are; dacă descărcarea directă eșuează, aplicația îți oferă descărcarea Suno.\nCtrl+E: extinde.\nDelete: mută în coșul Suno (întreabă întâi).\nTasta Aplicații sau Shift+F10 pentru toate: Descarcă WAV, Descarcă video, Extinde, Cover, Remasterizează, Melodia întreagă, Stem-uri, Editează titlul și versurile, Fă publică sau privată, Adaugă la o listă, Copiază linkul de distribuire Suno, Permite sau oprește remixurile, Melodii asemănătoare, Arată comentariile, Scrie un comentariu.\nWAV, Cover și Remasterizare necesită planul Pro sau Premier. Nu sunt disponibile pe planul gratuit și spun asta când planul nu e cunoscut încă.\nCând ajungi la capătul listei se încarcă mai multe melodii.\nAlt+F, Filtre: spațiu de lucru, melodii neapreciate, coș, stem-uri, melodii din Suno Studio, apreciate, publice sau private, încărcate, coveruri, extinse, remasterizări, melodii întregi, persona, melodii din liste de redare și melodii descărcate deja. Fiecare poate arăta acele melodii, doar acele melodii sau le poate ascunde. Ordinea: cele mai noi, cele mai vechi, cele mai apreciate sau cele mai puțin apreciate primele. Se păstrează între porniri.\nAlt+L, Descarcă tot: fiecare melodie terminată din listă, doar prin descărcarea directă gratuită; melodiile care sunt deja în dosar se sar.\nMelodiile apreciate spun „apreciată”.",
+  "Enter: відтворити.\nПробіл: пауза або продовження.\nСтрілки вліво і вправо: назад і вперед на 5 секунд.\nCtrl+I: подробиці (стиль, модель, прослуховування, посилання й текст) одним текстом.\nAlt+Enter: відомості про пісню, по одному факту в рядку.\nCtrl+L: текст пісні.\nCtrl+C: скопіювати посилання на пісню.\nCtrl+D: завантажити у форматі з Налаштувань. Використовує безкоштовний незашифрований файл пісні, коли він є в Suno; якщо пряме завантаження не вдається, програма пропонує завантаження через Suno.\nCtrl+E: продовжити.\nDelete: перемістити в кошик Suno (спершу запитує).\nКлавіша контекстного меню або Shift+F10 — усе інше: Завантажити WAV, Завантажити відео, Продовжити, Кавер, Ремастер, Ціла пісня, Стеми, Змінити назву й текст, Зробити публічною або приватною, Додати до плейлиста, Копіювати посилання Suno для поширення, Дозволити або заборонити ремікси, Схожі пісні, Показати коментарі, Написати коментар.\nДля WAV, каверу й ремастеру потрібен план Pro або Premier. На безкоштовному плані вони недоступні, а коли план ще невідомий, про це сказано.\nКоли ви доходите до кінця списку, завантажуються нові пісні.\nAlt+F, Фільтри: робочий простір, невподобані пісні, кошик, стеми, пісні з Suno Studio, вподобані, публічні чи приватні, завантажені, кавери, продовжені, ремастери, цілі пісні, персони, пісні в плейлистах і вже завантажувані пісні. Кожен може показувати ці пісні, показувати лише їх або ховати. Порядок: спершу нові, старі, з найбільшою або найменшою кількістю вподобань. Зберігаються між запусками.\nAlt+L, Завантажити все: кожна готова пісня зі списку, лише через безкоштовне пряме завантаження; пісні, що вже є в папці, пропускаються.\nВподобані пісні позначено словом «вподобана».",
+  "Intro: reproducir.\nEspacio: pausar o seguir.\nFlechas izquierda y derecha: retrocede y avanza 5 segundos.\nCtrl+I: detalles (estilo, modelo, reproducciones, enlace y letra) en un solo texto.\nAlt+Intro: información de la canción, un dato por línea.\nCtrl+L: letra.\nCtrl+C: copia el enlace de la canción.\nCtrl+D: descarga en el formato elegido en Configuración. Usa el archivo gratuito sin cifrar de la canción cuando Suno lo tiene; si la descarga directa falla, la app te ofrece la descarga de Suno.\nCtrl+E: extender.\nSuprimir: mover a la papelera de Suno (pregunta antes).\nTecla de aplicaciones o Mayús+F10 para todo: Descargar WAV, Descargar video, Extender, Cover, Remasterizar, Canción completa, Stems, Editar título y letra, Hacer pública o privada, Añadir a una lista, Copiar enlace para compartir de Suno, Permitir o impedir remixes, Canciones parecidas, Ver comentarios, Escribir un comentario.\nWAV, Cover y Remasterizar necesitan un plan Pro o Premier. No están disponibles en el plan gratuito, y lo dicen cuando el plan todavía no se conoce.\nAl llegar al final de la lista se cargan más canciones.\nAlt+F, Filtros: espacio de trabajo, canciones que no te gustaron, papelera, stems, canciones de Suno Studio, que me gustan, públicas o privadas, subidas, covers, extendidas, remasterizaciones, canciones completas, personas, canciones en listas y canciones descargadas antes. Cada uno puede mostrar esas canciones, mostrar solo esas u ocultarlas. Orden: más nuevas, más antiguas, más gustadas o menos gustadas primero. Se guardan entre sesiones.\nAlt+L, Descargar todo: cada canción terminada de la lista, solo con la descarga directa gratuita; se saltan las que ya están en la carpeta.\nLas canciones que te gustan dicen «te gusta»."
  ],
  "Search box": [
   "Caseta de căutare",
@@ -928,6 +1003,16 @@
   "Conectare deschide pagina de conectare a Suno; se închide singură după ce intri. Își amintește contul Google și poate salva parola. Deconectarea te scoate doar din Suno. Prima dată, sau când Suno îți încheie conectarea, Tin Pan îți cere să te conectezi.\nLimba: engleză, română, ucraineană sau spaniolă, ori aceeași ca Windows. Se schimbă la următoarea pornire a Tin Pan.\nDosarul de descărcări, formatul și fișierele suplimentare salvate lângă fiecare descărcare: versuri, versuri sincronizate (LRC), detaliile melodiei și coperta.\nCaută versiuni noi la pornirea Tin Pan: activat implicit și tăcut dacă nu apare nimic nou.",
   "«Увійти» відкриває сторінку входу Suno; вона закривається сама, щойно ви ввійдете. Вона запам'ятовує ваш обліковий запис Google і може зберегти пароль. «Вийти» виходить лише з Suno. Першого разу або коли Suno завершує ваш вхід, Tin Pan просить увійти.\nМова: англійська, румунська, українська, іспанська або як у Windows. Змінюється під час наступного запуску Tin Pan.\nПапка завантажень, формат і додаткові файли поруч із кожним завантаженням: текст, синхронізований текст (LRC), подробиці пісні й обкладинка.\nПеревіряти нові версії під час запуску Tin Pan: увімкнено типово, мовчить, якщо нічого нового немає.",
   "Iniciar sesión abre la página de inicio de sesión de Suno; se cierra sola cuando entras. Recuerda tu cuenta de Google y puede guardar tu contraseña. Cerrar sesión solo cierra la sesión de Suno. La primera vez, o cuando Suno cierra tu sesión, Tin Pan te pide que inicies sesión.\nIdioma: inglés, rumano, ucraniano o español, o el mismo que Windows. Cambia la próxima vez que se inicie Tin Pan.\nCarpeta de descargas, formato y archivos extra guardados junto a cada descarga: letra, letra sincronizada (LRC), detalles de la canción y portada.\nBuscar versiones nuevas al iniciar Tin Pan: activado de forma predeterminada y en silencio si no hay ninguna."
+ ],
+ "Uploading": [
+  "Încărcare",
+  "Надсилання",
+  "Subidas"
+ ],
+ "Library menu, Upload a song (Alt+U on the Library page), sends an audio file from this computer to your Suno account, where it becomes a song you can play, extend, cover and remaster. MP3, WAV, M4A, FLAC, AAC and WMA work; anything that isn't M4A is converted to M4A first. You confirm you have the rights to it and accept Suno's upload terms. Suno checks each upload, which can take a minute or two, and may refuse copyrighted music. The length limits are your plan's.": [
+  "Meniul Bibliotecă, Încarcă o melodie (Alt+C în pagina Bibliotecă), trimite un fișier audio de pe acest calculator în contul tău Suno, unde devine o melodie pe care o poți asculta, extinde, face cover și remasteriza. Merg MP3, WAV, M4A, FLAC, AAC și WMA; tot ce nu e M4A e întâi convertit în M4A. Confirmi că ai drepturile și accepți condițiile Suno pentru încărcări. Suno verifică fiecare încărcare, ceea ce poate dura un minut sau două, și poate refuza muzica protejată de drepturi de autor. Limitele de durată sunt cele ale planului tău.",
+  "Меню «Бібліотека», «Надіслати пісню» (Alt+Н на сторінці «Бібліотека») надсилає аудіофайл із цього комп'ютера у ваш обліковий запис Suno, де він стає піснею, яку можна слухати, продовжувати, робити кавери й ремастери. Підходять MP3, WAV, M4A, FLAC, AAC і WMA; усе, що не M4A, спершу перетворюється на M4A. Ви підтверджуєте, що маєте права, і приймаєте умови Suno щодо надсилання. Suno перевіряє кожен файл, що може тривати хвилину-дві, і може відхилити музику, захищену авторським правом. Обмеження тривалості залежать від вашого плану.",
+  "Menú Biblioteca, Subir una canción (Alt+U en la página Biblioteca), envía un archivo de audio de esta computadora a tu cuenta de Suno, donde se convierte en una canción que puedes escuchar, extender, versionar y remasterizar. Sirven MP3, WAV, M4A, FLAC, AAC y WMA; lo que no es M4A se convierte primero a M4A. Confirmas que tienes los derechos y aceptas los términos de Suno para subidas. Suno revisa cada subida, lo que puede tardar uno o dos minutos, y puede rechazar música protegida por derechos de autor. Los límites de duración son los de tu plan."
  ],
  "Clean-up": [
   "Curățare",
@@ -1554,11 +1639,6 @@
   "«{0}» уже завантажено.",
   "{0} ya está descargada."
  ],
- "Suno only has an encrypted copy of this song, so there's no free download.": [
-  "Suno are doar o copie criptată a melodiei, așa că nu există descărcare gratuită.",
-  "Suno має лише зашифровану копію цієї пісні, тож безкоштовного завантаження немає.",
-  "Suno solo tiene una copia cifrada de esta canción, así que no hay descarga gratuita."
- ],
  "Asking Suno for a WAV of {0}.": [
   "Cer de la Suno un WAV pentru {0}.",
   "Прошу в Suno WAV для «{0}».",
@@ -1574,11 +1654,6 @@
   "Збережено «{0}».",
   "Se guardó {0}."
  ],
- "The free file didn't download: {0}": [
-  "Fișierul gratuit nu s-a descărcat: {0}",
-  "Безкоштовний файл не завантажився: {0}",
-  "El archivo gratuito no se descargó: {0}"
- ],
  "Suno gave no file address for this song.": [
   "Suno nu a dat nicio adresă de fișier pentru melodie.",
   "Suno не надав адреси файлу для цієї пісні.",
@@ -1593,16 +1668,6 @@
   "Toate melodiile din listă sunt deja descărcate.",
   "Усі пісні з цього списку вже завантажено.",
   "Todas las canciones de esta lista ya están descargadas."
- ],
- "{0} only have an encrypted copy, so they'd cost a download each; they're left out. Ctrl+D on one offers Suno's own download.": [
-  "{0} au doar o copie criptată, așa că fiecare ar costa o descărcare; sunt lăsate deoparte. Ctrl+D pe una oferă descărcarea Suno.",
-  "{0} мають лише зашифровану копію, тож кожна коштувала б одне завантаження; їх пропущено. Ctrl+D на пісні пропонує завантаження через Suno.",
-  "{0} solo tienen una copia cifrada, así que cada una costaría una descarga; se dejan fuera. Ctrl+D en una ofrece la descarga de Suno."
- ],
- "None of these songs has a free file to download.": [
-  "Niciuna dintre aceste melodii nu are un fișier gratuit de descărcat.",
-  "Жодна з цих пісень не має безкоштовного файлу для завантаження.",
-  "Ninguna de estas canciones tiene un archivo gratuito para descargar."
  ],
  "Download {0} as {1} into {2}? {3} already there will be skipped.": [
   "Descarci {0} ca {1} în {2}? Cele {3} care sunt deja acolo se sar.",
@@ -1869,6 +1934,61 @@
   "Додано до «{0}».",
   "Se añadió a {0}."
  ],
+ "Windows can't read that file as audio.": [
+  "Windows nu poate citi fișierul ca audio.",
+  "Windows не може прочитати цей файл як аудіо.",
+  "Windows no puede leer ese archivo como audio."
+ ],
+ "That song is {0}. Suno takes uploads of at least {1}.": [
+  "Melodia are {0}. Suno acceptă încărcări de cel puțin {1}.",
+  "Ця пісня триває {0}. Suno приймає файли щонайменше на {1}.",
+  "Esa canción dura {0}. Suno acepta subidas de al menos {1}."
+ ],
+ "That song is {0}. Suno takes uploads of up to {1} on this account.": [
+  "Melodia are {0}. Suno acceptă încărcări de până la {1} pe acest cont.",
+  "Ця пісня триває {0}. Suno приймає з цього облікового запису файли до {1}.",
+  "Esa canción dura {0}. Suno acepta subidas de hasta {1} en esta cuenta."
+ ],
+ "I _own this audio or have the rights to upload it, and I accept Suno's terms for uploads (suno.com/terms)": [
+  "Dețin acest audio sau am _drepturile să-l încarc și accept condițiile Suno pentru încărcări (suno.com/terms)",
+  "Я власник цього аудіо або _маю права його надіслати й приймаю умови Suno щодо надсилання (suno.com/terms)",
+  "Soy dueño de este audio o tengo los _derechos para subirlo, y acepto los términos de Suno para subidas (suno.com/terms)"
+ ],
+ "Uploads {0} ({1}) to your Suno account, where it becomes a song you can play, extend, cover and remaster. Files that aren't M4A are converted to M4A first. Suno checks each upload and may refuse music it finds is copyrighted.": [
+  "Încarcă {0} ({1}) în contul tău Suno, unde devine o melodie pe care o poți asculta, extinde, face cover și remasteriza. Fișierele care nu sunt M4A sunt întâi convertite în M4A. Suno verifică fiecare încărcare și poate refuza muzica pe care o găsește protejată de drepturi de autor.",
+  "Надсилає {0} ({1}) у ваш обліковий запис Suno, де файл стає піснею, яку можна слухати, продовжувати, робити кавери й ремастери. Файли не в M4A спершу перетворюються на M4A. Suno перевіряє кожен файл і може відхилити музику, захищену авторським правом.",
+  "Sube {0} ({1}) a tu cuenta de Suno, donde se convierte en una canción que puedes escuchar, extender, versionar y remasterizar. Los archivos que no son M4A se convierten primero a M4A. Suno revisa cada subida y puede rechazar música protegida por derechos de autor."
+ ],
+ "Upload a song": [
+  "Încarcă o melodie",
+  "Надіслати пісню",
+  "Subir una canción"
+ ],
+ "Upload": [
+  "Încarcă",
+  "Надіслати",
+  "Subir"
+ ],
+ "Nothing was uploaded. Suno needs you to confirm the rights first.": [
+  "Nu s-a încărcat nimic. Suno are nevoie să confirmi întâi drepturile.",
+  "Нічого не надіслано. Suno потрібно, щоб ви спершу підтвердили права.",
+  "No se subió nada. Suno necesita que primero confirmes los derechos."
+ ],
+ "Uploading {0}.": [
+  "Se încarcă {0}.",
+  "Надсилаю «{0}».",
+  "Subiendo {0}."
+ ],
+ "Suno is checking {0}. This can take a minute or two.": [
+  "Suno verifică {0}. Poate dura un minut sau două.",
+  "Suno перевіряє «{0}». Це може тривати хвилину-дві.",
+  "Suno está revisando {0}. Puede tardar uno o dos minutos."
+ ],
+ "Uploaded {0}. It's at the top of your library.": [
+  "Am încărcat {0}. E în capul bibliotecii.",
+  "«{0}» надіслано. Пісня вгорі вашої бібліотеки.",
+  "Se subió {0}. Está arriba en tu biblioteca."
+ ],
  "Playback": [
   "Redare",
   "Відтворення",
@@ -2073,6 +2193,11 @@
   "Descarcă _tot...",
   "Завантажити _все...",
   "Descargar _todo..."
+ ],
+ "_Upload a song...": [
+  "Încarcă o _melodie...",
+  "_Надіслати пісню...",
+  "S_ubir una canción..."
  ],
  "_Library": [
   "_Bibliotecă",
@@ -2989,6 +3114,11 @@
   "Завантажити _все...",
   "Descargar _todo..."
  ],
+ "_Upload...": [
+  "Încar_că...",
+  "_Надіслати...",
+  "S_ubir..."
+ ],
  "Searc_h": [
   "Ca_ută",
   "По_шук",
@@ -3373,10 +3503,5 @@
   "engleză",
   "англійська",
   "inglés"
- ],
- "Enter: play.\nSpace: pause or resume.\nLeft and Right arrows: back and forward 5 seconds.\nCtrl+I: details (style, model, plays, link and lyrics) as one text.\nAlt+Enter: song information, one fact per line.\nCtrl+L: lyrics.\nCtrl+C: copy the song's link.\nCtrl+D: download in the format chosen in Settings. It uses the song's free unencrypted file when Suno has one; if the direct download fails, the app offers Suno's own download instead.\nCtrl+E: extend.\nDelete: move to Suno trash (asks first).\nApplications key or Shift+F10 for everything: Download WAV, Download video, Extend, Cover, Remaster, Get whole song, Stems, Edit title and lyrics, Make public or private, Add to playlist, Copy Suno share link, Allow or stop remixes, Similar songs, Show comments, Write a comment.\nWAV, Cover and Remaster need a Pro or Premier plan. They're unavailable on the free plan, and say so when the plan isn't known yet.\nReaching the end of the list loads more songs.\nAlt+F, Filters: workspace, disliked songs, trash, stems, Suno Studio songs, liked, public or private, uploaded, covers, extended, remasters, whole songs, personas, songs in a playlist and songs downloaded before. Each can show those songs, show only them, or hide them. Sort newest, oldest, most liked or least liked first. Kept between runs.\nAlt+L, Download all: every finished song in the list, using the free direct download only; songs already in the folder are skipped.\nSongs you liked say \"liked\".": [
-  "Enter: redare.\nSpațiu: pauză sau continuare.\nSăgețile stânga și dreapta: înapoi și înainte 5 secunde.\nCtrl+I: detalii (stil, model, redări, link și versuri) într-un singur text.\nAlt+Enter: informații despre melodie, câte una pe rând.\nCtrl+L: versuri.\nCtrl+C: copiază linkul melodiei.\nCtrl+D: descarcă în formatul ales în Setări. Folosește fișierul gratuit, necriptat, când Suno îl are; dacă descărcarea directă eșuează, aplicația îți oferă descărcarea Suno.\nCtrl+E: extinde.\nDelete: mută în coșul Suno (întreabă întâi).\nTasta Aplicații sau Shift+F10 pentru toate: Descarcă WAV, Descarcă video, Extinde, Cover, Remasterizează, Melodia întreagă, Stem-uri, Editează titlul și versurile, Fă publică sau privată, Adaugă la o listă, Copiază linkul de distribuire Suno, Permite sau oprește remixurile, Melodii asemănătoare, Arată comentariile, Scrie un comentariu.\nWAV, Cover și Remasterizare necesită planul Pro sau Premier. Nu sunt disponibile pe planul gratuit și spun asta când planul nu e cunoscut încă.\nCând ajungi la capătul listei se încarcă mai multe melodii.\nAlt+F, Filtre: spațiu de lucru, melodii neapreciate, coș, stem-uri, melodii din Suno Studio, apreciate, publice sau private, încărcate, coveruri, extinse, remasterizări, melodii întregi, persona, melodii din liste de redare și melodii descărcate deja. Fiecare poate arăta acele melodii, doar acele melodii sau le poate ascunde. Ordinea: cele mai noi, cele mai vechi, cele mai apreciate sau cele mai puțin apreciate primele. Se păstrează între porniri.\nAlt+L, Descarcă tot: fiecare melodie terminată din listă, doar prin descărcarea directă gratuită; melodiile care sunt deja în dosar se sar.\nMelodiile apreciate spun „apreciată”.",
-  "Enter: відтворити.\nПробіл: пауза або продовження.\nСтрілки вліво і вправо: назад і вперед на 5 секунд.\nCtrl+I: подробиці (стиль, модель, прослуховування, посилання й текст) одним текстом.\nAlt+Enter: відомості про пісню, по одному факту в рядку.\nCtrl+L: текст пісні.\nCtrl+C: скопіювати посилання на пісню.\nCtrl+D: завантажити у форматі з Налаштувань. Використовує безкоштовний незашифрований файл пісні, коли він є в Suno; якщо пряме завантаження не вдається, програма пропонує завантаження через Suno.\nCtrl+E: продовжити.\nDelete: перемістити в кошик Suno (спершу запитує).\nКлавіша контекстного меню або Shift+F10 — усе інше: Завантажити WAV, Завантажити відео, Продовжити, Кавер, Ремастер, Ціла пісня, Стеми, Змінити назву й текст, Зробити публічною або приватною, Додати до плейлиста, Копіювати посилання Suno для поширення, Дозволити або заборонити ремікси, Схожі пісні, Показати коментарі, Написати коментар.\nДля WAV, каверу й ремастеру потрібен план Pro або Premier. На безкоштовному плані вони недоступні, а коли план ще невідомий, про це сказано.\nКоли ви доходите до кінця списку, завантажуються нові пісні.\nAlt+F, Фільтри: робочий простір, невподобані пісні, кошик, стеми, пісні з Suno Studio, вподобані, публічні чи приватні, завантажені, кавери, продовжені, ремастери, цілі пісні, персони, пісні в плейлистах і вже завантажувані пісні. Кожен може показувати ці пісні, показувати лише їх або ховати. Порядок: спершу нові, старі, з найбільшою або найменшою кількістю вподобань. Зберігаються між запусками.\nAlt+L, Завантажити все: кожна готова пісня зі списку, лише через безкоштовне пряме завантаження; пісні, що вже є в папці, пропускаються.\nВподобані пісні позначено словом «вподобана».",
-  "Intro: reproducir.\nEspacio: pausar o seguir.\nFlechas izquierda y derecha: retrocede y avanza 5 segundos.\nCtrl+I: detalles (estilo, modelo, reproducciones, enlace y letra) en un solo texto.\nAlt+Intro: información de la canción, un dato por línea.\nCtrl+L: letra.\nCtrl+C: copia el enlace de la canción.\nCtrl+D: descarga en el formato elegido en Configuración. Usa el archivo gratuito sin cifrar de la canción cuando Suno lo tiene; si la descarga directa falla, la app te ofrece la descarga de Suno.\nCtrl+E: extender.\nSuprimir: mover a la papelera de Suno (pregunta antes).\nTecla de aplicaciones o Mayús+F10 para todo: Descargar WAV, Descargar video, Extender, Cover, Remasterizar, Canción completa, Stems, Editar título y letra, Hacer pública o privada, Añadir a una lista, Copiar enlace para compartir de Suno, Permitir o impedir remixes, Canciones parecidas, Ver comentarios, Escribir un comentario.\nWAV, Cover y Remasterizar necesitan un plan Pro o Premier. No están disponibles en el plan gratuito, y lo dicen cuando el plan todavía no se conoce.\nAl llegar al final de la lista se cargan más canciones.\nAlt+F, Filtros: espacio de trabajo, canciones que no te gustaron, papelera, stems, canciones de Suno Studio, que me gustan, públicas o privadas, subidas, covers, extendidas, remasterizaciones, canciones completas, personas, canciones en listas y canciones descargadas antes. Cada uno puede mostrar esas canciones, mostrar solo esas u ocultarlas. Orden: más nuevas, más antiguas, más gustadas o menos gustadas primero. Se guardan entre sesiones.\nAlt+L, Descargar todo: cada canción terminada de la lista, solo con la descarga directa gratuita; se saltan las que ya están en la carpeta.\nLas canciones que te gustan dicen «te gusta»."
  ]
 }

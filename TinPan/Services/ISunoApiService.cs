@@ -190,5 +190,11 @@ namespace TinPan.Services
 
         /// <summary>Lyric co-writing: Suno changes the lyrics the way the instruction asks. Returns the new lyrics.</summary>
         Task<string> CowriteLyricsAsync(string lyrics, string instruction, string? title, string? style, CancellationToken ct = default);
+        // Uploading audio (SunoApiService.Uploads.cs). The storage POST itself is UploadService's.
+        Task<AudioUploadTicket> StartAudioUploadAsync(CancellationToken ct = default);
+        Task FinishAudioUploadAsync(string uploadId, string fileName, CancellationToken ct = default);
+        Task<AudioUploadState> GetAudioUploadAsync(string uploadId, CancellationToken ct = default);
+        Task<string> CreateClipFromUploadAsync(string uploadId, CancellationToken ct = default);
+        Task NameUploadedSongAsync(string clipId, string title, CancellationToken ct = default);
     }
 }
