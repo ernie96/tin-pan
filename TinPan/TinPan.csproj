@@ -8,7 +8,7 @@
     <UseWPF>true</UseWPF>
     <AssemblyTitle>Tin Pan</AssemblyTitle>
     <Product>Tin Pan</Product>
-    <Version>1.3.0</Version>
+    <Version>1.4.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
