@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -59,6 +60,7 @@ namespace TinPan.Services
             Current.Audio ??= new AudioConfig();
             Current.User ??= new UserConfig();
             Current.Library ??= new LibraryConfig();
+            MigrateLibraryFilters(Current.Library);
             Current.Resume ??= new ResumeConfig();
             Current.Update ??= new UpdateConfig();
             Current.Cleanup ??= new CleanupConfig();
@@ -75,6 +77,18 @@ namespace TinPan.Services
                     SaveCookies(legacy);
             }
             Save();
+        }
+
+        /// <summary>Settings from before 1.5 had three switches; they become the matching filters once.</summary>
+        internal static void MigrateLibraryFilters(LibraryConfig library)
+        {
+            library.Show ??= new Dictionary<string, string>();
+            if (library.Sort == null)
+            {
+                library.Show["trashed"] = library.IncludeTrashed ? FeedFilters.Any : FeedFilters.Hide;
+                library.Show["stem"] = library.HideStems ? FeedFilters.Hide : FeedFilters.Any;
+                library.Sort = library.NewestFirst ? "newest" : "oldest";
+            }
         }
 
         public void Save()

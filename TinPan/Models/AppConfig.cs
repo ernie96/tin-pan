@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace TinPan.Models
@@ -99,6 +100,14 @@ namespace TinPan.Models
 
         /// <summary>"False" hides disliked songs, "Any" shows them, "True" shows only them (Suno's own values).</summary>
         public string Disliked { get; set; } = "False";
+
+        /// <summary>The other filters, by Suno field name (see FeedFilters.All): "Any", "True" or "False".</summary>
+        public Dictionary<string, string> Show { get; set; } = new();
+
+        /// <summary>newest, oldest, most-liked or least-liked. Null in settings from before 1.5.</summary>
+        public string? Sort { get; set; }
+
+        // Settings from before 1.5, read once into Show and Sort.
         public bool IncludeTrashed { get; set; }
         public bool HideStems { get; set; } = true;
         public bool NewestFirst { get; set; } = true;

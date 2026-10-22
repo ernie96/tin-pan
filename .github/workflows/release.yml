@@ -56,7 +56,8 @@ jobs:
           $pattern = '(?ms)^## ' + [regex]::Escape($env:VERSION) + '\b[^\n]*$(.*?)(?=^## |\z)'
           $match = [regex]::Match($changelog, $pattern)
           if (-not $match.Success) { throw "TinPan/CHANGELOG.md has no '## $env:VERSION' section." }
-          $intro = "Download **TinPan.exe** below and run it. It is one file and needs nothing installed. If you already have Tin Pan 1.2.0 or later, it offers this update by itself.`n`nTin Pan, like all my apps, is dedicated to Jenni and Diana.`n`n"
+          # The in-app updater skips this first paragraph (UpdateService.ChangesOnly) and reads only the changelog.
+          $intro = "Download **TinPan.exe** below and run it. It is one file and needs nothing installed. If you already have Tin Pan 1.2.0 or later, it offers this update by itself.`n`n"
           ($intro + $match.Groups[1].Value.Trim()) | Out-File release-notes.md -Encoding utf8
 
       - name: Publish the release

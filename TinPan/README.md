@@ -31,7 +31,7 @@ In the Library list:
 - Delete moves the song to your Suno trash (it asks first).
 - The Applications key (or Shift+F10) has everything else: Download WAV, Download video, Cover, Remaster, Get whole song, Stems, Edit title and lyrics, Make public or private.
 - When you reach the end of the list, the next page loads by itself.
-- Filters (Alt+F): workspace, disliked songs (hide, show, or only), trash, stems, newest or oldest first. Suno applies them itself, so paging and search follow them, and they're kept between runs.
+- Filters (Alt+F): workspace, disliked songs, and every other filter Suno's own library has: trash, stems, Suno Studio songs, liked, public or private, uploaded, covers, extended, remasters, whole songs, personas, songs in a playlist and songs downloaded before. Each shows those songs, shows only them, or hides them; the defaults are Suno's (trash, stems and Studio songs hidden). Sort newest, oldest, most liked or least liked first. Suno applies them itself, so paging and search follow them, and they're kept between runs.
 - Download all (Alt+L): every finished song in the list, through the free direct download only. Songs already in the folder are skipped, and the summary names any that need Suno's own download.
 
 ## Playlists

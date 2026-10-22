@@ -67,7 +67,7 @@ namespace TinPan.ViewModels
                 var version = update.Version.ToString(3);
                 if (!manual && _config.Current.Update.SkippedVersion == version) return;
 
-                var notes = PlainText(update.ReleaseNotes);
+                var notes = PlainText(UpdateService.ChangesOnly(update.ReleaseNotes));
                 var whatsNew = notes.Length > 0 ? T("What's new:") + "\n" + notes + "\n\n" : "";
                 var reminder = manual ? "" : "\n\n" + T("If you choose No, Tin Pan won't remind you about this version. Help, Check for updates still finds it.");
                 var intro = T("Tin Pan {0} is available. You have {1}.", version, _updates.CurrentVersion.ToString(3)) + "\n\n" + whatsNew;

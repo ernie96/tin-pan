@@ -68,22 +68,23 @@ namespace TinPan.Services
             return SunoJson.ReadFeedPage(await SendAsync(HttpMethod.Get, $"/api/feed/v2?page={query.Page}", null, ct));
         }
 
-        /// <summary>The filter object Suno's web library sends, per Nsomnia/suno-power-exporter.</summary>
+        /// <summary>
+        /// The filter object Suno's web library sends: every filter with an explicit value, as in its
+        /// bundle's default filter object. Hiding stems also hides their complements, as the web app does.
+        /// </summary>
         public static Dictionary<string, object> BuildFeedFilters(LibraryQuery query)
         {
             var f = query.Filter ?? new LibraryFilter();
-            var filters = new Dictionary<string, object>
+            var filters = new Dictionary<string, object> { ["disliked"] = FeedFilters.Valid(f.Disliked, FeedFilters.Hide) };
+            foreach (var filter in FeedFilters.All)
             {
-                ["trashed"] = f.IncludeTrashed ? "Any" : "False",
-                ["disliked"] = f.Disliked is "Any" or "True" ? f.Disliked : "False",
-                ["fromStudioProject"] = new { presence = "False" },
-                ["sort"] = new { sortBy = "created_at", sortDirection = f.NewestFirst ? "desc" : "asc" }
-            };
-            if (f.HideStems)
-            {
-                filters["stem"] = new { presence = "False" };
-                filters["stemComplement"] = "False";
+                var value = FeedFilters.Valid(f.Show.TryGetValue(filter.Field, out var v) ? v : null, filter.Default);
+                filters[filter.Field] = filter.Presence ? new { presence = value } : value;
             }
+            var stems = FeedFilters.Valid(f.Show.TryGetValue("stem", out var s) ? s : null, FeedFilters.Hide);
+            filters["stemComplement"] = stems == FeedFilters.Hide ? FeedFilters.Hide : FeedFilters.Any;
+            var (_, sortBy, direction) = FeedFilters.Sorts.FirstOrDefault(s => s.Id == f.Sort);
+            filters["sort"] = new { sortBy = sortBy ?? "created_at", sortDirection = direction ?? "desc" };
             if (!string.IsNullOrEmpty(f.WorkspaceId)) filters["workspace"] = new { presence = "True", workspaceId = f.WorkspaceId };
             if (!string.IsNullOrWhiteSpace(query.Search)) filters["searchText"] = query.Search.Trim();
             return filters;

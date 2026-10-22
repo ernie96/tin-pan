@@ -93,6 +93,15 @@ namespace TinPan.Tests
         }
 
         [Fact]
+        public void The_update_offer_reads_only_the_changes()
+        {
+            var notes = "Download **TinPan.exe** below and run it. It is one file.\r\n\r\n### New\r\n\r\n- Filters.";
+            Assert.Equal("### New\n\n- Filters.", UpdateService.ChangesOnly(notes));
+            Assert.Equal("### Fixed\n- Things.", UpdateService.ChangesOnly("### Fixed\n- Things."));
+            Assert.Equal("", UpdateService.ChangesOnly(null));
+        }
+
+        [Fact]
         public void Release_notes_are_read_as_plain_lines()
         {
             var text = MainViewModel.PlainText("### New\n\n* **Bold** item with [a link](https://x.y)\n- `code` item\n\n\n\nEnd");

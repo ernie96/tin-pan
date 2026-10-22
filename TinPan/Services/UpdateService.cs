@@ -127,6 +127,18 @@ namespace TinPan.Services
                 : new UpdateInfo(version, release.Body ?? "", file.DownloadUrl, signature.DownloadUrl, page);
         }
 
+        /// <summary>
+        /// The changelog part of a release's notes. The release workflow starts the notes with a
+        /// "Download **TinPan.exe** below" paragraph for the web page; that isn't news, so it's skipped.
+        /// </summary>
+        public static string ChangesOnly(string? notes)
+        {
+            var text = (notes ?? "").Replace("\r\n", "\n").Trim();
+            if (!text.StartsWith("Download **TinPan.exe**", StringComparison.Ordinal)) return text;
+            var end = text.IndexOf("\n\n", StringComparison.Ordinal);
+            return end < 0 ? "" : text[(end + 2)..].Trim();
+        }
+
         /// <summary>"v1.2.0", "1.2", "1.2.0-beta" → 1.2.0.</summary>
         internal static Version? ParseVersion(string? text)
         {

@@ -1,5 +1,15 @@
 # Tin Pan changelog
 
+## Unreleased
+
+### New
+
+- Library filters (Alt+F) now have every filter Suno's own library has: liked, public or private, uploaded, covers, extended, remasters, whole songs, personas, songs in a playlist, songs downloaded before and Suno Studio songs, as well as trash and stems. Each one shows those songs, shows only them (for example only your uploads), or hides them. Sort adds most liked and least liked first. Your earlier trash, stems and order choices carry over.
+
+### Fixed
+
+- The update offer reads only what changed, not the download instructions at the top of the release page. The dedication is no longer in release notes.
+
 ## 1.4.0 (2026-10-22)
 
 ### New

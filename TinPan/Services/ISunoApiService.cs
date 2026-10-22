@@ -10,11 +10,60 @@ namespace TinPan.Services
     public record LibraryQuery(string? Cursor = null, int Page = 0, string? Search = null, LibraryFilter? Filter = null);
 
     /// <summary>
-    /// Suno's own library filters. Disliked uses Suno's values: "False" hides disliked songs,
-    /// "Any" shows them, "True" shows only them. A null WorkspaceId means every workspace.
+    /// Suno's own library filters. Each value is Suno's: "Any" shows both, "True" only the matching
+    /// songs, "False" hides them. Show is keyed by the field name in FeedFilters.All; a missing key
+    /// takes that filter's default. A null WorkspaceId means every workspace.
     /// </summary>
-    public record LibraryFilter(string? WorkspaceId = null, string Disliked = "False", bool IncludeTrashed = false,
-        bool HideStems = true, bool NewestFirst = true);
+    public sealed record LibraryFilter
+    {
+        public string? WorkspaceId { get; init; }
+        public string Disliked { get; init; } = "False";
+        public IReadOnlyDictionary<string, string> Show { get; init; } = new Dictionary<string, string>();
+
+        /// <summary>One of FeedFilters.Sorts: newest, oldest, most-liked or least-liked.</summary>
+        public string Sort { get; init; } = "newest";
+    }
+
+    /// <summary>A yes/no/either filter of Suno's library feed (feed/v3), as Suno's web app sends it.</summary>
+    /// <param name="Field">Suno's field name.</param>
+    /// <param name="Presence">True when Suno wants {"presence": value} rather than the value itself.</param>
+    /// <param name="Default">What Suno's own library uses: trash, stems and Studio projects hidden, the rest shown.</param>
+    public sealed record FeedFilter(string Field, bool Presence, string Default);
+
+    public static class FeedFilters
+    {
+        public const string Any = "Any", Only = "True", Hide = "False";
+
+        /// <summary>Every on/off filter Suno's web library has (its bundle's default filter object), except bpm and key.</summary>
+        public static IReadOnlyList<FeedFilter> All { get; } = new FeedFilter[]
+        {
+            new("trashed", false, Hide),
+            new("stem", true, Hide),
+            new("fromStudioProject", true, Hide),
+            new("liked", false, Any),
+            new("public", false, Any),
+            new("upload", false, Any),
+            new("cover", true, Any),
+            new("extend", true, Any),
+            new("remaster", true, Any),
+            new("concat", true, Any),
+            new("persona", true, Any),
+            new("playlist", true, Any),
+            new("unlocked", false, Any),
+        };
+
+        /// <summary>Suno's sort choices: id, field and direction.</summary>
+        public static IReadOnlyList<(string Id, string SortBy, string Direction)> Sorts { get; } = new[]
+        {
+            ("newest", "created_at", "desc"),
+            ("oldest", "created_at", "asc"),
+            ("most-liked", "upvote_count", "desc"),
+            ("least-liked", "upvote_count", "asc"),
+        };
+
+        /// <summary>A value Suno accepts, or the fallback.</summary>
+        public static string Valid(string? value, string fallback) => value is Any or Only or Hide ? value : fallback;
+    }
 
     public record Workspace(string Id, string Name, int? ClipCount)
     {

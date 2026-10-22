@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 using TinPan.Models;
@@ -390,19 +391,51 @@ namespace TinPan.Tests
         [Fact]
         public void Feed_filters_follow_the_web_client()
         {
-            var f = SunoApiService.BuildFeedFilters(new LibraryQuery(Search: "rain", Filter: new LibraryFilter("ws1", "Any", true, false, false)));
-            var json = System.Text.Json.JsonSerializer.Serialize(f);
+            var filter = new LibraryFilter
+            {
+                WorkspaceId = "ws1",
+                Disliked = "Any",
+                Show = new Dictionary<string, string> { ["trashed"] = "Any", ["stem"] = "Any", ["upload"] = "True", ["cover"] = "False", ["liked"] = "nonsense" },
+                Sort = "most-liked"
+            };
+            var json = System.Text.Json.JsonSerializer.Serialize(SunoApiService.BuildFeedFilters(new LibraryQuery(Search: "rain", Filter: filter)));
             Assert.Contains("\"trashed\":\"Any\"", json);
             Assert.Contains("\"disliked\":\"Any\"", json);
+            Assert.Contains("\"upload\":\"True\"", json);
+            Assert.Contains("\"cover\":{\"presence\":\"False\"}", json);
+            Assert.Contains("\"liked\":\"Any\"", json); // an unknown value falls back to the default
+            Assert.Contains("\"stemComplement\":\"Any\"", json);
             Assert.Contains("\"workspace\":{\"presence\":\"True\",\"workspaceId\":\"ws1\"}", json);
-            Assert.Contains("\"sortDirection\":\"asc\"", json);
+            Assert.Contains("\"sort\":{\"sortBy\":\"upvote_count\",\"sortDirection\":\"desc\"}", json);
             Assert.Contains("\"searchText\":\"rain\"", json);
-            Assert.DoesNotContain("stemComplement", json);
 
+            // Defaults match Suno's own library: trash, stems and Studio projects hidden, everything else shown.
             var defaults = System.Text.Json.JsonSerializer.Serialize(SunoApiService.BuildFeedFilters(new LibraryQuery()));
             Assert.Contains("\"disliked\":\"False\"", defaults);
+            Assert.Contains("\"trashed\":\"False\"", defaults);
             Assert.Contains("\"stem\":{\"presence\":\"False\"}", defaults);
+            Assert.Contains("\"stemComplement\":\"False\"", defaults);
+            Assert.Contains("\"fromStudioProject\":{\"presence\":\"False\"}", defaults);
+            foreach (var field in new[] { "liked", "public", "upload", "unlocked" })
+                Assert.Contains($"\"{field}\":\"Any\"", defaults);
+            foreach (var field in new[] { "cover", "extend", "remaster", "concat", "persona", "playlist" })
+                Assert.Contains($"\"{field}\":{{\"presence\":\"Any\"}}", defaults);
+            Assert.Contains("\"sort\":{\"sortBy\":\"created_at\",\"sortDirection\":\"desc\"}", defaults);
             Assert.DoesNotContain("workspace", defaults);
+        }
+
+        [Fact]
+        public void Old_library_switches_become_the_matching_filters_once()
+        {
+            var old = new LibraryConfig { IncludeTrashed = true, HideStems = false, NewestFirst = false };
+            ConfigService.MigrateLibraryFilters(old);
+            Assert.Equal("Any", old.Show["trashed"]);
+            Assert.Equal("Any", old.Show["stem"]);
+            Assert.Equal("oldest", old.Sort);
+
+            old.Show["trashed"] = "True";
+            ConfigService.MigrateLibraryFilters(old); // already moved: nothing changes
+            Assert.Equal("True", old.Show["trashed"]);
         }
 
         [Fact]

@@ -125,13 +125,51 @@ namespace TinPan.ViewModels
             ("False", T("Hide songs I disliked")), ("Any", T("Show songs I disliked too")), ("True", T("Only songs I disliked"))
         };
 
+        /// <summary>The form label for each of Suno's filters (FeedFilters.All), with its access key.</summary>
+        private static string FilterLabel(string field) => field switch
+        {
+            "trashed" => T("Songs in the _trash"),
+            "stem" => T("_Stems"),
+            "fromStudioProject" => T("Suno Stud_io songs"),
+            "liked" => T("_Liked songs"),
+            "public" => T("Pu_blic or private"),
+            "upload" => T("_Uploaded songs"),
+            "cover" => T("_Covers"),
+            "extend" => T("_Extended songs"),
+            "remaster" => T("_Remasters"),
+            "concat" => T("W_hole songs (joined parts)"),
+            "persona" => T("Songs with a _persona"),
+            "playlist" => T("Songs in a pla_ylist"),
+            "unlocked" => T("Downloaded be_fore"),
+            _ => field
+        };
+
+        /// <summary>The three choices of a filter, in Suno's values: show both, only these, hide these.</summary>
+        private static (string Value, string Label)[] FilterChoices(string field) => field == "public"
+            ? new[] { (FeedFilters.Any, T("Both")), (FeedFilters.Only, T("Only public")), (FeedFilters.Hide, T("Only private")) }
+            : new[] { (FeedFilters.Any, T("Show")), (FeedFilters.Only, T("Only these")), (FeedFilters.Hide, T("Hide")) };
+
+        private static (string Id, string Label)[] SortChoices => new[]
+        {
+            ("newest", T("Newest first")), ("oldest", T("Oldest first")), ("most-liked", T("Most liked first")), ("least-liked", T("Least liked first"))
+        };
+
+        private static string FilterValue(LibraryConfig f, FeedFilter filter) =>
+            FeedFilters.Valid(f.Show.TryGetValue(filter.Field, out var v) ? v : null, filter.Default);
+
         private LibraryFilter CurrentFilter()
         {
             var f = _config.Current.Library;
-            return new LibraryFilter(string.IsNullOrEmpty(f.WorkspaceId) ? null : f.WorkspaceId, f.Disliked, f.IncludeTrashed, f.HideStems, f.NewestFirst);
+            return new LibraryFilter
+            {
+                WorkspaceId = string.IsNullOrEmpty(f.WorkspaceId) ? null : f.WorkspaceId,
+                Disliked = f.Disliked,
+                Show = FeedFilters.All.ToDictionary(x => x.Field, x => FilterValue(f, x)),
+                Sort = f.Sort ?? "newest"
+            };
         }
 
-        /// <summary>Short spoken description of the filters, for after they change.</summary>
+        /// <summary>Short spoken description of the filters, for after they change: only what differs from Suno's defaults.</summary>
         public string FilterSummary
         {
             get
@@ -139,9 +177,13 @@ namespace TinPan.ViewModels
                 var f = _config.Current.Library;
                 var parts = new List<string> { string.IsNullOrEmpty(f.WorkspaceId) ? T("All workspaces") : f.WorkspaceName };
                 parts.Add(f.Disliked switch { "Any" => T("disliked shown"), "True" => T("only disliked"), _ => T("disliked hidden") });
-                if (f.IncludeTrashed) parts.Add(T("trash included"));
-                if (!f.HideStems) parts.Add(T("stems shown"));
-                parts.Add(f.NewestFirst ? T("newest first") : T("oldest first"));
+                foreach (var filter in FeedFilters.All)
+                {
+                    var value = FilterValue(f, filter);
+                    if (value == filter.Default) continue;
+                    parts.Add(T("{0}: {1}", FilterLabel(filter.Field).Replace("_", ""), FilterChoices(filter.Field).First(c => c.Value == value).Label));
+                }
+                parts.Add(SortChoices.FirstOrDefault(c => c.Id == f.Sort).Label ?? SortChoices[0].Label);
                 return string.Join(", ", parts) + ".";
             }
         }
@@ -166,22 +208,28 @@ namespace TinPan.ViewModels
             var dislikedLabels = DislikedChoices.Select(d => (object)d.Label).ToList();
             var disliked = new ChoiceField(T("_Disliked songs"), dislikedLabels,
                 DislikedChoices.FirstOrDefault(d => d.Value == f.Disliked).Label ?? DislikedChoices[0].Label);
-            var trashed = new CheckField(T("Include songs in the _trash"), f.IncludeTrashed);
-            var stems = new CheckField(T("Hide _stems"), f.HideStems);
-            var newest = T("Newest first");
-            var oldest = T("Oldest first");
-            var order = new ChoiceField(T("_Order"), new object[] { newest, oldest }, f.NewestFirst ? newest : oldest);
+            var flags = FeedFilters.All.Select(filter =>
+            {
+                var choices = FilterChoices(filter.Field);
+                return (filter, choices, field: new ChoiceField(FilterLabel(filter.Field), choices.Select(c => (object)c.Label).ToList(),
+                    choices.First(c => c.Value == FilterValue(f, filter)).Label));
+            }).ToList();
+            var order = new ChoiceField(T("_Order"), SortChoices.Select(c => (object)c.Label).ToList(),
+                SortChoices.FirstOrDefault(c => c.Id == f.Sort).Label ?? SortChoices[0].Label);
 
-            if (!_dialogs.ShowForm(T("Library filters"), T("Suno applies these filters itself, so paging and search follow them."), T("Apply"),
-                    new FormField[] { workspace, disliked, trashed, stems, order })) return;
+            var fields = new List<FormField> { workspace, disliked };
+            fields.AddRange(flags.Select(x => x.field));
+            fields.Add(order);
+            if (!_dialogs.ShowForm(T("Library filters"), T("Suno applies these filters itself, so paging and search follow them. Each one shows those songs, shows only them, or hides them."), T("Apply"), fields))
+                return;
 
             var chosen = (Workspace?)workspace.Selected ?? all;
             f.WorkspaceId = chosen.Id;
             f.WorkspaceName = chosen.Name;
             f.Disliked = DislikedChoices.FirstOrDefault(d => d.Label == (string?)disliked.Selected).Value ?? "False";
-            f.IncludeTrashed = trashed.Value;
-            f.HideStems = stems.Value;
-            f.NewestFirst = (string?)order.Selected != oldest;
+            foreach (var (filter, choices, field) in flags)
+                f.Show[filter.Field] = choices.FirstOrDefault(c => c.Label == (string?)field.Selected).Value ?? filter.Default;
+            f.Sort = SortChoices.FirstOrDefault(c => c.Label == (string?)order.Selected).Id ?? "newest";
             _config.SaveSoon();
 
             await LoadFirstPageAsync(background: false, prefix: FilterSummary + " ");
