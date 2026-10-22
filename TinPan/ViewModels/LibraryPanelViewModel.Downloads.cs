@@ -21,21 +21,89 @@ namespace TinPan.ViewModels
     {
         // ── Downloads ───────────────────────────────────────────────────────
 
+        /// <summary>When to clean up a download with sunscreen.</summary>
+        private enum Cleanup { Ask, FromSettings, Never }
+
+        /// <summary>Download (Ctrl+D): the format from Settings, and asks every time whether to clean it up.</summary>
         [RelayCommand]
         private Task DownloadAsync(SunoClip? clip)
         {
             var format = _config.Current.Audio.OutputFormat;
-            if (format != "wav" || _account.IsPaid != false) return DownloadInFormatAsync(clip ?? SelectedClip, format);
-            return DownloadInFormatAsync(clip ?? SelectedClip, "mp3", T("WAV needs Pro or Premier, so this is an MP3.") + " ");
+            if (format != "wav" || _account.IsPaid != false) return DownloadInFormatAsync(clip ?? SelectedClip, format, Cleanup.Ask);
+            return DownloadInFormatAsync(clip ?? SelectedClip, "mp3", Cleanup.Ask, T("WAV needs Pro or Premier, so this is an MP3.") + " ");
         }
 
+        /// <summary>Download MP3 and Download WAV don't ask; Settings decides whether to clean up.</summary>
+        [RelayCommand]
+        private Task DownloadMp3Async(SunoClip? clip) => DownloadInFormatAsync(clip ?? SelectedClip, "mp3", Cleanup.FromSettings);
+
         [RelayCommand(CanExecute = nameof(CanUsePaidFeatures))]
-        private Task DownloadWavAsync(SunoClip? clip) => DownloadInFormatAsync(clip ?? SelectedClip, "wav");
+        private Task DownloadWavAsync(SunoClip? clip) => DownloadInFormatAsync(clip ?? SelectedClip, "wav", Cleanup.FromSettings);
 
         [RelayCommand]
-        private Task DownloadVideoAsync(SunoClip? clip) => DownloadInFormatAsync(clip ?? SelectedClip, "mp4");
+        private Task DownloadVideoAsync(SunoClip? clip) => DownloadInFormatAsync(clip ?? SelectedClip, "mp4", Cleanup.Never);
 
-        private async Task DownloadInFormatAsync(SunoClip? clip, string format, string note = "")
+        /// <summary>Cleans up a song that is already downloaded (its MP3, M4A or WAV in the download folder).</summary>
+        [RelayCommand]
+        private async Task CleanUpDownloadAsync(SunoClip? clip)
+        {
+            clip ??= SelectedClip;
+            if (clip == null) return;
+            string? path;
+            try
+            {
+                path = DownloadedFile(clip);
+            }
+            catch (SunoApiException ex)
+            {
+                Announcer.Announce(ex.Message, always: true);
+                return;
+            }
+            if (path == null)
+            {
+                Announcer.Announce(T("{0} isn't downloaded yet. Download it first, or use Download, which offers to clean it up.", clip.DisplayTitle), always: true);
+                return;
+            }
+            await CleanUpAsync(clip, path);
+        }
+
+        /// <summary>The song's downloaded audio file, if there is one: its MP3, M4A or WAV, not a cleaned-up copy.</summary>
+        private string? DownloadedFile(SunoClip clip)
+        {
+            var folder = DownloadFolder();
+            var stem = Path.GetFileNameWithoutExtension(FileNames.ForSong(clip.Title, clip.Id, "x"));
+            return new[] { ".m4a", ".mp3", ".wav" }.Select(e => Path.Combine(folder, stem + e)).FirstOrDefault(File.Exists);
+        }
+
+        /// <summary>The question Download asks every time: what clean-up does and what it costs in space.</summary>
+        private bool AskToCleanUp(SunoClip clip)
+        {
+            var keep = _config.Current.Cleanup.KeepOriginal
+                ? T("The download is kept too.")
+                : T("It replaces the download (Settings can keep both).");
+            return _dialogs.Ask(T("Clean up {0} too? sunscreen removes the haze and buzz in Suno songs and saves the result as a 24-bit WAV file, often 10 to 20 times bigger than the download. {1} It takes about 10 seconds for a 5-minute song. The clean-up steps are in Settings.", clip.DisplayTitle, keep),
+                T("Clean up"));
+        }
+
+        /// <summary>Runs sunscreen on a saved download and says how it went. False when it failed.</summary>
+        private async Task<bool> CleanUpAsync(SunoClip clip, string path, bool quiet = false)
+        {
+            if (!quiet) Announcer.Announce(T("Cleaning up {0}.", clip.DisplayTitle), interrupt: false);
+            try
+            {
+                await _cleanup.CleanAsync(path, _config.Current.Cleanup);
+                if (!quiet) Announcer.Announce(T("Cleaned up {0}.", clip.DisplayTitle), interrupt: false);
+                return true;
+            }
+            catch (SunoApiException ex)
+            {
+                Log.Warn($"Clean-up of {clip.Id} failed: {ex.Message}");
+                if (!quiet) Announcer.Announce(ex.Message, always: true);
+                return false;
+            }
+        }
+
+        private async Task DownloadInFormatAsync(SunoClip? clip, string format, Cleanup cleanup, string note = "")
         {
             if (clip == null) return;
             if (!clip.IsComplete)
@@ -55,7 +123,28 @@ namespace TinPan.ViewModels
             }
             if (File.Exists(path))
             {
-                Announcer.Announce(T("{0} is already downloaded.", clip.DisplayTitle));
+                if (cleanup == Cleanup.Ask && format != "mp4" && !File.Exists(CleanupService.CleanedPath(path)) && AskToCleanUp(clip))
+                    await CleanUpAsync(clip, path);
+                else
+                    Announcer.Announce(T("{0} is already downloaded.", clip.DisplayTitle));
+                return;
+            }
+
+            var clean = format != "mp4" && cleanup switch
+            {
+                Cleanup.Ask => AskToCleanUp(clip),
+                Cleanup.FromSettings => _config.Current.Cleanup.AfterDownload,
+                _ => false
+            };
+
+            // No free file at all: say so plainly and go straight to the offer, instead of fetching
+            // Suno's placeholder address and reporting its 403 as a failed download.
+            if (format == "mp3" && DirectAudioUrl(clip) == null)
+            {
+                Log.Info($"Download {clip.Id}: no unencrypted file in media_urls");
+                if (OfferSunoDownload(clip, T("Suno only has an encrypted copy of this song, so there's no free download."))
+                    && await DownloadThroughSunoAsync(clip, format, path) && clean)
+                    await CleanUpAsync(clip, path);
                 return;
             }
 
@@ -64,23 +153,39 @@ namespace TinPan.ViewModels
             {
                 await DownloadDirectAsync(clip, format, path);
                 Announcer.Announce(T("Saved {0}.", clip.DisplayTitle), interrupt: false);
+                if (clean) await CleanUpAsync(clip, path);
             }
             catch (SunoApiException ex)
             {
+                Log.Warn($"Download {clip.Id} ({format}) failed directly: {ex.Message}");
                 // A sign-in or save problem would fail Suno's route too, so only offer it for a refused file.
                 if (format == "wav" || ex is SunoSignInRequiredException || ex.InnerException is IOException or UnauthorizedAccessException
-                    || !OfferSunoDownload(clip, ex.Message))
+                    || !OfferSunoDownload(clip, T("The free file didn't download: {0}", ex.Message)))
                 {
                     Announcer.Announce(ex.Message, always: true);
                     return;
                 }
-                await DownloadThroughSunoAsync(clip, format, path);
+                if (await DownloadThroughSunoAsync(clip, format, path) && clean) await CleanUpAsync(clip, path);
             }
         }
 
         /// <summary>
-        /// The song's own file: the unencrypted one in media_urls when there is one (free),
-        /// otherwise audio_url as before. WAV uses Suno's WAV conversion, as before.
+        /// The free audio file: the unencrypted entry in media_urls, or else audio_url when it is a
+        /// real file address. Suno now sets audio_url to a placeholder that always answers 403
+        /// for songs it only keeps encrypted; that one is never used.
+        /// </summary>
+        internal static string? DirectAudioUrl(SunoClip clip)
+        {
+            if (clip.ProgressiveAudioUrl is { } plain) return plain;
+            var url = clip.AudioUrl;
+            if (string.IsNullOrEmpty(url) || !Uri.TryCreate(url, UriKind.Absolute, out var uri) || uri.Scheme != Uri.UriSchemeHttps) return null;
+            return uri.AbsolutePath.Contains("forbidden", StringComparison.OrdinalIgnoreCase) || uri.Host.StartsWith("studio-api", StringComparison.OrdinalIgnoreCase)
+                ? null
+                : url;
+        }
+
+        /// <summary>
+        /// The song's own file: the free one from DirectAudioUrl. WAV uses Suno's WAV conversion.
         /// The file name keeps the real extension, since the free file is often an M4A.
         /// </summary>
         private string TargetPath(SunoClip clip, string format, out string? directUrl)
@@ -89,7 +194,7 @@ namespace TinPan.ViewModels
             {
                 "wav" => null,
                 "mp4" => clip.VideoUrl,
-                _ => clip.ProgressiveAudioUrl ?? clip.AudioUrl
+                _ => DirectAudioUrl(clip)
             };
             var extension = format == "mp3" ? FileNames.ExtensionOf(directUrl, "mp3") : format;
             return Path.Combine(DownloadFolder(), FileNames.ForSong(clip.Title, clip.Id, extension));
@@ -158,19 +263,32 @@ namespace TinPan.ViewModels
                 Announcer.Announce(todo.Count == 0 ? T("No finished songs in this list.") : T("Every song in this list is already downloaded."));
                 return;
             }
+            // Only the free route runs here; songs Suno keeps only encrypted would cost a download each, so they're named and left out.
+            var costly = format == "mp3" ? missing.Where(c => DirectAudioUrl(c) == null).ToList() : new List<SunoClip>();
+            missing = missing.Except(costly).ToList();
+            var leftOut = costly.Count == 0 ? "" : " " + T("{0} only have an encrypted copy, so they'd cost a download each; they're left out. Ctrl+D on one offers Suno's own download.", Plural(costly.Count, "{0} song", "{0} songs"));
+            if (missing.Count == 0)
+            {
+                Announcer.Announce(T("None of these songs has a free file to download.") + leftOut, always: true);
+                return;
+            }
             if (!_dialogs.Confirm(T("Download {0} as {1} into {2}? {3} already there will be skipped.",
-                    Plural(missing.Count, "{0} song", "{0} songs"), format.ToUpperInvariant(), DownloadFolder(), todo.Count - missing.Count), T("Download all"))) return;
+                    Plural(missing.Count, "{0} song", "{0} songs"), format.ToUpperInvariant(), DownloadFolder(), todo.Count - missing.Count - costly.Count) + leftOut, T("Download all"))) return;
 
-            Announcer.Announce(T("Downloading {0}.", Plural(missing.Count, "{0} song", "{0} songs")));
+            var clean = _config.Current.Cleanup.AfterDownload;
+            Announcer.Announce(T("Downloading {0}.", Plural(missing.Count, "{0} song", "{0} songs")) + (clean ? " " + T("Each one is cleaned up after it downloads.") : ""));
             var saved = 0;
+            var cleaned = 0;
             var failed = new List<string>();
             for (var i = 0; i < missing.Count; i++)
             {
                 var clip = missing[i];
                 try
                 {
-                    await DownloadDirectAsync(clip, format, TargetPath(clip, format, out _));
+                    var path = TargetPath(clip, format, out _);
+                    await DownloadDirectAsync(clip, format, path);
                     saved++;
+                    if (clean && await CleanUpAsync(clip, path, quiet: true)) cleaned++;
                 }
                 catch (SunoApiException ex)
                 {
@@ -188,6 +306,8 @@ namespace TinPan.ViewModels
             }
 
             var summary = T("Downloaded {0} of {1} into {2}.", saved, Plural(missing.Count, "{0} song", "{0} songs"), Path.GetFileName(DownloadFolder()));
+            if (clean && saved > 0)
+                summary += " " + (cleaned == saved ? T("All of them are cleaned up.") : T("{0} of them cleaned up; the log says why the others weren't.", cleaned));
             if (failed.Count > 0)
                 summary += failed.Count <= 3
                     ? " " + T("Couldn't download directly: {0}. Ctrl+D on one offers Suno's own download.", string.Join(", ", failed))
@@ -206,14 +326,15 @@ namespace TinPan.ViewModels
                 : _account.Billing?.DownloadUsage?.Remaining is { } left
                     ? T("Suno counts it as 1 of your {0} downloads left.", left)
                     : T("Suno counts it against your downloads.");
-            return _dialogs.Confirm(T("The direct download didn't work ({0}) Use Suno's own download for \"{1}\" instead? {2}", problem, clip.DisplayTitle, cost), T("Download"));
+            return _dialogs.Confirm(T("{0} Use Suno's own download for \"{1}\" instead? {2}", problem, clip.DisplayTitle, cost), T("Download"));
         }
 
-        private async Task DownloadThroughSunoAsync(SunoClip clip, string format, string path)
+        /// <returns>True when the file was saved.</returns>
+        private async Task<bool> DownloadThroughSunoAsync(SunoClip clip, string format, string path)
         {
             var studio = _account.Billing?.HasStudio == true;
             Announcer.Announce(T("Downloading {0} through Suno.", clip.DisplayTitle));
-            await RunAsync(async () =>
+            return await RunAsync(async () =>
             {
                 if (!studio && clip.IsDownloadUnlocked != true)
                 {

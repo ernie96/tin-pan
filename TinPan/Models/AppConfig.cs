@@ -24,6 +24,47 @@ namespace TinPan.Models
         public string LastModel { get; set; } = "";
 
         public UpdateConfig Update { get; set; } = new();
+
+        public CleanupConfig Cleanup { get; set; } = new();
+    }
+
+    /// <summary>
+    /// Clean-up with sunscreen (abradburne/sunscreen). The stage switches and values are sunscreen's
+    /// own options; the defaults are its recommended chain and its built-in values.
+    /// </summary>
+    public class CleanupConfig
+    {
+        /// <summary>Clean up after Download MP3, Download WAV and Download all. Plain Download asks instead.</summary>
+        public bool AfterDownload { get; set; }
+
+        /// <summary>Keep the downloaded file next to the cleaned-up WAV.</summary>
+        public bool KeepOriginal { get; set; } = true;
+
+        /// <summary>Remove the 5 ms decoder buzz (sunscreen does it only when it finds it). Off = --no-debuzz.</summary>
+        public bool Debuzz { get; set; } = true;
+
+        /// <summary>Only remove haze you could hear (hearing model). Off = --no-gate.</summary>
+        public bool Gate { get; set; } = true;
+
+        /// <summary>--smooth=ms: steady the flutter of the remaining haze.</summary>
+        public bool Smooth { get; set; } = true;
+        public double SmoothMs { get; set; } = 85;
+
+        /// <summary>--widen=amount: give the highs the track's own stereo width (1 = the same, 0.5 = half).</summary>
+        public bool Widen { get; set; } = true;
+        public double WidenAmount { get; set; } = 1.0;
+
+        /// <summary>--excite=dB: rebuild the top octave above the MP3 cut-off, this many dB from the slope.</summary>
+        public bool Excite { get; set; } = true;
+        public double ExciteDb { get; set; } = -3;
+
+        /// <summary>--match[=file]: nudge the tone toward commercial masters, or toward this MP3 or WAV.</summary>
+        public bool Match { get; set; } = true;
+        public string MatchReference { get; set; } = "";
+
+        /// <summary>--master=LUFS: set the loudness, with a true-peak limiter at -1 dBTP.</summary>
+        public bool Master { get; set; } = true;
+        public double MasterLufs { get; set; } = -14;
     }
 
     public class UpdateConfig

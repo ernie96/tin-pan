@@ -1,5 +1,19 @@
 # Tin Pan changelog
 
+## Unreleased
+
+### New
+
+- Clean-up with sunscreen (github.com/abradburne/sunscreen), built in. Download (Ctrl+D) asks every time whether to clean the song up; Download MP3, Download WAV and Download all follow Settings. It removes Suno's haze and decoder buzz and saves a 24-bit WAV next to the download with "(clean)" in its name. Suno's M4A files are converted to WAV first. Clean up download, in the Song menu, does a song you already have.
+- Settings, Clean-up (sunscreen): every sunscreen step with its value (buzz, hearing model, flutter, widening, top octave, tone matching with an optional reference song, loudness), whether Download MP3, Download WAV and Download all clean up, and whether to keep the original. Use the recommended clean-up steps puts sunscreen's own recommendation back.
+- Download MP3, in the Song menu, alongside Download WAV.
+
+### Fixed
+
+- Downloading a song Suno only keeps encrypted no longer fails with "The download failed (403)". Suno's audio address for those songs is a placeholder that always refuses; Tin Pan now says there's no free download and offers Suno's own one straight away.
+- Download all names the songs that only have an encrypted copy and leaves them out up front, instead of failing on each.
+- Download attempts are now written to the log, so a failed one can be traced.
+
 ## 1.3.0 (2026-10-22)
 
 ### New

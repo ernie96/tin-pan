@@ -86,6 +86,18 @@ dotnet publish TinPan -p:PublishProfile=OneFile
 
 That makes a single `TinPan\bin\publish\TinPan.exe` (about 60 MB) with .NET, WPF, WebView2's loader, NVDA's helper and the license texts inside. Nothing needs installing: WebView2 comes with Windows 10 and 11. On first run Windows unpacks the native parts to a temporary folder and Tin Pan unpacks NVDA's helper to `%LOCALAPPDATA%\Tin Pan\native`, so the second start is quicker. Help, Licenses and notices shows the licenses. A `nvdaControllerClient.dll` placed next to the exe is used instead of the built-in one.
 
+## Clean-up (sunscreen)
+
+Suno songs carry a faint haze, like a radio slightly off-station, and a steady decoder buzz. [sunscreen](https://github.com/abradburne/sunscreen) by Alan Bradburne measures and removes them, and Tin Pan has it built in (version 0.7.1, MIT license, checked by its SHA-256 before every run). It runs on your computer; nothing is uploaded.
+
+- **Download (Ctrl+D)** asks every time: clean this song up too?
+- **Download MP3, Download WAV and Download all** don't ask. They clean up when Settings, "Clean up after Download MP3, Download WAV and Download all", is on (it's off to start with).
+- **Clean up download**, in the Song menu and the Applications key menu, cleans up a song you've already downloaded.
+
+The result is a 24-bit WAV next to the download, named like it with "(clean)" added. It's often 10 to 20 times bigger than the download. sunscreen reads MP3 and WAV only, so Suno's M4A files are converted to WAV first (Windows does that itself). A 5-minute song takes about 10 seconds.
+
+Settings, Clean-up (sunscreen) has each of sunscreen's steps with its value: remove the decoder buzz, only remove haze you can hear, steady the flutter (milliseconds), widen the highs (amount), rebuild the top octave (dB), match the tone of commercial masters or of a song you choose, and master the loudness (LUFS). "Use the recommended clean-up steps" puts sunscreen's own recommendation back. "Keep the downloaded file next to the cleaned-up WAV" is on to start with.
+
 ## Languages
 
 English, Romanian (Română), Ukrainian (Українська) and Spanish (Español). Settings, Language chooses one, or "Automatic" follows Windows; it changes the next time Tin Pan starts. Text Tin Pan hasn't got a translation for stays in English. Messages that come straight from Suno stay in Suno's words.

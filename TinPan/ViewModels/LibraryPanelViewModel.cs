@@ -27,6 +27,7 @@ namespace TinPan.ViewModels
         private readonly IDialogService _dialogs;
         private readonly SongWatcher _watcher;
         private readonly AccountState _account;
+        private readonly ICleanupService _cleanup;
 
         private SunoClip? _current;
         private LibraryQuery _next = new();
@@ -44,7 +45,7 @@ namespace TinPan.ViewModels
         [ObservableProperty] private string searchText = "";
 
         public LibraryPanelViewModel(ISunoApiService api, IAuthService auth, IAudioService audio, IConfigService config,
-            IDialogService dialogs, SongWatcher watcher, AccountState account, IAnnouncer announcer) : base(announcer)
+            IDialogService dialogs, SongWatcher watcher, AccountState account, ICleanupService cleanup, IAnnouncer announcer) : base(announcer)
         {
             _api = api;
             _auth = auth;
@@ -53,6 +54,7 @@ namespace TinPan.ViewModels
             _dialogs = dialogs;
             _watcher = watcher;
             _account = account;
+            _cleanup = cleanup;
 
             _audio.TrackEnded += OnTrackEnded;
             _audio.PlaybackFailed += (_, message) => Announcer.Announce(message);

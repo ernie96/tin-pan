@@ -61,6 +61,7 @@ namespace TinPan.Services
             Current.Library ??= new LibraryConfig();
             Current.Resume ??= new ResumeConfig();
             Current.Update ??= new UpdateConfig();
+            Current.Cleanup ??= new CleanupConfig();
             if (string.IsNullOrEmpty(Current.User.DeviceId))
                 Current.User.DeviceId = Guid.NewGuid().ToString();
 

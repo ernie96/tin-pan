@@ -96,6 +96,7 @@ def access_key(label):
 
 
 def main():
+    sys.stdout.reconfigure(encoding='utf-8')  # Romanian, Ukrainian and Spanish in a Windows console
     table = {}
     if os.path.exists(OUT):
         table = json.load(open(OUT, encoding='utf-8'))

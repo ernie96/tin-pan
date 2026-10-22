@@ -16,6 +16,8 @@ These components keep their own licenses when they are shipped with Tin Pan:
 - **Microsoft.Extensions.DependencyInjection**, by Microsoft. MIT License.
 - **System.Speech**, by Microsoft. MIT License.
 - **Microsoft Edge WebView2 SDK** (Microsoft.Web.WebView2), by Microsoft. Microsoft's WebView2 SDK license; the WebView2 Runtime itself is part of Windows.
+- **sunscreen** 0.7.1 (`sunscreen.exe`, Windows x86_64 build from its GitHub release), by Alan Bradburne. MIT License. Tin Pan carries it unchanged inside TinPan.exe, checks its SHA-256 before running it, and uses it for the optional clean-up of downloads. Its license text follows the NVDA Controller Client's in Help, Licenses and notices; source at github.com/abradburne/sunscreen.
+- **NAudio** (NAudio.Core and NAudio.Wasapi), by Mark Heath and contributors. MIT License. Used to read Suno's M4A files through Windows' own Media Foundation before clean-up.
 - **NVDA Controller Client** (`nvdaControllerClient.dll`), by NV Access. GNU Lesser General Public License 2.1. Tin Pan carries it unchanged inside TinPan.exe and loads it at run time. To use another build of the same library, put it next to TinPan.exe as `nvdaControllerClient.dll`; Tin Pan uses that one instead. Its license text is in `deps/nvda/license.txt`.
 
 ## Ideas and API notes

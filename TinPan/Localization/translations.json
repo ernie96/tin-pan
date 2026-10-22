@@ -384,6 +384,61 @@
   "Для капчі Suno потрібен Microsoft Edge WebView2 Runtime. Установіть його з сайту Microsoft і спробуйте ще раз.",
   "El captcha de Suno necesita Microsoft Edge WebView2 Runtime. Instálalo desde Microsoft y vuelve a intentarlo."
  ],
+ "Couldn't find the downloaded file for {0}.": [
+  "Nu am găsit fișierul descărcat pentru {0}.",
+  "Не вдалося знайти завантажений файл для «{0}».",
+  "No se encontró el archivo descargado de {0}."
+ ],
+ "The reference song for tone matching isn't there any more. Choose another in Settings, or clear it.": [
+  "Melodia de referință pentru ton nu mai există. Alege alta în Setări sau șterge-o.",
+  "Еталонної пісні для підгонки тембру вже немає. Виберіть іншу в Налаштуваннях або очистіть поле.",
+  "La canción de referencia para el tono ya no está. Elige otra en Configuración o bórrala."
+ ],
+ "sunscreen didn't write a cleaned-up file for {0}.": [
+  "sunscreen nu a scris un fișier curățat pentru {0}.",
+  "sunscreen не створив очищений файл для «{0}».",
+  "sunscreen no escribió un archivo limpio para {0}."
+ ],
+ "Couldn't save the cleaned-up file. Check the download folder in Settings.": [
+  "Nu am putut salva fișierul curățat. Verifică dosarul de descărcări din Setări.",
+  "Не вдалося зберегти очищений файл. Перевірте папку завантажень у Налаштуваннях.",
+  "No se pudo guardar el archivo limpio. Revisa la carpeta de descargas en Configuración."
+ ],
+ "This copy of Tin Pan has no clean-up tool built in.": [
+  "Această copie Tin Pan nu are instrumentul de curățare inclus.",
+  "У цій копії Tin Pan немає вбудованого засобу очищення.",
+  "Esta copia de Tin Pan no trae la herramienta de limpieza."
+ ],
+ "Couldn't unpack the clean-up tool.": [
+  "Nu am putut despacheta instrumentul de curățare.",
+  "Не вдалося розпакувати засіб очищення.",
+  "No se pudo desempaquetar la herramienta de limpieza."
+ ],
+ "Windows couldn't read this {0} file to clean it up.": [
+  "Windows nu a putut citi acest fișier {0} ca să-l curețe.",
+  "Windows не зміг прочитати цей файл {0}, щоб його очистити.",
+  "Windows no pudo leer este archivo {0} para limpiarlo."
+ ],
+ "Couldn't start the clean-up tool. Your antivirus may have blocked it.": [
+  "Nu am putut porni instrumentul de curățare. Poate l-a blocat antivirusul.",
+  "Не вдалося запустити засіб очищення. Можливо, його заблокував антивірус.",
+  "No se pudo iniciar la herramienta de limpieza. Puede que tu antivirus la haya bloqueado."
+ ],
+ "Clean-up cancelled.": [
+  "Curățarea a fost anulată.",
+  "Очищення скасовано.",
+  "Limpieza cancelada."
+ ],
+ "Cleaning up {0} took too long, so it was stopped.": [
+  "Curățarea pentru {0} a durat prea mult, așa că a fost oprită.",
+  "Очищення «{0}» тривало задовго, тому його зупинено.",
+  "La limpieza de {0} tardó demasiado, así que se detuvo."
+ ],
+ "sunscreen couldn't clean up {0}. Details are in the log.": [
+  "sunscreen nu a putut curăța {0}. Detaliile sunt în jurnal.",
+  "sunscreen не зміг очистити «{0}». Подробиці в журналі.",
+  "sunscreen no pudo limpiar {0}. Los detalles están en el registro."
+ ],
  "Not signed in.": [
   "Nu ești conectat.",
   "Ви не ввійшли.",
@@ -428,6 +483,11 @@
   "Alege unde se salvează melodiile",
   "Виберіть, куди зберігати пісні",
   "Elige dónde se guardan las canciones"
+ ],
+ "MP3 or WAV songs": [
+  "Melodii MP3 sau WAV",
+  "Пісні MP3 або WAV",
+  "Canciones MP3 o WAV"
  ],
  "another screen reader": [
   "alt cititor de ecran",
@@ -873,6 +933,16 @@
   "Conectare deschide pagina de conectare a Suno; se închide singură după ce intri. Își amintește contul Google și poate salva parola. Deconectarea te scoate doar din Suno. Prima dată, sau când Suno îți încheie conectarea, Tin Pan îți cere să te conectezi.\nLimba: engleză, română, ucraineană sau spaniolă, ori aceeași ca Windows. Se schimbă la următoarea pornire a Tin Pan.\nDosarul de descărcări, formatul și fișierele suplimentare salvate lângă fiecare descărcare: versuri, versuri sincronizate (LRC), detaliile melodiei și coperta.\nCaută versiuni noi la pornirea Tin Pan: activat implicit și tăcut dacă nu apare nimic nou.",
   "«Увійти» відкриває сторінку входу Suno; вона закривається сама, щойно ви ввійдете. Вона запам'ятовує ваш обліковий запис Google і може зберегти пароль. «Вийти» виходить лише з Suno. Першого разу або коли Suno завершує ваш вхід, Tin Pan просить увійти.\nМова: англійська, румунська, українська, іспанська або як у Windows. Змінюється під час наступного запуску Tin Pan.\nПапка завантажень, формат і додаткові файли поруч із кожним завантаженням: текст, синхронізований текст (LRC), подробиці пісні й обкладинка.\nПеревіряти нові версії під час запуску Tin Pan: увімкнено типово, мовчить, якщо нічого нового немає.",
   "Iniciar sesión abre la página de inicio de sesión de Suno; se cierra sola cuando entras. Recuerda tu cuenta de Google y puede guardar tu contraseña. Cerrar sesión solo cierra la sesión de Suno. La primera vez, o cuando Suno cierra tu sesión, Tin Pan te pide que inicies sesión.\nIdioma: inglés, rumano, ucraniano o español, o el mismo que Windows. Cambia la próxima vez que se inicie Tin Pan.\nCarpeta de descargas, formato y archivos extra guardados junto a cada descarga: letra, letra sincronizada (LRC), detalles de la canción y portada.\nBuscar versiones nuevas al iniciar Tin Pan: activado de forma predeterminada y en silencio si no hay ninguna."
+ ],
+ "Clean-up": [
+  "Curățare",
+  "Очищення",
+  "Limpieza"
+ ],
+ "Download (Ctrl+D) asks every time whether to clean the song up with sunscreen, which removes the haze and buzz in Suno songs. Download MP3, Download WAV and Download all don't ask; they clean up when Settings says to. Clean up download, in the Song menu, cleans up a song you already have.\nThe result is a 24-bit WAV next to the download, with (clean) added to its name, often 10 to 20 times bigger. sunscreen reads MP3 and WAV, so Suno's M4A files are converted first. It runs on this computer and takes about 10 seconds for a 5-minute song.\nSettings has each step: decoder buzz, hearing model, flutter, widening, top octave, tone matching and loudness, with their values, and whether to keep the original download.": [
+  "Descarcă (Ctrl+D) întreabă de fiecare dată dacă să curețe melodia cu sunscreen, care elimină zgomotul de fond și bâzâitul din melodiile Suno. Descarcă MP3, Descarcă WAV și Descarcă tot nu întreabă; curăță când spun Setările. Curăță descărcarea, din meniul Melodie, curăță o melodie pe care o ai deja.\nRezultatul e un WAV pe 24 de biți lângă descărcare, cu (clean) adăugat la nume, adesea de 10 până la 20 de ori mai mare. sunscreen citește MP3 și WAV, așa că fișierele M4A de la Suno sunt convertite întâi. Rulează pe acest calculator și durează cam 10 secunde pentru o melodie de 5 minute.\nSetările au fiecare pas: bâzâitul decodorului, modelul auditiv, pâlpâirea, lărgirea, octava de sus, potrivirea tonului și nivelul sonor, cu valorile lor, și dacă să păstreze descărcarea originală.",
+  "«Завантажити» (Ctrl+D) щоразу запитує, чи очистити пісню за допомогою sunscreen, який прибирає шум і гудіння в піснях Suno. «Завантажити MP3», «Завантажити WAV» і «Завантажити все» не запитують; вони очищають, якщо так задано в Налаштуваннях. «Очистити завантаження» в меню «Пісня» очищає пісню, яка у вас уже є.\nРезультат — 24-бітний WAV поруч із завантаженням, з (clean) у назві, часто в 10–20 разів більший. sunscreen читає MP3 і WAV, тож файли M4A від Suno спершу перетворюються. Він працює на цьому комп'ютері й триває близько 10 секунд для 5-хвилинної пісні.\nУ Налаштуваннях є кожен крок: гудіння декодера, модель слуху, тремтіння, розширення, верхня октава, підгонка тембру й гучність, з їхніми значеннями, а також чи зберігати оригінальне завантаження.",
+  "Descargar (Ctrl+D) pregunta cada vez si limpiar la canción con sunscreen, que quita el ruido de fondo y el zumbido de las canciones de Suno. Descargar MP3, Descargar WAV y Descargar todo no preguntan; limpian cuando lo dice Configuración. Limpiar la descarga, en el menú Canción, limpia una canción que ya tienes.\nEl resultado es un WAV de 24 bits junto a la descarga, con (clean) añadido al nombre, a menudo de 10 a 20 veces más grande. sunscreen lee MP3 y WAV, así que los archivos M4A de Suno se convierten primero. Funciona en esta computadora y tarda unos 10 segundos por cada canción de 5 minutos.\nConfiguración tiene cada paso: zumbido del decodificador, modelo auditivo, parpadeo, ampliación, octava alta, imitación del tono y volumen, con sus valores, y si conservar la descarga original."
  ],
  "Updates": [
   "Actualizări",
@@ -1374,10 +1444,50 @@
   "Для WAV потрібен Pro або Premier, тож це MP3.",
   "WAV necesita Pro o Premier, así que es un MP3."
  ],
+ "{0} isn't downloaded yet. Download it first, or use Download, which offers to clean it up.": [
+  "{0} nu e descărcată încă. Descarc-o întâi sau folosește Descarcă, care se oferă să o curețe.",
+  "«{0}» ще не завантажено. Спершу завантажте її або скористайтеся командою «Завантажити», яка запропонує очищення.",
+  "{0} todavía no está descargada. Descárgala primero, o usa Descargar, que ofrece limpiarla."
+ ],
+ "The download is kept too.": [
+  "Se păstrează și descărcarea.",
+  "Завантажений файл теж залишиться.",
+  "También se conserva la descarga."
+ ],
+ "It replaces the download (Settings can keep both).": [
+  "Înlocuiește descărcarea (în Setări le poți păstra pe amândouă).",
+  "Він замінить завантажений файл (у Налаштуваннях можна зберігати обидва).",
+  "Reemplaza la descarga (en Configuración puedes conservar ambas)."
+ ],
+ "Clean up {0} too? sunscreen removes the haze and buzz in Suno songs and saves the result as a 24-bit WAV file, often 10 to 20 times bigger than the download. {1} It takes about 10 seconds for a 5-minute song. The clean-up steps are in Settings.": [
+  "Curăți și {0}? sunscreen elimină zgomotul de fond și bâzâitul din melodiile Suno și salvează rezultatul ca fișier WAV pe 24 de biți, adesea de 10 până la 20 de ori mai mare decât descărcarea. {1} Durează cam 10 secunde pentru o melodie de 5 minute. Pașii de curățare sunt în Setări.",
+  "Очистити також «{0}»? sunscreen прибирає шум і гудіння в піснях Suno й зберігає результат як 24-бітний WAV, часто в 10–20 разів більший за завантажений файл. {1} Це триває близько 10 секунд для 5-хвилинної пісні. Кроки очищення — в Налаштуваннях.",
+  "¿Limpiar también {0}? sunscreen quita el ruido de fondo y el zumbido de las canciones de Suno y guarda el resultado como un WAV de 24 bits, a menudo de 10 a 20 veces más grande que la descarga. {1} Tarda unos 10 segundos por cada canción de 5 minutos. Los pasos de limpieza están en Configuración."
+ ],
+ "Clean up": [
+  "Curățare",
+  "Очищення",
+  "Limpiar"
+ ],
+ "Cleaning up {0}.": [
+  "Se curăță {0}.",
+  "Очищаю «{0}».",
+  "Limpiando {0}."
+ ],
+ "Cleaned up {0}.": [
+  "Am curățat {0}.",
+  "«{0}» очищено.",
+  "Se limpió {0}."
+ ],
  "{0} is already downloaded.": [
   "{0} e deja descărcată.",
   "«{0}» уже завантажено.",
   "{0} ya está descargada."
+ ],
+ "Suno only has an encrypted copy of this song, so there's no free download.": [
+  "Suno are doar o copie criptată a melodiei, așa că nu există descărcare gratuită.",
+  "Suno має лише зашифровану копію цієї пісні, тож безкоштовного завантаження немає.",
+  "Suno solo tiene una copia cifrada de esta canción, así que no hay descarga gratuita."
  ],
  "Asking Suno for a WAV of {0}.": [
   "Cer de la Suno un WAV pentru {0}.",
@@ -1394,6 +1504,11 @@
   "Збережено «{0}».",
   "Se guardó {0}."
  ],
+ "The free file didn't download: {0}": [
+  "Fișierul gratuit nu s-a descărcat: {0}",
+  "Безкоштовний файл не завантажився: {0}",
+  "El archivo gratuito no se descargó: {0}"
+ ],
  "Suno gave no file address for this song.": [
   "Suno nu a dat nicio adresă de fișier pentru melodie.",
   "Suno не надав адреси файлу для цієї пісні.",
@@ -1409,6 +1524,16 @@
   "Усі пісні з цього списку вже завантажено.",
   "Todas las canciones de esta lista ya están descargadas."
  ],
+ "{0} only have an encrypted copy, so they'd cost a download each; they're left out. Ctrl+D on one offers Suno's own download.": [
+  "{0} au doar o copie criptată, așa că fiecare ar costa o descărcare; sunt lăsate deoparte. Ctrl+D pe una oferă descărcarea Suno.",
+  "{0} мають лише зашифровану копію, тож кожна коштувала б одне завантаження; їх пропущено. Ctrl+D на пісні пропонує завантаження через Suno.",
+  "{0} solo tienen una copia cifrada, así que cada una costaría una descarga; se dejan fuera. Ctrl+D en una ofrece la descarga de Suno."
+ ],
+ "None of these songs has a free file to download.": [
+  "Niciuna dintre aceste melodii nu are un fișier gratuit de descărcat.",
+  "Жодна з цих пісень не має безкоштовного файлу для завантаження.",
+  "Ninguna de estas canciones tiene un archivo gratuito para descargar."
+ ],
  "Download {0} as {1} into {2}? {3} already there will be skipped.": [
   "Descarci {0} ca {1} în {2}? Cele {3} care sunt deja acolo se sar.",
   "Завантажити {0} як {1} у {2}? {3}, що вже там, буде пропущено.",
@@ -1419,6 +1544,11 @@
   "Завантажити все",
   "Descargar todo"
  ],
+ "Each one is cleaned up after it downloads.": [
+  "Fiecare se curăță după descărcare.",
+  "Кожну буде очищено після завантаження.",
+  "Cada una se limpia después de descargarse."
+ ],
  "Halfway: {0} saved.": [
   "La jumătate: {0} salvate.",
   "Половина: збережено {0}.",
@@ -1428,6 +1558,16 @@
   "Am descărcat {0} din {1} în {2}.",
   "Завантажено {0} з {1} у {2}.",
   "Se descargaron {0} de {1} en {2}."
+ ],
+ "All of them are cleaned up.": [
+  "Toate sunt curățate.",
+  "Усі очищено.",
+  "Todas quedaron limpias."
+ ],
+ "{0} of them cleaned up; the log says why the others weren't.": [
+  "{0} dintre ele au fost curățate; jurnalul spune de ce celelalte nu.",
+  "Очищено {0}; чому решту ні, сказано в журналі.",
+  "Se limpiaron {0}; el registro dice por qué las otras no."
  ],
  "Couldn't download directly: {0}. Ctrl+D on one offers Suno's own download.": [
   "Nu s-au putut descărca direct: {0}. Ctrl+D pe una oferă descărcarea Suno.",
@@ -1454,10 +1594,10 @@
   "Suno зарахує її до ваших завантажень.",
   "Suno la cuenta para tus descargas."
  ],
- "The direct download didn't work ({0}) Use Suno's own download for \"{1}\" instead? {2}": [
-  "Descărcarea directă nu a mers ({0}) Folosești în schimb descărcarea Suno pentru „{1}”? {2}",
-  "Пряме завантаження не вдалося ({0}) Використати натомість завантаження Suno для «{1}»? {2}",
-  "La descarga directa no funcionó ({0}) ¿Usar en su lugar la descarga de Suno para «{1}»? {2}"
+ "{0} Use Suno's own download for \"{1}\" instead? {2}": [
+  "{0} Folosești în schimb descărcarea Suno pentru „{1}”? {2}",
+  "{0} Використати натомість завантаження Suno для «{1}»? {2}",
+  "{0} ¿Usar en su lugar la descarga de Suno para «{1}»? {2}"
  ],
  "Download": [
   "Descarcă",
@@ -1799,10 +1939,20 @@
   "_Завантажити",
   "Descar_gar"
  ],
+ "Download MP_3": [
+  "Descarcă MP_3",
+  "Завантажити MP_3",
+  "Descargar MP_3"
+ ],
  "Download _video": [
   "Descarcă vid_eo",
   "Завантажити віде_о",
   "Descargar _video"
+ ],
+ "Clean up download (remove ha_ze)": [
+  "Curăță descărcarea (elimină zgomotul)",
+  "О_чистити завантаження (прибрати шум)",
+  "Limpiar la descarga (quitar ruido y _zumbido)"
  ],
  "_Extend...": [
   "Exti_nde...",
@@ -2293,6 +2443,31 @@
   "{0} listă de redare.|{0} liste de redare.|{0} de liste de redare.",
   "{0} плейлист.|{0} плейлисти.|{0} плейлистів.",
   "{0} lista.|{0} listas."
+ ],
+ "sunscreen {0}, by Alan Bradburne (MIT license), cleans up on this computer; nothing is uploaded. It reads MP3 and WAV, so Suno's M4A files are converted to WAV first. The result is always a 24-bit WAV, named like the download with (clean) added.": [
+  "sunscreen {0}, de Alan Bradburne (licență MIT), curăță pe acest calculator; nu se încarcă nimic nicăieri. Citește MP3 și WAV, așa că fișierele M4A de la Suno sunt întâi convertite în WAV. Rezultatul e mereu un WAV pe 24 de biți, cu numele descărcării plus (clean).",
+  "sunscreen {0}, автор Alan Bradburne (ліцензія MIT), очищає на цьому комп'ютері; нічого не вивантажується. Він читає MP3 і WAV, тож файли M4A від Suno спершу перетворюються на WAV. Результат завжди 24-бітний WAV із назвою завантаження та доданим (clean).",
+  "sunscreen {0}, de Alan Bradburne (licencia MIT), limpia en esta computadora; no se sube nada. Lee MP3 y WAV, así que los archivos M4A de Suno se convierten primero a WAV. El resultado siempre es un WAV de 24 bits, con el nombre de la descarga más (clean)."
+ ],
+ "Choose a song to match the tone of": [
+  "Alege o melodie al cărei ton să fie potrivit",
+  "Виберіть пісню, під тембр якої підганяти",
+  "Elige una canción cuyo tono imitar"
+ ],
+ "Clean-up matches the tone of {0}.": [
+  "Curățarea potrivește tonul după {0}.",
+  "Очищення підганяє тембр під «{0}».",
+  "La limpieza imita el tono de {0}."
+ ],
+ "Clean-up matches the average of commercial pop masters.": [
+  "Curățarea potrivește tonul după media masterelor pop comerciale.",
+  "Очищення підганяє тембр під середнє комерційних поп-мастерів.",
+  "La limpieza imita el promedio de los másteres pop comerciales."
+ ],
+ "Clean-up steps set to sunscreen's recommended ones.": [
+  "Pașii de curățare sunt acum cei recomandați de sunscreen.",
+  "Кроки очищення встановлено на рекомендовані sunscreen.",
+  "Los pasos de limpieza son ahora los recomendados por sunscreen."
  ],
  "Everything": [
   "Totul",
@@ -2958,6 +3133,131 @@
   "Co_perta",
   "Обкла_динка",
   "Po_rtada"
+ ],
+ "Clean-up (sunscreen)": [
+  "Curățare (sunscreen)",
+  "Очищення (sunscreen)",
+  "Limpieza (sunscreen)"
+ ],
+ "About clean-up": [
+  "Despre curățare",
+  "Про очищення",
+  "Acerca de la limpieza"
+ ],
+ "Clean _up after Download MP3, Download WAV and Download all": [
+  "Curăță a_utomat după Descarcă MP3, Descarcă WAV și Descarcă tot",
+  "О_чищати після «Завантажити MP3», «Завантажити WAV» і «Завантажити все»",
+  "Limpiar a_utomáticamente tras Descargar MP3, Descargar WAV y Descargar todo"
+ ],
+ "_Keep the downloaded file next to the cleaned-up WAV": [
+  "Păstr_ează fișierul descărcat lângă WAV-ul curățat",
+  "_Зберігати завантажений файл поруч з очищеним WAV",
+  "Conservar el archi_vo descargado junto al WAV limpio"
+ ],
+ "Clean-up steps:": [
+  "Pașii de curățare:",
+  "Кроки очищення:",
+  "Pasos de limpieza:"
+ ],
+ "Remove the decoder bu_zz": [
+  "Elimină _bâzâitul decodorului",
+  "Прибрати _гудіння декодера",
+  "Quitar el zum_bido del decodificador"
+ ],
+ "Only remove haze you can _hear (hearing model)": [
+  "Elimină doar zgomotul pe care îl poți _auzi (model auditiv)",
+  "Прибирати лише _шум, який можна почути (модель слуху)",
+  "_Quitar solo el ruido que se oye (modelo auditivo)"
+ ],
+ "Stead_y the flutter of what is left": [
+  "Stab_ilizează pâlpâirea care rămâne",
+  "_Вирівняти тремтіння залишку",
+  "Estabilizar el parpadeo que queda"
+ ],
+ "Flutter smoothing window, milliseconds (sunscreen uses 85)": [
+  "Fereastra de stabilizare, milisecunde (sunscreen folosește 85)",
+  "Вікно згладжування, мілісекунди (sunscreen використовує 85)",
+  "Ventana de estabilización, milisegundos (sunscreen usa 85)"
+ ],
+ "Flutter smoothing window, milliseconds": [
+  "Fereastra de stabilizare, milisecunde",
+  "Вікно згладжування, мілісекунди",
+  "Ventana de estabilización, milisegundos"
+ ],
+ "W_iden the highs": [
+  "Lăr_gește frecvențele înalte",
+  "_Розширити високі частоти",
+  "A_mpliar los agudos"
+ ],
+ "Widening amount (1 matches the rest of the track, 0.5 is half)": [
+  "Cât se lărgește (1 se potrivește cu restul piesei, 0,5 e jumătate)",
+  "Міра розширення (1 — як решта треку, 0,5 — половина)",
+  "Cuánto ampliar (1 iguala al resto de la pista, 0,5 es la mitad)"
+ ],
+ "Widening amount": [
+  "Cât se lărgește",
+  "Міра розширення",
+  "Cuánto ampliar"
+ ],
+ "Rebuild the top octave above the MP3 cut-off (e_xcite)": [
+  "Reconstruiește octava de sus peste limita MP3 (excite)",
+  "Віднов_ити верхню октаву над зрізом MP3 (excite)",
+  "Reconstruir la octava alta sobre el corte del MP3 (e_xcite)"
+ ],
+ "Top octave level, dB below the natural slope (sunscreen uses -3)": [
+  "Nivelul octavei de sus, dB sub panta naturală (sunscreen folosește -3)",
+  "Рівень верхньої октави, дБ нижче природного спаду (sunscreen використовує -3)",
+  "Nivel de la octava alta, dB bajo la pendiente natural (sunscreen usa -3)"
+ ],
+ "Top octave level, dB": [
+  "Nivelul octavei de sus, dB",
+  "Рівень верхньої октави, дБ",
+  "Nivel de la octava alta, dB"
+ ],
+ "_Match the tone of commercial masters": [
+  "Potrivește tonul cu masterele comerciale",
+  "Підігн_ати тембр під комерційні мастери",
+  "Igu_alar el tono de los másteres comerciales"
+ ],
+ "Or match this song instead (MP3 or WAV; empty uses the average of 12 pop masters)": [
+  "Sau potrivește după această melodie (MP3 sau WAV; gol folosește media a 12 mastere pop)",
+  "Або підганяти під цю пісню (MP3 чи WAV; порожньо — середнє 12 поп-мастерів)",
+  "O imitar esta canción (MP3 o WAV; vacío usa el promedio de 12 másteres pop)"
+ ],
+ "Clear": [
+  "Golește",
+  "Очистити",
+  "Borrar"
+ ],
+ "Choose _reference...": [
+  "Alege o referi_nță...",
+  "Вибрати _еталон...",
+  "Ele_gir referencia..."
+ ],
+ "Reference song to match": [
+  "Melodia de referință",
+  "Еталонна пісня",
+  "Canción de referencia"
+ ],
+ "M_aster the loudness": [
+  "Masterizează nivelul sonor",
+  "Мастеринг гучності",
+  "Masterizar el volumen"
+ ],
+ "Loudness target, LUFS (-14 is the streaming standard, -9 is loud like a single)": [
+  "Ținta de nivel sonor, LUFS (-14 e standardul de streaming, -9 e tare, ca un single)",
+  "Цільова гучність, LUFS (-14 — стандарт стримінгу, -9 — гучно, як у синглі)",
+  "Volumen objetivo, LUFS (-14 es el estándar de streaming, -9 suena fuerte como un sencillo)"
+ ],
+ "Loudness target, LUFS": [
+  "Ținta de nivel sonor, LUFS",
+  "Цільова гучність, LUFS",
+  "Volumen objetivo, LUFS"
+ ],
+ "Use the recommended clean-up steps": [
+  "Folosește pașii de curățare recomandați",
+  "Використати рекомендовані кроки очищення",
+  "Usar los pasos de limpieza recomendados"
  ],
  "_Trending songs": [
   "Melodii în _tendințe",

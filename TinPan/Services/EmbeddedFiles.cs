@@ -46,35 +46,49 @@ namespace TinPan.Services
             return path != null && File.Exists(path) ? path : null;
         }
 
-        /// <summary>
-        /// Writes the built-in DLL to %LOCALAPPDATA%\Tin Pan\native, named by its hash so a different
-        /// build never loads an old copy, and rewrites it if the file there doesn't match.
-        /// </summary>
         private static string? ExtractNvda()
         {
             try
             {
-                using var stream = Open(NvdaDll);
-                if (stream == null) return null;
-                using var memory = new MemoryStream();
-                stream.CopyTo(memory);
-                var bytes = memory.ToArray();
-                var expected = SHA256.HashData(bytes);
-                var dir = Path.Combine(AppFolders.Local, "native", Convert.ToHexString(expected)[..16]);
-                var path = Path.Combine(dir, NvdaDll);
-                if (File.Exists(path) && SHA256.HashData(File.ReadAllBytes(path)).AsSpan().SequenceEqual(expected)) return path;
-
-                Directory.CreateDirectory(dir);
-                var temp = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
-                File.WriteAllBytes(temp, bytes);
-                File.Move(temp, path, overwrite: true);
-                return path;
+                return Extract(NvdaDll);
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
             {
                 Log.Warn($"Couldn't unpack NVDA's helper; NVDA direct speech is off: {ex.Message}");
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Writes a built-in file to %LOCALAPPDATA%\Tin Pan\native, in a folder named by its hash so a
+        /// different build never uses an old copy, and rewrites it if the file there doesn't match.
+        /// Returns the path, or null when Tin Pan has no such file built in. Throws IOException and
+        /// UnauthorizedAccessException.
+        /// </summary>
+        public static string? Extract(string name)
+        {
+            using var stream = Open(name);
+            if (stream == null) return null;
+            using var memory = new MemoryStream();
+            stream.CopyTo(memory);
+            var bytes = memory.ToArray();
+            var expected = SHA256.HashData(bytes);
+            var dir = Path.Combine(AppFolders.Local, "native", Convert.ToHexString(expected)[..16]);
+            var path = Path.Combine(dir, name);
+            if (File.Exists(path) && SHA256.HashData(File.ReadAllBytes(path)).AsSpan().SequenceEqual(expected)) return path;
+
+            Directory.CreateDirectory(dir);
+            var temp = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
+            File.WriteAllBytes(temp, bytes);
+            File.Move(temp, path, overwrite: true);
+            return path;
+        }
+
+        /// <summary>SHA-256 of a built-in file, upper-case hex, or null.</summary>
+        public static string? Hash(string name)
+        {
+            using var stream = Open(name);
+            return stream == null ? null : Convert.ToHexString(SHA256.HashData(stream));
         }
     }
 }

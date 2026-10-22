@@ -68,6 +68,21 @@ namespace TinPan.Tests
         }
 
         [Fact]
+        public void The_free_download_never_uses_Sunos_placeholder_address()
+        {
+            var encryptedOnly = SunoJson.ReadFeedPage(
+                """{"clips":[{"id":"a1","audio_url":"https://studio-api-prod.suno.com/api/forbidden","media_urls":[{"url":"https://cdn1.suno.ai/a1.m4a","encoding":"m4a-opus"}]}]}""").Clips[0];
+            Assert.Null(TinPan.ViewModels.LibraryPanelViewModel.DirectAudioUrl(encryptedOnly));
+
+            var plain = SunoJson.ReadFeedPage(
+                """{"clips":[{"id":"b2","audio_url":"https://studio-api-prod.suno.com/api/forbidden","media_urls":[{"url":"https://cdn1.suno.ai/b2.m4a","encoding":"m4a-opus"},{"url":"https://cdn1.suno.ai/b2-plain.m4a"}]}]}""").Clips[0];
+            Assert.Equal("https://cdn1.suno.ai/b2-plain.m4a", TinPan.ViewModels.LibraryPanelViewModel.DirectAudioUrl(plain));
+
+            var older = SunoJson.ReadFeedPage("""{"clips":[{"id":"c3","audio_url":"https://cdn1.suno.ai/c3.mp3"}]}""").Clips[0];
+            Assert.Equal("https://cdn1.suno.ai/c3.mp3", TinPan.ViewModels.LibraryPanelViewModel.DirectAudioUrl(older));
+        }
+
+        [Fact]
         public void A_token_with_an_impossible_expiry_is_treated_as_unreadable()
         {
             var payload = System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("{\"exp\":99999999999999}")).TrimEnd('=');

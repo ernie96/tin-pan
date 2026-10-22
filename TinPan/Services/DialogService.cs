@@ -24,6 +24,9 @@ namespace TinPan.Services
 
         string? PickFolder(string? startIn);
 
+        /// <summary>An MP3 or WAV file, or null on Cancel.</summary>
+        string? PickAudioFile(string title);
+
         /// <summary>
         /// A list of short lines (message history, song information, the command list).
         /// When onEnter is given, Enter closes the window and runs it with the chosen line's index.
@@ -65,6 +68,12 @@ namespace TinPan.Services
             var dialog = new OpenFolderDialog { Title = T("Choose where songs are saved") };
             if (!string.IsNullOrEmpty(startIn)) dialog.InitialDirectory = startIn;
             return dialog.ShowDialog(Application.Current.MainWindow) == true ? dialog.FolderName : null;
+        }
+
+        public string? PickAudioFile(string title)
+        {
+            var dialog = new OpenFileDialog { Title = title, Filter = T("MP3 or WAV songs") + " (*.mp3;*.wav)|*.mp3;*.wav", CheckFileExists = true };
+            return dialog.ShowDialog(Application.Current.MainWindow) == true ? dialog.FileName : null;
         }
     }
 }

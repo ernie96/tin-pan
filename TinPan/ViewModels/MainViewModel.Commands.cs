@@ -79,8 +79,10 @@ namespace TinPan.ViewModels
                 new("Song", T("S_how comments"), "", lib.CommentsCommand),
                 new("Song", T("Write a comment..."), "", lib.WriteCommentCommand),
                 new("Song", T("D_ownload"), "Ctrl+D", lib.DownloadCommand),
+                new("Song", T("Download MP_3"), "", lib.DownloadMp3Command),
                 new("Song", T("Download _WAV"), "", lib.DownloadWavCommand, HeaderPath: nameof(LibraryPanelViewModel.WavMenuText)),
                 new("Song", T("Download _video"), "", lib.DownloadVideoCommand),
+                new("Song", T("Clean up download (remove ha_ze)"), "", lib.CleanUpDownloadCommand),
                 new("Song", T("_Extend..."), "Ctrl+E", lib.ExtendCommand),
                 new("Song", T("_Cover..."), "", lib.CoverCommand, HeaderPath: nameof(LibraryPanelViewModel.CoverMenuText)),
                 new("Song", T("Re_master..."), "", lib.RemasterCommand, HeaderPath: nameof(LibraryPanelViewModel.RemasterMenuText)),
@@ -271,9 +273,11 @@ namespace TinPan.ViewModels
         {
             var notices = EmbeddedFiles.ReadText("THIRD_PARTY_NOTICES.md") ?? "";
             var nvda = EmbeddedFiles.ReadText("nvdaControllerClient-license.txt") ?? "";
+            var sunscreen = EmbeddedFiles.ReadText("sunscreen-license.txt") ?? "";
             // The notices and licenses are legal texts; they stay in English.
             var text = notices.Replace("Its license text is in `deps/nvda/license.txt`.", "Its license text follows.")
-                       + Environment.NewLine + Environment.NewLine + "NVDA Controller Client license" + Environment.NewLine + Environment.NewLine + nvda;
+                       + Environment.NewLine + Environment.NewLine + "NVDA Controller Client license" + Environment.NewLine + Environment.NewLine + nvda
+                       + Environment.NewLine + Environment.NewLine + "sunscreen license" + Environment.NewLine + Environment.NewLine + sunscreen;
             _dialogs.ShowDocument(T("Licenses and notices"), text.Trim());
         }
 
