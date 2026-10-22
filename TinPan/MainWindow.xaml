@@ -1,0 +1,68 @@
+<Window x:Class="TinPan.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:localViews="clr-namespace:TinPan.Views"
+        Title="{Binding Title}" Height="750" Width="1000"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.InputBindings>
+        <KeyBinding Key="F1" Command="{Binding ContextHelpCommand}" />
+        <KeyBinding Key="F1" Modifiers="Ctrl" Command="{Binding FullHelpCommand}" />
+        <KeyBinding Key="F2" Command="{Binding ReadCreditsCommand}" />
+        <KeyBinding Key="F2" Modifiers="Shift" Command="{Binding ReadSubscriptionCommand}" />
+        <KeyBinding Key="F7" Modifiers="Shift" Command="{Binding LibraryVM.SeekCommand}" CommandParameter="-10" />
+        <KeyBinding Key="F9" Modifiers="Shift" Command="{Binding LibraryVM.SeekCommand}" CommandParameter="10" />
+        <KeyBinding Key="F3" Command="{Binding NowPlayingCommand}" />
+        <KeyBinding Key="F5" Command="{Binding RefreshCommand}" />
+        <KeyBinding Key="D1" Modifiers="Ctrl" Command="{Binding ShowTabCommand}" CommandParameter="0" />
+        <KeyBinding Key="D2" Modifiers="Ctrl" Command="{Binding ShowTabCommand}" CommandParameter="1" />
+        <KeyBinding Key="D3" Modifiers="Ctrl" Command="{Binding ShowTabCommand}" CommandParameter="2" />
+        <KeyBinding Key="D4" Modifiers="Ctrl" Command="{Binding ShowTabCommand}" CommandParameter="3" />
+        <KeyBinding Key="D5" Modifiers="Ctrl" Command="{Binding ShowTabCommand}" CommandParameter="4" />
+        <KeyBinding Key="D6" Modifiers="Ctrl" Command="{Binding ShowTabCommand}" CommandParameter="5" />
+        <KeyBinding Key="F7" Command="{Binding PreviousCommand}" />
+        <KeyBinding Key="F8" Command="{Binding PlayPauseCommand}" />
+        <KeyBinding Key="F8" Modifiers="Shift" Command="{Binding LibraryVM.StopCommand}" />
+        <KeyBinding Key="F9" Command="{Binding NextCommand}" />
+        <KeyBinding Key="F11" Command="{Binding LibraryVM.VolumeDownCommand}" />
+        <KeyBinding Key="F12" Command="{Binding LibraryVM.VolumeUpCommand}" />
+        <KeyBinding Key="MediaPlayPause" Command="{Binding PlayPauseCommand}" />
+        <KeyBinding Key="MediaStop" Command="{Binding LibraryVM.StopCommand}" />
+        <KeyBinding Key="MediaPreviousTrack" Command="{Binding PreviousCommand}" />
+        <KeyBinding Key="MediaNextTrack" Command="{Binding NextCommand}" />
+        <KeyBinding Key="F7" Modifiers="Ctrl" Command="{Binding SeekPercentCommand}" CommandParameter="-10" />
+        <KeyBinding Key="F9" Modifiers="Ctrl" Command="{Binding SeekPercentCommand}" CommandParameter="10" />
+        <KeyBinding Key="F8" Modifiers="Ctrl" Command="{Binding RestartCommand}" />
+        <KeyBinding Key="F8" Modifiers="Ctrl+Shift" Command="{Binding ResumeCommand}" />
+        <KeyBinding Key="R" Modifiers="Ctrl" Command="{Binding RepeatCommand}" />
+        <KeyBinding Key="R" Modifiers="Ctrl+Shift" Command="{Binding HistoryCommand}" />
+        <KeyBinding Key="F" Modifiers="Ctrl" Command="{Binding SearchCommand}" />
+    </Window.InputBindings>
+
+    <DockPanel>
+    <!-- Built from MainViewModel.Commands in code, so it always matches the Ctrl+F1 list.
+         Hidden until Alt or F10, like a classic Windows menu, so Tab and the screen reader don't meet it. -->
+    <Menu x:Name="mainMenu" DockPanel.Dock="Top" Visibility="Collapsed" AutomationProperties.Name="Menu bar"/>
+    <TabControl x:Name="mainTabs" Margin="10" SelectedIndex="{Binding SelectedTab}" SelectionChanged="MainTabs_SelectionChanged">
+        <!-- Order matches Ctrl+1 to Ctrl+6 and the tab numbers in MainViewModel. -->
+        <TabItem Header="Library">
+            <localViews:LibraryPanelView x:Name="libraryView" DataContext="{Binding LibraryVM}" />
+        </TabItem>
+        <TabItem Header="Playlists">
+            <localViews:PlaylistsView x:Name="playlistsView" DataContext="{Binding PlaylistsVM}" />
+        </TabItem>
+        <TabItem Header="Create">
+            <localViews:CreateView x:Name="createView" DataContext="{Binding SunoVM}" />
+        </TabItem>
+        <TabItem Header="Trending">
+            <localViews:TrendingView x:Name="trendingView" DataContext="{Binding SunoVM}" />
+        </TabItem>
+        <TabItem Header="Account">
+            <localViews:AccountView x:Name="accountView" DataContext="{Binding SunoVM}" />
+        </TabItem>
+        <TabItem Header="Settings">
+            <localViews:SettingsPanelView x:Name="settingsView" DataContext="{Binding SettingsVM}" />
+        </TabItem>
+    </TabControl>
+    </DockPanel>
+</Window>

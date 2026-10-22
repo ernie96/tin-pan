@@ -1,0 +1,77 @@
+<UserControl x:Class="TinPan.Views.LibraryPanelView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:TinPan.Views">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+            <Label Content="_Songs" Target="{Binding ElementName=songList}" FontSize="18" FontWeight="Bold" Padding="0" Margin="0,0,10,0"/>
+            <Button Content="_Refresh" IsTabStop="False" Padding="10,5" Command="{Binding RefreshCommand}"/>
+            <Button Content="_Filters..." IsTabStop="False" Padding="10,5" Margin="8,0,0,0" Command="{Binding FiltersCommand}"/>
+            <Button Content="Download a_ll..." IsTabStop="False" Padding="10,5" Margin="8,0,0,0" Command="{Binding DownloadAllCommand}"/>
+        </StackPanel>
+
+        <DockPanel Grid.Row="1" Margin="0,0,0,10">
+            <Label Content="Searc_h" Target="{Binding ElementName=searchBox}" Padding="0,0,8,0" VerticalAlignment="Center"/>
+            <Button DockPanel.Dock="Right" Content="Clear search" IsTabStop="False" Padding="10,2" Margin="8,0,0,0" Command="{Binding ClearSearchCommand}"/>
+            <Button DockPanel.Dock="Right" Content="Search" IsTabStop="False" Padding="10,2" Margin="8,0,0,0" Command="{Binding SearchCommand}"/>
+            <TextBox x:Name="searchBox" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                     AutomationProperties.Name="Search your songs" PreviewKeyDown="SearchBox_PreviewKeyDown"/>
+        </DockPanel>
+
+        <ListBox x:Name="songList" Grid.Row="2" ItemsSource="{Binding Songs}" SelectedItem="{Binding SelectedClip}"
+                 local:PlayingCue.Songs="True" AutomationProperties.Name="Songs" PreviewKeyDown="SongList_PreviewKeyDown"
+                 MouseDoubleClick="SongList_MouseDoubleClick">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding SpokenText}" Margin="2"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="_Play" InputGestureText="Enter" Command="{Binding PlayCommand}"/>
+                    <MenuItem Header="_Details" InputGestureText="Ctrl+I" Command="{Binding DetailsCommand}"/>
+                    <MenuItem Header="Song in_formation" InputGestureText="Alt+Enter" Command="{Binding SongInfoCommand}"/>
+                    <MenuItem Header="_Lyrics" InputGestureText="Ctrl+L" Command="{Binding LyricsCommand}"/>
+                    <MenuItem Header="Copy l_ink" InputGestureText="Ctrl+C" Command="{Binding CopyLinkCommand}"/>
+                    <MenuItem Header="Copy Suno share lin_k" Command="{Binding ShareLinkCommand}"/>
+                    <MenuItem Header="Similar so_ngs..." Command="{Binding SimilarCommand}"/>
+                    <MenuItem Header="S_how comments" Command="{Binding CommentsCommand}"/>
+                    <MenuItem Header="Write a comment..." Command="{Binding WriteCommentCommand}"/>
+                    <Separator/>
+                    <MenuItem Header="D_ownload" InputGestureText="Ctrl+D" Command="{Binding DownloadCommand}"/>
+                    <MenuItem Header="{Binding WavMenuText}" Command="{Binding DownloadWavCommand}"/>
+                    <MenuItem Header="Download _video" Command="{Binding DownloadVideoCommand}"/>
+                    <Separator/>
+                    <MenuItem Header="_Extend..." InputGestureText="Ctrl+E" Command="{Binding ExtendCommand}"/>
+                    <MenuItem Header="{Binding CoverMenuText}" Command="{Binding CoverCommand}"/>
+                    <MenuItem Header="{Binding RemasterMenuText}" Command="{Binding RemasterCommand}"/>
+                    <MenuItem Header="_Get whole song" Command="{Binding WholeSongCommand}"/>
+                    <MenuItem Header="S_tems" Command="{Binding StemsCommand}"/>
+                    <Separator/>
+                    <MenuItem Header="Edit title and l_yrics..." Command="{Binding EditCommand}"/>
+                    <MenuItem Header="Add to playli_st..." Command="{Binding AddToPlaylistCommand}"/>
+                    <MenuItem Header="{Binding VisibilityMenuText}" Command="{Binding ToggleVisibilityCommand}"/>
+                    <MenuItem Header="{Binding RemixMenuText}" Command="{Binding ToggleRemixCommand}"/>
+                    <MenuItem Header="Move to tr_ash" InputGestureText="Delete" Command="{Binding TrashCommand}"/>
+                </ContextMenu>
+            </ListBox.ContextMenu>
+        </ListBox>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+            <Button Content="Previous" IsTabStop="False" Width="80" Margin="5" Padding="5" Command="{Binding PreviousCommand}"/>
+            <Button Content="Play or pause" IsTabStop="False" Width="100" Margin="5" Padding="5" Command="{Binding PlayPauseCommand}"/>
+            <Button Content="Stop" IsTabStop="False" Width="80" Margin="5" Padding="5" Command="{Binding StopCommand}"/>
+            <Button Content="Next" IsTabStop="False" Width="80" Margin="5" Padding="5" Command="{Binding NextCommand}"/>
+            <Label Content="_Volume" Target="{Binding ElementName=volume}" VerticalAlignment="Center" Margin="10,0,0,0"/>
+            <Slider x:Name="volume" Minimum="0" Maximum="100" SmallChange="5" LargeChange="10" Width="120"
+                    VerticalAlignment="Center" Value="{Binding Volume, Mode=TwoWay}" AutomationProperties.Name="Volume"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

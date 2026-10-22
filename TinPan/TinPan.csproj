@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <AssemblyTitle>Tin Pan</AssemblyTitle>
+    <Product>Tin Pan</Product>
+    <Version>1.1.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.9" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4078.44" />
+    <PackageReference Include="System.Speech" Version="10.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="TinPan.Tests" />
+  </ItemGroup>
+
+  <!-- Built into TinPan.exe (see Services/EmbeddedFiles.cs), so the published app is one file. -->
+  <ItemGroup>
+    <EmbeddedResource Include="THIRD_PARTY_NOTICES.md" LogicalName="TinPan.THIRD_PARTY_NOTICES.md" />
+    <EmbeddedResource Include="..\deps\nvda\license.txt" LogicalName="TinPan.nvdaControllerClient-license.txt" />
+    <EmbeddedResource Include="..\deps\nvda\x64\nvdaControllerClient.dll" LogicalName="TinPan.nvdaControllerClient.dll" />
+  </ItemGroup>
+
+  <!-- Loose copies too, for the development build only; the published single file doesn't need them. -->
+  <ItemGroup>
+    <None Include="THIRD_PARTY_NOTICES.md" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Never" />
+    <None Include="..\deps\nvda\license.txt" Link="nvdaControllerClient-license.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Never" />
+    <ContentWithTargetPath Include="..\deps\nvda\x64\nvdaControllerClient.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+      <TargetPath>nvdaControllerClient.dll</TargetPath>
+    </ContentWithTargetPath>
+  </ItemGroup>
+
+</Project>

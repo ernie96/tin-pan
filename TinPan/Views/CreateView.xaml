@@ -1,0 +1,64 @@
+<UserControl x:Class="TinPan.Views.CreateView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:TinPan.Views">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="10">
+            <TextBlock Text="Settings for both ways of making a song" FontSize="16" FontWeight="Bold"/>
+            <Label Content="_Model" Target="{Binding ElementName=model}" Padding="0,5"/>
+            <ComboBox x:Name="model" ItemsSource="{Binding Models}" SelectedItem="{Binding SelectedModel}"
+                      AutomationProperties.Name="Model" HorizontalAlignment="Left" MinWidth="200"/>
+            <Label Content="_Style" Target="{Binding ElementName=style}" Padding="0,5"/>
+            <TextBox x:Name="style" Text="{Binding Style, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Style"/>
+            <Button Content="Style _boost" HorizontalAlignment="Left" Margin="0,5" Padding="10,5" Command="{Binding BoostStyleCommand}"/>
+            <Label Content="_Exclude styles" Target="{Binding ElementName=exclude}" Padding="0,5"/>
+            <TextBox x:Name="exclude" Text="{Binding ExcludeStyles, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Exclude styles"/>
+            <Label Content="_Voice" Target="{Binding ElementName=voice}" Padding="0,5"/>
+            <ComboBox x:Name="voice" ItemsSource="{Binding Vocals}" SelectedItem="{Binding Vocal}"
+                      AutomationProperties.Name="Voice" HorizontalAlignment="Left" MinWidth="200"/>
+            <CheckBox Content="_Instrumental (no singing)" IsChecked="{Binding IsInstrumental}" Margin="0,10,0,0"/>
+            <CheckBox Content="Ma_x mode (Suno's highest quality)" IsChecked="{Binding IsMaxMode}" Margin="0,6,0,0"/>
+            <Label Content="_Weirdness, 0 to 100 (empty lets Suno choose)" Target="{Binding ElementName=weirdness}" Padding="0,5"/>
+            <TextBox x:Name="weirdness" Text="{Binding Weirdness, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Weirdness, 0 to 100"
+                     HorizontalAlignment="Left" MinWidth="120"/>
+            <Label Content="Style in_fluence, 0 to 100 (empty lets Suno choose)" Target="{Binding ElementName=influence}" Padding="0,5"/>
+            <TextBox x:Name="influence" Text="{Binding StyleInfluence, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Style influence, 0 to 100"
+                     HorizontalAlignment="Left" MinWidth="120"/>
+            <Label Content="_Persona" Target="{Binding ElementName=personaList}" Padding="0,5"/>
+            <ComboBox x:Name="personaList" ItemsSource="{Binding Personas}" SelectedItem="{Binding SelectedPersona}"
+                      AutomationProperties.Name="Persona" HorizontalAlignment="Left" MinWidth="200"/>
+            <Label Content="Or type _a persona ID" Target="{Binding ElementName=persona}" Padding="0,5"/>
+            <TextBox x:Name="persona" Text="{Binding PersonaId, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Persona ID"/>
+
+            <TextBlock Text="Describe a song" FontSize="16" FontWeight="Bold" Margin="0,15,0,0"/>
+            <Label Content="_Description" Target="{Binding ElementName=description}" Padding="0,5"/>
+            <TextBox x:Name="description" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                     AutomationProperties.Name="Description" TextWrapping="Wrap" MinHeight="40"/>
+            <Button Content="_Create from description" HorizontalAlignment="Left" Margin="0,5" Padding="10,5"
+                    Command="{Binding CreateFromDescriptionCommand}"/>
+
+            <TextBlock Text="Your own lyrics" FontSize="16" FontWeight="Bold" Margin="0,15,0,0"/>
+            <Label Content="_Title" Target="{Binding ElementName=songTitle}" Padding="0,5"/>
+            <TextBox x:Name="songTitle" Text="{Binding SongTitle, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Title"/>
+            <Label Content="_Lyrics" Target="{Binding ElementName=lyrics}" Padding="0,5"/>
+            <TextBox x:Name="lyrics" Text="{Binding Lyrics, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Lyrics"
+                     AcceptsReturn="True" TextWrapping="Wrap" MinHeight="120" VerticalScrollBarVisibility="Auto"/>
+            <Button Content="C_reate with my lyrics" HorizontalAlignment="Left" Margin="0,5" Padding="10,5"
+                    Command="{Binding CreateCustomCommand}"/>
+
+            <TextBlock Text="Write lyrics for me" FontSize="16" FontWeight="Bold" Margin="0,15,0,0"/>
+            <Label Content="T_opic" Target="{Binding ElementName=topic}" Padding="0,5"/>
+            <TextBox x:Name="topic" Text="{Binding LyricsTopic, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Topic"/>
+            <Button Content="Write l_yrics" HorizontalAlignment="Left" Margin="0,5" Padding="10,5" Command="{Binding WriteLyricsCommand}"/>
+            <Label Content="_Generated lyrics" Target="{Binding ElementName=generated}" Padding="0,5"/>
+            <TextBox x:Name="generated" Text="{Binding GeneratedLyrics, Mode=OneWay}" IsReadOnly="True" AutomationProperties.Name="Generated lyrics"
+                     TextWrapping="Wrap" MinHeight="80" VerticalScrollBarVisibility="Auto"/>
+            <Button Content="_Use these lyrics" HorizontalAlignment="Left" Margin="0,5" Padding="10,5" Command="{Binding UseGeneratedLyricsCommand}"/>
+
+            <TextBlock Text="Change my lyrics" FontSize="16" FontWeight="Bold" Margin="0,15,0,0"/>
+            <Label Content="What to c_hange (for example: make the chorus rhyme)" Target="{Binding ElementName=cowrite}" Padding="0,5"/>
+            <TextBox x:Name="cowrite" Text="{Binding CowriteInstruction, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="What to change in my lyrics"/>
+            <Button Content="Rewrite my lyrics _now" HorizontalAlignment="Left" Margin="0,5" Padding="10,5" Command="{Binding CowriteCommand}"/>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

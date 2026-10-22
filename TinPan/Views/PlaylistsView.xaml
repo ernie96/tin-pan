@@ -1,0 +1,63 @@
+<UserControl x:Class="TinPan.Views.PlaylistsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:TinPan.Views">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0,0,0,10">
+            <Label Content="_Playlists" Target="{Binding ElementName=playlistList}" FontSize="18" FontWeight="Bold" Padding="0" Margin="0,0,10,0"/>
+            <Button Content="_Refresh" IsTabStop="False" Padding="8,4" Command="{Binding RefreshCommand}"/>
+            <Button Content="_New..." IsTabStop="False" Padding="8,4" Margin="6,0,0,0" Command="{Binding NewCommand}"/>
+            <Button Content="Rena_me..." IsTabStop="False" Padding="8,4" Margin="6,0,0,0" Command="{Binding RenameCommand}"/>
+            <Button Content="_Delete" IsTabStop="False" Padding="8,4" Margin="6,0,0,0" Command="{Binding DeleteCommand}"/>
+        </StackPanel>
+
+        <ListBox x:Name="playlistList" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Playlists}" SelectedItem="{Binding SelectedPlaylist}"
+                 AutomationProperties.Name="Playlists" PreviewKeyDown="Playlists_PreviewKeyDown" Margin="0,0,10,0">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="AutomationProperties.Name" Value="{Binding SpokenText}"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding SpokenText}" Margin="2"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="_Open" InputGestureText="Enter" Command="{Binding OpenCommand}"/>
+                    <MenuItem Header="_New playlist..." Command="{Binding NewCommand}"/>
+                    <MenuItem Header="Rena_me..." Command="{Binding RenameCommand}"/>
+                    <MenuItem Header="_Delete" InputGestureText="Delete" Command="{Binding DeleteCommand}"/>
+                    <MenuItem Header="_Refresh" InputGestureText="F5" Command="{Binding RefreshCommand}"/>
+                </ContextMenu>
+            </ListBox.ContextMenu>
+        </ListBox>
+
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,10">
+            <Label Content="_Songs in this playlist" Target="{Binding ElementName=songList}" FontSize="18" FontWeight="Bold" Padding="0" Margin="0,0,10,0"/>
+            <Button Content="Move _up" IsTabStop="False" Padding="8,4" Command="{Binding MoveUpCommand}"/>
+            <Button Content="Move do_wn" IsTabStop="False" Padding="8,4" Margin="6,0,0,0" Command="{Binding MoveDownCommand}"/>
+            <Button Content="Remo_ve" IsTabStop="False" Padding="8,4" Margin="6,0,0,0" Command="{Binding RemoveSongCommand}"/>
+        </StackPanel>
+
+        <ListBox x:Name="songList" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Songs}" SelectedItem="{Binding SelectedSong}"
+                 local:PlayingCue.Songs="True" AutomationProperties.Name="Songs in this playlist" PreviewKeyDown="Songs_PreviewKeyDown"
+                 MouseDoubleClick="Songs_MouseDoubleClick">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding SpokenText}" Margin="2"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>

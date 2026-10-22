@@ -1,0 +1,142 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using TinPan.Services;
+using TinPan.Views;
+
+namespace TinPan.ViewModels
+{
+    public partial class SettingsPanelViewModel : ViewModelBase
+    {
+        private readonly IConfigService _config;
+        private readonly IAuthService _auth;
+        private readonly IDialogService _dialogs;
+        private readonly IAudioService _audio;
+
+        [ObservableProperty] private string signInText = "Not signed in.";
+        [ObservableProperty] private bool isSignedIn;
+        [ObservableProperty] private string downloadDir;
+        [ObservableProperty] private string outputFormat;
+        [ObservableProperty] private bool saveLyrics;
+        [ObservableProperty] private bool saveTimedLyrics;
+        [ObservableProperty] private bool saveDetails;
+        [ObservableProperty] private bool saveCover;
+
+        public IReadOnlyList<string> OutputFormats { get; } = new[] { "mp3", "wav" };
+
+        private static readonly (SpeechLevel Level, string Label)[] SpeechLevelChoices =
+        {
+            (Services.SpeechLevel.Everything, "Everything"),
+            (Services.SpeechLevel.AskedFor, "What I ask for and errors, not background news"),
+            (Services.SpeechLevel.ErrorsOnly, "Only errors and what I ask to hear")
+        };
+
+        public IReadOnlyList<string> SpeechLevels { get; } = SpeechLevelChoices.Select(c => c.Label).ToList();
+
+        [ObservableProperty] private string speechLevel = SpeechLevelChoices[0].Label;
+
+        public static string SpeechLevelLabel(SpeechLevel level) => SpeechLevelChoices.First(c => c.Level == level).Label;
+
+        partial void OnSpeechLevelChanged(string value)
+        {
+            var level = SpeechLevelChoices.FirstOrDefault(c => c.Label == value).Level;
+            Announcer.Level = level;
+            _config.Current.SpeechLevel = level.ToString();
+            _config.SaveSoon();
+        }
+
+        private static readonly (PlayingCueMode Mode, string Label)[] PlayingCueChoices =
+        {
+            (PlayingCueMode.Click, "A short click"),
+            (PlayingCueMode.Say, "Say playing (also shown in braille)"),
+            (PlayingCueMode.ClickAndSay, "Click and say playing"),
+            (PlayingCueMode.Off, "Nothing")
+        };
+
+        public IReadOnlyList<string> PlayingCues { get; } = PlayingCueChoices.Select(c => c.Label).ToList();
+
+        [ObservableProperty] private string playingCue = PlayingCueChoices[0].Label;
+
+        partial void OnPlayingCueChanged(string value)
+        {
+            var mode = PlayingCueChoices.FirstOrDefault(c => c.Label == value).Mode;
+            Views.PlayingCue.Instance.Mode = mode;
+            _config.Current.PlayingCue = mode.ToString();
+            _config.SaveSoon();
+        }
+
+        public SettingsPanelViewModel(IConfigService config, IAuthService auth, IDialogService dialogs, IAudioService audio, IAnnouncer announcer)
+            : base(announcer)
+        {
+            _config = config;
+            _auth = auth;
+            _dialogs = dialogs;
+            _audio = audio;
+            downloadDir = config.Current.Audio.DownloadDir;
+            outputFormat = OutputFormats.Contains(config.Current.Audio.OutputFormat) ? config.Current.Audio.OutputFormat : "mp3";
+            speechLevel = SpeechLevelLabel(Enum.TryParse<SpeechLevel>(config.Current.SpeechLevel, out var lvl) ? lvl : Services.SpeechLevel.Everything);
+            var cue = Enum.TryParse<PlayingCueMode>(config.Current.PlayingCue, out var m) ? m : PlayingCueMode.Click;
+            Views.PlayingCue.Instance.Mode = cue;
+            playingCue = PlayingCueChoices.First(c => c.Mode == cue).Label;
+            var downloads = config.Current.Audio;
+            saveLyrics = downloads.SaveLyrics;
+            saveTimedLyrics = downloads.SaveTimedLyrics;
+            saveDetails = downloads.SaveDetails;
+            saveCover = downloads.SaveCover;
+            _auth.AuthStateChanged += (_, _) => UpdateSignInText();
+        }
+
+        private void UpdateSignInText()
+        {
+            IsSignedIn = _auth.IsAuthenticated;
+            SignInText = !_auth.IsAuthenticated ? "Not signed in."
+                : string.IsNullOrEmpty(_auth.UserName) ? "Signed in." : $"Signed in as {_auth.UserName}.";
+        }
+
+        [RelayCommand]
+        private async Task SignInAsync()
+        {
+            if (await _auth.SignInAsync()) Announcer.Announce(SignInText);
+            else Announcer.Announce("Not signed in.");
+        }
+
+        [RelayCommand]
+        private async Task SignOutAsync()
+        {
+            if (!_auth.IsAuthenticated) return;
+            _auth.SignOut();
+            await _audio.ForgetSignInAsync();
+            Announcer.Announce("Signed out.");
+        }
+
+        [RelayCommand]
+        private void Browse()
+        {
+            var picked = _dialogs.PickFolder(string.IsNullOrEmpty(DownloadDir) ? null : DownloadDir);
+            if (picked == null) return;
+            DownloadDir = picked;
+            Announcer.Announce("Download folder set.");
+        }
+
+        partial void OnDownloadDirChanged(string value)
+        {
+            _config.Current.Audio.DownloadDir = value.Trim();
+            _config.SaveSoon();
+        }
+
+        partial void OnSaveLyricsChanged(bool value) { _config.Current.Audio.SaveLyrics = value; _config.SaveSoon(); }
+        partial void OnSaveTimedLyricsChanged(bool value) { _config.Current.Audio.SaveTimedLyrics = value; _config.SaveSoon(); }
+        partial void OnSaveDetailsChanged(bool value) { _config.Current.Audio.SaveDetails = value; _config.SaveSoon(); }
+        partial void OnSaveCoverChanged(bool value) { _config.Current.Audio.SaveCover = value; _config.SaveSoon(); }
+
+        partial void OnOutputFormatChanged(string value)
+        {
+            _config.Current.Audio.OutputFormat = value;
+            _config.SaveSoon();
+        }
+
+    }
+}
