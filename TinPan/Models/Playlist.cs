@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.Models
 {
@@ -23,9 +24,9 @@ namespace TinPan.Models
             set { if (SetProperty(ref _songCount, value)) OnPropertyChanged(nameof(SpokenText)); }
         }
 
-        public string DisplayName => string.IsNullOrWhiteSpace(Name) ? "Untitled playlist" : Name.Trim();
+        public string DisplayName => string.IsNullOrWhiteSpace(Name) ? T("Untitled playlist") : Name.Trim();
 
-        public string SpokenText => SongCount is { } n ? $"{DisplayName}, {n} {(n == 1 ? "song" : "songs")}" : DisplayName;
+        public string SpokenText => SongCount is { } n ? $"{DisplayName}, {Plural(n, "{0} song", "{0} songs")}" : DisplayName;
 
         public override string ToString() => SpokenText;
     }
@@ -40,8 +41,8 @@ namespace TinPan.Models
 
         public override string ToString()
         {
-            var head = string.IsNullOrEmpty(Author) ? "Someone" : Author;
-            var extra = Likes > 0 ? $" ({Likes} {(Likes == 1 ? "like" : "likes")})" : "";
+            var head = string.IsNullOrEmpty(Author) ? T("Someone") : Author;
+            var extra = Likes > 0 ? $" ({Plural(Likes, "{0} like", "{0} likes")})" : "";
             return $"{head}: {Text}{extra}";
         }
     }

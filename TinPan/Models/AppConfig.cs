@@ -8,6 +8,9 @@ namespace TinPan.Models
         public UserConfig User { get; set; } = new();
         public LibraryConfig Library { get; set; } = new();
 
+        /// <summary>"" follows Windows; otherwise "en", "ro", "uk" or "es". Takes effect at the next start.</summary>
+        public string Language { get; set; } = "";
+
         /// <summary>Everything, AskedFor or ErrorsOnly (see SpeechLevel).</summary>
         public string SpeechLevel { get; set; } = "Everything";
 

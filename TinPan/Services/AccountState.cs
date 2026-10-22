@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using TinPan.Models;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.Services
 {
@@ -23,9 +24,9 @@ namespace TinPan.Services
         /// <summary>Null until billing has loaded or when Suno doesn't say.</summary>
         public bool? IsPaid => Billing?.IsPaid;
 
-        public string CreditsText => Billing == null ? "Credits not loaded yet." : BillingText.Credits(Billing);
+        public string CreditsText => Billing == null ? T("Credits not loaded yet.") : BillingText.Credits(Billing);
 
-        public string SubscriptionText => Billing == null ? "Plan not loaded yet." : BillingText.Subscription(Billing);
+        public string SubscriptionText => Billing == null ? T("Plan not loaded yet.") : BillingText.Subscription(Billing);
 
         public IReadOnlyList<SunoModel> Models =>
             Billing?.Models.Where(m => m.CanUse && !string.IsNullOrEmpty(m.ExternalKey)).ToList() ?? new List<SunoModel>();
@@ -64,6 +65,6 @@ namespace TinPan.Services
         public void Clear() => Billing = null;
 
         /// <summary>Label for plan-only actions: plain when allowed, with the requirement otherwise.</summary>
-        public string PaidLabel(string label) => IsPaid == true ? label : label + " (needs Pro or Premier)";
+        public string PaidLabel(string label) => IsPaid == true ? label : T("{0} (needs Pro or Premier)", label);
     }
 }

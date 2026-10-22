@@ -1,0 +1,3007 @@
+{
+ "Something went wrong. Details are in the log.": [
+  "Ceva nu a mers. Detaliile sunt în jurnal.",
+  "Щось пішло не так. Подробиці в журналі.",
+  "Algo salió mal. Los detalles están en el registro."
+ ],
+ "Remove from playlist": [
+  "Elimină din lista de redare",
+  "Прибрати з плейлиста",
+  "Quitar de la lista"
+ ],
+ "Move up": [
+  "Mută mai sus",
+  "Перемістити вгору",
+  "Subir"
+ ],
+ "Move down": [
+  "Mută mai jos",
+  "Перемістити вниз",
+  "Bajar"
+ ],
+ "{0} song|{0} songs": [
+  "{0} melodie|{0} melodii|{0} de melodii",
+  "{0} пісня|{0} пісні|{0} пісень",
+  "{0} canción|{0} canciones"
+ ],
+ "{0} of this month's {1}, plus {2} extra.": [
+  "{0} din cele {1} ale lunii, plus {2} în plus.",
+  "{0} з {1} цього місяця, плюс {2} додаткових.",
+  "{0} de los {1} de este mes, más {2} extra."
+ ],
+ "{0} of this month's {1}.": [
+  "{0} din cele {1} ale lunii.",
+  "{0} з {1} цього місяця.",
+  "{0} de los {1} de este mes."
+ ],
+ "Including {0} extra.": [
+  "Inclusiv {0} în plus.",
+  "Зокрема {0} додаткових.",
+  "Incluye {0} extra."
+ ],
+ "active": [
+  "activ",
+  "активний",
+  "activo"
+ ],
+ "not active": [
+  "inactiv",
+  "неактивний",
+  "inactivo"
+ ],
+ "{0}, {1}, renews {2}.": [
+  "{0}, {1}, se reînnoiește pe {2}.",
+  "{0}, {1}, поновлюється {2}.",
+  "{0}, {1}, se renueva el {2}."
+ ],
+ "{0}: {1} a month, {2} used, plus {3} extra.": [
+  "{0}: {1} pe lună, {2} folosite, plus {3} în plus.",
+  "{0}: {1} на місяць, використано {2}, плюс {3} додаткових.",
+  "{0}: {1} al mes, {2} usadas, más {3} extra."
+ ],
+ "{0}: {1} a month, {2} used.": [
+  "{0}: {1} pe lună, {2} folosite.",
+  "{0}: {1} на місяць, використано {2}.",
+  "{0}: {1} al mes, {2} usadas."
+ ],
+ "WAV downloads, covers and remasters need Pro or Premier.": [
+  "Descărcările WAV, coverurile și remasterizările necesită Pro sau Premier.",
+  "Для завантаження WAV, каверів і ремастерів потрібен Pro або Premier.",
+  "Las descargas WAV, los covers y las remasterizaciones necesitan Pro o Premier."
+ ],
+ "Your plan includes: {0}.": [
+  "Planul tău include: {0}.",
+  "Ваш план містить: {0}.",
+  "Tu plan incluye: {0}."
+ ],
+ "Plan unknown": [
+  "Plan necunoscut",
+  "План невідомий",
+  "Plan desconocido"
+ ],
+ "{0} plan": [
+  "Planul {0}",
+  "План {0}",
+  "Plan {0}"
+ ],
+ "v4 model": [
+  "modelul v4",
+  "модель v4",
+  "modelo v4"
+ ],
+ "v4.5 models": [
+  "modelele v4.5",
+  "моделі v4.5",
+  "modelos v4.5"
+ ],
+ "covers": [
+  "coveruri",
+  "кавери",
+  "covers"
+ ],
+ "editing songs": [
+  "editarea melodiilor",
+  "редагування пісень",
+  "editar canciones"
+ ],
+ "personas": [
+  "persona",
+  "персони",
+  "personas"
+ ],
+ "buying extra credits": [
+  "cumpărarea de credite în plus",
+  "купівля додаткових кредитів",
+  "comprar créditos extra"
+ ],
+ "commercial use": [
+  "utilizare comercială",
+  "комерційне використання",
+  "uso comercial"
+ ],
+ "stems": [
+  "stem-uri",
+  "стеми",
+  "stems"
+ ],
+ "song cover images": [
+  "imagini de copertă",
+  "обкладинки пісень",
+  "imágenes de portada"
+ ],
+ "styles to exclude": [
+  "stiluri de exclus",
+  "стилі для виключення",
+  "estilos a excluir"
+ ],
+ "remasters": [
+  "remasterizări",
+  "ремастери",
+  "remasterizaciones"
+ ],
+ "song videos": [
+  "videoclipuri ale melodiilor",
+  "відео до пісень",
+  "videos de canciones"
+ ],
+ "long uploads": [
+  "încărcări lungi",
+  "довгі завантаження на сервер",
+  "subidas largas"
+ ],
+ "WAV conversion": [
+  "conversie WAV",
+  "конвертування у WAV",
+  "conversión a WAV"
+ ],
+ "weirdness and style sliders": [
+  "glisoarele de ciudățenie și stil",
+  "повзунки дивності та стилю",
+  "controles de rareza y estilo"
+ ],
+ "playlist inspiration": [
+  "inspirație din liste de redare",
+  "натхнення з плейлистів",
+  "inspiración de listas"
+ ],
+ "style boost": [
+  "amplificarea stilului",
+  "посилення стилю",
+  "mejora de estilo"
+ ],
+ "custom models": [
+  "modele personalizate",
+  "власні моделі",
+  "modelos personalizados"
+ ],
+ "max mode": [
+  "modul Max",
+  "режим Max",
+  "modo Max"
+ ],
+ "{0:N0} credit left.|{0:N0} credits left.": [
+  "A mai rămas {0:N0} credit.|Au mai rămas {0:N0} credite.|Au mai rămas {0:N0} de credite.",
+  "Залишився {0:N0} кредит.|Залишилося {0:N0} кредити.|Залишилося {0:N0} кредитів.",
+  "Te queda {0:N0} crédito.|Te quedan {0:N0} créditos."
+ ],
+ "{0:N0} download left|{0:N0} downloads left": [
+  "{0:N0} descărcare rămasă|{0:N0} descărcări rămase|{0:N0} de descărcări rămase",
+  "{0:N0} завантаження лишилося|{0:N0} завантаження лишилося|{0:N0} завантажень лишилося",
+  "{0:N0} descarga restante|{0:N0} descargas restantes"
+ ],
+ "Untitled playlist": [
+  "Listă fără nume",
+  "Плейлист без назви",
+  "Lista sin nombre"
+ ],
+ "Someone": [
+  "Cineva",
+  "Хтось",
+  "Alguien"
+ ],
+ "{0} like|{0} likes": [
+  "{0} aprecie|{0} aprecieri|{0} de aprecieri",
+  "{0} вподобання|{0} вподобання|{0} вподобань",
+  "{0} me gusta|{0} me gusta"
+ ],
+ "Untitled song": [
+  "Melodie fără titlu",
+  "Пісня без назви",
+  "Canción sin título"
+ ],
+ "liked": [
+  "apreciată",
+  "вподобана",
+  "te gusta"
+ ],
+ "failed": [
+  "eșuată",
+  "не вдалася",
+  "falló"
+ ],
+ "still being made": [
+  "încă se creează",
+  "ще створюється",
+  "todavía se está creando"
+ ],
+ "whole song": [
+  "melodie întreagă",
+  "ціла пісня",
+  "canción completa"
+ ],
+ "stem": [
+  "stem",
+  "стем",
+  "stem"
+ ],
+ "Lyrics:": [
+  "Versuri:",
+  "Текст:",
+  "Letra:"
+ ],
+ "Length: {0}": [
+  "Durată: {0}",
+  "Тривалість: {0}",
+  "Duración: {0}"
+ ],
+ "Status: {0}": [
+  "Stare: {0}",
+  "Стан: {0}",
+  "Estado: {0}"
+ ],
+ "Error: {0}": [
+  "Eroare: {0}",
+  "Помилка: {0}",
+  "Error: {0}"
+ ],
+ "Style: {0}": [
+  "Stil: {0}",
+  "Стиль: {0}",
+  "Estilo: {0}"
+ ],
+ "Instrumental": [
+  "Instrumentală",
+  "Інструментальна",
+  "Instrumental"
+ ],
+ "Description: {0}": [
+  "Descriere: {0}",
+  "Опис: {0}",
+  "Descripción: {0}"
+ ],
+ "Tempo: about {0:0} beats per minute": [
+  "Tempo: aproximativ {0:0} de bătăi pe minut",
+  "Темп: близько {0:0} ударів за хвилину",
+  "Tempo: unos {0:0} pulsos por minuto"
+ ],
+ "Model: {0}": [
+  "Model: {0}",
+  "Модель: {0}",
+  "Modelo: {0}"
+ ],
+ "Made: {0}": [
+  "Creată: {0}",
+  "Створено: {0}",
+  "Creada: {0}"
+ ],
+ "Public": [
+  "Publică",
+  "Публічна",
+  "Pública"
+ ],
+ "Private": [
+  "Privată",
+  "Приватна",
+  "Privada"
+ ],
+ "Plays: {0}. Likes: {1}.": [
+  "Redări: {0}. Aprecieri: {1}.",
+  "Прослуховувань: {0}. Вподобань: {1}.",
+  "Reproducciones: {0}. Me gusta: {1}."
+ ],
+ "Downloaded before, so downloading again is free.": [
+  "Descărcată deja, așa că o nouă descărcare e gratuită.",
+  "Уже завантажувалася, тож повторне завантаження безкоштовне.",
+  "Ya la descargaste, así que volver a descargarla es gratis."
+ ],
+ "Link: {0}": [
+  "Link: {0}",
+  "Посилання: {0}",
+  "Enlace: {0}"
+ ],
+ "complete": [
+  "gata",
+  "готова",
+  "lista"
+ ],
+ "streaming": [
+  "se poate asculta, încă se finalizează",
+  "можна слухати, ще завершується",
+  "se puede escuchar, aún se termina"
+ ],
+ "submitted": [
+  "trimisă",
+  "надіслана",
+  "enviada"
+ ],
+ "queued": [
+  "în așteptare",
+  "у черзі",
+  "en cola"
+ ],
+ "error": [
+  "eroare",
+  "помилка",
+  "error"
+ ],
+ "unknown": [
+  "necunoscută",
+  "невідомо",
+  "desconocido"
+ ],
+ "Credits not loaded yet.": [
+  "Creditele nu s-au încărcat încă.",
+  "Кредити ще не завантажено.",
+  "Los créditos aún no se cargaron."
+ ],
+ "Plan not loaded yet.": [
+  "Planul nu s-a încărcat încă.",
+  "План ще не завантажено.",
+  "El plan aún no se cargó."
+ ],
+ "{0} (needs Pro or Premier)": [
+  "{0} (necesită Pro sau Premier)",
+  "{0} (потрібен Pro або Premier)",
+  "{0} (necesita Pro o Premier)"
+ ],
+ "Not signed in. Sign in from Settings.": [
+  "Nu ești conectat. Conectează-te din Setări.",
+  "Ви не ввійшли. Увійдіть у Налаштуваннях.",
+  "No iniciaste sesión. Inicia sesión desde Configuración."
+ ],
+ "Passing Suno's captcha first. This can take half a minute.": [
+  "Întâi trec de captcha-ul Suno. Poate dura o jumătate de minut.",
+  "Спершу проходжу капчу Suno. Це може тривати пів хвилини.",
+  "Primero paso el captcha de Suno. Puede tardar medio minuto."
+ ],
+ "Suno wants you to confirm you're a person. A Suno check window is open; press the check box in it if there is one.": [
+  "Suno vrea să confirmi că ești om. S-a deschis o fereastră de verificare Suno; apasă căsuța din ea, dacă există.",
+  "Suno просить підтвердити, що ви людина. Відкрито вікно перевірки Suno; позначте в ньому прапорець, якщо він є.",
+  "Suno quiere que confirmes que eres una persona. Se abrió una ventana de verificación de Suno; marca la casilla si la hay."
+ ],
+ "Suno's captcha wasn't passed, so no song was made. You can try again, or make this one on suno.com.": [
+  "Captcha-ul Suno nu a fost trecut, așa că nu s-a creat nicio melodie. Poți încerca din nou sau o poți crea pe suno.com.",
+  "Капчу Suno не пройдено, тому пісню не створено. Спробуйте ще раз або створіть її на suno.com.",
+  "No se pasó el captcha de Suno, así que no se creó ninguna canción. Puedes intentarlo de nuevo o crearla en suno.com."
+ ],
+ "Suno check": [
+  "Verificare Suno",
+  "Перевірка Suno",
+  "Verificación de Suno"
+ ],
+ "Suno's captcha needs the Microsoft Edge WebView2 Runtime. Install it from Microsoft, then try again.": [
+  "Captcha-ul Suno are nevoie de Microsoft Edge WebView2 Runtime. Instalează-l de la Microsoft, apoi încearcă din nou.",
+  "Для капчі Suno потрібен Microsoft Edge WebView2 Runtime. Установіть його з сайту Microsoft і спробуйте ще раз.",
+  "El captcha de Suno necesita Microsoft Edge WebView2 Runtime. Instálalo desde Microsoft y vuelve a intentarlo."
+ ],
+ "Not signed in.": [
+  "Nu ești conectat.",
+  "Ви не ввійшли.",
+  "No iniciaste sesión."
+ ],
+ "Suno sign-in check failed ({0}).": [
+  "Verificarea conectării la Suno a eșuat ({0}).",
+  "Не вдалося перевірити вхід у Suno ({0}).",
+  "Falló la verificación de inicio de sesión de Suno ({0})."
+ ],
+ "Not signed in to Suno.": [
+  "Nu ești conectat la Suno.",
+  "Ви не ввійшли в Suno.",
+  "No iniciaste sesión en Suno."
+ ],
+ "Can't reach Suno. Check your internet connection.": [
+  "Nu pot ajunge la Suno. Verifică-ți conexiunea la internet.",
+  "Не вдається зв'язатися з Suno. Перевірте підключення до інтернету.",
+  "No se puede conectar con Suno. Revisa tu conexión a internet."
+ ],
+ "Suno's sign-in service sent a reply this app doesn't understand.": [
+  "Serviciul de conectare Suno a trimis un răspuns pe care aplicația nu-l înțelege.",
+  "Служба входу Suno надіслала відповідь, яку програма не розуміє.",
+  "El servicio de inicio de sesión de Suno envió una respuesta que la app no entiende."
+ ],
+ "Suno sign-in service didn't answer.": [
+  "Serviciul de conectare Suno nu a răspuns.",
+  "Служба входу Suno не відповіла.",
+  "El servicio de inicio de sesión de Suno no respondió."
+ ],
+ "Couldn't refresh the Suno sign-in ({0}).": [
+  "Nu am putut reîmprospăta conectarea la Suno ({0}).",
+  "Не вдалося оновити вхід у Suno ({0}).",
+  "No se pudo renovar el inicio de sesión de Suno ({0})."
+ ],
+ "Suno sign-in returned no token.": [
+  "Conectarea Suno nu a trimis niciun token.",
+  "Вхід у Suno не повернув токена.",
+  "El inicio de sesión de Suno no devolvió ningún token."
+ ],
+ "Choose where songs are saved": [
+  "Alege unde se salvează melodiile",
+  "Виберіть, куди зберігати пісні",
+  "Elige dónde se guardan las canciones"
+ ],
+ "another screen reader": [
+  "alt cititor de ecran",
+  "інший екранний читач",
+  "otro lector de pantalla"
+ ],
+ "Windows speech": [
+  "vorbirea Windows",
+  "мовлення Windows",
+  "la voz de Windows"
+ ],
+ "Nothing said yet.": [
+  "Nu s-a spus nimic încă.",
+  "Ще нічого не сказано.",
+  "Todavía no se dijo nada."
+ ],
+ "Your Suno sign-in has expired. Sign in again from Settings.": [
+  "Conectarea la Suno a expirat. Conectează-te din nou din Setări.",
+  "Термін входу в Suno минув. Увійдіть знову в Налаштуваннях.",
+  "Tu sesión de Suno expiró. Vuelve a iniciar sesión desde Configuración."
+ ],
+ "Searching isn't available from Suno right now.": [
+  "Căutarea nu e disponibilă la Suno acum.",
+  "Пошук у Suno зараз недоступний.",
+  "La búsqueda no está disponible en Suno ahora."
+ ],
+ "My Workspace": [
+  "Spațiul meu de lucru",
+  "Мій робочий простір",
+  "Mi espacio de trabajo"
+ ],
+ "Untitled workspace": [
+  "Spațiu de lucru fără nume",
+  "Робочий простір без назви",
+  "Espacio de trabajo sin nombre"
+ ],
+ "Unnamed persona": [
+  "Persona fără nume",
+  "Персона без імені",
+  "Persona sin nombre"
+ ],
+ "Suno turned this request down. Check the style and lyrics, then try again.": [
+  "Suno a refuzat cererea. Verifică stilul și versurile, apoi încearcă din nou.",
+  "Suno відхилив запит. Перевірте стиль і текст і спробуйте ще раз.",
+  "Suno rechazó la solicitud. Revisa el estilo y la letra y vuelve a intentarlo."
+ ],
+ "Suno didn't say whether it started. Refresh the library before trying again, so you don't pay twice.": [
+  "Suno nu a spus dacă a început. Reîmprospătează biblioteca înainte să încerci din nou, ca să nu plătești de două ori.",
+  "Suno не повідомив, чи почав. Оновіть бібліотеку, перш ніж пробувати знову, щоб не заплатити двічі.",
+  "Suno no dijo si empezó. Actualiza la biblioteca antes de volver a intentarlo, para no pagar dos veces."
+ ],
+ "Suno didn't say whether the remaster started. Refresh the library before trying again.": [
+  "Suno nu a spus dacă remasterizarea a început. Reîmprospătează biblioteca înainte să încerci din nou.",
+  "Suno не повідомив, чи почався ремастер. Оновіть бібліотеку, перш ніж пробувати знову.",
+  "Suno no dijo si empezó la remasterización. Actualiza la biblioteca antes de volver a intentarlo."
+ ],
+ "Suno didn't start writing the lyrics.": [
+  "Suno nu a început să scrie versurile.",
+  "Suno не почав писати текст.",
+  "Suno no empezó a escribir la letra."
+ ],
+ "Suno couldn't write those lyrics: {0}": [
+  "Suno nu a putut scrie versurile: {0}",
+  "Suno не зміг написати текст: {0}",
+  "Suno no pudo escribir esa letra: {0}"
+ ],
+ "Suno couldn't write lyrics for that topic.": [
+  "Suno nu a putut scrie versuri pe tema aceasta.",
+  "Suno не зміг написати текст на цю тему.",
+  "Suno no pudo escribir una letra sobre ese tema."
+ ],
+ "Suno took too long writing the lyrics. Try again.": [
+  "Suno a scris versurile prea încet. Încearcă din nou.",
+  "Suno надто довго писав текст. Спробуйте ще раз.",
+  "Suno tardó demasiado en escribir la letra. Vuelve a intentarlo."
+ ],
+ "Suno took too long making the WAV file. Try again later.": [
+  "Suno a făcut fișierul WAV prea încet. Încearcă mai târziu.",
+  "Suno надто довго створював файл WAV. Спробуйте пізніше.",
+  "Suno tardó demasiado en crear el archivo WAV. Inténtalo más tarde."
+ ],
+ "Suno didn't confirm the download. Check your downloads left with Shift+F2.": [
+  "Suno nu a confirmat descărcarea. Verifică descărcările rămase cu Shift+F2.",
+  "Suno не підтвердив завантаження. Перевірте залишок завантажень клавішами Shift+F2.",
+  "Suno no confirmó la descarga. Revisa tus descargas restantes con Mayús+F2."
+ ],
+ "Suno couldn't prepare that download.": [
+  "Suno nu a putut pregăti descărcarea.",
+  "Suno не зміг підготувати завантаження.",
+  "Suno no pudo preparar esa descarga."
+ ],
+ "Suno couldn't prepare that download: {0}": [
+  "Suno nu a putut pregăti descărcarea: {0}",
+  "Suno не зміг підготувати завантаження: {0}",
+  "Suno no pudo preparar esa descarga: {0}"
+ ],
+ "Suno took too long preparing the download. Try again later.": [
+  "Suno a pregătit descărcarea prea încet. Încearcă mai târziu.",
+  "Suno надто довго готував завантаження. Спробуйте пізніше.",
+  "Suno tardó demasiado en preparar la descarga. Inténtalo más tarde."
+ ],
+ "Suno gave a download address this app won't use.": [
+  "Suno a dat o adresă de descărcare pe care aplicația nu o folosește.",
+  "Suno надав адресу завантаження, якою програма не користуватиметься.",
+  "Suno dio una dirección de descarga que la app no usará."
+ ],
+ "The download failed ({0}).": [
+  "Descărcarea a eșuat ({0}).",
+  "Не вдалося завантажити ({0}).",
+  "La descarga falló ({0})."
+ ],
+ "Couldn't save the file. Check the download folder in Settings.": [
+  "Nu am putut salva fișierul. Verifică dosarul de descărcări din Setări.",
+  "Не вдалося зберегти файл. Перевірте папку завантажень у Налаштуваннях.",
+  "No se pudo guardar el archivo. Revisa la carpeta de descargas en Configuración."
+ ],
+ "The download didn't start in time. Try again.": [
+  "Descărcarea nu a pornit la timp. Încearcă din nou.",
+  "Завантаження не почалося вчасно. Спробуйте ще раз.",
+  "La descarga no empezó a tiempo. Vuelve a intentarlo."
+ ],
+ "Suno didn't answer in time. Try again.": [
+  "Suno nu a răspuns la timp. Încearcă din nou.",
+  "Suno не відповів вчасно. Спробуйте ще раз.",
+  "Suno no respondió a tiempo. Vuelve a intentarlo."
+ ],
+ "Suno didn't answer in time. It may still have done it, so refresh to check before trying again.": [
+  "Suno nu a răspuns la timp. Poate a făcut-o totuși, așa că reîmprospătează ca să verifici înainte să încerci din nou.",
+  "Suno не відповів вчасно. Можливо, він усе ж це зробив, тож оновіть, щоб перевірити, перш ніж пробувати знову.",
+  "Suno no respondió a tiempo. Puede que lo haya hecho igual, así que actualiza para comprobarlo antes de volver a intentarlo."
+ ],
+ "Suno turned the request down. If it keeps happening, sign in again from Settings.": [
+  "Suno a refuzat cererea. Dacă se tot întâmplă, conectează-te din nou din Setări.",
+  "Suno відхилив запит. Якщо це повторюється, увійдіть знову в Налаштуваннях.",
+  "Suno rechazó la solicitud. Si sigue pasando, vuelve a iniciar sesión desde Configuración."
+ ],
+ "That needs a Pro or Premier plan.": [
+  "Pentru asta e nevoie de planul Pro sau Premier.",
+  "Для цього потрібен план Pro або Premier.",
+  "Eso necesita un plan Pro o Premier."
+ ],
+ "Suno says this account can't do that.": [
+  "Suno spune că acest cont nu poate face asta.",
+  "Suno каже, що цей обліковий запис не може цього зробити.",
+  "Suno dice que esta cuenta no puede hacer eso."
+ ],
+ "Not enough credits.": [
+  "Nu ai destule credite.",
+  "Недостатньо кредитів.",
+  "No tienes suficientes créditos."
+ ],
+ "Suno couldn't find that song, or this feature moved.": [
+  "Suno nu a găsit melodia sau această funcție s-a mutat.",
+  "Suno не знайшов цю пісню, або цю функцію перенесено.",
+  "Suno no encontró esa canción o esta función cambió de lugar."
+ ],
+ "Suno's content rules blocked this. Try different words.": [
+  "Regulile de conținut Suno au blocat asta. Încearcă alte cuvinte.",
+  "Правила вмісту Suno заблокували це. Спробуйте інші слова.",
+  "Las reglas de contenido de Suno lo bloquearon. Prueba con otras palabras."
+ ],
+ "Suno didn't accept the captcha. Try again.": [
+  "Suno nu a acceptat captcha-ul. Încearcă din nou.",
+  "Suno не прийняв капчу. Спробуйте ще раз.",
+  "Suno no aceptó el captcha. Vuelve a intentarlo."
+ ],
+ "Something is too long for this model.": [
+  "Ceva e prea lung pentru acest model.",
+  "Щось задовге для цієї моделі.",
+  "Algo es demasiado largo para este modelo."
+ ],
+ "Suno didn't accept those settings.": [
+  "Suno nu a acceptat aceste setări.",
+  "Suno не прийняв ці налаштування.",
+  "Suno no aceptó esos ajustes."
+ ],
+ "Suno says too many requests. Wait a minute and try again.": [
+  "Suno spune că sunt prea multe cereri. Așteaptă un minut și încearcă din nou.",
+  "Suno каже, що забагато запитів. Зачекайте хвилину й спробуйте ще раз.",
+  "Suno dice que hay demasiadas solicitudes. Espera un minuto y vuelve a intentarlo."
+ ],
+ "Suno had a problem on its side ({0}). Try again later.": [
+  "Suno a avut o problemă de partea lui ({0}). Încearcă mai târziu.",
+  "У Suno виникла проблема з його боку ({0}). Спробуйте пізніше.",
+  "Suno tuvo un problema de su lado ({0}). Inténtalo más tarde."
+ ],
+ "Suno refused the request ({0}).": [
+  "Suno a refuzat cererea ({0}).",
+  "Suno відхилив запит ({0}).",
+  "Suno rechazó la solicitud ({0})."
+ ],
+ "Suno says: {0}": [
+  "Suno spune: {0}",
+  "Suno каже: {0}",
+  "Suno dice: {0}"
+ ],
+ "Suno sent a reply this app doesn't understand.": [
+  "Suno a trimis un răspuns pe care aplicația nu-l înțelege.",
+  "Suno надіслав відповідь, яку програма не розуміє.",
+  "Suno envió una respuesta que la app no entiende."
+ ],
+ "Suno didn't say whether the playlist was made. Refresh playlists to check.": [
+  "Suno nu a spus dacă lista a fost creată. Reîmprospătează listele ca să verifici.",
+  "Suno не повідомив, чи створено плейлист. Оновіть плейлисти, щоб перевірити.",
+  "Suno no dijo si se creó la lista. Actualiza las listas para comprobarlo."
+ ],
+ "Suno didn't accept that name: {0}": [
+  "Suno nu a acceptat numele: {0}",
+  "Suno не прийняв цю назву: {0}",
+  "Suno no aceptó ese nombre: {0}"
+ ],
+ "Suno gave no share link.": [
+  "Suno nu a dat niciun link de distribuire.",
+  "Suno не надав посилання для поширення.",
+  "Suno no dio ningún enlace para compartir."
+ ],
+ "Suno gave no boosted style.": [
+  "Suno nu a dat niciun stil amplificat.",
+  "Suno не повернув посиленого стилю.",
+  "Suno no devolvió ningún estilo mejorado."
+ ],
+ "Suno sent back no lyrics.": [
+  "Suno nu a trimis înapoi niciun vers.",
+  "Suno не повернув тексту.",
+  "Suno no devolvió ninguna letra."
+ ],
+ "Suno's player didn't offer this song. It may be private to another account, or still being made.": [
+  "Playerul Suno nu a oferit melodia. Poate fi privată pentru alt cont sau încă se creează.",
+  "Плеєр Suno не запропонував цю пісню. Можливо, вона приватна для іншого облікового запису або ще створюється.",
+  "El reproductor de Suno no ofreció esta canción. Puede que sea privada de otra cuenta o que todavía se esté creando."
+ ],
+ "Suno's player didn't start this song. Try again.": [
+  "Playerul Suno nu a pornit melodia. Încearcă din nou.",
+  "Плеєр Suno не запустив цю пісню. Спробуйте ще раз.",
+  "El reproductor de Suno no inició esta canción. Vuelve a intentarlo."
+ ],
+ "Suno player": [
+  "Player Suno",
+  "Плеєр Suno",
+  "Reproductor de Suno"
+ ],
+ "Playing needs the Microsoft Edge WebView2 Runtime. Install it from Microsoft, then try again.": [
+  "Redarea are nevoie de Microsoft Edge WebView2 Runtime. Instalează-l de la Microsoft, apoi încearcă din nou.",
+  "Для відтворення потрібен Microsoft Edge WebView2 Runtime. Установіть його з сайту Microsoft і спробуйте ще раз.",
+  "Para reproducir se necesita Microsoft Edge WebView2 Runtime. Instálalo desde Microsoft y vuelve a intentarlo."
+ ],
+ "Playback stopped because of an error.": [
+  "Redarea s-a oprit din cauza unei erori.",
+  "Відтворення зупинилося через помилку.",
+  "La reproducción se detuvo por un error."
+ ],
+ "GitHub answered {0} when checking for updates.": [
+  "GitHub a răspuns {0} la căutarea actualizărilor.",
+  "GitHub відповів {0} під час перевірки оновлень.",
+  "GitHub respondió {0} al buscar actualizaciones."
+ ],
+ "The latest release has no usable version number.": [
+  "Ultima versiune publicată nu are un număr de versiune utilizabil.",
+  "Останній випуск не має придатного номера версії.",
+  "La última versión publicada no tiene un número de versión válido."
+ ],
+ "Tin Pan {0} is out, but its signed download is missing. Get it from the release page.": [
+  "Tin Pan {0} a apărut, dar lipsește descărcarea semnată. Ia-o de pe pagina versiunii.",
+  "Вийшов Tin Pan {0}, але підписаного завантаження немає. Завантажте його зі сторінки випуску.",
+  "Salió Tin Pan {0}, pero falta su descarga firmada. Descárgalo desde la página de la versión."
+ ],
+ "Checking for updates timed out.": [
+  "Căutarea actualizărilor a durat prea mult.",
+  "Перевірка оновлень тривала задовго.",
+  "La búsqueda de actualizaciones tardó demasiado."
+ ],
+ "Couldn't check for updates. Check your internet connection.": [
+  "Nu am putut căuta actualizări. Verifică-ți conexiunea la internet.",
+  "Не вдалося перевірити оновлення. Перевірте підключення до інтернету.",
+  "No se pudieron buscar actualizaciones. Revisa tu conexión a internet."
+ ],
+ "The downloaded update isn't signed by Tin Pan's publisher, so it wasn't installed.": [
+  "Actualizarea descărcată nu e semnată de editorul Tin Pan, așa că nu a fost instalată.",
+  "Завантажене оновлення не підписане видавцем Tin Pan, тому його не встановлено.",
+  "La actualización descargada no está firmada por el editor de Tin Pan, así que no se instaló."
+ ],
+ "The update download was cancelled.": [
+  "Descărcarea actualizării a fost anulată.",
+  "Завантаження оновлення скасовано.",
+  "Se canceló la descarga de la actualización."
+ ],
+ "Couldn't download the update. Check your internet connection and try again.": [
+  "Nu am putut descărca actualizarea. Verifică-ți conexiunea la internet și încearcă din nou.",
+  "Не вдалося завантажити оновлення. Перевірте підключення до інтернету й спробуйте ще раз.",
+  "No se pudo descargar la actualización. Revisa tu conexión a internet y vuelve a intentarlo."
+ ],
+ "Couldn't find where Tin Pan is running from.": [
+  "Nu am găsit de unde rulează Tin Pan.",
+  "Не вдалося визначити, звідки запущено Tin Pan.",
+  "No se encontró desde dónde se ejecuta Tin Pan."
+ ],
+ "Couldn't start the update.": [
+  "Nu am putut porni actualizarea.",
+  "Не вдалося запустити оновлення.",
+  "No se pudo iniciar la actualización."
+ ],
+ "Library. Arrow through your songs. Enter plays, Space pauses, Left and Right seek. Applications key for extend, cover, downloads and more. Ctrl+F searches. Ctrl+Shift+F8 resumes where you left off. Alt+F for filters.": [
+  "Bibliotecă. Parcurge melodiile cu săgețile. Enter redă, Spațiu pune pauză, stânga și dreapta derulează. Tasta Aplicații pentru extindere, cover, descărcări și altele. Ctrl+F caută. Ctrl+Shift+F8 reia de unde ai rămas. Alt+F pentru filtre.",
+  "Бібліотека. Переходьте між піснями стрілками. Enter відтворює, Пробіл ставить на паузу, стрілки вліво і вправо перемотують. Клавіша контекстного меню — продовження, кавер, завантаження та інше. Ctrl+F шукає. Ctrl+Shift+F8 продовжує з місця, де ви зупинилися. Alt+F — фільтри.",
+  "Biblioteca. Recorre tus canciones con las flechas. Intro reproduce, Espacio pausa, izquierda y derecha avanzan o retroceden. Tecla de aplicaciones para extender, cover, descargas y más. Ctrl+F busca. Ctrl+Mayús+F8 sigue donde lo dejaste. Alt+F para los filtros."
+ ],
+ "Create. Set the model, style and voice, then describe a song or use your own lyrics. Tab moves between fields. F5 reloads the models.": [
+  "Creare. Alege modelul, stilul și vocea, apoi descrie o melodie sau folosește versurile tale. Tab trece de la un câmp la altul. F5 reîncarcă modelele.",
+  "Створення. Виберіть модель, стиль і голос, потім опишіть пісню або використайте власний текст. Tab переходить між полями. F5 перезавантажує моделі.",
+  "Crear. Elige el modelo, el estilo y la voz; luego describe una canción o usa tu propia letra. Tab pasa de un campo a otro. F5 vuelve a cargar los modelos."
+ ],
+ "Trending. Enter or Space plays a song. Applications key for more. F5 refreshes.": [
+  "În tendințe. Enter sau Spațiu redă o melodie. Tasta Aplicații pentru mai mult. F5 reîmprospătează.",
+  "У тренді. Enter або Пробіл відтворює пісню. Клавіша контекстного меню — більше дій. F5 оновлює.",
+  "Tendencias. Intro o Espacio reproduce una canción. Tecla de aplicaciones para más. F5 actualiza."
+ ],
+ "Account. Your plan and credits, then Suno's notifications. F2 and Shift+F2 read them from anywhere. F5 refreshes.": [
+  "Cont. Planul și creditele tale, apoi notificările Suno. F2 și Shift+F2 le citesc de oriunde. F5 reîmprospătează.",
+  "Обліковий запис. Ваш план і кредити, потім сповіщення Suno. F2 і Shift+F2 зачитують їх звідусіль. F5 оновлює.",
+  "Cuenta. Tu plan y tus créditos, y luego las notificaciones de Suno. F2 y Mayús+F2 los leen desde cualquier lugar. F5 actualiza."
+ ],
+ "Playlists. Pick a playlist and press Enter to open its songs. Enter plays, Space pauses, Delete removes a song, Ctrl+Up and Ctrl+Down move it. Applications key for more on either list.": [
+  "Liste de redare. Alege o listă și apasă Enter ca să-i deschizi melodiile. Enter redă, Spațiu pune pauză, Delete elimină o melodie, Ctrl+Sus și Ctrl+Jos o mută. Tasta Aplicații pentru mai mult, în ambele liste.",
+  "Плейлисти. Виберіть плейлист і натисніть Enter, щоб відкрити його пісні. Enter відтворює, Пробіл ставить на паузу, Delete прибирає пісню, Ctrl+Вгору і Ctrl+Вниз переміщують її. Клавіша контекстного меню — більше дій у будь-якому списку.",
+  "Listas. Elige una lista y pulsa Intro para abrir sus canciones. Intro reproduce, Espacio pausa, Suprimir quita una canción, Ctrl+Arriba y Ctrl+Abajo la mueven. Tecla de aplicaciones para más en cualquiera de las dos listas."
+ ],
+ "Settings. Sign in or out, choose the language, and choose where songs are saved.": [
+  "Setări. Conectează-te sau deconectează-te, alege limba și unde se salvează melodiile.",
+  "Налаштування. Вхід і вихід, вибір мови й місця збереження пісень.",
+  "Configuración. Inicia o cierra sesión, elige el idioma y dónde se guardan las canciones."
+ ],
+ "You're not signed in. Ctrl+6 opens Settings.": [
+  "Nu ești conectat. Ctrl+6 deschide Setările.",
+  "Ви не ввійшли. Ctrl+6 відкриває Налаштування.",
+  "No iniciaste sesión. Ctrl+6 abre Configuración."
+ ],
+ "Anywhere": [
+  "Oriunde",
+  "Будь-де",
+  "En cualquier lugar"
+ ],
+ "Alt or F10: the menu bar, hidden until then. Every command is in it, with its keys. Left and Right move between menus, Down opens one, Escape or Alt leaves. The Song menu acts on the song selected in the tab you're on.\nTab only stops on what you need: the search box, the list and the volume. The buttons on each page still work with their Alt letters, and everything is in the menu bar.\nF1: short help for where you are.\nCtrl+F1: all commands in a list; Enter runs one. Its first item is this guide.\nCtrl+R: repeat the last message. Ctrl+Shift+R: message history, newest first.\nEscape: step back one level (to the tab headers, or from a playlist's songs to the playlists).\nF2: credits left.\nShift+F2: your plan, when it renews, credits and downloads left. The Account tab lists everything the plan includes.\nF3: what's playing and how far in.\nF5: refresh the current tab.\nCtrl+1 to Ctrl+6: Library, Playlists, Create, Trending, Account, Settings. Each puts you on that page's list or first field.\nCtrl+F: search your songs.": [
+  "Alt sau F10: bara de meniu, ascunsă până atunci. Conține toate comenzile, cu tastele lor. Stânga și dreapta trec de la un meniu la altul, Jos deschide unul, Escape sau Alt iese. Meniul Melodie lucrează cu melodia selectată în fila în care ești.\nTab se oprește doar unde e nevoie: caseta de căutare, lista și volumul. Butoanele de pe fiecare pagină funcționează în continuare cu literele Alt, iar totul e în bara de meniu.\nF1: ajutor scurt pentru locul în care ești.\nCtrl+F1: toate comenzile într-o listă; Enter rulează una. Primul element este acest ghid.\nCtrl+R: repetă ultimul mesaj. Ctrl+Shift+R: istoricul mesajelor, cele mai noi primele.\nEscape: un pas înapoi (la antetele filelor sau de la melodiile unei liste la liste).\nF2: creditele rămase.\nShift+F2: planul, când se reînnoiește, creditele și descărcările rămase. Fila Cont arată tot ce include planul.\nF3: ce se redă și cât a trecut.\nF5: reîmprospătează fila curentă.\nCtrl+1 până la Ctrl+6: Bibliotecă, Liste de redare, Creare, În tendințe, Cont, Setări. Fiecare te duce la lista sau la primul câmp al paginii.\nCtrl+F: caută în melodiile tale.",
+  "Alt або F10: рядок меню, прихований до того. У ньому всі команди з клавішами. Вліво і вправо переходять між меню, Вниз відкриває меню, Escape або Alt виходить. Меню «Пісня» діє на пісню, вибрану на поточній вкладці.\nTab зупиняється лише там, де потрібно: поле пошуку, список і гучність. Кнопки на кожній сторінці й далі працюють зі своїми літерами Alt, а все є в рядку меню.\nF1: коротка довідка про те, де ви.\nCtrl+F1: усі команди списком; Enter виконує вибрану. Перший пункт — цей посібник.\nCtrl+R: повторити останнє повідомлення. Ctrl+Shift+R: історія повідомлень, новіші спершу.\nEscape: крок назад (до заголовків вкладок або від пісень плейлиста до плейлистів).\nF2: залишок кредитів.\nShift+F2: ваш план, дата поновлення, залишок кредитів і завантажень. Вкладка «Обліковий запис» показує все, що містить план.\nF3: що грає і скільки минуло.\nF5: оновити поточну вкладку.\nВід Ctrl+1 до Ctrl+6: Бібліотека, Плейлисти, Створення, У тренді, Обліковий запис, Налаштування. Кожна переводить до списку або першого поля сторінки.\nCtrl+F: пошук у ваших піснях.",
+  "Alt o F10: la barra de menús, oculta hasta entonces. Tiene todos los comandos con sus teclas. Izquierda y derecha pasan de un menú a otro, Abajo abre uno, Escape o Alt sale. El menú Canción actúa sobre la canción seleccionada en la pestaña en la que estás.\nTab solo se detiene donde hace falta: el cuadro de búsqueda, la lista y el volumen. Los botones de cada página siguen funcionando con sus letras de Alt, y todo está en la barra de menús.\nF1: ayuda breve sobre dónde estás.\nCtrl+F1: todos los comandos en una lista; Intro ejecuta uno. El primer elemento es esta guía.\nCtrl+R: repite el último mensaje. Ctrl+Mayús+R: historial de mensajes, los más nuevos primero.\nEscape: retrocede un nivel (a los encabezados de las pestañas, o de las canciones de una lista a las listas).\nF2: créditos restantes.\nMayús+F2: tu plan, cuándo se renueva, los créditos y las descargas restantes. La pestaña Cuenta muestra todo lo que incluye el plan.\nF3: qué suena y cuánto lleva.\nF5: actualiza la pestaña actual.\nCtrl+1 a Ctrl+6: Biblioteca, Listas, Crear, Tendencias, Cuenta, Configuración. Cada una te lleva a la lista o al primer campo de la página.\nCtrl+F: busca en tus canciones."
+ ],
+ "Playing": [
+  "Redare",
+  "Відтворення",
+  "Reproducción"
+ ],
+ "F8 or the Play/Pause media key: play or pause; with nothing playing it starts the selected song on the Library or Playlists tab.\nShift+F8: stop.\nF7 and F9: previous and next song.\nShift+F7 and Shift+F9: back and forward 10 seconds.\nCtrl+F7 and Ctrl+F9: back and forward 10 percent of the song.\nCtrl+F8: back to the start of the song.\nCtrl+Shift+F8: resume the last song where you left off, even after closing Tin Pan.\nF11 and F12: volume down and up.\nSongs play through Suno's own player, hidden inside the app.": [
+  "F8 sau tasta media Redare/Pauză: redare sau pauză; dacă nu se redă nimic, pornește melodia selectată din fila Bibliotecă sau Liste de redare.\nShift+F8: oprire.\nF7 și F9: melodia anterioară și următoarea.\nShift+F7 și Shift+F9: înapoi și înainte 10 secunde.\nCtrl+F7 și Ctrl+F9: înapoi și înainte 10 la sută din melodie.\nCtrl+F8: înapoi la începutul melodiei.\nCtrl+Shift+F8: reia ultima melodie de unde ai rămas, chiar și după ce ai închis Tin Pan.\nF11 și F12: volumul mai încet și mai tare.\nMelodiile se redau prin playerul Suno, ascuns în aplicație.",
+  "F8 або медіаклавіша «Відтворення/Пауза»: відтворення або пауза; якщо нічого не грає, запускає вибрану пісню на вкладці «Бібліотека» або «Плейлисти».\nShift+F8: зупинити.\nF7 і F9: попередня й наступна пісня.\nShift+F7 і Shift+F9: назад і вперед на 10 секунд.\nCtrl+F7 і Ctrl+F9: назад і вперед на 10 відсотків пісні.\nCtrl+F8: на початок пісні.\nCtrl+Shift+F8: продовжити останню пісню з місця, де ви зупинилися, навіть після закриття Tin Pan.\nF11 і F12: тихіше й гучніше.\nПісні грають через власний плеєр Suno, прихований у програмі.",
+  "F8 o la tecla multimedia Reproducir/Pausa: reproduce o pausa; si no suena nada, inicia la canción seleccionada en la pestaña Biblioteca o Listas.\nMayús+F8: detener.\nF7 y F9: canción anterior y siguiente.\nMayús+F7 y Mayús+F9: retrocede y avanza 10 segundos.\nCtrl+F7 y Ctrl+F9: retrocede y avanza el 10 por ciento de la canción.\nCtrl+F8: vuelve al principio de la canción.\nCtrl+Mayús+F8: sigue la última canción donde la dejaste, incluso después de cerrar Tin Pan.\nF11 y F12: baja y sube el volumen.\nLas canciones suenan con el propio reproductor de Suno, oculto dentro de la app."
+ ],
+ "Library list": [
+  "Lista Bibliotecă",
+  "Список бібліотеки",
+  "Lista de la biblioteca"
+ ],
+ "Enter: play.\nSpace: pause or resume.\nLeft and Right arrows: back and forward 5 seconds.\nCtrl+I: details (style, model, plays, link and lyrics) as one text.\nAlt+Enter: song information, one fact per line.\nCtrl+L: lyrics.\nCtrl+C: copy the song's link.\nCtrl+D: download in the format chosen in Settings. It uses the song's free unencrypted file when Suno has one; if the direct download fails, the app offers Suno's own download instead.\nCtrl+E: extend.\nDelete: move to Suno trash (asks first).\nApplications key or Shift+F10 for everything: Download WAV, Download video, Extend, Cover, Remaster, Get whole song, Stems, Edit title and lyrics, Make public or private, Add to playlist, Copy Suno share link, Allow or stop remixes, Similar songs, Show comments, Write a comment.\nWAV, Cover and Remaster need a Pro or Premier plan. They're unavailable on the free plan, and say so when the plan isn't known yet.\nReaching the end of the list loads more songs.\nAlt+F, Filters: workspace, disliked songs (hide, show, or only), trash, stems, newest or oldest first. Kept between runs.\nAlt+L, Download all: every finished song in the list, using the free direct download only; songs already in the folder are skipped.\nSongs you liked say \"liked\".": [
+  "Enter: redare.\nSpațiu: pauză sau continuare.\nSăgețile stânga și dreapta: înapoi și înainte 5 secunde.\nCtrl+I: detalii (stil, model, redări, link și versuri) într-un singur text.\nAlt+Enter: informații despre melodie, câte una pe rând.\nCtrl+L: versuri.\nCtrl+C: copiază linkul melodiei.\nCtrl+D: descarcă în formatul ales în Setări. Folosește fișierul gratuit, necriptat, când Suno îl are; dacă descărcarea directă eșuează, aplicația îți oferă descărcarea Suno.\nCtrl+E: extinde.\nDelete: mută în coșul Suno (întreabă întâi).\nTasta Aplicații sau Shift+F10 pentru toate: Descarcă WAV, Descarcă video, Extinde, Cover, Remasterizează, Melodia întreagă, Stem-uri, Editează titlul și versurile, Fă publică sau privată, Adaugă la o listă, Copiază linkul de distribuire Suno, Permite sau oprește remixurile, Melodii asemănătoare, Arată comentariile, Scrie un comentariu.\nWAV, Cover și Remasterizare necesită planul Pro sau Premier. Nu sunt disponibile pe planul gratuit și spun asta când planul nu e cunoscut încă.\nCând ajungi la capătul listei se încarcă mai multe melodii.\nAlt+F, Filtre: spațiu de lucru, melodii neapreciate (ascunse, arătate sau doar ele), coș, stem-uri, cele mai noi sau cele mai vechi primele. Se păstrează între porniri.\nAlt+L, Descarcă tot: fiecare melodie terminată din listă, doar prin descărcarea directă gratuită; melodiile care sunt deja în dosar se sar.\nMelodiile apreciate spun „apreciată”.",
+  "Enter: відтворити.\nПробіл: пауза або продовження.\nСтрілки вліво і вправо: назад і вперед на 5 секунд.\nCtrl+I: подробиці (стиль, модель, прослуховування, посилання й текст) одним текстом.\nAlt+Enter: відомості про пісню, по одному факту в рядку.\nCtrl+L: текст пісні.\nCtrl+C: скопіювати посилання на пісню.\nCtrl+D: завантажити у форматі з Налаштувань. Використовує безкоштовний незашифрований файл пісні, коли він є в Suno; якщо пряме завантаження не вдається, програма пропонує завантаження через Suno.\nCtrl+E: продовжити.\nDelete: перемістити в кошик Suno (спершу запитує).\nКлавіша контекстного меню або Shift+F10 — усе інше: Завантажити WAV, Завантажити відео, Продовжити, Кавер, Ремастер, Ціла пісня, Стеми, Змінити назву й текст, Зробити публічною або приватною, Додати до плейлиста, Копіювати посилання Suno для поширення, Дозволити або заборонити ремікси, Схожі пісні, Показати коментарі, Написати коментар.\nДля WAV, каверу й ремастеру потрібен план Pro або Premier. На безкоштовному плані вони недоступні, а коли план ще невідомий, про це сказано.\nКоли ви доходите до кінця списку, завантажуються нові пісні.\nAlt+F, Фільтри: робочий простір, невподобані пісні (сховати, показати або лише їх), кошик, стеми, спершу нові або старі. Зберігаються між запусками.\nAlt+L, Завантажити все: кожна готова пісня зі списку, лише через безкоштовне пряме завантаження; пісні, що вже є в папці, пропускаються.\nВподобані пісні позначено словом «вподобана».",
+  "Intro: reproducir.\nEspacio: pausar o seguir.\nFlechas izquierda y derecha: retrocede y avanza 5 segundos.\nCtrl+I: detalles (estilo, modelo, reproducciones, enlace y letra) en un solo texto.\nAlt+Intro: información de la canción, un dato por línea.\nCtrl+L: letra.\nCtrl+C: copia el enlace de la canción.\nCtrl+D: descarga en el formato elegido en Configuración. Usa el archivo gratuito sin cifrar de la canción cuando Suno lo tiene; si la descarga directa falla, la app te ofrece la descarga de Suno.\nCtrl+E: extender.\nSuprimir: mover a la papelera de Suno (pregunta antes).\nTecla de aplicaciones o Mayús+F10 para todo: Descargar WAV, Descargar video, Extender, Cover, Remasterizar, Canción completa, Stems, Editar título y letra, Hacer pública o privada, Añadir a una lista, Copiar enlace para compartir de Suno, Permitir o impedir remixes, Canciones parecidas, Ver comentarios, Escribir un comentario.\nWAV, Cover y Remasterizar necesitan un plan Pro o Premier. No están disponibles en el plan gratuito, y lo dicen cuando el plan todavía no se conoce.\nAl llegar al final de la lista se cargan más canciones.\nAlt+F, Filtros: espacio de trabajo, canciones que no te gustaron (ocultar, mostrar o solo esas), papelera, stems, más nuevas o más antiguas primero. Se guardan entre sesiones.\nAlt+L, Descargar todo: cada canción terminada de la lista, solo con la descarga directa gratuita; se saltan las que ya están en la carpeta.\nLas canciones que te gustan dicen «te gusta»."
+ ],
+ "Search box": [
+  "Caseta de căutare",
+  "Поле пошуку",
+  "Cuadro de búsqueda"
+ ],
+ "Enter searches, Escape clears the search.": [
+  "Enter caută, Escape șterge căutarea.",
+  "Enter шукає, Escape очищає пошук.",
+  "Intro busca, Escape borra la búsqueda."
+ ],
+ "Create tab": [
+  "Fila Creare",
+  "Вкладка «Створення»",
+  "Pestaña Crear"
+ ],
+ "Model, style, styles to exclude, voice, instrumental, max mode, weirdness, style influence and persona (pick one of yours, or type an ID) apply to both ways of making a song.\nDescribe a song lets Suno write the words. Your own lyrics uses your title and lyrics. Write lyrics makes lyrics from a topic, and Use these lyrics copies them in.\nStyle boost rewrites the Style box into a fuller description.\nChange my lyrics: say what to change, then Rewrite my lyrics now. The result goes into Generated lyrics; Use these lyrics copies it in.\nNew songs appear at the top of your library. You'll hear when they're ready.\nIf Suno asks for a captcha, the app passes it itself. If Suno wants a click, a Suno check window comes forward with the check box.": [
+  "Modelul, stilul, stilurile de exclus, vocea, instrumentalul, modul Max, ciudățenia, influența stilului și persona (alege una de-a ta sau scrie un ID) se aplică ambelor feluri de a crea o melodie.\nDescrie o melodie o lasă pe Suno să scrie cuvintele. Versurile tale folosește titlul și versurile tale. Scrie versuri face versuri dintr-o temă, iar Folosește aceste versuri le copiază.\nAmplificare stil rescrie caseta Stil într-o descriere mai bogată.\nSchimbă-mi versurile: spune ce să schimbe, apoi Rescrie-mi versurile acum. Rezultatul ajunge în Versuri generate; Folosește aceste versuri îl copiază.\nMelodiile noi apar în capul bibliotecii. Vei auzi când sunt gata.\nDacă Suno cere un captcha, aplicația trece singură de el. Dacă Suno vrea un clic, apare o fereastră de verificare Suno cu căsuța.",
+  "Модель, стиль, стилі для виключення, голос, інструментал, режим Max, дивність, вплив стилю й персона (виберіть свою або введіть ID) стосуються обох способів створення пісні.\n«Опишіть пісню» дає Suno написати слова. «Ваш текст» використовує вашу назву й текст. «Написати текст» створює текст за темою, а «Використати цей текст» копіює його.\n«Посилення стилю» переписує поле «Стиль» у повніший опис.\n«Змінити мій текст»: скажіть, що змінити, потім «Переписати мій текст зараз». Результат з'являється в «Згенерованому тексті»; «Використати цей текст» копіює його.\nНові пісні з'являються вгорі бібліотеки. Ви почуєте, коли вони будуть готові.\nЯкщо Suno просить капчу, програма проходить її сама. Якщо Suno хоче клацання, з'являється вікно перевірки Suno з прапорцем.",
+  "El modelo, el estilo, los estilos a excluir, la voz, el modo instrumental, el modo Max, la rareza, la influencia del estilo y la persona (elige una tuya o escribe un ID) sirven para las dos formas de crear una canción.\nDescribe una canción deja que Suno escriba la letra. Tu propia letra usa tu título y tu letra. Escribir letra crea una letra a partir de un tema, y Usar esta letra la copia.\nMejorar estilo reescribe el cuadro Estilo con una descripción más completa.\nCambiar mi letra: di qué cambiar y luego Reescribir mi letra ahora. El resultado va a Letra generada; Usar esta letra la copia.\nLas canciones nuevas aparecen arriba en tu biblioteca. Oirás cuando estén listas.\nSi Suno pide un captcha, la app lo pasa sola. Si Suno quiere un clic, aparece una ventana de verificación de Suno con la casilla."
+ ],
+ "Trending tab": [
+  "Fila În tendințe",
+  "Вкладка «У тренді»",
+  "Pestaña Tendencias"
+ ],
+ "Loads when you first open it. Enter or Space plays a song; the Applications key has every Song command.": [
+  "Se încarcă prima dată când o deschizi. Enter sau Spațiu redă o melodie; tasta Aplicații are toate comenzile Melodie.",
+  "Завантажується, коли ви вперше її відкриваєте. Enter або Пробіл відтворює пісню; клавіша контекстного меню містить усі команди меню «Пісня».",
+  "Se carga la primera vez que la abres. Intro o Espacio reproduce una canción; la tecla de aplicaciones tiene todos los comandos de Canción."
+ ],
+ "Account tab": [
+  "Fila Cont",
+  "Вкладка «Обліковий запис»",
+  "Pestaña Cuenta"
+ ],
+ "Your plan, credits and what the plan includes, then Suno's notifications.": [
+  "Planul tău, creditele și ce include planul, apoi notificările Suno.",
+  "Ваш план, кредити та що входить у план, потім сповіщення Suno.",
+  "Tu plan, tus créditos y lo que incluye el plan, y luego las notificaciones de Suno."
+ ],
+ "Playlists tab": [
+  "Fila Liste de redare",
+  "Вкладка «Плейлисти»",
+  "Pestaña Listas"
+ ],
+ "Left list: your playlists. Enter opens one, Delete moves it to the trash (asks first). New, Rename and Delete buttons.\nRight list: its songs. Enter plays and carries on through the playlist, Space pauses, Delete removes the song from the playlist, Ctrl+Up and Ctrl+Down move it.": [
+  "Lista din stânga: listele tale de redare. Enter deschide una, Delete o mută în coș (întreabă întâi). Butoanele Nouă, Redenumește și Șterge.\nLista din dreapta: melodiile ei. Enter redă și continuă prin listă, Spațiu pune pauză, Delete elimină melodia din listă, Ctrl+Sus și Ctrl+Jos o mută.",
+  "Лівий список: ваші плейлисти. Enter відкриває плейлист, Delete переміщує його в кошик (спершу запитує). Кнопки «Новий», «Перейменувати» й «Видалити».\nПравий список: його пісні. Enter відтворює й продовжує плейлистом, Пробіл ставить на паузу, Delete прибирає пісню з плейлиста, Ctrl+Вгору і Ctrl+Вниз переміщують її.",
+  "Lista de la izquierda: tus listas. Intro abre una, Suprimir la manda a la papelera (pregunta antes). Botones Nueva, Cambiar nombre y Eliminar.\nLista de la derecha: sus canciones. Intro reproduce y sigue por la lista, Espacio pausa, Suprimir quita la canción de la lista, Ctrl+Arriba y Ctrl+Abajo la mueven."
+ ],
+ "Extend, Cover and Remaster": [
+  "Extindere, Cover și Remasterizare",
+  "Продовження, кавер і ремастер",
+  "Extender, Cover y Remasterizar"
+ ],
+ "Each opens a short form. Tab moves between fields, Enter on OK starts it, Escape cancels.\nExtend continues a song from a time you choose; then use Get whole song to join the parts.\nCover keeps the melody in a new style; you can change the title and lyrics, which start as the original words, and set audio influence, weirdness, style influence and persona. Remaster makes a cleaner version with a newer model: pick strength (Subtle, Normal, High), kind (Natural, Boost, Clarity) and, if you like, the fine controls.": [
+  "Fiecare deschide un formular scurt. Tab trece de la un câmp la altul, Enter pe OK pornește, Escape anulează.\nExtinde continuă o melodie din momentul ales; apoi folosește Melodia întreagă ca să unești părțile.\nCover păstrează melodia într-un stil nou; poți schimba titlul și versurile, care pornesc de la cuvintele originale, și poți seta influența audio, ciudățenia, influența stilului și persona. Remasterizarea face o versiune mai curată cu un model mai nou: alege intensitatea (Subtilă, Normală, Mare), felul (Natural, Amplificat, Claritate) și, dacă vrei, reglajele fine.",
+  "Кожна відкриває коротку форму. Tab переходить між полями, Enter на OK запускає, Escape скасовує.\n«Продовжити» продовжує пісню з вибраного моменту; потім «Ціла пісня» об'єднує частини.\nКавер зберігає мелодію в новому стилі; можна змінити назву й текст, які спершу збігаються з оригіналом, і задати вплив аудіо, дивність, вплив стилю й персону. Ремастер робить чистішу версію новішою моделлю: виберіть силу (Легка, Звичайна, Сильна), тип (Природний, Підсилений, Чіткість) і, за бажання, точні налаштування.",
+  "Cada uno abre un formulario breve. Tab pasa de un campo a otro, Intro en Aceptar lo inicia, Escape cancela.\nExtender continúa una canción desde el momento que elijas; luego usa Canción completa para unir las partes.\nCover conserva la melodía con un estilo nuevo; puedes cambiar el título y la letra, que empiezan siendo los originales, y ajustar la influencia del audio, la rareza, la influencia del estilo y la persona. Remasterizar crea una versión más limpia con un modelo más nuevo: elige la intensidad (Sutil, Normal, Alta), el tipo (Natural, Realce, Claridad) y, si quieres, los ajustes finos."
+ ],
+ "Speech": [
+  "Vorbire",
+  "Мовлення",
+  "Voz"
+ ],
+ "Help menu or Settings, Tin Pan speaks: everything; what you ask for and errors (no background news); or only errors and what you ask to hear. F1, F2, F3 and Ctrl+R always speak, and every message is kept in the history.\nSettings, When a list reaches the playing song: a short click (the default), say playing (also in braille), both, or nothing.": [
+  "Meniul Ajutor sau Setări, Tin Pan spune: totul; ce ceri și erorile (fără noutăți de fundal); sau doar erorile și ce ceri să auzi. F1, F2, F3 și Ctrl+R vorbesc mereu, iar fiecare mesaj se păstrează în istoric.\nSetări, Când o listă ajunge la melodia care se redă: un clic scurt (implicit), spune „se redă” (și în braille), amândouă sau nimic.",
+  "Меню «Довідка» або Налаштування, «Tin Pan каже»: усе; те, що ви просите, і помилки (без фонових новин); або лише помилки й те, що ви просите почути. F1, F2, F3 і Ctrl+R говорять завжди, а кожне повідомлення зберігається в історії.\nНалаштування, «Коли список доходить до пісні, що грає»: короткий клацок (типово), сказати «грає» (також шрифтом Брайля), обидва або нічого.",
+  "Menú Ayuda o Configuración, Tin Pan dice: todo; lo que pides y los errores (sin novedades de fondo); o solo los errores y lo que pides oír. F1, F2, F3 y Ctrl+R siempre hablan, y cada mensaje queda en el historial.\nConfiguración, Cuando una lista llega a la canción que suena: un clic corto (lo predeterminado), decir «sonando» (también en braille), ambos o nada."
+ ],
+ "Settings": [
+  "Setări",
+  "Налаштування",
+  "Configuración"
+ ],
+ "Sign in opens Suno's own sign-in page; it closes by itself once you're in. It remembers your Google account and can save your password. Sign out only signs out of Suno. The first time, or when Suno ends your sign-in, Tin Pan asks you to sign in.\nLanguage: English, Romanian, Ukrainian or Spanish, or the same as Windows. It changes the next time Tin Pan starts.\nDownload folder, download format, and extra files saved next to each download: lyrics, timed lyrics (LRC), song details and cover art.\nCheck for new versions when Tin Pan starts: on by default, and quiet unless there is one.": [
+  "Conectare deschide pagina de conectare a Suno; se închide singură după ce intri. Își amintește contul Google și poate salva parola. Deconectarea te scoate doar din Suno. Prima dată, sau când Suno îți încheie conectarea, Tin Pan îți cere să te conectezi.\nLimba: engleză, română, ucraineană sau spaniolă, ori aceeași ca Windows. Se schimbă la următoarea pornire a Tin Pan.\nDosarul de descărcări, formatul și fișierele suplimentare salvate lângă fiecare descărcare: versuri, versuri sincronizate (LRC), detaliile melodiei și coperta.\nCaută versiuni noi la pornirea Tin Pan: activat implicit și tăcut dacă nu apare nimic nou.",
+  "«Увійти» відкриває сторінку входу Suno; вона закривається сама, щойно ви ввійдете. Вона запам'ятовує ваш обліковий запис Google і може зберегти пароль. «Вийти» виходить лише з Suno. Першого разу або коли Suno завершує ваш вхід, Tin Pan просить увійти.\nМова: англійська, румунська, українська, іспанська або як у Windows. Змінюється під час наступного запуску Tin Pan.\nПапка завантажень, формат і додаткові файли поруч із кожним завантаженням: текст, синхронізований текст (LRC), подробиці пісні й обкладинка.\nПеревіряти нові версії під час запуску Tin Pan: увімкнено типово, мовчить, якщо нічого нового немає.",
+  "Iniciar sesión abre la página de inicio de sesión de Suno; se cierra sola cuando entras. Recuerda tu cuenta de Google y puede guardar tu contraseña. Cerrar sesión solo cierra la sesión de Suno. La primera vez, o cuando Suno cierra tu sesión, Tin Pan te pide que inicies sesión.\nIdioma: inglés, rumano, ucraniano o español, o el mismo que Windows. Cambia la próxima vez que se inicie Tin Pan.\nCarpeta de descargas, formato y archivos extra guardados junto a cada descarga: letra, letra sincronizada (LRC), detalles de la canción y portada.\nBuscar versiones nuevas al iniciar Tin Pan: activado de forma predeterminada y en silencio si no hay ninguna."
+ ],
+ "Updates": [
+  "Actualizări",
+  "Оновлення",
+  "Actualizaciones"
+ ],
+ "Help, Check for updates looks for a new version now. When one is out, Tin Pan says what's new and asks; Yes downloads it, checks its signature, closes Tin Pan, swaps in the new TinPan.exe and opens it again. Saying No at startup means that version isn't offered again by itself.": [
+  "Ajutor, Caută actualizări caută acum o versiune nouă. Când apare una, Tin Pan spune ce e nou și întreabă; Da o descarcă, îi verifică semnătura, închide Tin Pan, pune noul TinPan.exe în locul celui vechi și îl redeschide. Dacă spui Nu la pornire, versiunea aceea nu mai e oferită de la sine.",
+  "«Довідка», «Перевірити оновлення» шукає нову версію зараз. Коли вона виходить, Tin Pan розповідає, що нового, і запитує; «Так» завантажує її, перевіряє підпис, закриває Tin Pan, замінює TinPan.exe новим і знову відкриває. Якщо під час запуску відповісти «Ні», цю версію більше не буде запропоновано самостійно.",
+  "Ayuda, Buscar actualizaciones busca ahora una versión nueva. Cuando sale una, Tin Pan dice qué hay de nuevo y pregunta; Sí la descarga, comprueba su firma, cierra Tin Pan, pone el nuevo TinPan.exe en su lugar y lo vuelve a abrir. Si dices No al iniciar, esa versión no se vuelve a ofrecer sola."
+ ],
+ "That song failed to generate.": [
+  "Melodia nu s-a putut genera.",
+  "Пісню не вдалося згенерувати.",
+  "No se pudo generar esa canción."
+ ],
+ "That song isn't finished yet.": [
+  "Melodia nu e gata încă.",
+  "Пісня ще не готова.",
+  "Esa canción todavía no está terminada."
+ ],
+ "Models haven't loaded yet. Press F5 on the Create tab, then try again.": [
+  "Modelele nu s-au încărcat încă. Apasă F5 în fila Creare, apoi încearcă din nou.",
+  "Моделі ще не завантажено. Натисніть F5 на вкладці «Створення» й спробуйте ще раз.",
+  "Los modelos aún no se cargaron. Pulsa F5 en la pestaña Crear y vuelve a intentarlo."
+ ],
+ "Extend f_rom (seconds, or minutes:seconds)": [
+  "Extinde _de la (secunde sau minute:secunde)",
+  "Продовжити _з моменту (секунди або хвилини:секунди)",
+  "Extender _desde (segundos, o minutos:segundos)"
+ ],
+ "_Title": [
+  "_Titlu",
+  "_Назва",
+  "_Título"
+ ],
+ "_Lyrics for the new part": [
+  "_Versuri pentru partea nouă",
+  "_Текст нової частини",
+  "_Letra de la parte nueva"
+ ],
+ "_Style": [
+  "_Stil",
+  "_Стиль",
+  "_Estilo"
+ ],
+ "_Exclude styles": [
+  "Stiluri de _exclus",
+  "Ви_ключити стилі",
+  "Estilos a excl_uir"
+ ],
+ "_Weirdness, 0 to 100 (empty lets Suno choose)": [
+  "_Ciudățenie, de la 0 la 100 (gol: alege Suno)",
+  "_Дивність, від 0 до 100 (порожньо — вибирає Suno)",
+  "_Rareza, de 0 a 100 (vacío: elige Suno)"
+ ],
+ "Style in_fluence, 0 to 100 (empty lets Suno choose)": [
+  "_Influența stilului, de la 0 la 100 (gol: alege Suno)",
+  "_Вплив стилю, від 0 до 100 (порожньо — вибирає Suno)",
+  "_Influencia del estilo, de 0 a 100 (vacío: elige Suno)"
+ ],
+ "Ma_x mode": [
+  "Modul Ma_x",
+  "Режим Ma_x",
+  "Modo Ma_x"
+ ],
+ "Continues {0} from a point you choose. Leave lyrics empty to let Suno carry on. Use Get whole song afterwards to join the parts.": [
+  "Continuă {0} din momentul ales. Lasă versurile goale ca Suno să continue singură. Apoi folosește Melodia întreagă ca să unești părțile.",
+  "Продовжує «{0}» з вибраного моменту. Залиште текст порожнім, щоб Suno продовжив сам. Потім «Ціла пісня» об'єднає частини.",
+  "Continúa {0} desde el momento que elijas. Deja la letra vacía para que Suno siga sola. Después usa Canción completa para unir las partes."
+ ],
+ "Extend {0}": [
+  "Extinde {0}",
+  "Продовжити «{0}»",
+  "Extender {0}"
+ ],
+ "Extend": [
+  "Extinde",
+  "Продовжити",
+  "Extender"
+ ],
+ "Extending {0}.": [
+  "Se extinde {0}.",
+  "Продовжую «{0}».",
+  "Extendiendo {0}."
+ ],
+ "No persona": [
+  "Fără persona",
+  "Без персони",
+  "Sin persona"
+ ],
+ "_Persona": [
+  "_Persona",
+  "_Персона",
+  "_Persona"
+ ],
+ "{0} (Cover)": [
+  "{0} (Cover)",
+  "{0} (кавер)",
+  "{0} (Cover)"
+ ],
+ "_Lyrics (change them, or keep the original words)": [
+  "_Versuri (schimbă-le sau păstrează cuvintele originale)",
+  "_Текст (змініть його або залиште оригінальні слова)",
+  "_Letra (cámbiala o conserva la original)"
+ ],
+ "_Instrumental (no singing)": [
+  "Instrumentală (_fără voce)",
+  "_Інструментал (без співу)",
+  "Instrumental (sin _voz)"
+ ],
+ "New _style": [
+  "_Stil nou",
+  "Новий _стиль",
+  "Nuevo _estilo"
+ ],
+ "_Audio influence: how closely to follow the original, 0 to 100 (empty lets Suno choose)": [
+  "Influența _audio: cât de aproape să rămână de original, de la 0 la 100 (gol: alege Suno)",
+  "Вплив _аудіо: наскільки близько до оригіналу, від 0 до 100 (порожньо — вибирає Suno)",
+  "Influencia del _audio: qué tanto seguir el original, de 0 a 100 (vacío: elige Suno)"
+ ],
+ "Makes a new version of {0} in another style, keeping its melody. The lyrics start as the original words.": [
+  "Face o versiune nouă a melodiei {0} în alt stil, păstrându-i linia melodică. Versurile pornesc de la cuvintele originale.",
+  "Створює нову версію «{0}» в іншому стилі, зберігаючи мелодію. Текст спершу збігається з оригіналом.",
+  "Crea una versión nueva de {0} con otro estilo, conservando su melodía. La letra empieza siendo la original."
+ ],
+ "Cover {0}": [
+  "Cover pentru {0}",
+  "Кавер на «{0}»",
+  "Cover de {0}"
+ ],
+ "Make cover": [
+  "Fă coverul",
+  "Створити кавер",
+  "Crear cover"
+ ],
+ "Add lyrics, or tick Instrumental.": [
+  "Adaugă versuri sau bifează Instrumentală.",
+  "Додайте текст або позначте «Інструментал».",
+  "Agrega una letra o marca Instrumental."
+ ],
+ "Covering {0}.": [
+  "Se face coverul pentru {0}.",
+  "Створюю кавер на «{0}».",
+  "Creando el cover de {0}."
+ ],
+ "Subtle": [
+  "Subtilă",
+  "Легка",
+  "Sutil"
+ ],
+ "Normal": [
+  "Normală",
+  "Звичайна",
+  "Normal"
+ ],
+ "High": [
+  "Mare",
+  "Сильна",
+  "Alta"
+ ],
+ "Natural": [
+  "Natural",
+  "Природний",
+  "Natural"
+ ],
+ "Boost": [
+  "Amplificat",
+  "Підсилений",
+  "Realce"
+ ],
+ "Clarity": [
+  "Claritate",
+  "Чіткість",
+  "Claridad"
+ ],
+ "Plan details haven't loaded yet. Press F5 on the Create tab, then try again.": [
+  "Detaliile planului nu s-au încărcat încă. Apasă F5 în fila Creare, apoi încearcă din nou.",
+  "Подробиці плану ще не завантажено. Натисніть F5 на вкладці «Створення» й спробуйте ще раз.",
+  "Los detalles del plan aún no se cargaron. Pulsa F5 en la pestaña Crear y vuelve a intentarlo."
+ ],
+ "Suno offers no remaster models to this account.": [
+  "Suno nu oferă modele de remasterizare acestui cont.",
+  "Suno не пропонує цьому обліковому запису моделей для ремастеру.",
+  "Suno no ofrece modelos de remasterización a esta cuenta."
+ ],
+ "Suno only remasters songs up to 16 minutes long.": [
+  "Suno remasterizează doar melodii de până la 16 minute.",
+  "Suno робить ремастер лише пісень до 16 хвилин.",
+  "Suno solo remasteriza canciones de hasta 16 minutos."
+ ],
+ "Remaster _model": [
+  "_Model de remasterizare",
+  "_Модель ремастеру",
+  "_Modelo de remasterización"
+ ],
+ "Remaster s_trength": [
+  "_Intensitatea remasterizării",
+  "_Сила ремастеру",
+  "_Intensidad"
+ ],
+ "Remaster _kind": [
+  "_Felul remasterizării",
+  "_Тип ремастеру",
+  "_Tipo de remasterización"
+ ],
+ "_Style (optional)": [
+  "_Stil (opțional)",
+  "Ст_иль (необов'язково)",
+  "_Estilo (opcional)"
+ ],
+ "_Freedom, 0 to 100 (empty keeps Suno's 0)": [
+  "_Libertate, de la 0 la 100 (gol păstrează valoarea Suno, 0)",
+  "Сво_бода, від 0 до 100 (порожньо — як у Suno, 0)",
+  "_Libertad, de 0 a 100 (vacío: lo de Suno, 0)"
+ ],
+ "T_one, 0 to 100 (empty keeps Suno's 50)": [
+  "T_on, de la 0 la 100 (gol păstrează valoarea Suno, 50)",
+  "Т_ембр, від 0 до 100 (порожньо — як у Suno, 50)",
+  "T_ono, de 0 a 100 (vacío: lo de Suno, 50)"
+ ],
+ "_Clarity, 0 to 100 (empty keeps Suno's 50)": [
+  "_Claritate, de la 0 la 100 (gol păstrează valoarea Suno, 50)",
+  "_Чіткість, від 0 до 100 (порожньо — як у Suno, 50)",
+  "_Claridad, de 0 a 100 (vacío: lo de Suno, 50)"
+ ],
+ "Stre_ngth, 0 to 100 (empty keeps Suno's 50)": [
+  "Fo_rță, de la 0 la 100 (gol păstrează valoarea Suno, 50)",
+  "_Потужність, від 0 до 100 (порожньо — як у Suno, 50)",
+  "_Fuerza, de 0 a 100 (vacío: lo de Suno, 50)"
+ ],
+ "Stereo _width, 0 to 100 (empty keeps Suno's 50)": [
+  "Lățime st_ereo, de la 0 la 100 (gol păstrează valoarea Suno, 50)",
+  "_Ширина стерео, від 0 до 100 (порожньо — як у Suno, 50)",
+  "_Amplitud estéreo, de 0 a 100 (vacío: lo de Suno, 50)"
+ ],
+ "Makes a cleaner, newer-sounding version of the same song. Strength is how much it may change. Kind: Natural stays close to the original, Boost lifts it, Clarity sharpens it. The five numbers are Suno's fine controls.": [
+  "Face o versiune mai curată, cu sunet mai nou, a aceleiași melodii. Intensitatea arată cât se poate schimba. Felul: Natural rămâne aproape de original, Amplificat o înviorează, Claritate o face mai clară. Cele cinci numere sunt reglajele fine Suno.",
+  "Створює чистішу, сучаснішу на звук версію тієї самої пісні. Сила визначає, наскільки вона може змінитися. Тип: «Природний» лишається близько до оригіналу, «Підсилений» додає яскравості, «Чіткість» робить звук чіткішим. П'ять чисел — точні налаштування Suno.",
+  "Crea una versión más limpia y de sonido más moderno de la misma canción. La intensidad es cuánto puede cambiar. Tipo: Natural se queda cerca del original, Realce la levanta, Claridad la hace más nítida. Los cinco números son los ajustes finos de Suno."
+ ],
+ "Remaster {0}": [
+  "Remasterizează {0}",
+  "Ремастер «{0}»",
+  "Remasterizar {0}"
+ ],
+ "Remaster": [
+  "Remasterizează",
+  "Ремастер",
+  "Remasterizar"
+ ],
+ "Remastering {0}.": [
+  "Se remasterizează {0}.",
+  "Роблю ремастер «{0}».",
+  "Remasterizando {0}."
+ ],
+ "Splitting into stems: {0}.": [
+  "Se împarte în stem-uri: {0}.",
+  "Розділяю на стеми: «{0}».",
+  "Separando en stems: {0}."
+ ],
+ "Joining the parts of {0}.": [
+  "Se unesc părțile melodiei {0}.",
+  "Об'єдную частини «{0}».",
+  "Uniendo las partes de {0}."
+ ],
+ "Suno accepted it. New songs will show up when you refresh.": [
+  "Suno a acceptat. Melodiile noi vor apărea când reîmprospătezi.",
+  "Suno прийняв запит. Нові пісні з'являться після оновлення.",
+  "Suno lo aceptó. Las canciones nuevas aparecerán al actualizar."
+ ],
+ "Started. You'll hear when it's ready.": [
+  "A început. Vei auzi când e gata.",
+  "Почалося. Ви почуєте, коли буде готово.",
+  "Empezó. Oirás cuando esté lista."
+ ],
+ "Started. You'll hear when they're ready.": [
+  "A început. Vei auzi când sunt gata.",
+  "Почалося. Ви почуєте, коли буде готово.",
+  "Empezó. Oirás cuando estén listas."
+ ],
+ "Download _WAV": [
+  "Descarcă _WAV",
+  "Завантажити _WAV",
+  "Descargar _WAV"
+ ],
+ "_Cover...": [
+  "_Cover...",
+  "Кав_ер...",
+  "C_over..."
+ ],
+ "Re_master...": [
+  "Remasteri_zează...",
+  "Ре_мастер...",
+  "Re_masterizar..."
+ ],
+ "Make p_rivate": [
+  "_Fă-o privată",
+  "Зро_бити приватною",
+  "_Hacer privada"
+ ],
+ "Make p_ublic": [
+  "_Fă-o publică",
+  "Зро_бити публічною",
+  "_Hacer pública"
+ ],
+ "Allow remi_xes": [
+  "Permite remi_xurile",
+  "Дозволити рем_ікси",
+  "Permitir remi_xes"
+ ],
+ "Stop remi_xes": [
+  "Oprește remi_xurile",
+  "Заборонити рем_ікси",
+  "Impedir remi_xes"
+ ],
+ "Hide songs I disliked": [
+  "Ascunde melodiile care nu mi-au plăcut",
+  "Сховати невподобані пісні",
+  "Ocultar las canciones que no me gustaron"
+ ],
+ "Show songs I disliked too": [
+  "Arată și melodiile care nu mi-au plăcut",
+  "Показувати й невподобані пісні",
+  "Mostrar también las que no me gustaron"
+ ],
+ "Only songs I disliked": [
+  "Doar melodiile care nu mi-au plăcut",
+  "Лише невподобані пісні",
+  "Solo las que no me gustaron"
+ ],
+ "All workspaces": [
+  "Toate spațiile de lucru",
+  "Усі робочі простори",
+  "Todos los espacios de trabajo"
+ ],
+ "disliked shown": [
+  "neapreciatele arătate",
+  "невподобані показано",
+  "no me gusta visibles"
+ ],
+ "only disliked": [
+  "doar neapreciatele",
+  "лише невподобані",
+  "solo no me gusta"
+ ],
+ "disliked hidden": [
+  "neapreciatele ascunse",
+  "невподобані сховано",
+  "no me gusta ocultas"
+ ],
+ "trash included": [
+  "cu coșul",
+  "разом із кошиком",
+  "papelera incluida"
+ ],
+ "stems shown": [
+  "stem-urile arătate",
+  "стеми показано",
+  "stems visibles"
+ ],
+ "newest first": [
+  "cele mai noi primele",
+  "спершу нові",
+  "más nuevas primero"
+ ],
+ "oldest first": [
+  "cele mai vechi primele",
+  "спершу старі",
+  "más antiguas primero"
+ ],
+ "Sign in from Settings first.": [
+  "Întâi conectează-te din Setări.",
+  "Спершу увійдіть у Налаштуваннях.",
+  "Primero inicia sesión desde Configuración."
+ ],
+ "_Workspace": [
+  "_Spațiu de lucru",
+  "_Робочий простір",
+  "_Espacio de trabajo"
+ ],
+ "_Disliked songs": [
+  "Melodii _neapreciate",
+  "_Невподобані пісні",
+  "Canciones que _no me gustaron"
+ ],
+ "Include songs in the _trash": [
+  "Include melodiile din _coș",
+  "Включати пісні з _кошика",
+  "Incluir las canciones de la _papelera"
+ ],
+ "Hide _stems": [
+  "Ascunde s_tem-urile",
+  "Сховати _стеми",
+  "Ocultar s_tems"
+ ],
+ "Newest first": [
+  "Cele mai noi primele",
+  "Спершу нові",
+  "Más nuevas primero"
+ ],
+ "Oldest first": [
+  "Cele mai vechi primele",
+  "Спершу старі",
+  "Más antiguas primero"
+ ],
+ "_Order": [
+  "_Ordine",
+  "_Порядок",
+  "_Orden"
+ ],
+ "Library filters": [
+  "Filtrele bibliotecii",
+  "Фільтри бібліотеки",
+  "Filtros de la biblioteca"
+ ],
+ "Suno applies these filters itself, so paging and search follow them.": [
+  "Suno aplică singură aceste filtre, așa că paginile și căutarea țin cont de ele.",
+  "Suno сам застосовує ці фільтри, тож сторінки й пошук їх ураховують.",
+  "Suno aplica estos filtros, así que las páginas y la búsqueda los respetan."
+ ],
+ "Apply": [
+  "Aplică",
+  "Застосувати",
+  "Aplicar"
+ ],
+ "No songs.": [
+  "Nicio melodie.",
+  "Пісень немає.",
+  "No hay canciones."
+ ],
+ "No songs match {0}.": [
+  "Nicio melodie nu se potrivește cu {0}.",
+  "Немає пісень за запитом «{0}».",
+  "Ninguna canción coincide con {0}."
+ ],
+ "{0} matching {1}.": [
+  "{0} pentru {1}.",
+  "{0} за запитом «{1}».",
+  "{0} que coinciden con {1}."
+ ],
+ "{0} more.": [
+  "Încă {0}.",
+  "Ще {0}.",
+  "{0} más."
+ ],
+ "End of list.": [
+  "Sfârșitul listei.",
+  "Кінець списку.",
+  "Fin de la lista."
+ ],
+ "That song isn't ready yet.": [
+  "Melodia nu e gata încă.",
+  "Пісня ще не готова.",
+  "Esa canción todavía no está lista."
+ ],
+ "Playing: {0}.": [
+  "Se redă: {0}.",
+  "Грає: {0}.",
+  "Sonando: {0}."
+ ],
+ "Paused.": [
+  "Pauză.",
+  "Пауза.",
+  "En pausa."
+ ],
+ "Playing.": [
+  "Se redă.",
+  "Грає.",
+  "Sonando."
+ ],
+ "Stopped.": [
+  "Oprit.",
+  "Зупинено.",
+  "Detenido."
+ ],
+ "First song.": [
+  "Prima melodie.",
+  "Перша пісня.",
+  "Primera canción."
+ ],
+ "End of library.": [
+  "Sfârșitul bibliotecii.",
+  "Кінець бібліотеки.",
+  "Fin de la biblioteca."
+ ],
+ "Volume {0:0}.": [
+  "Volum {0:0}.",
+  "Гучність {0:0}.",
+  "Volumen {0:0}."
+ ],
+ "{0} song.|{0} songs.": [
+  "{0} melodie.|{0} melodii.|{0} de melodii.",
+  "{0} пісня.|{0} пісні.|{0} пісень.",
+  "{0} canción.|{0} canciones."
+ ],
+ "WAV needs Pro or Premier, so this is an MP3.": [
+  "WAV necesită Pro sau Premier, așa că acesta e un MP3.",
+  "Для WAV потрібен Pro або Premier, тож це MP3.",
+  "WAV necesita Pro o Premier, así que es un MP3."
+ ],
+ "{0} is already downloaded.": [
+  "{0} e deja descărcată.",
+  "«{0}» уже завантажено.",
+  "{0} ya está descargada."
+ ],
+ "Asking Suno for a WAV of {0}.": [
+  "Cer de la Suno un WAV pentru {0}.",
+  "Прошу в Suno WAV для «{0}».",
+  "Pidiendo a Suno un WAV de {0}."
+ ],
+ "Downloading {0}.": [
+  "Se descarcă {0}.",
+  "Завантажую {0}.",
+  "Descargando {0}."
+ ],
+ "Saved {0}.": [
+  "Am salvat {0}.",
+  "Збережено «{0}».",
+  "Se guardó {0}."
+ ],
+ "Suno gave no file address for this song.": [
+  "Suno nu a dat nicio adresă de fișier pentru melodie.",
+  "Suno не надав адреси файлу для цієї пісні.",
+  "Suno no dio ninguna dirección de archivo para esta canción."
+ ],
+ "No finished songs in this list.": [
+  "Nu există melodii terminate în listă.",
+  "У цьому списку немає готових пісень.",
+  "No hay canciones terminadas en esta lista."
+ ],
+ "Every song in this list is already downloaded.": [
+  "Toate melodiile din listă sunt deja descărcate.",
+  "Усі пісні з цього списку вже завантажено.",
+  "Todas las canciones de esta lista ya están descargadas."
+ ],
+ "Download {0} as {1} into {2}? {3} already there will be skipped.": [
+  "Descarci {0} ca {1} în {2}? Cele {3} care sunt deja acolo se sar.",
+  "Завантажити {0} як {1} у {2}? {3}, що вже там, буде пропущено.",
+  "¿Descargar {0} como {1} en {2}? Se saltarán las {3} que ya están ahí."
+ ],
+ "Download all": [
+  "Descarcă tot",
+  "Завантажити все",
+  "Descargar todo"
+ ],
+ "Halfway: {0} saved.": [
+  "La jumătate: {0} salvate.",
+  "Половина: збережено {0}.",
+  "A la mitad: {0} guardadas."
+ ],
+ "Downloaded {0} of {1} into {2}.": [
+  "Am descărcat {0} din {1} în {2}.",
+  "Завантажено {0} з {1} у {2}.",
+  "Se descargaron {0} de {1} en {2}."
+ ],
+ "Couldn't download directly: {0}. Ctrl+D on one offers Suno's own download.": [
+  "Nu s-au putut descărca direct: {0}. Ctrl+D pe una oferă descărcarea Suno.",
+  "Не вдалося завантажити напряму: {0}. Ctrl+D на пісні пропонує завантаження через Suno.",
+  "No se pudieron descargar directamente: {0}. Ctrl+D en una ofrece la descarga de Suno."
+ ],
+ "{0} couldn't be downloaded directly. Ctrl+D on one offers Suno's own download.": [
+  "{0} nu s-au putut descărca direct. Ctrl+D pe una oferă descărcarea Suno.",
+  "{0} не вдалося завантажити напряму. Ctrl+D на пісні пропонує завантаження через Suno.",
+  "{0} no se pudieron descargar directamente. Ctrl+D en una ofrece la descarga de Suno."
+ ],
+ "You've downloaded this song before, so it won't count against your downloads.": [
+  "Ai mai descărcat melodia, așa că nu se socotește la descărcări.",
+  "Ви вже завантажували цю пісню, тож вона не враховуватиметься в завантаженнях.",
+  "Ya descargaste esta canción, así que no cuenta para tus descargas."
+ ],
+ "Suno counts it as 1 of your {0} downloads left.": [
+  "Suno o socotește ca 1 din cele {0} descărcări rămase.",
+  "Suno зарахує її як 1 з {0} завантажень, що залишилися.",
+  "Suno la cuenta como 1 de tus {0} descargas restantes."
+ ],
+ "Suno counts it against your downloads.": [
+  "Suno o socotește la descărcările tale.",
+  "Suno зарахує її до ваших завантажень.",
+  "Suno la cuenta para tus descargas."
+ ],
+ "The direct download didn't work ({0}) Use Suno's own download for \"{1}\" instead? {2}": [
+  "Descărcarea directă nu a mers ({0}) Folosești în schimb descărcarea Suno pentru „{1}”? {2}",
+  "Пряме завантаження не вдалося ({0}) Використати натомість завантаження Suno для «{1}»? {2}",
+  "La descarga directa no funcionó ({0}) ¿Usar en su lugar la descarga de Suno para «{1}»? {2}"
+ ],
+ "Download": [
+  "Descarcă",
+  "Завантажити",
+  "Descargar"
+ ],
+ "Downloading {0} through Suno.": [
+  "Se descarcă {0} prin Suno.",
+  "Завантажую «{0}» через Suno.",
+  "Descargando {0} a través de Suno."
+ ],
+ "Can't use the download folder. Check it in Settings.": [
+  "Nu pot folosi dosarul de descărcări. Verifică-l în Setări.",
+  "Не вдається використати папку завантажень. Перевірте її в Налаштуваннях.",
+  "No se puede usar la carpeta de descargas. Revísala en Configuración."
+ ],
+ "Details: {0}": [
+  "Detalii: {0}",
+  "Подробиці: {0}",
+  "Detalles: {0}"
+ ],
+ "Information: {0}": [
+  "Informații: {0}",
+  "Відомості: {0}",
+  "Información: {0}"
+ ],
+ "Resuming {0} at {1}.": [
+  "Se reia {0} de la {1}.",
+  "Продовжую «{0}» з {1}.",
+  "Siguiendo {0} desde {1}."
+ ],
+ "This song has no lyrics.": [
+  "Melodia nu are versuri.",
+  "У цієї пісні немає тексту.",
+  "Esta canción no tiene letra."
+ ],
+ "Lyrics: {0}": [
+  "Versuri: {0}",
+  "Текст: {0}",
+  "Letra: {0}"
+ ],
+ "Link copied.": [
+  "Link copiat.",
+  "Посилання скопійовано.",
+  "Enlace copiado."
+ ],
+ "Couldn't use the clipboard. Try again.": [
+  "Nu am putut folosi clipboardul. Încearcă din nou.",
+  "Не вдалося використати буфер обміну. Спробуйте ще раз.",
+  "No se pudo usar el portapapeles. Vuelve a intentarlo."
+ ],
+ "Move \"{0}\" to your Suno trash?": [
+  "Muți „{0}” în coșul Suno?",
+  "Перемістити «{0}» у кошик Suno?",
+  "¿Mover «{0}» a tu papelera de Suno?"
+ ],
+ "Move to trash": [
+  "Mută în coș",
+  "Перемістити в кошик",
+  "Mover a la papelera"
+ ],
+ "Moved {0} to trash.": [
+  "Am mutat {0} în coș.",
+  "«{0}» переміщено в кошик.",
+  "{0} se movió a la papelera."
+ ],
+ "_Lyrics": [
+  "_Versuri",
+  "_Текст",
+  "_Letra"
+ ],
+ "Edit {0}": [
+  "Editează {0}",
+  "Змінити «{0}»",
+  "Editar {0}"
+ ],
+ "Changes what Suno shows for this song. The audio stays the same.": [
+  "Schimbă ce arată Suno pentru melodie. Sunetul rămâne același.",
+  "Змінює те, що Suno показує для цієї пісні. Звук лишається тим самим.",
+  "Cambia lo que Suno muestra de esta canción. El audio sigue igual."
+ ],
+ "Save": [
+  "Salvează",
+  "Зберегти",
+  "Guardar"
+ ],
+ "Saved.": [
+  "Salvat.",
+  "Збережено.",
+  "Guardado."
+ ],
+ "{0} is public.": [
+  "{0} e publică.",
+  "«{0}» тепер публічна.",
+  "{0} es pública."
+ ],
+ "{0} is private.": [
+  "{0} e privată.",
+  "«{0}» тепер приватна.",
+  "{0} es privada."
+ ],
+ "Share link copied.": [
+  "Linkul de distribuire a fost copiat.",
+  "Посилання для поширення скопійовано.",
+  "Enlace para compartir copiado."
+ ],
+ "Others may now cover and remix it.": [
+  "Ceilalți pot acum să-i facă cover și remix.",
+  "Тепер інші можуть робити кавери й ремікси.",
+  "Ahora otros pueden hacerle covers y remixes."
+ ],
+ "Others can no longer cover or remix it.": [
+  "Ceilalți nu mai pot să-i facă cover sau remix.",
+  "Інші більше не можуть робити кавери чи ремікси.",
+  "Otros ya no pueden hacerle covers ni remixes."
+ ],
+ "Suno found no similar songs.": [
+  "Suno nu a găsit melodii asemănătoare.",
+  "Suno не знайшов схожих пісень.",
+  "Suno no encontró canciones parecidas."
+ ],
+ "Songs similar to {0}": [
+  "Melodii asemănătoare cu {0}",
+  "Пісні, схожі на «{0}»",
+  "Canciones parecidas a {0}"
+ ],
+ "No comments.": [
+  "Niciun comentariu.",
+  "Коментарів немає.",
+  "No hay comentarios."
+ ],
+ "Comments on {0} ({1})": [
+  "Comentarii la {0} ({1})",
+  "Коментарі до «{0}» ({1})",
+  "Comentarios de {0} ({1})"
+ ],
+ "_Comment": [
+  "_Comentariu",
+  "_Коментар",
+  "_Comentario"
+ ],
+ "Comment on {0}": [
+  "Comentează {0}",
+  "Коментар до «{0}»",
+  "Comentar {0}"
+ ],
+ "Comments are public on Suno.": [
+  "Comentariile sunt publice pe Suno.",
+  "Коментарі на Suno публічні.",
+  "Los comentarios son públicos en Suno."
+ ],
+ "Post": [
+  "Publică",
+  "Опублікувати",
+  "Publicar"
+ ],
+ "Comment posted.": [
+  "Comentariu publicat.",
+  "Коментар опубліковано.",
+  "Comentario publicado."
+ ],
+ "New playlist": [
+  "Listă nouă",
+  "Новий плейлист",
+  "Lista nueva"
+ ],
+ "_Playlist": [
+  "_Listă de redare",
+  "_Плейлист",
+  "_Lista"
+ ],
+ "Name for a _new playlist": [
+  "_Numele listei noi",
+  "_Назва нового плейлиста",
+  "_Nombre de la lista nueva"
+ ],
+ "Add {0} to a playlist": [
+  "Adaugă {0} la o listă",
+  "Додати «{0}» до плейлиста",
+  "Añadir {0} a una lista"
+ ],
+ "Pick a playlist, or New playlist and give it a name.": [
+  "Alege o listă sau Listă nouă și dă-i un nume.",
+  "Виберіть плейлист або «Новий плейлист» і дайте йому назву.",
+  "Elige una lista, o Lista nueva y ponle un nombre."
+ ],
+ "Add": [
+  "Adaugă",
+  "Додати",
+  "Añadir"
+ ],
+ "Give the new playlist a name.": [
+  "Dă un nume listei noi.",
+  "Дайте новому плейлисту назву.",
+  "Ponle un nombre a la lista nueva."
+ ],
+ "Added to {0}.": [
+  "Adăugată la {0}.",
+  "Додано до «{0}».",
+  "Se añadió a {0}."
+ ],
+ "Playback": [
+  "Redare",
+  "Відтворення",
+  "Reproducción"
+ ],
+ "Song": [
+  "Melodie",
+  "Пісня",
+  "Canción"
+ ],
+ "Library": [
+  "Bibliotecă",
+  "Бібліотека",
+  "Biblioteca"
+ ],
+ "View": [
+  "Vizualizare",
+  "Вигляд",
+  "Ver"
+ ],
+ "Account": [
+  "Cont",
+  "Обліковий запис",
+  "Cuenta"
+ ],
+ "Help": [
+  "Ajutor",
+  "Довідка",
+  "Ayuda"
+ ],
+ "_Play or pause": [
+  "_Redare sau pauză",
+  "_Відтворення або пауза",
+  "_Reproducir o pausar"
+ ],
+ "_Stop": [
+  "_Oprire",
+  "_Стоп",
+  "_Detener"
+ ],
+ "Pre_vious song": [
+  "Melodia _anterioară",
+  "_Попередня пісня",
+  "Canción _anterior"
+ ],
+ "_Next song": [
+  "Melodia _următoare",
+  "_Наступна пісня",
+  "Canción _siguiente"
+ ],
+ "_Back 10 seconds": [
+  "Înapoi 10 _secunde",
+  "Наза_д на 10 секунд",
+  "Re_troceder 10 segundos"
+ ],
+ "_Forward 10 seconds": [
+  "Înainte 10 se_cunde",
+  "Вп_еред на 10 секунд",
+  "A_vanzar 10 segundos"
+ ],
+ "Bac_k 10 percent": [
+  "Înapoi 10 _procente",
+  "Назад на 10 відсот_ків",
+  "Retroceder 10 _por ciento"
+ ],
+ "Forwar_d 10 percent": [
+  "Înainte 10 proc_ente",
+  "Вперед на 10 відсотк_ів",
+  "Avanzar 10 por _ciento"
+ ],
+ "Back to the s_tart": [
+  "Înapoi la î_nceput",
+  "На по_чаток",
+  "Volver al pr_incipio"
+ ],
+ "_Resume where I left off": [
+  "Re_ia de unde am rămas",
+  "П_родовжити з місця зупинки",
+  "Se_guir donde lo dejé"
+ ],
+ "_What's playing": [
+  "Ce se re_dă",
+  "_Що грає",
+  "_Qué suena"
+ ],
+ "Volume d_own": [
+  "Volum mai înce_t",
+  "_Тихіше",
+  "_Bajar volumen"
+ ],
+ "Volume _up": [
+  "Volu_m mai tare",
+  "_Гучніше",
+  "S_ubir volumen"
+ ],
+ "_Play": [
+  "_Redă",
+  "_Відтворити",
+  "_Reproducir"
+ ],
+ "_Details": [
+  "De_talii",
+  "_Подробиці",
+  "_Detalles"
+ ],
+ "Song in_formation": [
+  "_Informații despre melodie",
+  "Ві_домості про пісню",
+  "_Información de la canción"
+ ],
+ "Copy l_ink": [
+  "Copiază _linkul",
+  "Копіювати по_силання",
+  "Copiar _enlace"
+ ],
+ "Copy Suno share lin_k": [
+  "Copiază linkul de _partajare Suno",
+  "Копіювати посилання для по_ширення",
+  "Copiar enlace para comp_artir de Suno"
+ ],
+ "Similar so_ngs...": [
+  "_Melodii asemănătoare...",
+  "С_хожі пісні...",
+  "Canciones _parecidas..."
+ ],
+ "S_how comments": [
+  "Arată c_omentariile",
+  "Показати _коментарі",
+  "Ver come_ntarios"
+ ],
+ "Write a comment...": [
+  "Scrie un comentariu...",
+  "Написати коментар...",
+  "Escribir un comentario..."
+ ],
+ "D_ownload": [
+  "_Descarcă",
+  "_Завантажити",
+  "Descar_gar"
+ ],
+ "Download _video": [
+  "Descarcă vid_eo",
+  "Завантажити віде_о",
+  "Descargar _video"
+ ],
+ "_Extend...": [
+  "Exti_nde...",
+  "П_родовжити...",
+  "Ex_tender..."
+ ],
+ "_Get whole song": [
+  "Melodia întrea_gă",
+  "_Ціла пісня",
+  "Canción _completa"
+ ],
+ "S_tems": [
+  "_Stem-uri",
+  "Стем_и",
+  "_Stems"
+ ],
+ "Edit title and l_yrics...": [
+  "Schim_bă titlul și versurile...",
+  "Змінити _назву й текст...",
+  "Editar título _y letra..."
+ ],
+ "Add to playli_st...": [
+  "_Adaugă la o listă...",
+  "Дод_ати до плейлиста...",
+  "Añadir a _una lista..."
+ ],
+ "Move to tr_ash": [
+  "M_ută în coș",
+  "_У кошик",
+  "_Borrar (a la papelera)"
+ ],
+ "_Refresh": [
+  "_Reîmprospătează",
+  "_Оновити",
+  "_Actualizar"
+ ],
+ "_Search": [
+  "_Caută",
+  "_Пошук",
+  "_Buscar"
+ ],
+ "_Filters...": [
+  "_Filtre...",
+  "_Фільтри...",
+  "_Filtros..."
+ ],
+ "Download _all...": [
+  "Descarcă _tot...",
+  "Завантажити _все...",
+  "Descargar _todo..."
+ ],
+ "_Library": [
+  "_Bibliotecă",
+  "_Бібліотека",
+  "_Biblioteca"
+ ],
+ "_Playlists": [
+  "_Liste de redare",
+  "_Плейлисти",
+  "_Listas"
+ ],
+ "_Create": [
+  "_Creare",
+  "_Створення",
+  "_Crear"
+ ],
+ "_Trending": [
+  "În _tendințe",
+  "У _тренді",
+  "_Tendencias"
+ ],
+ "_Account": [
+  "C_ont",
+  "_Обліковий запис",
+  "C_uenta"
+ ],
+ "_Settings": [
+  "_Setări",
+  "_Налаштування",
+  "C_onfiguración"
+ ],
+ "_Credits left": [
+  "_Credite rămase",
+  "_Залишок кредитів",
+  "_Créditos restantes"
+ ],
+ "_Plan and downloads": [
+  "_Plan și descărcări",
+  "_План і завантаження",
+  "_Plan y descargas"
+ ],
+ "Sign _in": [
+  "C_onectare",
+  "_Увійти",
+  "_Iniciar sesión"
+ ],
+ "Sign _out": [
+  "_Deconectare",
+  "Ви_йти",
+  "Cerrar _sesión"
+ ],
+ "_Help for here": [
+  "_Ajutor pentru aici",
+  "_Довідка тут",
+  "_Ayuda para aquí"
+ ],
+ "_All commands": [
+  "_Toate comenzile",
+  "_Усі команди",
+  "_Todos los comandos"
+ ],
+ "_Repeat last message": [
+  "_Repetă ultimul mesaj",
+  "_Повторити останнє повідомлення",
+  "_Repetir el último mensaje"
+ ],
+ "_Message history": [
+  "_Istoricul mesajelor",
+  "_Історія повідомлень",
+  "_Historial de mensajes"
+ ],
+ "Speak e_verything": [
+  "Spune t_ot",
+  "Казати _все",
+  "Decir t_odo"
+ ],
+ "Speak only what I as_k for": [
+  "Spune doar ce _cer",
+  "Казати лише на _запит",
+  "Decir solo lo que _pido"
+ ],
+ "Speak only _errors": [
+  "Spune doar _erorile",
+  "Казати лише по_милки",
+  "Decir solo los _errores"
+ ],
+ "Check for _updates": [
+  "Caută act_ualizări",
+  "Перевірити _оновлення",
+  "B_uscar actualizaciones"
+ ],
+ "_Licenses and notices": [
+  "_Licențe și note",
+  "_Ліцензії та примітки",
+  "_Licencias y avisos"
+ ],
+ "About Tin Pa_n": [
+  "Despre Tin Pa_n",
+  "Про Tin Pa_n",
+  "Acerca de Tin Pa_n"
+ ],
+ "Read the full key guide": [
+  "Citește ghidul complet al tastelor",
+  "Прочитати повний посібник із клавіш",
+  "Leer la guía completa de teclas"
+ ],
+ "All commands. Enter runs one.": [
+  "Toate comenzile. Enter rulează una.",
+  "Усі команди. Enter виконує вибрану.",
+  "Todos los comandos. Intro ejecuta uno."
+ ],
+ "Tin Pan keys": [
+  "Tastele Tin Pan",
+  "Клавіші Tin Pan",
+  "Teclas de Tin Pan"
+ ],
+ "{0} isn't available right now.": [
+  "{0} nu e disponibil acum.",
+  "«{0}» зараз недоступно.",
+  "{0} no está disponible ahora."
+ ],
+ "No messages yet.": [
+  "Niciun mesaj încă.",
+  "Повідомлень ще немає.",
+  "Todavía no hay mensajes."
+ ],
+ "Message history, newest first": [
+  "Istoricul mesajelor, cele mai noi primele",
+  "Історія повідомлень, новіші спершу",
+  "Historial de mensajes, los más nuevos primero"
+ ],
+ "Speaking everything.": [
+  "Spun totul.",
+  "Кажу все.",
+  "Diré todo."
+ ],
+ "Speaking what you ask for and errors, not background news.": [
+  "Spun ce ceri și erorile, fără noutăți de fundal.",
+  "Кажу те, що ви просите, і помилки, без фонових новин.",
+  "Diré lo que pidas y los errores, sin novedades de fondo."
+ ],
+ "Speaking only errors and what you ask to hear.": [
+  "Spun doar erorile și ce ceri să auzi.",
+  "Кажу лише помилки й те, що ви просите почути.",
+  "Diré solo los errores y lo que pidas oír."
+ ],
+ "From the start.": [
+  "De la început.",
+  "З початку.",
+  "Desde el principio."
+ ],
+ "Nothing to resume yet.": [
+  "Nu e nimic de reluat încă.",
+  "Ще нічого продовжувати.",
+  "Todavía no hay nada que seguir."
+ ],
+ "Licenses and notices": [
+  "Licențe și note",
+  "Ліцензії та примітки",
+  "Licencias y avisos"
+ ],
+ "Tin Pan {0}, by Ernesto Melendez.": [
+  "Tin Pan {0}, de Ernesto Melendez.",
+  "Tin Pan {0}, автор Ernesto Melendez.",
+  "Tin Pan {0}, de Ernesto Melendez."
+ ],
+ "An accessible, unofficial client for Suno. Not affiliated with Suno.": [
+  "Un client accesibil, neoficial, pentru Suno. Nu e afiliat cu Suno.",
+  "Доступний неофіційний клієнт для Suno. Не пов'язаний із Suno.",
+  "Un cliente accesible y no oficial de Suno. No está afiliado a Suno."
+ ],
+ "Speech goes through {0}.": [
+  "Vorbirea trece prin {0}.",
+  "Мовлення йде через {0}.",
+  "La voz sale por {0}."
+ ],
+ "Signed in.": [
+  "Conectat.",
+  "Ви ввійшли.",
+  "Sesión iniciada."
+ ],
+ "Signed in as {0}.": [
+  "Conectat ca {0}.",
+  "Ви ввійшли як {0}.",
+  "Sesión iniciada como {0}."
+ ],
+ "Settings: {0}": [
+  "Setări: {0}",
+  "Налаштування: {0}",
+  "Configuración: {0}"
+ ],
+ "Log: {0}": [
+  "Jurnal: {0}",
+  "Журнал: {0}",
+  "Registro: {0}"
+ ],
+ "Built with ideas and Suno API notes from Nsomnia's chadvis-projectm-qt, suno-power-exporter and suno-api-local-manager-frontend, paperfoot/suno-cli and gcui-art/suno-api, and the BrailleNote QT's KeySoft.": [
+  "Făcut cu idei și note despre API-ul Suno din chadvis-projectm-qt, suno-power-exporter și suno-api-local-manager-frontend ale lui Nsomnia, paperfoot/suno-cli și gcui-art/suno-api, și din KeySoft de pe BrailleNote QT.",
+  "Створено з ідеями та нотатками про API Suno з chadvis-projectm-qt, suno-power-exporter і suno-api-local-manager-frontend від Nsomnia, paperfoot/suno-cli і gcui-art/suno-api, а також KeySoft із BrailleNote QT.",
+  "Hecho con ideas y notas sobre la API de Suno de chadvis-projectm-qt, suno-power-exporter y suno-api-local-manager-frontend de Nsomnia, paperfoot/suno-cli y gcui-art/suno-api, y del KeySoft del BrailleNote QT."
+ ],
+ "About Tin Pan": [
+  "Despre Tin Pan",
+  "Про Tin Pan",
+  "Acerca de Tin Pan"
+ ],
+ "Tin Pan, by Ernesto Melendez": [
+  "Tin Pan, de Ernesto Melendez",
+  "Tin Pan, автор Ernesto Melendez",
+  "Tin Pan, de Ernesto Melendez"
+ ],
+ "Tin Pan ready. {0} Press F1 for help.": [
+  "Tin Pan e gata. {0} Apasă F1 pentru ajutor.",
+  "Tin Pan готовий. {0} Натисніть F1 для довідки.",
+  "Tin Pan está listo. {0} Pulsa F1 para la ayuda."
+ ],
+ "Tin Pan ready. Press F1 for help.": [
+  "Tin Pan e gata. Apasă F1 pentru ajutor.",
+  "Tin Pan готовий. Натисніть F1 для довідки.",
+  "Tin Pan está listo. Pulsa F1 para la ayuda."
+ ],
+ "Tin Pan ready.": [
+  "Tin Pan e gata.",
+  "Tin Pan готовий.",
+  "Tin Pan está listo."
+ ],
+ "Suno has ended your sign-in, so Tin Pan can't reach your songs. This happens now and then, for example after changing your password. Sign in again now?": [
+  "Suno ți-a încheiat conectarea, așa că Tin Pan nu mai ajunge la melodiile tale. Se mai întâmplă, de exemplu după ce îți schimbi parola. Te conectezi din nou acum?",
+  "Suno завершив ваш вхід, тому Tin Pan не має доступу до ваших пісень. Так іноді буває, наприклад після зміни пароля. Увійти знову зараз?",
+  "Suno cerró tu sesión, así que Tin Pan no puede llegar a tus canciones. Pasa de vez en cuando, por ejemplo después de cambiar la contraseña. ¿Iniciar sesión otra vez ahora?"
+ ],
+ "Sign in again": [
+  "Conectează-te din nou",
+  "Увійти знову",
+  "Volver a iniciar sesión"
+ ],
+ "Welcome to Tin Pan. To browse, play and make songs, sign in to your Suno account. Suno's own sign-in page opens, and closes by itself once you're in. Sign in now?": [
+  "Bun venit în Tin Pan. Ca să răsfoiești, să asculți și să creezi melodii, conectează-te la contul Suno. Se deschide pagina de conectare a Suno și se închide singură după ce intri. Te conectezi acum?",
+  "Ласкаво просимо до Tin Pan. Щоб переглядати, слухати й створювати пісні, увійдіть у свій обліковий запис Suno. Відкриється сторінка входу Suno, яка закриється сама, щойно ви ввійдете. Увійти зараз?",
+  "Te damos la bienvenida a Tin Pan. Para ver, escuchar y crear canciones, inicia sesión en tu cuenta de Suno. Se abre la página de inicio de sesión de Suno y se cierra sola cuando entras. ¿Iniciar sesión ahora?"
+ ],
+ "Welcome to Tin Pan": [
+  "Bun venit în Tin Pan",
+  "Ласкаво просимо до Tin Pan",
+  "Bienvenida a Tin Pan"
+ ],
+ "Not signed in. You can sign in any time from Settings, Ctrl+6. Press F1 for help.": [
+  "Nu ești conectat. Te poți conecta oricând din Setări, Ctrl+6. Apasă F1 pentru ajutor.",
+  "Ви не ввійшли. Увійти можна будь-коли в Налаштуваннях, Ctrl+6. Натисніть F1 для довідки.",
+  "No iniciaste sesión. Puedes hacerlo cuando quieras desde Configuración, Ctrl+6. Pulsa F1 para la ayuda."
+ ],
+ "Tin Pan - signed in": [
+  "Tin Pan - conectat",
+  "Tin Pan - ви ввійшли",
+  "Tin Pan - sesión iniciada"
+ ],
+ "Ready: {0}.": [
+  "Gata: {0}.",
+  "Готово: {0}.",
+  "Listas: {0}."
+ ],
+ "Ctrl+F1 for all commands.": [
+  "Ctrl+F1 pentru toate comenzile.",
+  "Ctrl+F1 — усі команди.",
+  "Ctrl+F1 para todos los comandos."
+ ],
+ "Nothing playing.": [
+  "Nu se redă nimic.",
+  "Нічого не грає.",
+  "No suena nada."
+ ],
+ "{0} of {1}": [
+  "{0} din {1}",
+  "{0} з {1}",
+  "{0} de {1}"
+ ],
+ "Paused: {0}, {1}.": [
+  "Pauză: {0}, {1}.",
+  "Пауза: {0}, {1}.",
+  "En pausa: {0}, {1}."
+ ],
+ "Playing: {0}, {1}.": [
+  "Se redă: {0}, {1}.",
+  "Грає: {0}, {1}.",
+  "Sonando: {0}, {1}."
+ ],
+ "{0} song failed.|{0} songs failed.": [
+  "{0} melodie a eșuat.|{0} melodii au eșuat.|{0} de melodii au eșuat.",
+  "{0} пісня не вдалася.|{0} пісні не вдалися.|{0} пісень не вдалося.",
+  "Falló {0} canción.|Fallaron {0} canciones."
+ ],
+ "The last update couldn't be installed. Help, Check for updates tries again.": [
+  "Ultima actualizare nu s-a putut instala. Ajutor, Caută actualizări încearcă din nou.",
+  "Останнє оновлення не вдалося встановити. «Довідка», «Перевірити оновлення» спробує знову.",
+  "No se pudo instalar la última actualización. Ayuda, Buscar actualizaciones lo vuelve a intentar."
+ ],
+ "Already checking for updates.": [
+  "Deja caut actualizări.",
+  "Оновлення вже перевіряються.",
+  "Ya estoy buscando actualizaciones."
+ ],
+ "Checking for updates.": [
+  "Caut actualizări.",
+  "Перевіряю оновлення.",
+  "Buscando actualizaciones."
+ ],
+ "Tin Pan is up to date, version {0}.": [
+  "Tin Pan e la zi, versiunea {0}.",
+  "Tin Pan оновлено, версія {0}.",
+  "Tin Pan está al día, versión {0}."
+ ],
+ "What's new:": [
+  "Ce e nou:",
+  "Що нового:",
+  "Novedades:"
+ ],
+ "If you choose No, Tin Pan won't remind you about this version. Help, Check for updates still finds it.": [
+  "Dacă alegi Nu, Tin Pan nu-ți mai amintește de această versiune. Ajutor, Caută actualizări o găsește în continuare.",
+  "Якщо виберете «Ні», Tin Pan більше не нагадуватиме про цю версію. «Довідка», «Перевірити оновлення» однаково її знайде.",
+  "Si eliges No, Tin Pan no te recordará esta versión. Ayuda, Buscar actualizaciones la sigue encontrando."
+ ],
+ "Tin Pan {0} is available. You have {1}.": [
+  "Tin Pan {0} e disponibil. Ai {1}.",
+  "Доступний Tin Pan {0}. У вас {1}.",
+  "Tin Pan {0} está disponible. Tienes la {1}."
+ ],
+ "This copy of Tin Pan can't update itself. Open the release page?": [
+  "Această copie Tin Pan nu se poate actualiza singură. Deschizi pagina versiunii?",
+  "Ця копія Tin Pan не може оновитися сама. Відкрити сторінку випуску?",
+  "Esta copia de Tin Pan no puede actualizarse sola. ¿Abrir la página de la versión?"
+ ],
+ "Tin Pan update": [
+  "Actualizare Tin Pan",
+  "Оновлення Tin Pan",
+  "Actualización de Tin Pan"
+ ],
+ "Download and install it now? Tin Pan closes and opens again by itself.": [
+  "O descarci și o instalezi acum? Tin Pan se închide și se redeschide singur.",
+  "Завантажити й установити зараз? Tin Pan закриється й відкриється знову сам.",
+  "¿Descargarla e instalarla ahora? Tin Pan se cierra y se vuelve a abrir solo."
+ ],
+ "Downloading Tin Pan {0}.": [
+  "Se descarcă Tin Pan {0}.",
+  "Завантажую Tin Pan {0}.",
+  "Descargando Tin Pan {0}."
+ ],
+ "Update download halfway.": [
+  "Descărcarea actualizării e la jumătate.",
+  "Половину оновлення завантажено.",
+  "La descarga de la actualización va por la mitad."
+ ],
+ "Another Tin Pan window is open, and the update can't install while it is. Close it, then check for updates again.": [
+  "E deschisă altă fereastră Tin Pan, iar actualizarea nu se poate instala cât e deschisă. Închide-o, apoi caută din nou actualizări.",
+  "Відкрито ще одне вікно Tin Pan, і поки воно відкрите, оновлення не встановиться. Закрийте його й перевірте оновлення знову.",
+  "Hay otra ventana de Tin Pan abierta y la actualización no se puede instalar mientras siga así. Ciérrala y vuelve a buscar actualizaciones."
+ ],
+ "Installing Tin Pan {0}. It opens again in a moment.": [
+  "Se instalează Tin Pan {0}. Se redeschide imediat.",
+  "Встановлюю Tin Pan {0}. За мить він відкриється знову.",
+  "Instalando Tin Pan {0}. Se vuelve a abrir en un momento."
+ ],
+ "Couldn't open the browser. The release page is github.com/ernie96/tin-pan/releases.": [
+  "Nu am putut deschide browserul. Pagina versiunilor e github.com/ernie96/tin-pan/releases.",
+  "Не вдалося відкрити браузер. Сторінка випусків: github.com/ernie96/tin-pan/releases.",
+  "No se pudo abrir el navegador. La página de versiones es github.com/ernie96/tin-pan/releases."
+ ],
+ "No playlists.": [
+  "Nicio listă de redare.",
+  "Плейлистів немає.",
+  "No hay listas."
+ ],
+ "{0} is empty.": [
+  "{0} e goală.",
+  "«{0}» порожній.",
+  "{0} está vacía."
+ ],
+ "_Name": [
+  "_Nume",
+  "_Назва",
+  "_Nombre"
+ ],
+ "Make playlist": [
+  "Fă lista",
+  "Створити плейлист",
+  "Crear lista"
+ ],
+ "Made playlist {0}.": [
+  "Am făcut lista {0}.",
+  "Створено плейлист «{0}».",
+  "Se creó la lista {0}."
+ ],
+ "_Description": [
+  "_Descriere",
+  "_Опис",
+  "_Descripción"
+ ],
+ "Rename {0}": [
+  "Redenumește {0}",
+  "Перейменувати «{0}»",
+  "Cambiar el nombre de {0}"
+ ],
+ "Move the playlist \"{0}\" to the trash? The songs in it stay in your library.": [
+  "Muți lista „{0}” în coș? Melodiile din ea rămân în bibliotecă.",
+  "Перемістити плейлист «{0}» у кошик? Пісні з нього лишаться в бібліотеці.",
+  "¿Mover la lista «{0}» a la papelera? Sus canciones se quedan en tu biblioteca."
+ ],
+ "Delete playlist": [
+  "Șterge lista",
+  "Видалити плейлист",
+  "Eliminar lista"
+ ],
+ "End of playlist.": [
+  "Sfârșitul listei de redare.",
+  "Кінець плейлиста.",
+  "Fin de la lista."
+ ],
+ "Removed {0} from {1}.": [
+  "Am eliminat {0} din {1}.",
+  "«{0}» прибрано з «{1}».",
+  "Se quitó {0} de {1}."
+ ],
+ "Already first.": [
+  "E deja prima.",
+  "Уже перша.",
+  "Ya es la primera."
+ ],
+ "Already last.": [
+  "E deja ultima.",
+  "Уже остання.",
+  "Ya es la última."
+ ],
+ "{0} of {1}.": [
+  "{0} din {1}.",
+  "{0} з {1}.",
+  "{0} de {1}."
+ ],
+ "{0} playlist.|{0} playlists.": [
+  "{0} listă de redare.|{0} liste de redare.|{0} de liste de redare.",
+  "{0} плейлист.|{0} плейлисти.|{0} плейлистів.",
+  "{0} lista.|{0} listas."
+ ],
+ "Everything": [
+  "Totul",
+  "Усе",
+  "Todo"
+ ],
+ "What I ask for and errors, not background news": [
+  "Ce cer și erorile, fără noutăți de fundal",
+  "Те, що я прошу, і помилки, без фонових новин",
+  "Lo que pido y los errores, sin novedades de fondo"
+ ],
+ "Only errors and what I ask to hear": [
+  "Doar erorile și ce cer să aud",
+  "Лише помилки й те, що я прошу почути",
+  "Solo los errores y lo que pido oír"
+ ],
+ "A short click": [
+  "Un clic scurt",
+  "Короткий клацок",
+  "Un clic corto"
+ ],
+ "Say playing (also shown in braille)": [
+  "Spune „se redă” (apare și în braille)",
+  "Сказати «грає» (також шрифтом Брайля)",
+  "Decir «sonando» (también en braille)"
+ ],
+ "Click and say playing": [
+  "Clic și „se redă”",
+  "Клацок і «грає»",
+  "Clic y decir «sonando»"
+ ],
+ "Nothing": [
+  "Nimic",
+  "Нічого",
+  "Nada"
+ ],
+ "The language changes the next time Tin Pan starts.": [
+  "Limba se schimbă la următoarea pornire a Tin Pan.",
+  "Мова зміниться під час наступного запуску Tin Pan.",
+  "El idioma cambia la próxima vez que se inicie Tin Pan."
+ ],
+ "Signed out.": [
+  "Deconectat.",
+  "Ви вийшли.",
+  "Sesión cerrada."
+ ],
+ "Download folder set.": [
+  "Dosarul de descărcări a fost setat.",
+  "Папку завантажень задано.",
+  "Carpeta de descargas establecida."
+ ],
+ "Any voice": [
+  "Orice voce",
+  "Будь-який голос",
+  "Cualquier voz"
+ ],
+ "Male vocals": [
+  "Voce masculină",
+  "Чоловічий вокал",
+  "Voz masculina"
+ ],
+ "Female vocals": [
+  "Voce feminină",
+  "Жіночий вокал",
+  "Voz femenina"
+ ],
+ "No notifications.": [
+  "Nicio notificare.",
+  "Сповіщень немає.",
+  "No hay notificaciones."
+ ],
+ "Describe the song first.": [
+  "Întâi descrie melodia.",
+  "Спершу опишіть пісню.",
+  "Primero describe la canción."
+ ],
+ "Models haven't loaded yet. Press F5 to refresh, then try again.": [
+  "Modelele nu s-au încărcat încă. Apasă F5 ca să reîmprospătezi, apoi încearcă din nou.",
+  "Моделі ще не завантажено. Натисніть F5, щоб оновити, і спробуйте ще раз.",
+  "Los modelos aún no se cargaron. Pulsa F5 para actualizar y vuelve a intentarlo."
+ ],
+ "Weirdness": [
+  "Ciudățenie",
+  "Дивність",
+  "Rareza"
+ ],
+ "Style influence": [
+  "Influența stilului",
+  "Вплив стилю",
+  "Influencia del estilo"
+ ],
+ "Title": [
+  "Titlu",
+  "Назва",
+  "Título"
+ ],
+ "Style": [
+  "Stil",
+  "Стиль",
+  "Estilo"
+ ],
+ "Exclude styles": [
+  "Stiluri de exclus",
+  "Виключити стилі",
+  "Estilos a excluir"
+ ],
+ "Description": [
+  "Descriere",
+  "Опис",
+  "Descripción"
+ ],
+ "Lyrics": [
+  "Versuri",
+  "Текст",
+  "Letra"
+ ],
+ "{0} is {1} characters. This model allows {2}.": [
+  "{0} are {1} caractere. Modelul acceptă {2}.",
+  "{0}: {1} символів. Ця модель дозволяє {2}.",
+  "{0} tiene {1} caracteres. Este modelo admite {2}."
+ ],
+ "{0} must be a number from 0 to 100, or empty.": [
+  "{0} trebuie să fie un număr de la 0 la 100 sau gol.",
+  "{0}: має бути число від 0 до 100 або порожньо.",
+  "{0} debe ser un número de 0 a 100, o quedar vacío."
+ ],
+ "Sending to Suno.": [
+  "Trimit la Suno.",
+  "Надсилаю в Suno.",
+  "Enviando a Suno."
+ ],
+ "Making 1 song. You'll hear when it's ready.": [
+  "Se face 1 melodie. Vei auzi când e gata.",
+  "Створюю 1 пісню. Ви почуєте, коли вона буде готова.",
+  "Creando 1 canción. Oirás cuando esté lista."
+ ],
+ "Making {0} songs. You'll hear when they're ready.": [
+  "Se fac {0} melodii. Vei auzi când sunt gata.",
+  "Створюю пісні: {0}. Ви почуєте, коли вони будуть готові.",
+  "Creando {0} canciones. Oirás cuando estén listas."
+ ],
+ "Type a topic first.": [
+  "Întâi scrie o temă.",
+  "Спершу введіть тему.",
+  "Primero escribe un tema."
+ ],
+ "Writing lyrics.": [
+  "Scriu versurile.",
+  "Пишу текст.",
+  "Escribiendo la letra."
+ ],
+ "Lyrics ready.": [
+  "Versurile sunt gata.",
+  "Текст готовий.",
+  "La letra está lista."
+ ],
+ "Type a style first, even a word or two.": [
+  "Întâi scrie un stil, măcar un cuvânt sau două.",
+  "Спершу введіть стиль, хоч слово чи два.",
+  "Primero escribe un estilo, aunque sea una o dos palabras."
+ ],
+ "Boosting the style.": [
+  "Îmbogățesc stilul.",
+  "Посилюю стиль.",
+  "Mejorando el estilo."
+ ],
+ "Style boosted: {0}": [
+  "Stilul îmbogățit: {0}",
+  "Посилений стиль: {0}",
+  "Estilo mejorado: {0}"
+ ],
+ "Put lyrics in the Lyrics box first. Write lyrics makes some from a topic.": [
+  "Întâi pune versuri în caseta Versuri. Generează versuri le face dintr-o temă.",
+  "Спершу додайте текст у поле «Текст». «Написати текст» створить його за темою.",
+  "Primero pon una letra en el cuadro Letra. Escribir letra crea una a partir de un tema."
+ ],
+ "Say what to change, for example: make the chorus rhyme.": [
+  "Spune ce să schimbe, de exemplu: refrenul să rimeze.",
+  "Скажіть, що змінити, наприклад: зробити риму в приспіві.",
+  "Di qué cambiar, por ejemplo: que el coro rime."
+ ],
+ "Rewriting the lyrics.": [
+  "Rescriu versurile.",
+  "Переписую текст.",
+  "Reescribiendo la letra."
+ ],
+ "New lyrics ready in Generated lyrics. Use these lyrics copies them in.": [
+  "Versurile noi sunt gata în Versuri generate. Folosește aceste versuri le copiază.",
+  "Новий текст готовий у «Згенерованому тексті». «Використати цей текст» скопіює його.",
+  "La letra nueva está en Letra generada. Usar esta letra la copia."
+ ],
+ "Copied into Lyrics.": [
+  "Copiat în Versuri.",
+  "Скопійовано в «Текст».",
+  "Copiada en Letra."
+ ],
+ "Nothing trending came back.": [
+  "Nu a venit nimic în tendințe.",
+  "Нічого в трендах не надійшло.",
+  "No llegó nada en tendencias."
+ ],
+ "{0} notification.|{0} notifications.": [
+  "{0} notificare.|{0} notificări.|{0} de notificări.",
+  "{0} сповіщення.|{0} сповіщення.|{0} сповіщень.",
+  "{0} notificación.|{0} notificaciones."
+ ],
+ "{0} trending song.|{0} trending songs.": [
+  "{0} melodie în tendințe.|{0} melodii în tendințe.|{0} de melodii în tendințe.",
+  "{0} пісня у тренді.|{0} пісні у тренді.|{0} пісень у тренді.",
+  "{0} canción en tendencia.|{0} canciones en tendencia."
+ ],
+ "{0} is {1} characters. The limit is {2}.": [
+  "{0} are {1} caractere. Limita e {2}.",
+  "{0}: {1} символів. Межа — {2}.",
+  "{0} tiene {1} caracteres. El límite es {2}."
+ ],
+ "{0} is needed.": [
+  "Lipsește {0}.",
+  "Потрібно заповнити: {0}.",
+  "Falta {0}."
+ ],
+ "{0}: type seconds, or minutes and seconds like 2:30.": [
+  "{0}: scrie secunde sau minute și secunde, ca 2:30.",
+  "{0}: введіть секунди або хвилини й секунди, як 2:30.",
+  "{0}: escribe segundos, o minutos y segundos como 2:30."
+ ],
+ "{0} must be a number.": [
+  "{0} trebuie să fie un număr.",
+  "{0}: має бути число.",
+  "{0} debe ser un número."
+ ],
+ "{0} must be between {1} and {2}.": [
+  "{0} trebuie să fie între {1} și {2}.",
+  "{0}: має бути між {1} і {2}.",
+  "{0} debe estar entre {1} y {2}."
+ ],
+ "{0} must be from {1} to {2}.": [
+  "{0} trebuie să fie de la {1} la {2}.",
+  "{0}: має бути від {1} до {2}.",
+  "{0} debe ser de {1} a {2}."
+ ],
+ "About this": [
+  "Despre asta",
+  "Про це",
+  "Acerca de esto"
+ ],
+ "Cancel": [
+  "Anulează",
+  "Скасувати",
+  "Cancelar"
+ ],
+ "Close": [
+  "Închide",
+  "Закрити",
+  "Cerrar"
+ ],
+ "Signing in needs the Microsoft Edge WebView2 Runtime. Install it from Microsoft, then try again.": [
+  "Conectarea are nevoie de Microsoft Edge WebView2 Runtime. Instalează-l de la Microsoft, apoi încearcă din nou.",
+  "Для входу потрібен Microsoft Edge WebView2 Runtime. Установіть його з сайту Microsoft і спробуйте ще раз.",
+  "Para iniciar sesión se necesita Microsoft Edge WebView2 Runtime. Instálalo desde Microsoft y vuelve a intentarlo."
+ ],
+ "Sign in to Suno": [
+  "Conectare la Suno",
+  "Вхід у Suno",
+  "Iniciar sesión en Suno"
+ ],
+ "Menu bar": [
+  "Bara de meniu",
+  "Рядок меню",
+  "Barra de menús"
+ ],
+ "Playlists": [
+  "Liste de redare",
+  "Плейлисти",
+  "Listas"
+ ],
+ "Create": [
+  "Creare",
+  "Створення",
+  "Crear"
+ ],
+ "Trending": [
+  "În tendințe",
+  "У тренді",
+  "Tendencias"
+ ],
+ "_Refresh account": [
+  "_Reîmprospătează contul",
+  "_Оновити обліковий запис",
+  "_Actualizar la cuenta"
+ ],
+ "_Notifications": [
+  "_Notificări",
+  "_Сповіщення",
+  "_Notificaciones"
+ ],
+ "Refresh n_otifications": [
+  "Reîmprospătează n_otificările",
+  "Оновити спо_віщення",
+  "Actualizar n_otificaciones"
+ ],
+ "Notifications": [
+  "Notificări",
+  "Сповіщення",
+  "Notificaciones"
+ ],
+ "Settings for both ways of making a song": [
+  "Setări pentru ambele feluri de a crea o melodie",
+  "Налаштування для обох способів створення пісні",
+  "Ajustes para las dos formas de crear una canción"
+ ],
+ "_Model": [
+  "_Model",
+  "_Модель",
+  "_Modelo"
+ ],
+ "Model": [
+  "Model",
+  "Модель",
+  "Modelo"
+ ],
+ "Style _boost": [
+  "Îm_bogățește stilul",
+  "Посил_ити стиль",
+  "Me_jorar estilo"
+ ],
+ "_Voice": [
+  "V_oce",
+  "_Голос",
+  "Vo_z"
+ ],
+ "Voice": [
+  "Voce",
+  "Голос",
+  "Voz"
+ ],
+ "Ma_x mode (Suno's highest quality)": [
+  "Modul Ma_x (cea mai bună calitate Suno)",
+  "Режим Ma_x (найвища якість Suno)",
+  "Modo Ma_x (la mejor calidad de Suno)"
+ ],
+ "Weirdness, 0 to 100": [
+  "Ciudățenie, de la 0 la 100",
+  "Дивність, від 0 до 100",
+  "Rareza, de 0 a 100"
+ ],
+ "Style influence, 0 to 100": [
+  "Influența stilului, de la 0 la 100",
+  "Вплив стилю, від 0 до 100",
+  "Influencia del estilo, de 0 a 100"
+ ],
+ "Persona": [
+  "Persona",
+  "Персона",
+  "Persona"
+ ],
+ "Or type _a persona ID": [
+  "S_au scrie un ID de persona",
+  "Або введіть _ID персони",
+  "O escribe un ID de pers_ona"
+ ],
+ "Persona ID": [
+  "ID de persona",
+  "ID персони",
+  "ID de persona"
+ ],
+ "Describe a song": [
+  "Descrie o melodie",
+  "Опишіть пісню",
+  "Describe una canción"
+ ],
+ "_Create from description": [
+  "C_reează din descriere",
+  "Створити з опис_у",
+  "_Crear a partir de la descripción"
+ ],
+ "Your own lyrics": [
+  "Versurile tale",
+  "Ваш текст",
+  "Tu propia letra"
+ ],
+ "C_reate with my lyrics": [
+  "Creează c_u versurile mele",
+  "Створити з моїм т_екстом",
+  "Crear co_n mi letra"
+ ],
+ "Write lyrics for me": [
+  "Scrie versuri pentru mine",
+  "Написати текст за мене",
+  "Escribir una letra por mí"
+ ],
+ "T_opic": [
+  "Temă",
+  "Тем_а",
+  "Tem_a"
+ ],
+ "Topic": [
+  "Temă",
+  "Тема",
+  "Tema"
+ ],
+ "Write l_yrics": [
+  "_Generează versuri",
+  "Написати текст",
+  "Escri_bir letra"
+ ],
+ "_Generated lyrics": [
+  "Versuri ge_nerate",
+  "_Згенерований текст",
+  "Letra _generada"
+ ],
+ "Generated lyrics": [
+  "Versuri generate",
+  "Згенерований текст",
+  "Letra generada"
+ ],
+ "_Use these lyrics": [
+  "Fo_losește aceste versuri",
+  "Використати _цей текст",
+  "Usar esta letra"
+ ],
+ "Change my lyrics": [
+  "Schimbă-mi versurile",
+  "Змінити мій текст",
+  "Cambiar mi letra"
+ ],
+ "What to c_hange (for example: make the chorus rhyme)": [
+  "Ce să sc_himbe (de exemplu: refrenul să rimeze)",
+  "_Що змінити (наприклад: зробити риму в приспіві)",
+  "_Qué cambiar (por ejemplo: que el coro rime)"
+ ],
+ "What to change in my lyrics": [
+  "Ce să schimbe în versurile mele",
+  "Що змінити в моєму тексті",
+  "Qué cambiar en mi letra"
+ ],
+ "Rewrite my lyrics _now": [
+  "Rescrie-mi versurile acum",
+  "Переписати мій текст за_раз",
+  "Reescribir mi letra a_hora"
+ ],
+ "_Songs": [
+  "_Melodii",
+  "_Пісні",
+  "_Canciones"
+ ],
+ "Download a_ll...": [
+  "Descarcă _tot...",
+  "Завантажити _все...",
+  "Descargar _todo..."
+ ],
+ "Searc_h": [
+  "Ca_ută",
+  "По_шук",
+  "_Buscar"
+ ],
+ "Clear search": [
+  "Șterge căutarea",
+  "Очистити пошук",
+  "Borrar la búsqueda"
+ ],
+ "Search": [
+  "Caută",
+  "Шукати",
+  "Buscar"
+ ],
+ "Search your songs": [
+  "Caută în melodiile tale",
+  "Пошук у ваших піснях",
+  "Buscar en tus canciones"
+ ],
+ "Songs": [
+  "Melodii",
+  "Пісні",
+  "Canciones"
+ ],
+ "Previous": [
+  "Anterioara",
+  "Попередня",
+  "Anterior"
+ ],
+ "Play or pause": [
+  "Redare sau pauză",
+  "Відтворення або пауза",
+  "Reproducir o pausar"
+ ],
+ "Stop": [
+  "Oprește",
+  "Стоп",
+  "Detener"
+ ],
+ "Next": [
+  "Următoarea",
+  "Наступна",
+  "Siguiente"
+ ],
+ "_Volume": [
+  "_Volum",
+  "_Гучність",
+  "_Volumen"
+ ],
+ "Volume": [
+  "Volum",
+  "Гучність",
+  "Volumen"
+ ],
+ "Suno sign-in page": [
+  "Pagina de conectare Suno",
+  "Сторінка входу Suno",
+  "Página de inicio de sesión de Suno"
+ ],
+ "_New...": [
+  "_Nouă...",
+  "_Новий...",
+  "_Nueva..."
+ ],
+ "Rena_me...": [
+  "Redenu_mește...",
+  "Пере_йменувати...",
+  "Ca_mbiar nombre..."
+ ],
+ "_Delete": [
+  "Șter_ge",
+  "_Видалити",
+  "_Eliminar"
+ ],
+ "_Open": [
+  "_Deschide",
+  "Від_крити",
+  "A_brir"
+ ],
+ "_New playlist...": [
+  "_Listă nouă...",
+  "_Новий плейлист...",
+  "_Nueva lista..."
+ ],
+ "_Songs in this playlist": [
+  "Mel_odiile din listă",
+  "Пісні _цього плейлиста",
+  "_Canciones de esta lista"
+ ],
+ "Move _up": [
+  "Mută mai _sus",
+  "Перемістити вго_ру",
+  "S_ubir"
+ ],
+ "Move do_wn": [
+  "Mută mai _jos",
+  "Перемістити вни_з",
+  "Ba_jar"
+ ],
+ "Remo_ve": [
+  "_Elimină",
+  "При_брати",
+  "_Quitar"
+ ],
+ "Songs in this playlist": [
+  "Melodiile din listă",
+  "Пісні цього плейлиста",
+  "Canciones de esta lista"
+ ],
+ "Suno account": [
+  "Contul Suno",
+  "Обліковий запис Suno",
+  "Cuenta de Suno"
+ ],
+ "Account status": [
+  "Starea contului",
+  "Стан облікового запису",
+  "Estado de la cuenta"
+ ],
+ "_Sign in": [
+  "_Conectare",
+  "_Увійти",
+  "_Iniciar sesión"
+ ],
+ "Language": [
+  "Limba",
+  "Мова",
+  "Idioma"
+ ],
+ "Lan_guage (changes the next time Tin Pan starts)": [
+  "_Limba (se schimbă la următoarea pornire)",
+  "_Мова (зміниться під час наступного запуску Tin Pan)",
+  "Idi_oma (cambia la próxima vez que se inicie Tin Pan)"
+ ],
+ "Tin Pan s_peaks": [
+  "Tin Pan _spune",
+  "Tin Pan _каже",
+  "Tin Pan _dice"
+ ],
+ "Tin Pan speaks": [
+  "Tin Pan spune",
+  "Tin Pan каже",
+  "Tin Pan dice"
+ ],
+ "_When a list reaches the playing song": [
+  "Când o listă ajunge la melodia care se _redă",
+  "Ко_ли список доходить до пісні, що грає",
+  "_Cuando una lista llega a la canción que suena"
+ ],
+ "When a list reaches the playing song": [
+  "Când o listă ajunge la melodia care se redă",
+  "Коли список доходить до пісні, що грає",
+  "Cuando una lista llega a la canción que suena"
+ ],
+ "Check for _new versions when Tin Pan starts": [
+  "Caută _versiuni noi la pornirea Tin Pan",
+  "Перевіряти _нові версії під час запуску Tin Pan",
+  "Buscar versiones _nuevas al iniciar Tin Pan"
+ ],
+ "Downloads": [
+  "Descărcări",
+  "Завантаження",
+  "Descargas"
+ ],
+ "_Download folder (empty means Music\\Suno)": [
+  "D_osarul de descărcări (gol înseamnă Muzică\\Suno)",
+  "_Папка завантажень (порожньо — Музика\\Suno)",
+  "Car_peta de descargas (vacía significa Música\\Suno)"
+ ],
+ "_Browse...": [
+  "Răs_foiește...",
+  "_Огляд...",
+  "_Examinar..."
+ ],
+ "Download folder": [
+  "Dosarul de descărcări",
+  "Папка завантажень",
+  "Carpeta de descargas"
+ ],
+ "Download _format for Ctrl+D (WAV needs Pro or Premier)": [
+  "Forma_tul de descărcare pentru Ctrl+D (WAV necesită Pro sau Premier)",
+  "_Формат завантаження для Ctrl+D (для WAV потрібен Pro або Premier)",
+  "_Formato de descarga para Ctrl+D (WAV necesita Pro o Premier)"
+ ],
+ "Download format": [
+  "Formatul de descărcare",
+  "Формат завантаження",
+  "Formato de descarga"
+ ],
+ "Also save next to each download:": [
+  "Salvează și lângă fiecare descărcare:",
+  "Також зберігати поруч із кожним завантаженням:",
+  "Guardar también junto a cada descarga:"
+ ],
+ "_Lyrics as text": [
+  "Versuri ca te_xt",
+  "_Текст як файл",
+  "_Letra como texto"
+ ],
+ "_Timed lyrics (LRC)": [
+  "Versuri sincroni_zate (LRC)",
+  "_Синхронізований текст (LRC)",
+  "Letra sincroni_zada (LRC)"
+ ],
+ "Song d_etails": [
+  "Detaliile _melodiei",
+  "Подро_биці пісні",
+  "De_talles de la canción"
+ ],
+ "_Cover art": [
+  "Co_perta",
+  "Обкла_динка",
+  "Po_rtada"
+ ],
+ "_Trending songs": [
+  "Melodii în _tendințe",
+  "Пісні у _тренді",
+  "Canciones en _tendencia"
+ ],
+ "_Refresh trending": [
+  "_Reîmprospătează tendințele",
+  "_Оновити тренди",
+  "_Actualizar tendencias"
+ ],
+ "Trending songs": [
+  "Melodii în tendințe",
+  "Пісні у тренді",
+  "Canciones en tendencia"
+ ],
+ "Tin Pan, like all my apps, is dedicated to Jenni and Diana.": [
+  "Tin Pan, ca toate aplicațiile mele, e dedicat lui Jenni și Diana.",
+  "Tin Pan, як і всі мої програми, присвячено Дженні та Діані.",
+  "Tin Pan, como todas mis apps, está dedicado a Jenni y Diana."
+ ],
+ "Automatic (Windows language)": [
+  "Automat (limba Windows)",
+  "Автоматично (мова Windows)",
+  "Automático (idioma de Windows)"
+ ],
+ "Romanian": [
+  "română",
+  "румунська",
+  "rumano"
+ ],
+ "Ukrainian": [
+  "ucraineană",
+  "українська",
+  "ucraniano"
+ ],
+ "Spanish": [
+  "spaniolă",
+  "іспанська",
+  "español"
+ ],
+ "English": [
+  "engleză",
+  "англійська",
+  "inglés"
+ ]
+}

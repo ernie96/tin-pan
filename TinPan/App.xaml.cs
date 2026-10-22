@@ -7,6 +7,7 @@ using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using TinPan.Services;
 using TinPan.ViewModels;
+using static TinPan.Localization.Loc;
 
 namespace TinPan
 {
@@ -27,6 +28,8 @@ namespace TinPan
             EmbeddedFiles.RegisterNativeLibraries();
 
             _services = ConfigureServices();
+            // The language is fixed for the session: windows read their text once, when they open.
+            Localization.Loc.Use(_services.GetRequiredService<IConfigService>().Current.Language);
             var audio = _services.GetRequiredService<IAudioService>();
             audio.CurrentChanged += (_, _) => Views.PlayingCue.Instance.ClipId = audio.CurrentClipId;
             var main = _services.GetRequiredService<MainViewModel>();
@@ -78,7 +81,7 @@ namespace TinPan
         private void OnUnhandledUiException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             Log.Error("Unhandled error", e.Exception);
-            var message = e.Exception is SunoApiException api ? api.Message : "Something went wrong. Details are in the log.";
+            var message = e.Exception is SunoApiException api ? api.Message : T("Something went wrong. Details are in the log.");
             _services?.GetService<IAnnouncer>()?.Announce(message, always: true);
             e.Handled = true;
         }

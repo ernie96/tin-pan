@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using TinPan.ViewModels;
 using TinPan.Views;
+using static TinPan.Localization.Loc;
 
 namespace TinPan;
 
@@ -21,6 +22,7 @@ public partial class MainWindow : Window
         {
             if (DataContext is not MainViewModel vm) return;
             BuildMenu(vm);
+            libraryView.songList.ContextMenu = BuildSongContextMenu(vm, playlistItems: false);
             playlistsView.songList.ContextMenu = BuildSongContextMenu(vm, playlistItems: true);
             trendingView.trending.ContextMenu = BuildSongContextMenu(vm, playlistItems: false);
             vm.SearchRequested += (_, _) => Dispatcher.BeginInvoke(DispatcherPriority.Input, () => libraryView.FocusSearch());
@@ -46,7 +48,7 @@ public partial class MainWindow : Window
         mainMenu.Items.Clear();
         foreach (var group in vm.Commands.GroupBy(c => c.Group))
         {
-            var top = new MenuItem { Header = group.Key };
+            var top = new MenuItem { Header = MainViewModel.GroupLabel(group.Key) };
             foreach (var entry in group) top.Items.Add(MenuItemFor(vm, entry));
             // Song commands act on the song selected in the tab you're on; decided as the menu opens.
             top.SubmenuOpened += (_, _) => UpdateSongParameters(vm, top);
@@ -76,8 +78,8 @@ public partial class MainWindow : Window
     }
 
     /// <summary>
-    /// The Applications key menu for a playlist's songs and for Trending: the Song menu's commands
-    /// for that song, with the playlist's own Remove and Move first.
+    /// The Applications key menu for the Library, a playlist's songs and Trending: the Song menu's
+    /// commands for that song, with the playlist's own Remove and Move first.
     /// </summary>
     private static ContextMenu BuildSongContextMenu(MainViewModel vm, bool playlistItems)
     {
@@ -85,9 +87,9 @@ public partial class MainWindow : Window
         if (playlistItems)
         {
             var p = vm.PlaylistsVM;
-            menu.Items.Add(new MenuItem { Header = "Remove from playlist", InputGestureText = "Delete", Command = p.RemoveSongCommand });
-            menu.Items.Add(new MenuItem { Header = "Move up", InputGestureText = "Ctrl+Up", Command = p.MoveUpCommand });
-            menu.Items.Add(new MenuItem { Header = "Move down", InputGestureText = "Ctrl+Down", Command = p.MoveDownCommand });
+            menu.Items.Add(new MenuItem { Header = T("Remove from playlist"), InputGestureText = "Delete", Command = p.RemoveSongCommand });
+            menu.Items.Add(new MenuItem { Header = T("Move up"), InputGestureText = "Ctrl+Up", Command = p.MoveUpCommand });
+            menu.Items.Add(new MenuItem { Header = T("Move down"), InputGestureText = "Ctrl+Down", Command = p.MoveDownCommand });
             menu.Items.Add(new Separator());
         }
         foreach (var entry in vm.Commands.Where(c => c.Group == "Song")) menu.Items.Add(MenuItemFor(vm, entry));

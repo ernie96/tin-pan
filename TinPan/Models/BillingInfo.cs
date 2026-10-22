@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.Json.Serialization;
+using TinPan.Localization;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.Models
 {
@@ -135,44 +137,48 @@ namespace TinPan.Models
 
     public static class BillingText
     {
-        private static readonly CultureInfo Culture = CultureInfo.CurrentCulture;
+        private static CultureInfo Culture => Loc.Culture;
 
         /// <summary>F2: total credits, then where they come from.</summary>
         public static string Credits(BillingInfo info)
         {
-            var text = $"{N(info.TotalCreditsLeft)} credits left.";
+            var text = Loc.Plural(info.TotalCreditsLeft, "{0:N0} credit left.", "{0:N0} credits left.");
             if (info.MonthlyLimit is > 0 && info.MonthlyUsage is { } used)
             {
                 var monthlyLeft = Math.Max(0, info.MonthlyLimit.Value - used);
-                text += $" {N(monthlyLeft)} of this month's {N(info.MonthlyLimit.Value)}";
-                text += info.ExtraCredits is > 0 ? $", plus {N(info.ExtraCredits.Value)} extra." : ".";
+                text += " " + (info.ExtraCredits is > 0
+                    ? T("{0} of this month's {1}, plus {2} extra.", N(monthlyLeft), N(info.MonthlyLimit.Value), N(info.ExtraCredits.Value))
+                    : T("{0} of this month's {1}.", N(monthlyLeft), N(info.MonthlyLimit.Value)));
             }
             else if (info.ExtraCredits is > 0)
             {
-                text += $" Including {N(info.ExtraCredits.Value)} extra.";
+                text += " " + T("Including {0} extra.", N(info.ExtraCredits.Value));
             }
             return text;
         }
 
-        /// <summary>Shift+F2: plan, renewal, credits and downloads. The full feature list is on the Dashboard.</summary>
+        /// <summary>Shift+F2: plan, renewal, credits and downloads. The full feature list is on the Account tab.</summary>
         public static string Subscription(BillingInfo info)
         {
+            var state = info.IsActive ? T("active") : T("not active");
             var parts = new List<string>
             {
-                $"{PlanName(info)}, {(info.IsActive ? "active" : "not active")}" + (Renewal(info) is { } renews ? $", renews {renews}." : "."),
+                Renewal(info) is { } renews ? T("{0}, {1}, renews {2}.", PlanName(info), state, renews) : T("{0}, {1}.", PlanName(info), state),
                 Credits(info)
             };
             if (info.DownloadUsage?.Remaining is { } left)
             {
                 var u = info.DownloadUsage;
-                var detail = u.Limit is { } limit ? $" {N(limit)} a month, {N(u.Used ?? 0)} used" + (u.Extra is > 0 ? $", plus {N(u.Extra.Value)} extra" : "") : "";
-                parts.Add($"{N(left)} downloads left{(detail.Length > 0 ? ":" + detail : "")}.");
+                var count = Loc.Plural(left, "{0:N0} download left", "{0:N0} downloads left");
+                parts.Add(u.Limit is not { } limit ? count + "."
+                    : u.Extra is > 0 ? T("{0}: {1} a month, {2} used, plus {3} extra.", count, N(limit), N(u.Used ?? 0), N(u.Extra.Value))
+                    : T("{0}: {1} a month, {2} used.", count, N(limit), N(u.Used ?? 0)));
             }
-            if (info.IsPaid == false) parts.Add("WAV downloads, covers and remasters need Pro or Premier.");
+            if (info.IsPaid == false) parts.Add(T("WAV downloads, covers and remasters need Pro or Premier."));
             return string.Join(" ", parts);
         }
 
-        /// <summary>Everything the plan includes, in plain words, for the Dashboard.</summary>
+        /// <summary>Everything the plan includes, in plain words, for the Account tab.</summary>
         public static string Features(BillingInfo info)
         {
             var names = (info.Plan?.Features.Select(f => f.Name) ?? Enumerable.Empty<string>())
@@ -181,19 +187,19 @@ namespace TinPan.Models
                 .Select(FeatureName)
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToList();
-            return names.Count == 0 ? "" : "Your plan includes: " + string.Join(", ", names) + ".";
+            return names.Count == 0 ? "" : T("Your plan includes: {0}.", string.Join(", ", names));
         }
 
-        /// <summary>"Pro Plan" becomes "Pro plan"; no "Pro Plan plan".</summary>
+        /// <summary>"Pro Plan" becomes "Pro plan"; no "Pro Plan plan". Suno's plan names (Pro, Premier) stay as they are.</summary>
         public static string PlanName(BillingInfo info)
         {
             var name = info.Plan?.Name?.Trim();
-            if (string.IsNullOrEmpty(name)) return "Plan unknown";
+            if (string.IsNullOrEmpty(name)) return T("Plan unknown");
             if (name.EndsWith(" plan", StringComparison.OrdinalIgnoreCase)) name = name[..^5].TrimEnd();
-            return name + " plan";
+            return T("{0} plan", name);
         }
 
-        /// <summary>"November 9, 2026" from Suno's ISO date, in the user's own date format.</summary>
+        /// <summary>"November 9, 2026" from Suno's ISO date, in the chosen language's date format.</summary>
         public static string? Renewal(BillingInfo info)
         {
             if (string.IsNullOrWhiteSpace(info.RenewsOn)) return null;
@@ -202,35 +208,30 @@ namespace TinPan.Models
                 : info.RenewsOn.Trim();
         }
 
-        private static readonly Dictionary<string, string> FeatureNames = new(StringComparer.OrdinalIgnoreCase)
+        private static string FeatureName(string raw) => raw.Trim().Replace(' ', '_').ToLowerInvariant() switch
         {
-            ["v4"] = "v4 model",
-            ["auk"] = "v4.5 models",
-            ["cover"] = "covers",
-            ["edit_mode"] = "editing songs",
-            ["persona"] = "personas",
-            ["can_buy_credit_top_ups"] = "buying extra credits",
-            ["commercial_rights"] = "commercial use",
-            ["get_stems"] = "stems",
-            ["generate_song_image"] = "song cover images",
-            ["negative_tags"] = "styles to exclude",
-            ["remaster"] = "remasters",
-            ["generate_song_video"] = "song videos",
-            ["long_uploads"] = "long uploads",
-            ["convert_audio"] = "WAV conversion",
-            ["create_control_sliders"] = "weirdness and style sliders",
-            ["playlist_condition"] = "playlist inspiration",
-            ["tag_upsample"] = "style boost",
-            ["custom_models"] = "custom models",
-            ["max_mode"] = "max mode",
-            ["studio"] = "Suno Studio"
+            "v4" => T("v4 model"),
+            "auk" => T("v4.5 models"),
+            "cover" => T("covers"),
+            "edit_mode" => T("editing songs"),
+            "persona" => T("personas"),
+            "can_buy_credit_top_ups" => T("buying extra credits"),
+            "commercial_rights" => T("commercial use"),
+            "get_stems" => T("stems"),
+            "generate_song_image" => T("song cover images"),
+            "negative_tags" => T("styles to exclude"),
+            "remaster" => T("remasters"),
+            "generate_song_video" => T("song videos"),
+            "long_uploads" => T("long uploads"),
+            "convert_audio" => T("WAV conversion"),
+            "create_control_sliders" => T("weirdness and style sliders"),
+            "playlist_condition" => T("playlist inspiration"),
+            "tag_upsample" => T("style boost"),
+            "custom_models" => T("custom models"),
+            "max_mode" => T("max mode"),
+            "studio" => "Suno Studio",
+            _ => raw.Trim().Replace('_', ' ')
         };
-
-        private static string FeatureName(string raw)
-        {
-            var key = raw.Trim().Replace(' ', '_');
-            return FeatureNames.TryGetValue(key, out var name) ? name : raw.Trim().Replace('_', ' ');
-        }
 
         private static string N(int value) => value.ToString("N0", Culture);
     }

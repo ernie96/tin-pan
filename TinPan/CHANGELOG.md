@@ -1,5 +1,19 @@
 # Tin Pan changelog
 
+## Unreleased
+
+### New
+
+- Tin Pan speaks Romanian, Ukrainian and Spanish as well as English, like TimePlayer. Settings, Language picks one, or follows Windows (the default); it changes the next time Tin Pan starts. Each language is named in its own words and in yours, so every voice can read the list. Menus, pages and forms have their own Alt letters in each language.
+- First time, or after signing out: a welcome that offers to sign in. If Suno ends your sign-in later (not a network problem), Tin Pan asks you to sign in again right away. Saying No points to Settings.
+
+### Fixed
+
+- Extend, Cover, Remaster, Stems and Get whole song now say when a song isn't finished, instead of sending it to Suno to be refused.
+- Times of an hour or more in the Extend form read correctly (60:00, not 0:00).
+- The update offer at startup waits until Tin Pan's own window is in front, so it can't land on top of the sign-in window.
+- The Library's Applications key menu is now the same as the Song menu, so the two can't differ.
+
 ## 1.2.0 (2026-10-22)
 
 ### New

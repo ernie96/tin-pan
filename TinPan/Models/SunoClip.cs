@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.Models
 {
@@ -96,7 +97,7 @@ namespace TinPan.Models
         [JsonPropertyName("is_download_unlocked")]
         public bool? IsDownloadUnlocked { get; set; }
 
-        public string DisplayTitle => string.IsNullOrWhiteSpace(Title) ? "Untitled song" : Title.Trim();
+        public string DisplayTitle => string.IsNullOrWhiteSpace(Title) ? T("Untitled song") : Title.Trim();
 
         public double? Duration => Metadata?.Duration;
 
@@ -118,11 +119,11 @@ namespace TinPan.Models
             {
                 var text = DisplayTitle;
                 if (Duration is > 0) text += ", " + FormatTime(TimeSpan.FromSeconds(Duration.Value));
-                if (IsLiked) text += ", liked";
-                if (HasFailed) text += ", failed";
-                else if (!IsReady && !string.IsNullOrEmpty(Status)) text += ", still being made";
-                if (Metadata?.Type is "concat") text += ", whole song";
-                else if (Metadata?.HasStem == true || Metadata?.StemFromId != null) text += ", stem";
+                if (IsLiked) text += ", " + T("liked");
+                if (HasFailed) text += ", " + T("failed");
+                else if (!IsReady && !string.IsNullOrEmpty(Status)) text += ", " + T("still being made");
+                if (Metadata?.Type is "concat") text += ", " + T("whole song");
+                else if (Metadata?.HasStem == true || Metadata?.StemFromId != null) text += ", " + T("stem");
                 return text;
             }
         }
@@ -136,7 +137,7 @@ namespace TinPan.Models
                 if (!string.IsNullOrWhiteSpace(Metadata?.Prompt))
                 {
                     lines.Add("");
-                    lines.Add("Lyrics:");
+                    lines.Add(T("Lyrics:"));
                     lines.Add(Metadata!.Prompt!.Trim());
                 }
                 return string.Join(Environment.NewLine, lines);
@@ -149,22 +150,34 @@ namespace TinPan.Models
             get
             {
                 var lines = new List<string> { DisplayTitle };
-                if (Duration is > 0) lines.Add("Length: " + FormatTime(TimeSpan.FromSeconds(Duration.Value)));
-                lines.Add("Status: " + (Status ?? "unknown"));
-                if (!string.IsNullOrWhiteSpace(Metadata?.ErrorMessage)) lines.Add("Error: " + Metadata!.ErrorMessage);
-                if (!string.IsNullOrWhiteSpace(Metadata?.Tags)) lines.Add("Style: " + Metadata!.Tags);
-                if (Metadata?.MakeInstrumental == true) lines.Add("Instrumental");
-                if (!string.IsNullOrWhiteSpace(Metadata?.GptDescriptionPrompt)) lines.Add("Description: " + Metadata!.GptDescriptionPrompt);
-                if (Metadata?.AvgBpm is > 0) lines.Add($"Tempo: about {Metadata!.AvgBpm:0} beats per minute");
-                if (!string.IsNullOrEmpty(ModelName)) lines.Add("Model: " + ModelName);
-                if (CreatedAt != null) lines.Add("Made: " + CreatedAt.Value.ToLocalTime().ToString("f"));
-                lines.Add(IsPublic ? "Public" : "Private");
-                lines.Add($"Plays: {PlayCount}. Likes: {UpvoteCount}.");
-                if (IsDownloadUnlocked == true) lines.Add("Downloaded before, so downloading again is free.");
-                lines.Add("Link: " + WebLink);
+                if (Duration is > 0) lines.Add(T("Length: {0}", FormatTime(TimeSpan.FromSeconds(Duration.Value))));
+                lines.Add(T("Status: {0}", StatusName));
+                if (!string.IsNullOrWhiteSpace(Metadata?.ErrorMessage)) lines.Add(T("Error: {0}", Metadata!.ErrorMessage));
+                if (!string.IsNullOrWhiteSpace(Metadata?.Tags)) lines.Add(T("Style: {0}", Metadata!.Tags));
+                if (Metadata?.MakeInstrumental == true) lines.Add(T("Instrumental"));
+                if (!string.IsNullOrWhiteSpace(Metadata?.GptDescriptionPrompt)) lines.Add(T("Description: {0}", Metadata!.GptDescriptionPrompt));
+                if (Metadata?.AvgBpm is > 0) lines.Add(T("Tempo: about {0:0} beats per minute", Metadata!.AvgBpm));
+                if (!string.IsNullOrEmpty(ModelName)) lines.Add(T("Model: {0}", ModelName));
+                if (CreatedAt != null) lines.Add(T("Made: {0}", CreatedAt.Value.ToLocalTime().ToString("f", TinPan.Localization.Loc.Culture)));
+                lines.Add(IsPublic ? T("Public") : T("Private"));
+                lines.Add(T("Plays: {0}. Likes: {1}.", PlayCount, UpvoteCount));
+                if (IsDownloadUnlocked == true) lines.Add(T("Downloaded before, so downloading again is free."));
+                lines.Add(T("Link: {0}", WebLink));
                 return lines;
             }
         }
+
+        /// <summary>Suno's status word, in the chosen language.</summary>
+        private string StatusName => Status switch
+        {
+            "complete" => T("complete"),
+            "streaming" => T("streaming"),
+            "submitted" => T("submitted"),
+            "queued" => T("queued"),
+            "error" => T("error"),
+            null or "" => T("unknown"),
+            _ => Status
+        };
 
         public override string ToString() => SpokenText;
 

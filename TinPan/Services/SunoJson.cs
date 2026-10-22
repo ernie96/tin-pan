@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using TinPan.Models;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.Services
 {
@@ -197,7 +198,7 @@ namespace TinPan.Services
             catch (JsonException ex)
             {
                 Log.Error("Unreadable reply from Suno", ex);
-                throw new SunoApiException("Suno sent a reply this app doesn't understand.", null, ex);
+                throw new SunoApiException(T("Suno sent a reply this app doesn't understand."), null, ex);
             }
         }
 

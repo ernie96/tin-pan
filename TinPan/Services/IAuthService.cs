@@ -19,6 +19,15 @@ namespace TinPan.Services
 
         event EventHandler AuthStateChanged;
 
+        /// <summary>
+        /// Suno no longer accepts the saved or current sign-in (it said so; network failures don't count).
+        /// Not raised for Sign out.
+        /// </summary>
+        event EventHandler SignInExpired;
+
+        /// <summary>True when a sign-in has been saved before, whether or not it still works.</summary>
+        bool HasSavedSignIn { get; }
+
         /// <summary>Tries the sign-in saved last time. Returns false if the user needs to sign in.</summary>
         Task<bool> RestoreAsync();
 

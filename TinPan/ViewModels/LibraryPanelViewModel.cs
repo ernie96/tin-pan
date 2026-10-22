@@ -12,6 +12,7 @@ using CommunityToolkit.Mvvm.Input;
 using TinPan.Models;
 using TinPan.Services;
 using TinPan.Views;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.ViewModels
 {
@@ -61,11 +62,11 @@ namespace TinPan.ViewModels
 
         // ── Menu labels that depend on the plan or the song ────────────────
 
-        public string WavMenuText => _account.PaidLabel("Download _WAV");
-        public string CoverMenuText => _account.PaidLabel("_Cover...");
-        public string RemasterMenuText => _account.PaidLabel("Re_master...");
-        public string VisibilityMenuText => SelectedClip?.IsPublic == true ? "Make p_rivate" : "Make p_ublic";
-        public string RemixMenuText => SelectedClip?.Metadata?.CanRemix == false ? "Allow remi_xes" : "Stop remi_xes";
+        public string WavMenuText => _account.PaidLabel(T("Download _WAV"));
+        public string CoverMenuText => _account.PaidLabel(T("_Cover..."));
+        public string RemasterMenuText => _account.PaidLabel(T("Re_master..."));
+        public string VisibilityMenuText => SelectedClip?.IsPublic == true ? T("Make p_rivate") : T("Make p_ublic");
+        public string RemixMenuText => SelectedClip?.Metadata?.CanRemix == false ? T("Allow remi_xes") : T("Stop remi_xes");
 
         /// <summary>Disabled only when Suno says this is a free plan; unknown plans may try.</summary>
         private bool CanUsePaidFeatures() => _account.IsPaid != false;
@@ -117,9 +118,9 @@ namespace TinPan.ViewModels
 
         // ── Filters ─────────────────────────────────────────────────────────
 
-        private static readonly (string Value, string Label)[] DislikedChoices =
+        private static (string Value, string Label)[] DislikedChoices => new[]
         {
-            ("False", "Hide songs I disliked"), ("Any", "Show songs I disliked too"), ("True", "Only songs I disliked")
+            ("False", T("Hide songs I disliked")), ("Any", T("Show songs I disliked too")), ("True", T("Only songs I disliked"))
         };
 
         private LibraryFilter CurrentFilter()
@@ -134,11 +135,11 @@ namespace TinPan.ViewModels
             get
             {
                 var f = _config.Current.Library;
-                var parts = new List<string> { string.IsNullOrEmpty(f.WorkspaceId) ? "All workspaces" : f.WorkspaceName };
-                parts.Add(f.Disliked switch { "Any" => "disliked shown", "True" => "only disliked", _ => "disliked hidden" });
-                if (f.IncludeTrashed) parts.Add("trash included");
-                if (!f.HideStems) parts.Add("stems shown");
-                parts.Add(f.NewestFirst ? "newest first" : "oldest first");
+                var parts = new List<string> { string.IsNullOrEmpty(f.WorkspaceId) ? T("All workspaces") : f.WorkspaceName };
+                parts.Add(f.Disliked switch { "Any" => T("disliked shown"), "True" => T("only disliked"), _ => T("disliked hidden") });
+                if (f.IncludeTrashed) parts.Add(T("trash included"));
+                if (!f.HideStems) parts.Add(T("stems shown"));
+                parts.Add(f.NewestFirst ? T("newest first") : T("oldest first"));
                 return string.Join(", ", parts) + ".";
             }
         }
@@ -148,26 +149,28 @@ namespace TinPan.ViewModels
         {
             if (!_auth.IsAuthenticated)
             {
-                Announcer.Announce("Sign in from Settings first.");
+                Announcer.Announce(T("Sign in from Settings first."));
                 return;
             }
             IReadOnlyList<Workspace> workspaces = Array.Empty<Workspace>();
             await RunAsync(async () => workspaces = await _api.GetWorkspacesAsync());
 
             var f = _config.Current.Library;
-            var all = new Workspace("", "All workspaces", null);
+            var all = new Workspace("", T("All workspaces"), null);
             var workspaceItems = new List<object> { all };
             workspaceItems.AddRange(workspaces);
-            var workspace = new ChoiceField("_Workspace", workspaceItems,
+            var workspace = new ChoiceField(T("_Workspace"), workspaceItems,
                 workspaces.FirstOrDefault(w => w.Id == f.WorkspaceId) ?? (object)all);
             var dislikedLabels = DislikedChoices.Select(d => (object)d.Label).ToList();
-            var disliked = new ChoiceField("_Disliked songs", dislikedLabels,
+            var disliked = new ChoiceField(T("_Disliked songs"), dislikedLabels,
                 DislikedChoices.FirstOrDefault(d => d.Value == f.Disliked).Label ?? DislikedChoices[0].Label);
-            var trashed = new CheckField("Include songs in the _trash", f.IncludeTrashed);
-            var stems = new CheckField("Hide _stems", f.HideStems);
-            var order = new ChoiceField("_Order", new object[] { "Newest first", "Oldest first" }, f.NewestFirst ? "Newest first" : "Oldest first");
+            var trashed = new CheckField(T("Include songs in the _trash"), f.IncludeTrashed);
+            var stems = new CheckField(T("Hide _stems"), f.HideStems);
+            var newest = T("Newest first");
+            var oldest = T("Oldest first");
+            var order = new ChoiceField(T("_Order"), new object[] { newest, oldest }, f.NewestFirst ? newest : oldest);
 
-            if (!_dialogs.ShowForm("Library filters", "Suno applies these filters itself, so paging and search follow them.", "Apply",
+            if (!_dialogs.ShowForm(T("Library filters"), T("Suno applies these filters itself, so paging and search follow them."), T("Apply"),
                     new FormField[] { workspace, disliked, trashed, stems, order })) return;
 
             var chosen = (Workspace?)workspace.Selected ?? all;
@@ -176,7 +179,7 @@ namespace TinPan.ViewModels
             f.Disliked = DislikedChoices.FirstOrDefault(d => d.Label == (string?)disliked.Selected).Value ?? "False";
             f.IncludeTrashed = trashed.Value;
             f.HideStems = stems.Value;
-            f.NewestFirst = (string?)order.Selected != "Oldest first";
+            f.NewestFirst = (string?)order.Selected != oldest;
             _config.SaveSoon();
 
             await LoadFirstPageAsync(background: false, prefix: FilterSummary + " ");
@@ -202,8 +205,9 @@ namespace TinPan.ViewModels
                 if (_current != null) _current = Songs.FirstOrDefault(c => c.Id == _current.Id) ?? _current;
                 if (!background)
                 {
-                    var what = search == null ? "songs" : $"songs matching {search}";
-                    Announcer.Announce(prefix + (Songs.Count == 0 ? (search == null ? "No songs." : $"No songs match {search}.") : $"{Songs.Count} {what}."));
+                    Announcer.Announce(prefix + (Songs.Count == 0
+                        ? search == null ? T("No songs.") : T("No songs match {0}.", search)
+                        : search == null ? Plural(Songs.Count, "{0} song.", "{0} songs.") : T("{0} matching {1}.", Plural(Songs.Count, "{0} song", "{0} songs"), search)));
                 }
             }, background);
         }
@@ -237,7 +241,7 @@ namespace TinPan.ViewModels
                     AdvancePaging(page, query.Page);
                     if (added == 0) _hasMore = false; // guards against a cursor that never ends
                     _watcher.Watch(page.Clips);
-                    if (announce) Announcer.Announce(added > 0 ? $"{added} more." : "End of list.", interrupt: false);
+                    if (announce) Announcer.Announce(added > 0 ? T("{0} more.", added) : T("End of list."), interrupt: false);
                 }, background: !announce);
             }
             finally
@@ -286,14 +290,14 @@ namespace TinPan.ViewModels
             if (clip == null) return;
             if (!clip.CanPlay)
             {
-                Announcer.Announce(clip.HasFailed ? "That song failed to generate." : "That song isn't ready yet.");
+                Announcer.Announce(clip.HasFailed ? T("That song failed to generate.") : T("That song isn't ready yet."));
                 return;
             }
 
             _current = clip;
             if (await RunAsync(() => _audio.PlayAsync(clip.Id, clip.DisplayTitle, this)))
             {
-                Announcer.Announce($"Playing: {clip.DisplayTitle}.");
+                Announcer.Announce(T("Playing: {0}.", clip.DisplayTitle));
             }
         }
 
@@ -303,12 +307,12 @@ namespace TinPan.ViewModels
             if (_audio.IsPlaying)
             {
                 _audio.Pause();
-                Announcer.Announce("Paused.");
+                Announcer.Announce(T("Paused."));
             }
             else if (_audio.IsPaused)
             {
                 _audio.Resume();
-                Announcer.Announce("Playing.");
+                Announcer.Announce(T("Playing."));
             }
             else
             {
@@ -321,7 +325,7 @@ namespace TinPan.ViewModels
         {
             if (_audio.CurrentClipId == null) return;
             _audio.Stop();
-            Announcer.Announce("Stopped.");
+            Announcer.Announce(T("Stopped."));
         }
 
         /// <summary>Seconds to move, as text from a key binding: "-10", "5".</summary>
@@ -345,7 +349,7 @@ namespace TinPan.ViewModels
             // Skip songs still being made or failed, as Next does.
             var previous = index > 0 ? Songs.Take(index).Reverse().FirstOrDefault(c => c.CanPlay) : null;
             if (previous != null) return StartAsync(previous);
-            Announcer.Announce("First song.");
+            Announcer.Announce(T("First song."));
             return Task.CompletedTask;
         }
 
@@ -354,7 +358,7 @@ namespace TinPan.ViewModels
         {
             var next = await FindNextAsync();
             if (next != null) await StartAsync(next);
-            else Announcer.Announce("End of list.");
+            else Announcer.Announce(T("End of list."));
         }
 
         private async Task<SunoClip?> FindNextAsync()
@@ -374,7 +378,7 @@ namespace TinPan.ViewModels
             else
             {
                 _current = null;
-                Announcer.Announce("End of library.", interrupt: false);
+                Announcer.Announce(T("End of library."), interrupt: false);
             }
         }
 
@@ -384,7 +388,7 @@ namespace TinPan.ViewModels
         private void ChangeVolume(float delta)
         {
             Volume = Math.Clamp(_audio.Volume + delta, 0f, 1f) * 100;
-            Announcer.Announce($"Volume {Volume:0}.");
+            Announcer.Announce(T("Volume {0:0}.", Volume));
         }
     }
 }

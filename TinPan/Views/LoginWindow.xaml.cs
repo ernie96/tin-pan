@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Microsoft.Web.WebView2.Core;
 using TinPan.Services;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.Views
 {
@@ -43,8 +44,8 @@ namespace TinPan.Views
             }
             catch (WebView2RuntimeNotFoundException)
             {
-                MessageBox.Show(this, "Signing in needs the Microsoft Edge WebView2 Runtime. Install it from Microsoft, then try again.",
-                    "Sign in to Suno", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(this, T("Signing in needs the Microsoft Edge WebView2 Runtime. Install it from Microsoft, then try again."),
+                    T("Sign in to Suno"), MessageBoxButton.OK, MessageBoxImage.Error);
                 Close();
                 return;
             }

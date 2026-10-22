@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using CommunityToolkit.Mvvm.Input;
 using TinPan.Services;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.ViewModels
 {
@@ -20,10 +21,26 @@ namespace TinPan.ViewModels
         private async Task AfterStartupUpdatesAsync()
         {
             if (UpdateService.TidyAfterUpdate())
-                Announcer.Announce("The last update couldn't be installed. Help, Check for updates tries again.", interrupt: false, always: true);
+                Announcer.Announce(T("The last update couldn't be installed. Help, Check for updates tries again."), interrupt: false, always: true);
             if (!_config.Current.Update.CheckAtStartup) return;
             await Task.Delay(StartupCheckDelay); // after "Tin Pan ready" and the first library load
+            await WhenMainWindowActiveAsync();
             await RunUpdateCheckAsync(manual: false);
+        }
+
+        /// <summary>Waits while another window (sign-in, a form, a dialog) is in front.</summary>
+        private static Task WhenMainWindowActiveAsync()
+        {
+            var main = Application.Current?.MainWindow;
+            if (main == null || main.IsActive) return Task.CompletedTask;
+            var ready = new TaskCompletionSource();
+            void OnActivated(object? s, EventArgs e)
+            {
+                main.Activated -= OnActivated;
+                ready.TrySetResult();
+            }
+            main.Activated += OnActivated;
+            return ready.Task;
         }
 
         [RelayCommand]
@@ -33,17 +50,17 @@ namespace TinPan.ViewModels
         {
             if (_updating)
             {
-                if (manual) Announcer.Announce("Already checking for updates.", always: true);
+                if (manual) Announcer.Announce(T("Already checking for updates."), always: true);
                 return;
             }
             _updating = true;
             try
             {
-                if (manual) Announcer.Announce("Checking for updates.");
+                if (manual) Announcer.Announce(T("Checking for updates."));
                 var update = await _updates.CheckAsync();
                 if (update == null)
                 {
-                    if (manual) Announcer.Announce($"Tin Pan is up to date, version {_updates.CurrentVersion.ToString(3)}.", always: true);
+                    if (manual) Announcer.Announce(T("Tin Pan is up to date, version {0}.", _updates.CurrentVersion.ToString(3)), always: true);
                     return;
                 }
 
@@ -51,20 +68,20 @@ namespace TinPan.ViewModels
                 if (!manual && _config.Current.Update.SkippedVersion == version) return;
 
                 var notes = PlainText(update.ReleaseNotes);
-                var whatsNew = notes.Length > 0 ? $"What's new:\n{notes}\n\n" : "";
-                var reminder = manual ? "" : "\n\nIf you choose No, Tin Pan won't remind you about this version. Help, Check for updates still finds it.";
-                var intro = $"Tin Pan {version} is available. You have {_updates.CurrentVersion.ToString(3)}.\n\n{whatsNew}";
+                var whatsNew = notes.Length > 0 ? T("What's new:") + "\n" + notes + "\n\n" : "";
+                var reminder = manual ? "" : "\n\n" + T("If you choose No, Tin Pan won't remind you about this version. Help, Check for updates still finds it.");
+                var intro = T("Tin Pan {0} is available. You have {1}.", version, _updates.CurrentVersion.ToString(3)) + "\n\n" + whatsNew;
 
                 if (!_updates.CanInstall)
                 {
                     // The development build can't replace itself; offer the release page instead.
-                    if (_dialogs.Ask(intro + "This copy of Tin Pan can't update itself. Open the release page?" + reminder, "Tin Pan update"))
+                    if (_dialogs.Ask(intro + T("This copy of Tin Pan can't update itself. Open the release page?") + reminder, T("Tin Pan update")))
                         OpenPage(update.PageUrl);
                     else if (!manual) SkipVersion(version);
                     return;
                 }
 
-                if (!_dialogs.Ask(intro + "Download and install it now? Tin Pan closes and opens again by itself." + reminder, "Tin Pan update"))
+                if (!_dialogs.Ask(intro + T("Download and install it now? Tin Pan closes and opens again by itself.") + reminder, T("Tin Pan update")))
                 {
                     if (!manual) SkipVersion(version);
                     return;
@@ -84,13 +101,13 @@ namespace TinPan.ViewModels
 
         private async Task DownloadAndInstallAsync(UpdateInfo update, string version)
         {
-            Announcer.Announce($"Downloading Tin Pan {version}.", always: true);
+            Announcer.Announce(T("Downloading Tin Pan {0}.", version), always: true);
             var halfwaySaid = false;
             var progress = new Progress<double>(fraction =>
             {
                 if (halfwaySaid || fraction < 0.5) return;
                 halfwaySaid = true;
-                Announcer.Announce("Update download halfway.", interrupt: false);
+                Announcer.Announce(T("Update download halfway."), interrupt: false);
             });
 
             var file = await _updates.DownloadAsync(update, progress);
@@ -100,12 +117,12 @@ namespace TinPan.ViewModels
                 && string.Equals(SafePath(p), exe, StringComparison.OrdinalIgnoreCase));
             if (others > 0)
             {
-                Announcer.Announce("Another Tin Pan window is open, and the update can't install while it is. Close it, then check for updates again.", always: true);
+                Announcer.Announce(T("Another Tin Pan window is open, and the update can't install while it is. Close it, then check for updates again."), always: true);
                 return;
             }
 
             _updates.StartInstall(file);
-            Announcer.Announce($"Installing Tin Pan {version}. It opens again in a moment.", always: true);
+            Announcer.Announce(T("Installing Tin Pan {0}. It opens again in a moment.", version), always: true);
             await Task.Delay(1500); // let that be heard
             Application.Current.Shutdown();
         }
@@ -127,7 +144,7 @@ namespace TinPan.ViewModels
             try { Process.Start(new ProcessStartInfo(url) { UseShellExecute = true }); }
             catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or InvalidOperationException)
             {
-                Announcer.Announce("Couldn't open the browser. The release page is github.com/ernie96/tin-pan/releases.", always: true);
+                Announcer.Announce(T("Couldn't open the browser. The release page is github.com/ernie96/tin-pan/releases."), always: true);
             }
         }
 

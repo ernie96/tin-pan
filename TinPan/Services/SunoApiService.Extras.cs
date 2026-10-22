@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using TinPan.Models;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.Services
 {
@@ -54,7 +55,7 @@ namespace TinPan.Services
         {
             using var doc = ParseDocument(await SendAsync(HttpMethod.Post, "/api/playlist/create/", new { name }, ct));
             var p = SunoJson.ReadPlaylist(doc.RootElement);
-            if (string.IsNullOrEmpty(p.Id)) throw new SunoApiException("Suno didn't say whether the playlist was made. Refresh playlists to check.");
+            if (string.IsNullOrEmpty(p.Id)) throw new SunoApiException(T("Suno didn't say whether the playlist was made. Refresh playlists to check."));
             if (string.IsNullOrEmpty(p.Name)) p.Name = name;
             return p;
         }
@@ -63,7 +64,7 @@ namespace TinPan.Services
         {
             var json = await SendAsync(HttpMethod.Post, "/api/playlist/set_metadata", new { playlist_id = playlistId, name, description }, ct);
             var moderation = SunoJson.TryReadString(json, "moderation_error_message");
-            if (!string.IsNullOrWhiteSpace(moderation)) throw new SunoApiException("Suno didn't accept that name: " + moderation);
+            if (!string.IsNullOrWhiteSpace(moderation)) throw new SunoApiException(T("Suno didn't accept that name: {0}", moderation));
         }
 
         public async Task TrashPlaylistAsync(string playlistId, CancellationToken ct = default) =>
@@ -91,7 +92,7 @@ namespace TinPan.Services
         {
             var json = await SendAsync(HttpMethod.Post, "/api/share/link", new { content_type = "clip", content_id = clipId, source = "web" }, ct);
             var link = SunoJson.TryReadString(json, "link");
-            if (string.IsNullOrEmpty(link)) throw new SunoApiException("Suno gave no share link.");
+            if (string.IsNullOrEmpty(link)) throw new SunoApiException(T("Suno gave no share link."));
             return link;
         }
 
@@ -133,7 +134,7 @@ namespace TinPan.Services
             if (!string.IsNullOrWhiteSpace(lyrics)) body["lyrics"] = lyrics;
             if (!string.IsNullOrWhiteSpace(guidance)) body["user_guidance"] = guidance.Trim();
             var boosted = SunoJson.TryReadString(await SendAsync(HttpMethod.Post, "/api/prompts/upsample", body, ct), "upsampled");
-            if (string.IsNullOrWhiteSpace(boosted)) throw new SunoApiException("Suno gave no boosted style.");
+            if (string.IsNullOrWhiteSpace(boosted)) throw new SunoApiException(T("Suno gave no boosted style."));
             return boosted.Trim();
         }
 
@@ -157,7 +158,7 @@ namespace TinPan.Services
                 lyrics_project_id = (string?)null
             };
             var edited = SunoJson.TryReadString(await SendAsync(HttpMethod.Post, "/api/generate/cowrite-lyrics/", body, ct), "edited_lyrics");
-            if (string.IsNullOrWhiteSpace(edited)) throw new SunoApiException("Suno sent back no lyrics.");
+            if (string.IsNullOrWhiteSpace(edited)) throw new SunoApiException(T("Suno sent back no lyrics."));
             return edited.Trim();
         }
     }

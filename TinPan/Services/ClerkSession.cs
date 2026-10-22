@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.Services
 {
@@ -46,7 +47,7 @@ namespace TinPan.Services
         /// <summary>Finds the active session. Throws SunoSignInRequiredException if there is none.</summary>
         public async Task InitializeAsync(CancellationToken ct = default)
         {
-            if (!Cookies.HasClient) throw new SunoSignInRequiredException("Not signed in.");
+            if (!Cookies.HasClient) throw new SunoSignInRequiredException(T("Not signed in."));
 
             SunoApiException? last = null;
             foreach (var baseUrl in ClerkBases)
@@ -57,7 +58,7 @@ namespace TinPan.Services
                     if (response.StatusCode == HttpStatusCode.NotFound) continue;
                     if (!response.IsSuccessStatusCode)
                     {
-                        last = new SunoApiException($"Suno sign-in check failed ({(int)response.StatusCode}).", (int)response.StatusCode);
+                        last = new SunoApiException(T("Suno sign-in check failed ({0}).", (int)response.StatusCode), (int)response.StatusCode);
                         Log.Warn($"Clerk client lookup on {baseUrl} returned {(int)response.StatusCode}");
                         continue;
                     }
@@ -66,7 +67,7 @@ namespace TinPan.Services
                     var client = doc.RootElement.TryGetProperty("response", out var r) ? r : doc.RootElement;
                     var sid = client.TryGetProperty("last_active_session_id", out var s) ? s.GetString() : null;
                     if (string.IsNullOrEmpty(sid))
-                        throw new SunoSignInRequiredException("Not signed in to Suno.");
+                        throw new SunoSignInRequiredException(T("Not signed in to Suno."));
 
                     _clerkBase = baseUrl;
                     _sessionId = sid;
@@ -76,16 +77,16 @@ namespace TinPan.Services
                 }
                 catch (Exception ex) when (ex is HttpRequestException || ex is TaskCanceledException && !ct.IsCancellationRequested)
                 {
-                    last = new SunoApiException("Can't reach Suno. Check your internet connection.", null, ex);
+                    last = new SunoApiException(T("Can't reach Suno. Check your internet connection."), null, ex);
                     Log.Error($"Clerk client lookup on {baseUrl} failed", ex);
                 }
                 catch (Exception ex) when (ex is JsonException or InvalidOperationException)
                 {
-                    last = new SunoApiException("Suno's sign-in service sent a reply this app doesn't understand.", null, ex);
+                    last = new SunoApiException(T("Suno's sign-in service sent a reply this app doesn't understand."), null, ex);
                     Log.Error($"Clerk client lookup on {baseUrl} gave an unreadable reply", ex);
                 }
             }
-            throw last ?? new SunoApiException("Suno sign-in service didn't answer.");
+            throw last ?? new SunoApiException(T("Suno sign-in service didn't answer."));
         }
 
         /// <summary>Returns a JWT that is valid for at least a few more seconds.</summary>
@@ -108,7 +109,7 @@ namespace TinPan.Services
                 catch (Exception ex) when (ex is HttpRequestException || ex is TaskCanceledException && !ct.IsCancellationRequested)
                 {
                     Log.Error("Refreshing the Suno sign-in failed", ex);
-                    throw new SunoApiException("Can't reach Suno. Check your internet connection.", null, ex);
+                    throw new SunoApiException(T("Can't reach Suno. Check your internet connection."), null, ex);
                 }
                 using var response = sent;
                 if (response.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.NotFound or HttpStatusCode.Forbidden)
@@ -117,7 +118,7 @@ namespace TinPan.Services
                     throw new SunoSignInRequiredException();
                 }
                 if (!response.IsSuccessStatusCode)
-                    throw new SunoApiException($"Couldn't refresh the Suno sign-in ({(int)response.StatusCode}).", (int)response.StatusCode);
+                    throw new SunoApiException(T("Couldn't refresh the Suno sign-in ({0}).", (int)response.StatusCode), (int)response.StatusCode);
 
                 string? jwt;
                 try
@@ -128,9 +129,9 @@ namespace TinPan.Services
                 }
                 catch (JsonException ex)
                 {
-                    throw new SunoApiException("Suno's sign-in service sent a reply this app doesn't understand.", null, ex);
+                    throw new SunoApiException(T("Suno's sign-in service sent a reply this app doesn't understand."), null, ex);
                 }
-                if (string.IsNullOrEmpty(jwt)) throw new SunoApiException("Suno sign-in returned no token.");
+                if (string.IsNullOrEmpty(jwt)) throw new SunoApiException(T("Suno sign-in returned no token."));
 
                 _jwt = jwt;
                 _jwtExpires = Jwt.ReadExpiry(jwt) ?? DateTimeOffset.UtcNow.AddSeconds(50);

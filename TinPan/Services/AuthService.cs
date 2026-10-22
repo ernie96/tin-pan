@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using TinPan.Views;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.Services
 {
@@ -15,6 +16,9 @@ namespace TinPan.Services
         private ClerkSession? _session;
 
         public event EventHandler? AuthStateChanged;
+        public event EventHandler? SignInExpired;
+
+        public bool HasSavedSignIn => !string.IsNullOrEmpty(_config.Current.User.ProtectedCookies);
 
         public AuthService(IConfigService config, HttpClient http)
         {
@@ -46,6 +50,7 @@ namespace TinPan.Services
             {
                 Log.Info("Saved sign-in is no longer valid");
                 _config.SaveCookies(null);
+                SignInExpired?.Invoke(this, EventArgs.Empty);
                 return false;
             }
             finally
@@ -103,7 +108,7 @@ namespace TinPan.Services
             var session = _session;
             if (session == null)
             {
-                if (!await RestoreAsync()) throw new SunoSignInRequiredException("Not signed in. Sign in from Settings.");
+                if (!await RestoreAsync()) throw new SunoSignInRequiredException(T("Not signed in. Sign in from Settings."));
                 session = _session!;
             }
 
@@ -117,7 +122,9 @@ namespace TinPan.Services
                 {
                     _session = null;
                     _config.SaveCookies(null);
+                    Log.Info("Suno ended the sign-in");
                     AuthStateChanged?.Invoke(this, EventArgs.Empty);
+                    SignInExpired?.Invoke(this, EventArgs.Empty);
                 }
                 throw;
             }

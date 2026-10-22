@@ -1,6 +1,7 @@
 <Window x:Class="TinPan.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:l="clr-namespace:TinPan.Localization"
         xmlns:localViews="clr-namespace:TinPan.Views"
         Title="{Binding Title}" Height="750" Width="1000"
         WindowStartupLocation="CenterScreen">
@@ -42,25 +43,25 @@
     <DockPanel>
     <!-- Built from MainViewModel.Commands in code, so it always matches the Ctrl+F1 list.
          Hidden until Alt or F10, like a classic Windows menu, so Tab and the screen reader don't meet it. -->
-    <Menu x:Name="mainMenu" DockPanel.Dock="Top" Visibility="Collapsed" AutomationProperties.Name="Menu bar"/>
+    <Menu x:Name="mainMenu" DockPanel.Dock="Top" Visibility="Collapsed" AutomationProperties.Name="{l:T 'Menu bar'}"/>
     <TabControl x:Name="mainTabs" Margin="10" SelectedIndex="{Binding SelectedTab}" SelectionChanged="MainTabs_SelectionChanged">
         <!-- Order matches Ctrl+1 to Ctrl+6 and the tab numbers in MainViewModel. -->
-        <TabItem Header="Library">
+        <TabItem Header="{l:T 'Library'}">
             <localViews:LibraryPanelView x:Name="libraryView" DataContext="{Binding LibraryVM}" />
         </TabItem>
-        <TabItem Header="Playlists">
+        <TabItem Header="{l:T 'Playlists'}">
             <localViews:PlaylistsView x:Name="playlistsView" DataContext="{Binding PlaylistsVM}" />
         </TabItem>
-        <TabItem Header="Create">
+        <TabItem Header="{l:T 'Create'}">
             <localViews:CreateView x:Name="createView" DataContext="{Binding SunoVM}" />
         </TabItem>
-        <TabItem Header="Trending">
+        <TabItem Header="{l:T 'Trending'}">
             <localViews:TrendingView x:Name="trendingView" DataContext="{Binding SunoVM}" />
         </TabItem>
-        <TabItem Header="Account">
+        <TabItem Header="{l:T 'Account'}">
             <localViews:AccountView x:Name="accountView" DataContext="{Binding SunoVM}" />
         </TabItem>
-        <TabItem Header="Settings">
+        <TabItem Header="{l:T 'Settings'}">
             <localViews:SettingsPanelView x:Name="settingsView" DataContext="{Binding SettingsVM}" />
         </TabItem>
     </TabControl>

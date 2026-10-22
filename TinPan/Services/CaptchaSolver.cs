@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.Services
 {
@@ -36,7 +37,7 @@ namespace TinPan.Services
 
         public async Task<(string Token, int Provider)> SolveAsync(int provider)
         {
-            _announcer.Announce("Passing Suno's captcha first. This can take half a minute.", interrupt: false);
+            _announcer.Announce(T("Passing Suno's captcha first. This can take half a minute."), interrupt: false);
             await EnsureWindowAsync();
             try
             {
@@ -47,10 +48,10 @@ namespace TinPan.Services
 
                 // Not passed silently: show Suno's check box so the user can press it.
                 ShowOnScreen();
-                _announcer.Announce("Suno wants you to confirm you're a person. A Suno check window is open; press the check box in it if there is one.");
+                _announcer.Announce(T("Suno wants you to confirm you're a person. A Suno check window is open; press the check box in it if there is one."));
                 var shown = await TryAsync(provider == 2 ? 2 : 1, visible: true);
                 if (shown != null) return (shown, provider == 2 ? 2 : 1);
-                throw new SunoApiException("Suno's captcha wasn't passed, so no song was made. You can try again, or make this one on suno.com.");
+                throw new SunoApiException(T("Suno's captcha wasn't passed, so no song was made. You can try again, or make this one on suno.com."));
             }
             finally
             {
@@ -165,7 +166,7 @@ namespace TinPan.Services
             if (_view?.CoreWebView2 != null) return;
             _window = new Window
             {
-                Title = "Suno check",
+                Title = T("Suno check"),
                 Width = 520,
                 Height = 640,
                 Left = -32000,
@@ -181,7 +182,7 @@ namespace TinPan.Services
                 _view = null;
             };
             _view = new WebView2();
-            System.Windows.Automation.AutomationProperties.SetName(_view, "Suno check");
+            System.Windows.Automation.AutomationProperties.SetName(_view, T("Suno check"));
             _window.Content = _view;
             _window.Show();
             try
@@ -190,7 +191,7 @@ namespace TinPan.Services
             }
             catch (WebView2RuntimeNotFoundException ex)
             {
-                throw new SunoApiException("Suno's captcha needs the Microsoft Edge WebView2 Runtime. Install it from Microsoft, then try again.", null, ex);
+                throw new SunoApiException(T("Suno's captcha needs the Microsoft Edge WebView2 Runtime. Install it from Microsoft, then try again."), null, ex);
             }
             WebViewEnvironment.KeepOnSuno(_view.CoreWebView2, "captcha");
         }

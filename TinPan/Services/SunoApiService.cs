@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using TinPan.Models;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.Services
 {
@@ -63,7 +64,7 @@ namespace TinPan.Services
             }
 
             if (!string.IsNullOrWhiteSpace(query.Search))
-                throw new SunoApiException("Searching isn't available from Suno right now.");
+                throw new SunoApiException(T("Searching isn't available from Suno right now."));
             return SunoJson.ReadFeedPage(await SendAsync(HttpMethod.Get, $"/api/feed/v2?page={query.Page}", null, ct));
         }
 
@@ -100,10 +101,10 @@ namespace TinPan.Services
                     if (id.Length == 0) continue;
                     var name = p.TryGetProperty("name", out var n) && n.ValueKind == JsonValueKind.String ? n.GetString()! : "";
                     int? count = p.TryGetProperty("clip_count", out var c) && c.TryGetInt32(out var cc) ? cc : null;
-                    list.Add(new Workspace(id, name.Length > 0 ? name : id == "default" ? "My Workspace" : "Untitled workspace", count));
+                    list.Add(new Workspace(id, name.Length > 0 ? name : id == "default" ? T("My Workspace") : T("Untitled workspace"), count));
                 }
             }
-            if (list.All(w => w.Id != "default")) list.Insert(0, new Workspace("default", "My Workspace", null));
+            if (list.All(w => w.Id != "default")) list.Insert(0, new Workspace("default", T("My Workspace"), null));
             return list;
         }
 
@@ -117,7 +118,7 @@ namespace TinPan.Services
                 {
                     var id = p.TryGetProperty("id", out var i) ? i.ToString() : "";
                     var name = p.TryGetProperty("name", out var n) && n.ValueKind == JsonValueKind.String ? n.GetString()! : "";
-                    if (id.Length > 0) list.Add(new Persona(id, name.Length > 0 ? name : "Unnamed persona"));
+                    if (id.Length > 0) list.Add(new Persona(id, name.Length > 0 ? name : T("Unnamed persona")));
                 }
             }
             return list;
@@ -171,11 +172,11 @@ namespace TinPan.Services
 
             var json = await SendAsync(HttpMethod.Post, "/api/generate/v2-web/", request, ct);
             if (SunoJson.ReadString(json, "status")?.Equals("error", StringComparison.OrdinalIgnoreCase) == true)
-                throw new SunoApiException("Suno turned this request down. Check the style and lyrics, then try again.");
+                throw new SunoApiException(T("Suno turned this request down. Check the style and lyrics, then try again."));
 
             var clips = SunoJson.ReadFeedPage(json).Clips;
             if (clips.Count == 0)
-                throw new SunoApiException("Suno didn't say whether it started. Refresh the library before trying again, so you don't pay twice.");
+                throw new SunoApiException(T("Suno didn't say whether it started. Refresh the library before trying again, so you don't pay twice."));
             return clips;
         }
 
@@ -199,7 +200,7 @@ namespace TinPan.Services
         {
             var clips = SunoJson.FindClipsById(await SendAsync(HttpMethod.Post, "/api/generate/upsample", BuildRemasterBody(request), ct));
             if (clips.Count == 0)
-                throw new SunoApiException("Suno didn't say whether the remaster started. Refresh the library before trying again.");
+                throw new SunoApiException(T("Suno didn't say whether the remaster started. Refresh the library before trying again."));
             return clips;
         }
 
@@ -237,17 +238,17 @@ namespace TinPan.Services
         public async Task<LyricsResult> GenerateLyricsAsync(string topic, CancellationToken ct = default)
         {
             var submitted = Deserialize<LyricsResult>(await SendAsync(HttpMethod.Post, "/api/generate/lyrics/", new { prompt = topic }, ct));
-            if (string.IsNullOrEmpty(submitted?.Id)) throw new SunoApiException("Suno didn't start writing the lyrics.");
+            if (string.IsNullOrEmpty(submitted?.Id)) throw new SunoApiException(T("Suno didn't start writing the lyrics."));
 
             for (var attempt = 0; attempt < 30; attempt++)
             {
                 await Task.Delay(PollInterval, ct);
                 var result = Deserialize<LyricsResult>(await SendAsync(HttpMethod.Get, $"/api/generate/lyrics/{Uri.EscapeDataString(submitted.Id)}", null, ct));
-                if (!string.IsNullOrWhiteSpace(result?.ErrorMessage)) throw new SunoApiException($"Suno couldn't write those lyrics: {result.ErrorMessage}");
+                if (!string.IsNullOrWhiteSpace(result?.ErrorMessage)) throw new SunoApiException(T("Suno couldn't write those lyrics: {0}", result.ErrorMessage));
                 if (result?.Status == "complete") return result;
-                if (result?.Status == "error") throw new SunoApiException("Suno couldn't write lyrics for that topic.");
+                if (result?.Status == "error") throw new SunoApiException(T("Suno couldn't write lyrics for that topic."));
             }
-            throw new SunoApiException("Suno took too long writing the lyrics. Try again.");
+            throw new SunoApiException(T("Suno took too long writing the lyrics. Try again."));
         }
 
         public async Task<AlignedLyrics?> GetAlignedLyricsAsync(string clipId, CancellationToken ct = default) =>
@@ -271,14 +272,14 @@ namespace TinPan.Services
                 }
                 await Task.Delay(PollInterval, ct);
             }
-            throw new SunoApiException("Suno took too long making the WAV file. Try again later.");
+            throw new SunoApiException(T("Suno took too long making the WAV file. Try again later."));
         }
 
         public async Task AuthorizeDownloadAsync(string clipId, CancellationToken ct = default)
         {
             var json = await SendAsync(HttpMethod.Post, "/api/download/authorize", new { item_id = clipId, item_type = "clip" }, ct);
             if (SunoJson.ReadBool(json, "ok") != true)
-                throw new SunoApiException("Suno didn't confirm the download. Check your downloads left with Shift+F2.");
+                throw new SunoApiException(T("Suno didn't confirm the download. Check your downloads left with Shift+F2."));
         }
 
         public async Task<string> PrepareDownloadAsync(string clipId, string format, bool studio, CancellationToken ct = default)
@@ -300,18 +301,18 @@ namespace TinPan.Services
                 {
                     var detail = SunoJson.ReadString(json, "detail") ?? reason;
                     throw new SunoApiException(string.IsNullOrWhiteSpace(detail)
-                        ? "Suno couldn't prepare that download."
-                        : $"Suno couldn't prepare that download: {detail}");
+                        ? T("Suno couldn't prepare that download.")
+                        : T("Suno couldn't prepare that download: {0}", detail));
                 }
                 await Task.Delay(PollInterval, ct);
             }
-            throw new SunoApiException("Suno took too long preparing the download. Try again later.");
+            throw new SunoApiException(T("Suno took too long preparing the download. Try again later."));
         }
 
         public async Task DownloadAsync(string url, string destinationPath, CancellationToken ct = default)
         {
             if (!url.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
-                throw new SunoApiException("Suno gave a download address this app won't use.");
+                throw new SunoApiException(T("Suno gave a download address this app won't use."));
 
             var temp = destinationPath + ".part";
             try
@@ -319,7 +320,7 @@ namespace TinPan.Services
                 // CDN files need no sign-in, so no token is sent here.
                 using var response = await _http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ct);
                 if (!response.IsSuccessStatusCode)
-                    throw new SunoApiException($"The download failed ({(int)response.StatusCode}).", (int)response.StatusCode);
+                    throw new SunoApiException(T("The download failed ({0}).", (int)response.StatusCode), (int)response.StatusCode);
 
                 await using (var file = File.Create(temp))
                     await response.Content.CopyToAsync(file, ct);
@@ -327,15 +328,15 @@ namespace TinPan.Services
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
             {
-                throw new SunoApiException("Couldn't save the file. Check the download folder in Settings.", null, ex);
+                throw new SunoApiException(T("Couldn't save the file. Check the download folder in Settings."), null, ex);
             }
             catch (HttpRequestException ex)
             {
-                throw new SunoApiException("Can't reach Suno. Check your internet connection.", null, ex);
+                throw new SunoApiException(T("Can't reach Suno. Check your internet connection."), null, ex);
             }
             catch (TaskCanceledException ex) when (!ct.IsCancellationRequested)
             {
-                throw new SunoApiException("The download didn't start in time. Try again.", null, ex);
+                throw new SunoApiException(T("The download didn't start in time. Try again."), null, ex);
             }
             finally
             {
@@ -362,15 +363,15 @@ namespace TinPan.Services
             catch (HttpRequestException ex)
             {
                 Log.Error($"{method} {Queryless(path)} failed", ex);
-                throw new SunoApiException("Can't reach Suno. Check your internet connection.", null, ex);
+                throw new SunoApiException(T("Can't reach Suno. Check your internet connection."), null, ex);
             }
             catch (TaskCanceledException ex) when (!ct.IsCancellationRequested)
             {
                 Log.Error($"{method} {Queryless(path)} timed out", ex);
                 // A request that changes something may still have gone through; making songs costs credits.
                 throw new SunoApiException(method == HttpMethod.Get
-                    ? "Suno didn't answer in time. Try again."
-                    : "Suno didn't answer in time. It may still have done it, so refresh to check before trying again.", null, ex);
+                    ? T("Suno didn't answer in time. Try again.")
+                    : T("Suno didn't answer in time. It may still have done it, so refresh to check before trying again."), null, ex);
             }
 
             using (response)
@@ -419,21 +420,21 @@ namespace TinPan.Services
             var lower = body.ToLowerInvariant();
             return (int)code switch
             {
-                401 => "Suno turned the request down. If it keeps happening, sign in again from Settings.",
+                401 => T("Suno turned the request down. If it keeps happening, sign in again from Settings."),
                 403 when lower.Contains("pro") || lower.Contains("premier") || lower.Contains("subscri") || lower.Contains("plan") =>
-                    "That needs a Pro or Premier plan.",
-                403 => "Suno says this account can't do that.",
-                402 => "Not enough credits.",
-                404 => "Suno couldn't find that song, or this feature moved.",
-                400 or 422 when lower.Contains("credit") => "Not enough credits.",
+                    T("That needs a Pro or Premier plan."),
+                403 => T("Suno says this account can't do that."),
+                402 => T("Not enough credits."),
+                404 => T("Suno couldn't find that song, or this feature moved."),
+                400 or 422 when lower.Contains("credit") => T("Not enough credits."),
                 400 or 422 when lower.Contains("moderat") || lower.Contains("inappropriate") || lower.Contains("policy") =>
-                    "Suno's content rules blocked this. Try different words.",
-                400 or 422 when lower.Contains("captcha") => "Suno didn't accept the captcha. Try again.",
-                400 or 422 when lower.Contains("length") || lower.Contains("too long") => "Something is too long for this model.",
-                400 or 422 => "Suno didn't accept those settings." + DetailFrom(body),
-                429 => "Suno says too many requests. Wait a minute and try again.",
-                >= 500 => $"Suno had a problem on its side ({(int)code}). Try again later.",
-                _ => $"Suno refused the request ({(int)code})."
+                    T("Suno's content rules blocked this. Try different words."),
+                400 or 422 when lower.Contains("captcha") => T("Suno didn't accept the captcha. Try again."),
+                400 or 422 when lower.Contains("length") || lower.Contains("too long") => T("Something is too long for this model."),
+                400 or 422 => T("Suno didn't accept those settings.") + DetailFrom(body),
+                429 => T("Suno says too many requests. Wait a minute and try again."),
+                >= 500 => T("Suno had a problem on its side ({0}). Try again later.", (int)code),
+                _ => T("Suno refused the request ({0}).", (int)code)
             };
         }
 
@@ -441,23 +442,23 @@ namespace TinPan.Services
         private static string DetailFrom(string body)
         {
             var detail = SunoJson.TryReadString(body, "detail");
-            return string.IsNullOrWhiteSpace(detail) || detail.Length > 160 ? "" : " Suno says: " + detail.Trim();
+            return string.IsNullOrWhiteSpace(detail) || detail.Length > 160 ? "" : " " + T("Suno says: {0}", detail.Trim());
         }
 
-        private static T? Deserialize<T>(string json) where T : class
+        private static TResult? Deserialize<TResult>(string json) where TResult : class
         {
-            try { return JsonSerializer.Deserialize<T>(json, JsonOpts); }
+            try { return JsonSerializer.Deserialize<TResult>(json, JsonOpts); }
             catch (JsonException ex)
             {
-                Log.Error($"Unexpected reply for {typeof(T).Name}", ex);
-                throw new SunoApiException("Suno sent a reply this app doesn't understand.", null, ex);
+                Log.Error($"Unexpected reply for {typeof(TResult).Name}", ex);
+                throw new SunoApiException(T("Suno sent a reply this app doesn't understand."), null, ex);
             }
         }
 
         private static JsonDocument ParseDocument(string json)
         {
             try { return JsonDocument.Parse(json); }
-            catch (JsonException ex) { throw new SunoApiException("Suno sent a reply this app doesn't understand.", null, ex); }
+            catch (JsonException ex) { throw new SunoApiException(T("Suno sent a reply this app doesn't understand."), null, ex); }
         }
 
         private static string Queryless(string path) => path.Split('?')[0];

@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using TinPan.Models;
 using TinPan.Services;
 using TinPan.Views;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.ViewModels
 {
@@ -57,7 +58,7 @@ namespace TinPan.ViewModels
                 Playlists.Clear();
                 foreach (var p in list) Playlists.Add(p);
                 SelectedPlaylist = Playlists.FirstOrDefault(p => p.Id == keep) ?? Playlists.FirstOrDefault();
-                if (!background) Announcer.Announce(list.Count == 0 ? "No playlists." : $"{list.Count} playlists.");
+                if (!background) Announcer.Announce(list.Count == 0 ? T("No playlists.") : Plural(list.Count, "{0} playlist.", "{0} playlists."));
             }, background);
         }
 
@@ -84,7 +85,7 @@ namespace TinPan.ViewModels
                 foreach (var s in songs) Songs.Add(s);
                 SelectedSong = Songs.FirstOrDefault();
                 playlist.SongCount = songs.Count;
-                if (announce) Announcer.Announce(songs.Count == 0 ? $"{playlist.DisplayName} is empty." : $"{playlist.DisplayName}, {songs.Count} songs.");
+                if (announce) Announcer.Announce(songs.Count == 0 ? T("{0} is empty.", playlist.DisplayName) : $"{playlist.DisplayName}, {Plural(songs.Count, "{0} song.", "{0} songs.")}");
             }, background: !announce);
         }
 
@@ -93,15 +94,15 @@ namespace TinPan.ViewModels
         [RelayCommand]
         private async Task NewAsync()
         {
-            var name = new TextField("_Name", "", maxLength: 100);
-            if (!_dialogs.ShowForm("New playlist", "", "Create", new FormField[] { name }) || name.Value.Length == 0) return;
+            var name = new TextField(T("_Name"), "", maxLength: 100);
+            if (!_dialogs.ShowForm(T("New playlist"), "", T("Make playlist"), new FormField[] { name }) || name.Value.Length == 0) return;
             await RunAsync(async () =>
             {
                 var created = await _api.CreatePlaylistAsync(name.Value);
                 created.SongCount ??= 0;
                 Playlists.Insert(0, created);
                 SelectedPlaylist = created;
-                Announcer.Announce($"Made playlist {created.DisplayName}.");
+                Announcer.Announce(T("Made playlist {0}.", created.DisplayName));
             });
         }
 
@@ -110,14 +111,14 @@ namespace TinPan.ViewModels
         {
             var p = SelectedPlaylist;
             if (p == null) return;
-            var name = new TextField("_Name", p.Name, maxLength: 100);
-            var description = new TextField("_Description", p.Description, multiline: true);
-            if (!_dialogs.ShowForm($"Rename {p.DisplayName}", "", "Save", new FormField[] { name, description }) || name.Value.Length == 0) return;
+            var name = new TextField(T("_Name"), p.Name, maxLength: 100);
+            var description = new TextField(T("_Description"), p.Description, multiline: true);
+            if (!_dialogs.ShowForm(T("Rename {0}", p.DisplayName), "", T("Save"), new FormField[] { name, description }) || name.Value.Length == 0) return;
             if (await RunAsync(() => _api.RenamePlaylistAsync(p.Id, name.Value, description.Value)))
             {
                 p.Name = name.Value;
                 p.Description = description.Value;
-                Announcer.Announce("Saved.");
+                Announcer.Announce(T("Saved."));
             }
         }
 
@@ -125,13 +126,13 @@ namespace TinPan.ViewModels
         private async Task DeleteAsync()
         {
             var p = SelectedPlaylist;
-            if (p == null || !_dialogs.Confirm($"Move the playlist \"{p.DisplayName}\" to the trash? The songs in it stay in your library.", "Delete playlist")) return;
+            if (p == null || !_dialogs.Confirm(T("Move the playlist \"{0}\" to the trash? The songs in it stay in your library.", p.DisplayName), T("Delete playlist"))) return;
             if (await RunAsync(() => _api.TrashPlaylistAsync(p.Id)))
             {
                 var index = Playlists.IndexOf(p);
                 Playlists.Remove(p);
                 SelectedPlaylist = Playlists.Count == 0 ? null : Playlists[Math.Clamp(index, 0, Playlists.Count - 1)];
-                Announcer.Announce($"Moved {p.DisplayName} to trash.");
+                Announcer.Announce(T("Moved {0} to trash.", p.DisplayName));
             }
         }
 
@@ -145,12 +146,12 @@ namespace TinPan.ViewModels
             if (clip == null) return;
             if (!clip.CanPlay)
             {
-                Announcer.Announce(clip.HasFailed ? "That song failed to generate." : "That song isn't ready yet.");
+                Announcer.Announce(clip.HasFailed ? T("That song failed to generate.") : T("That song isn't ready yet."));
                 return;
             }
             _current = clip;
             if (await RunAsync(() => _audio.PlayAsync(clip.Id, clip.DisplayTitle, this)))
-                Announcer.Announce($"Playing: {clip.DisplayTitle}.");
+                Announcer.Announce(T("Playing: {0}.", clip.DisplayTitle));
         }
 
         void IPlaybackQueue.PlayPause() => PlayPause();
@@ -158,8 +159,8 @@ namespace TinPan.ViewModels
         [RelayCommand]
         private void PlayPause()
         {
-            if (_audio.IsPlaying) { _audio.Pause(); Announcer.Announce("Paused."); }
-            else if (_audio.IsPaused) { _audio.Resume(); Announcer.Announce("Playing."); }
+            if (_audio.IsPlaying) { _audio.Pause(); Announcer.Announce(T("Paused.")); }
+            else if (_audio.IsPaused) { _audio.Resume(); Announcer.Announce(T("Playing.")); }
             else _ = StartAsync(SelectedSong);
         }
 
@@ -170,18 +171,18 @@ namespace TinPan.ViewModels
             if (!await StepAsync(+1))
             {
                 _current = null;
-                Announcer.Announce("End of playlist.", interrupt: false);
+                Announcer.Announce(T("End of playlist."), interrupt: false);
             }
         }
 
         public async Task NextAsync()
         {
-            if (!await StepAsync(+1)) Announcer.Announce("End of playlist.");
+            if (!await StepAsync(+1)) Announcer.Announce(T("End of playlist."));
         }
 
         public async Task PreviousAsync()
         {
-            if (!await StepAsync(-1)) Announcer.Announce("First song.");
+            if (!await StepAsync(-1)) Announcer.Announce(T("First song."));
         }
 
         /// <summary>Plays the next or previous playable song after the current one. False when there is none.</summary>
@@ -209,7 +210,7 @@ namespace TinPan.ViewModels
                 Songs.Remove(song);
                 p.SongCount = Songs.Count;
                 if (Songs.Count > 0) SelectedSong = Songs[Math.Clamp(index, 0, Songs.Count - 1)];
-                Announcer.Announce($"Removed {song.DisplayTitle} from {p.DisplayName}.");
+                Announcer.Announce(T("Removed {0} from {1}.", song.DisplayTitle, p.DisplayName));
             }
         }
 
@@ -225,14 +226,14 @@ namespace TinPan.ViewModels
             var to = from + delta;
             if (from < 0 || to < 0 || to >= Songs.Count)
             {
-                Announcer.Announce(delta < 0 ? "Already first." : "Already last.");
+                Announcer.Announce(delta < 0 ? T("Already first.") : T("Already last."));
                 return;
             }
             if (await RunAsync(() => _api.MoveInPlaylistAsync(p.Id, song.Id, to)))
             {
                 Songs.Move(from, to);
                 SelectedSong = song;
-                Announcer.Announce($"{to + 1} of {Songs.Count}.");
+                Announcer.Announce(T("{0} of {1}.", to + 1, Songs.Count));
             }
         }
     }

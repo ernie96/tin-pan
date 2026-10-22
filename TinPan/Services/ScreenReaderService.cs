@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.Services
 {
@@ -86,7 +87,7 @@ namespace TinPan.Services
 
         public IReadOnlyList<string> History => new List<string>(_history);
 
-        public string OutputName => IsNvdaRunning ? "NVDA" : OtherScreenReaderIsOn() ? "another screen reader" : "Windows speech";
+        public string OutputName => IsNvdaRunning ? "NVDA" : OtherScreenReaderIsOn() ? T("another screen reader") : T("Windows speech");
 
         public bool IsNvdaRunning
         {
@@ -119,7 +120,7 @@ namespace TinPan.Services
             if (speak) Speak(text, interrupt);
         }
 
-        public void RepeatLast() => Speak(_last ?? "Nothing said yet.", interrupt: true);
+        public void RepeatLast() => Speak(_last ?? T("Nothing said yet."), interrupt: true);
 
         private void Speak(string text, bool interrupt)
         {

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.Services
 {
@@ -131,8 +132,8 @@ namespace TinPan.Services
                 Stop();
                 Log.Warn($"Player didn't start: {result}");
                 throw new SunoApiException(result == "nobutton"
-                    ? "Suno's player didn't offer this song. It may be private to another account, or still being made."
-                    : "Suno's player didn't start this song. Try again.");
+                    ? T("Suno's player didn't offer this song. It may be private to another account, or still being made.")
+                    : T("Suno's player didn't start this song. Try again."));
             }
 
             CurrentClipId = clipId;
@@ -205,7 +206,7 @@ namespace TinPan.Services
             // Off screen and never activated, so focus and the screen reader stay in the main window.
             _window = new Window
             {
-                Title = "Suno player",
+                Title = T("Suno player"),
                 Width = 900,
                 Height = 700,
                 Left = -32000,
@@ -228,7 +229,7 @@ namespace TinPan.Services
             catch (WebView2RuntimeNotFoundException ex)
             {
                 _ready = null;
-                throw new SunoApiException("Playing needs the Microsoft Edge WebView2 Runtime. Install it from Microsoft, then try again.", null, ex);
+                throw new SunoApiException(T("Playing needs the Microsoft Edge WebView2 Runtime. Install it from Microsoft, then try again."), null, ex);
             }
 
             var core = _view.CoreWebView2;
@@ -283,7 +284,7 @@ namespace TinPan.Services
                     else if (CurrentClipId != null)
                     {
                         Stop();
-                        PlaybackFailed?.Invoke(this, "Playback stopped because of an error.");
+                        PlaybackFailed?.Invoke(this, T("Playback stopped because of an error."));
                     }
                     break;
                 case "ended":

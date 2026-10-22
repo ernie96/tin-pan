@@ -86,6 +86,16 @@ dotnet publish TinPan -p:PublishProfile=OneFile
 
 That makes a single `TinPan\bin\publish\TinPan.exe` (about 60 MB) with .NET, WPF, WebView2's loader, NVDA's helper and the license texts inside. Nothing needs installing: WebView2 comes with Windows 10 and 11. On first run Windows unpacks the native parts to a temporary folder and Tin Pan unpacks NVDA's helper to `%LOCALAPPDATA%\Tin Pan\native`, so the second start is quicker. Help, Licenses and notices shows the licenses. A `nvdaControllerClient.dll` placed next to the exe is used instead of the built-in one.
 
+## Languages
+
+English, Romanian (Română), Ukrainian (Українська) and Spanish (Español). Settings, Language chooses one, or "Automatic" follows Windows; it changes the next time Tin Pan starts. Text Tin Pan hasn't got a translation for stays in English. Messages that come straight from Suno stay in Suno's words.
+
+The translations are in `TinPan/Localization/translations.json`: each English text with its Romanian, Ukrainian and Spanish. Counts have each language's plural forms, separated by `|` (Romanian and Ukrainian three, Spanish two). After changing any text, run `python -I build/translations/check.py`; it lists texts without translations, placeholders that don't match, and Alt letters used twice on a page, menu or form in any language. The tests check the same.
+
+## Signing in
+
+The first time (or after Sign out), Tin Pan welcomes you and offers to sign in. If Suno ends your sign-in later, for example after a password change, Tin Pan asks you to sign in again. A network problem never does; your saved sign-in stays and is tried again.
+
 ## Updates
 
 Tin Pan looks for a new version on GitHub a few seconds after it starts, and says nothing unless there is one (Settings can turn this off). Help, Check for updates looks now. When there's a new version, Tin Pan reads what's new and asks. Yes downloads the new `TinPan.exe`, checks that it's signed by Tin Pan's publisher (Ed25519, the same scheme as TimePlayer), closes, swaps it in and starts again. If the swap fails, the old exe is put back and the next start says so. Saying No to a version offered at startup means it isn't offered again by itself.

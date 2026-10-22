@@ -6,12 +6,13 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TinPan.Models;
 using TinPan.Services;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.ViewModels
 {
     public partial class MainViewModel : ViewModelBase
     {
-        private const string AppTitle = "Tin Pan, by Ernesto Melendez";
+        private static string AppTitle => T("Tin Pan, by Ernesto Melendez");
         // Tab order, which is also Ctrl+1 to Ctrl+6.
         public const int LibraryTab = 0, PlaylistsTab = 1, CreateTab = 2, TrendingTab = 3, AccountTab = 4, SettingsTab = 5;
 
@@ -44,11 +45,15 @@ namespace TinPan.ViewModels
             _updates = updates;
 
             _auth.AuthStateChanged += (_, _) => OnAuthChanged();
+            _auth.SignInExpired += (_, _) => _signInExpired = true;
             SunoVM.SongsStarted += (_, clips) => LibraryVM.Upsert(clips);
             watcher.ClipsFinished += (_, clips) => AnnounceFinished(clips);
         }
 
         /// <summary>Called once the window is showing.</summary>
+        private bool _signInExpired;
+        private bool _askingToSignIn;
+
         public async Task InitializeAsync()
         {
             Announcer.Level = Enum.TryParse<SpeechLevel>(_config.Current.SpeechLevel, out var level) ? level : SpeechLevel.Everything;
@@ -60,21 +65,54 @@ namespace TinPan.ViewModels
             }
             catch (SunoApiException ex)
             {
-                Announcer.Announce($"Tin Pan ready. {ex.Message} Press F1 for help.", always: true);
+                // Suno couldn't be reached: the saved sign-in stays, and there's nothing to ask yet.
+                Announcer.Announce(T("Tin Pan ready. {0} Press F1 for help.", ex.Message), always: true);
                 _ = AfterStartupUpdatesAsync();
                 return;
             }
-            Announcer.Announce(signedIn
-                ? "Tin Pan ready. Press F1 for help."
-                : "Tin Pan ready. Not signed in. Press F1 for help.", interrupt: false, always: true);
+            if (signedIn)
+            {
+                Announcer.Announce(T("Tin Pan ready. Press F1 for help."), interrupt: false, always: true);
+            }
+            else
+            {
+                Announcer.Announce(T("Tin Pan ready."), interrupt: false, always: true);
+                await OfferSignInAsync(expired: _signInExpired);
+            }
             _ = AfterStartupUpdatesAsync();
+            // From now on, an ended sign-in asks straight away.
+            _auth.SignInExpired += (_, _) => System.Windows.Application.Current?.Dispatcher.BeginInvoke(() => _ = OfferSignInAsync(expired: true));
+        }
+
+        /// <summary>
+        /// First run (nothing saved): a welcome that offers to sign in. An ended sign-in (Suno said so,
+        /// not a network problem): asks to sign in again. No either way points to Settings.
+        /// </summary>
+        private async Task OfferSignInAsync(bool expired)
+        {
+            if (_askingToSignIn || _auth.IsAuthenticated) return;
+            _askingToSignIn = true;
+            _signInExpired = false;
+            try
+            {
+                var yes = expired
+                    ? _dialogs.Ask(T("Suno has ended your sign-in, so Tin Pan can't reach your songs. This happens now and then, for example after changing your password. Sign in again now?"), T("Sign in again"))
+                    : _dialogs.Ask(T("Welcome to Tin Pan. To browse, play and make songs, sign in to your Suno account. Suno's own sign-in page opens, and closes by itself once you're in. Sign in now?"), T("Welcome to Tin Pan"));
+                if (yes) await SettingsVM.SignInCommand.ExecuteAsync(null);
+                if (!_auth.IsAuthenticated)
+                    Announcer.Announce(T("Not signed in. You can sign in any time from Settings, Ctrl+6. Press F1 for help."), always: true);
+            }
+            finally
+            {
+                _askingToSignIn = false;
+            }
         }
 
         private void OnAuthChanged()
         {
             if (_auth.IsAuthenticated)
             {
-                Title = string.IsNullOrEmpty(_auth.UserName) ? "Tin Pan - signed in" : $"Tin Pan - {_auth.UserName}";
+                Title = string.IsNullOrEmpty(_auth.UserName) ? T("Tin Pan - signed in") : $"Tin Pan - {_auth.UserName}";
                 // One load of each, quietly; failures still get one spoken line.
                 _ = LibraryVM.LoadFirstPageAsync(background: true);
                 _ = SunoVM.LoadAccountAsync(background: true);
@@ -97,8 +135,8 @@ namespace TinPan.ViewModels
             var ready = clips.Where(c => !c.HasFailed).Select(c => c.DisplayTitle).Distinct().ToList();
             var failed = clips.Count(c => c.HasFailed);
             var parts = new List<string>();
-            if (ready.Count > 0) parts.Add($"Ready: {string.Join(", ", ready)}.");
-            if (failed > 0) parts.Add(failed == 1 ? "1 song failed." : $"{failed} songs failed.");
+            if (ready.Count > 0) parts.Add(T("Ready: {0}.", string.Join(", ", ready)));
+            if (failed > 0) parts.Add(Plural(failed, "{0} song failed.", "{0} songs failed."));
             Announcer.Announce(string.Join(" ", parts), interrupt: false);
         }
 
@@ -117,7 +155,7 @@ namespace TinPan.ViewModels
                 _ => HelpText.Library
             };
             if (!_auth.IsAuthenticated && SelectedTab != SettingsTab) text += HelpText.NotSignedIn;
-            Announcer.Announce(text + " Ctrl+F1 for all commands.", always: true);
+            Announcer.Announce(text + " " + T("Ctrl+F1 for all commands."), always: true);
         }
 
         [RelayCommand]
@@ -130,7 +168,7 @@ namespace TinPan.ViewModels
         {
             if (!_auth.IsAuthenticated)
             {
-                Announcer.Announce("Not signed in.", always: true);
+                Announcer.Announce(T("Not signed in."), always: true);
                 return;
             }
             // Always fetch, so the numbers are current; fall back to the last known ones if that fails.
@@ -155,11 +193,12 @@ namespace TinPan.ViewModels
         {
             if (_audio.CurrentClipId == null)
             {
-                Announcer.Announce("Nothing playing.", always: true);
+                Announcer.Announce(T("Nothing playing."), always: true);
                 return;
             }
-            var total = _audio.TotalDuration > TimeSpan.Zero ? " of " + SunoClip.FormatTime(_audio.TotalDuration) : "";
-            Announcer.Announce($"{(_audio.IsPaused ? "Paused" : "Playing")}: {_audio.CurrentTitle}, {SunoClip.FormatTime(_audio.CurrentPosition)}{total}.", always: true);
+            var position = SunoClip.FormatTime(_audio.CurrentPosition);
+            var where = _audio.TotalDuration > TimeSpan.Zero ? T("{0} of {1}", position, SunoClip.FormatTime(_audio.TotalDuration)) : position;
+            Announcer.Announce((_audio.IsPaused ? T("Paused: {0}, {1}.", _audio.CurrentTitle, where) : T("Playing: {0}, {1}.", _audio.CurrentTitle, where)), always: true);
         }
 
         [RelayCommand]

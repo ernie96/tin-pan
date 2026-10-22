@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Win32;
 using TinPan.Views;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.Services
 {
@@ -61,7 +62,7 @@ namespace TinPan.Services
 
         public string? PickFolder(string? startIn)
         {
-            var dialog = new OpenFolderDialog { Title = "Choose where songs are saved" };
+            var dialog = new OpenFolderDialog { Title = T("Choose where songs are saved") };
             if (!string.IsNullOrEmpty(startIn)) dialog.InitialDirectory = startIn;
             return dialog.ShowDialog(Application.Current.MainWindow) == true ? dialog.FolderName : null;
         }

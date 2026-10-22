@@ -13,6 +13,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.Services
 {
@@ -94,24 +95,24 @@ namespace TinPan.Services
                 using var response = await _http.SendAsync(request, timeout.Token);
                 if (response.StatusCode == HttpStatusCode.NotFound) return null; // no release yet
                 if (!response.IsSuccessStatusCode)
-                    throw new UpdateException($"GitHub answered {(int)response.StatusCode} when checking for updates.");
+                    throw new UpdateException(T("GitHub answered {0} when checking for updates.", (int)response.StatusCode));
 
                 var release = await JsonSerializer.DeserializeAsync<GitHubRelease>(await response.Content.ReadAsStreamAsync(timeout.Token), cancellationToken: timeout.Token);
                 if (release == null || ParseVersion(release.TagName) is not { } latest)
-                    throw new UpdateException("The latest release has no usable version number.");
+                    throw new UpdateException(T("The latest release has no usable version number."));
 
                 Log.Info($"Update check: running {CurrentVersion.ToString(3)}, latest release {latest.ToString(3)}");
                 if (latest <= CurrentVersion) return null;
                 return PickAssets(release, latest)
-                       ?? throw new UpdateException($"Tin Pan {latest.ToString(3)} is out, but its signed download is missing. Get it from the release page.");
+                       ?? throw new UpdateException(T("Tin Pan {0} is out, but its signed download is missing. Get it from the release page.", latest.ToString(3)));
             }
             catch (OperationCanceledException) when (!ct.IsCancellationRequested)
             {
-                throw new UpdateException("Checking for updates timed out.");
+                throw new UpdateException(T("Checking for updates timed out."));
             }
             catch (Exception ex) when (ex is HttpRequestException or JsonException)
             {
-                throw new UpdateException("Couldn't check for updates. Check your internet connection.", ex);
+                throw new UpdateException(T("Couldn't check for updates. Check your internet connection."), ex);
             }
         }
 
@@ -138,10 +139,10 @@ namespace TinPan.Services
 
         public async Task<string> DownloadAsync(UpdateInfo update, IProgress<double>? progress, CancellationToken ct = default)
         {
-            Directory.CreateDirectory(Folder);
             var target = Path.Combine(Folder, AssetName);
             try
             {
+                Directory.CreateDirectory(Folder);
                 var signature = await _http.GetStringAsync(update.SignatureUrl, ct);
                 using (var response = await _http.GetAsync(update.DownloadUrl, HttpCompletionOption.ResponseHeadersRead, ct))
                 {
@@ -164,7 +165,7 @@ namespace TinPan.Services
                 {
                     TryDelete(target);
                     Log.Error($"Update {update.Version.ToString(3)} failed signature verification; discarded");
-                    throw new UpdateException("The downloaded update isn't signed by Tin Pan's publisher, so it wasn't installed.");
+                    throw new UpdateException(T("The downloaded update isn't signed by Tin Pan's publisher, so it wasn't installed."));
                 }
                 Log.Info($"Update {update.Version.ToString(3)} downloaded and verified");
                 return target;
@@ -172,18 +173,18 @@ namespace TinPan.Services
             catch (OperationCanceledException)
             {
                 TryDelete(target);
-                throw new UpdateException("The update download was cancelled.");
+                throw new UpdateException(T("The update download was cancelled."));
             }
             catch (Exception ex) when (ex is HttpRequestException or IOException or UnauthorizedAccessException)
             {
                 TryDelete(target);
-                throw new UpdateException("Couldn't download the update. Check your internet connection and try again.", ex);
+                throw new UpdateException(T("Couldn't download the update. Check your internet connection and try again."), ex);
             }
         }
 
         public void StartInstall(string verifiedFile)
         {
-            var exe = Environment.ProcessPath ?? throw new UpdateException("Couldn't find where Tin Pan is running from.");
+            var exe = Environment.ProcessPath ?? throw new UpdateException(T("Couldn't find where Tin Pan is running from."));
             var script = InstallScript(Environment.ProcessId, verifiedFile, exe);
             try
             {
@@ -197,7 +198,7 @@ namespace TinPan.Services
             }
             catch (Exception ex) when (ex is Win32Exception or InvalidOperationException)
             {
-                throw new UpdateException("Couldn't start the update.", ex);
+                throw new UpdateException(T("Couldn't start the update."), ex);
             }
         }
 

@@ -12,6 +12,7 @@ using CommunityToolkit.Mvvm.Input;
 using TinPan.Models;
 using TinPan.Services;
 using TinPan.Views;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.ViewModels
 {
@@ -25,7 +26,7 @@ namespace TinPan.ViewModels
         {
             var format = _config.Current.Audio.OutputFormat;
             if (format != "wav" || _account.IsPaid != false) return DownloadInFormatAsync(clip ?? SelectedClip, format);
-            return DownloadInFormatAsync(clip ?? SelectedClip, "mp3", "WAV needs Pro or Premier, so this is an MP3. ");
+            return DownloadInFormatAsync(clip ?? SelectedClip, "mp3", T("WAV needs Pro or Premier, so this is an MP3.") + " ");
         }
 
         [RelayCommand(CanExecute = nameof(CanUsePaidFeatures))]
@@ -39,7 +40,7 @@ namespace TinPan.ViewModels
             if (clip == null) return;
             if (!clip.IsComplete)
             {
-                Announcer.Announce(clip.HasFailed ? "That song failed to generate." : "That song isn't finished yet.");
+                Announcer.Announce(clip.HasFailed ? T("That song failed to generate.") : T("That song isn't finished yet."));
                 return;
             }
             string path;
@@ -54,15 +55,15 @@ namespace TinPan.ViewModels
             }
             if (File.Exists(path))
             {
-                Announcer.Announce($"{clip.DisplayTitle} is already downloaded.");
+                Announcer.Announce(T("{0} is already downloaded.", clip.DisplayTitle));
                 return;
             }
 
-            Announcer.Announce(note + (format == "wav" ? $"Asking Suno for a WAV of {clip.DisplayTitle}." : $"Downloading {clip.DisplayTitle}."));
+            Announcer.Announce(note + (format == "wav" ? T("Asking Suno for a WAV of {0}.", clip.DisplayTitle) : T("Downloading {0}.", clip.DisplayTitle)));
             try
             {
                 await DownloadDirectAsync(clip, format, path);
-                Announcer.Announce($"Saved {clip.DisplayTitle}.", interrupt: false);
+                Announcer.Announce(T("Saved {0}.", clip.DisplayTitle), interrupt: false);
             }
             catch (SunoApiException ex)
             {
@@ -98,7 +99,7 @@ namespace TinPan.ViewModels
         {
             TargetPath(clip, format, out var url);
             if (format == "wav") url = await _api.GetWavUrlAsync(clip.Id);
-            if (string.IsNullOrEmpty(url)) throw new SunoApiException("Suno gave no file address for this song.");
+            if (string.IsNullOrEmpty(url)) throw new SunoApiException(T("Suno gave no file address for this song."));
             await _api.DownloadAsync(url, path);
             await SaveExtrasAsync(clip, path);
         }
@@ -154,13 +155,13 @@ namespace TinPan.ViewModels
             }
             if (missing.Count == 0)
             {
-                Announcer.Announce(todo.Count == 0 ? "No finished songs in this list." : "Every song in this list is already downloaded.");
+                Announcer.Announce(todo.Count == 0 ? T("No finished songs in this list.") : T("Every song in this list is already downloaded."));
                 return;
             }
-            if (!_dialogs.Confirm($"Download {missing.Count} songs as {format.ToUpperInvariant()} into {DownloadFolder()}? " +
-                                  $"{todo.Count - missing.Count} already there will be skipped.", "Download all")) return;
+            if (!_dialogs.Confirm(T("Download {0} as {1} into {2}? {3} already there will be skipped.",
+                    Plural(missing.Count, "{0} song", "{0} songs"), format.ToUpperInvariant(), DownloadFolder(), todo.Count - missing.Count), T("Download all"))) return;
 
-            Announcer.Announce($"Downloading {missing.Count} songs.");
+            Announcer.Announce(T("Downloading {0}.", Plural(missing.Count, "{0} song", "{0} songs")));
             var saved = 0;
             var failed = new List<string>();
             for (var i = 0; i < missing.Count; i++)
@@ -183,14 +184,14 @@ namespace TinPan.ViewModels
                     }
                 }
                 if (i + 1 == missing.Count / 2 && missing.Count >= 10)
-                    Announcer.Announce($"Halfway: {saved} saved.", interrupt: false);
+                    Announcer.Announce(T("Halfway: {0} saved.", saved), interrupt: false);
             }
 
-            var summary = $"Downloaded {saved} of {missing.Count} songs into {Path.GetFileName(DownloadFolder())}.";
+            var summary = T("Downloaded {0} of {1} into {2}.", saved, Plural(missing.Count, "{0} song", "{0} songs"), Path.GetFileName(DownloadFolder()));
             if (failed.Count > 0)
                 summary += failed.Count <= 3
-                    ? $" Couldn't download directly: {string.Join(", ", failed)}. Ctrl+D on one offers Suno's own download."
-                    : $" {failed.Count} couldn't be downloaded directly. Ctrl+D on one offers Suno's own download.";
+                    ? " " + T("Couldn't download directly: {0}. Ctrl+D on one offers Suno's own download.", string.Join(", ", failed))
+                    : " " + T("{0} couldn't be downloaded directly. Ctrl+D on one offers Suno's own download.", failed.Count);
             Announcer.Announce(summary, interrupt: false);
         }
 
@@ -201,17 +202,17 @@ namespace TinPan.ViewModels
         private bool OfferSunoDownload(SunoClip clip, string problem)
         {
             var cost = clip.IsDownloadUnlocked == true
-                ? "You've downloaded this song before, so it won't count against your downloads."
+                ? T("You've downloaded this song before, so it won't count against your downloads.")
                 : _account.Billing?.DownloadUsage?.Remaining is { } left
-                    ? $"Suno counts it as 1 of your {left} downloads left."
-                    : "Suno counts it against your downloads.";
-            return _dialogs.Confirm($"The direct download didn't work ({problem}) Use Suno's own download for \"{clip.DisplayTitle}\" instead? {cost}", "Download");
+                    ? T("Suno counts it as 1 of your {0} downloads left.", left)
+                    : T("Suno counts it against your downloads.");
+            return _dialogs.Confirm(T("The direct download didn't work ({0}) Use Suno's own download for \"{1}\" instead? {2}", problem, clip.DisplayTitle, cost), T("Download"));
         }
 
         private async Task DownloadThroughSunoAsync(SunoClip clip, string format, string path)
         {
             var studio = _account.Billing?.HasStudio == true;
-            Announcer.Announce($"Downloading {clip.DisplayTitle} through Suno.");
+            Announcer.Announce(T("Downloading {0} through Suno.", clip.DisplayTitle));
             await RunAsync(async () =>
             {
                 if (!studio && clip.IsDownloadUnlocked != true)
@@ -222,7 +223,7 @@ namespace TinPan.ViewModels
                 }
                 await _api.DownloadAsync(await _api.PrepareDownloadAsync(clip.Id, format, studio), path);
                 await SaveExtrasAsync(clip, path);
-                Announcer.Announce($"Saved {clip.DisplayTitle}.", interrupt: false);
+                Announcer.Announce(T("Saved {0}.", clip.DisplayTitle), interrupt: false);
                 _ = RefreshAccountQuietlyAsync();
             });
         }
@@ -244,7 +245,7 @@ namespace TinPan.ViewModels
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
             {
-                throw new SunoApiException("Can't use the download folder. Check it in Settings.", null, ex);
+                throw new SunoApiException(T("Can't use the download folder. Check it in Settings."), null, ex);
             }
             return dir;
         }

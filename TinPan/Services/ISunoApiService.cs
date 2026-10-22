@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using TinPan.Models;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.Services
 {
@@ -17,7 +18,7 @@ namespace TinPan.Services
 
     public record Workspace(string Id, string Name, int? ClipCount)
     {
-        public override string ToString() => ClipCount is { } n ? $"{Name}, {n} songs" : Name;
+        public override string ToString() => ClipCount is { } n ? $"{Name}, {Plural(n, "{0} song", "{0} songs")}" : Name;
     }
 
     /// <summary>

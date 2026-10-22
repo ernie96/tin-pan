@@ -9,12 +9,13 @@ using CommunityToolkit.Mvvm.Input;
 using TinPan.Models;
 using TinPan.Services;
 using TinPan.Views;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.ViewModels
 {
     public partial class SunoPanelViewModel : ViewModelBase
     {
-        public static readonly IReadOnlyList<string> VocalChoices = new[] { "Any voice", "Male vocals", "Female vocals" };
+        public static IReadOnlyList<string> VocalChoices { get; } = new[] { T("Any voice"), T("Male vocals"), T("Female vocals") };
 
         private readonly ISunoApiService _api;
         private readonly IAuthService _auth;
@@ -41,14 +42,14 @@ namespace TinPan.ViewModels
 
         // ── Account ─────────────────────────────────────────────────────────
 
-        [ObservableProperty] private string accountText = "Not signed in.";
+        [ObservableProperty] private string accountText = T("Not signed in.");
 
         public ObservableCollection<Notification> Notifications { get; } = new();
 
         private void OnAccountChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName != nameof(AccountState.Billing)) return;
-            AccountText = Account.Billing == null ? "Not signed in." : $"{Account.SubscriptionText} {BillingText.Features(Account.Billing)}".Trim();
+            AccountText = Account.Billing == null ? T("Not signed in.") : $"{Account.SubscriptionText} {BillingText.Features(Account.Billing)}".Trim();
             SetModels(Account.Models);
         }
 
@@ -78,7 +79,7 @@ namespace TinPan.ViewModels
                 var items = await _api.GetNotificationsAsync();
                 Notifications.Clear();
                 foreach (var n in items) Notifications.Add(n);
-                if (!background) Announcer.Announce(items.Count == 0 ? "No notifications." : $"{items.Count} notifications.");
+                if (!background) Announcer.Announce(items.Count == 0 ? T("No notifications.") : Plural(items.Count, "{0} notification.", "{0} notifications."));
             });
         }
 
@@ -135,7 +136,7 @@ namespace TinPan.ViewModels
         [ObservableProperty] private string personaId = "";
         [ObservableProperty] private Persona? selectedPersona;
 
-        public static readonly Persona NoPersona = new("", "No persona");
+        public static Persona NoPersona { get; } = new("", T("No persona"));
 
         /// <summary>Your personas from Suno, with "No persona" first.</summary>
         public ObservableCollection<Persona> Personas { get; } = new() { NoPersona };
@@ -166,7 +167,7 @@ namespace TinPan.ViewModels
         {
             if (string.IsNullOrWhiteSpace(Description))
             {
-                Announcer.Announce("Describe the song first.");
+                Announcer.Announce(T("Describe the song first."));
                 return Task.CompletedTask;
             }
             return StartSongsAsync(GenerateRequest.Modes.Inspiration);
@@ -177,7 +178,7 @@ namespace TinPan.ViewModels
         {
             if (string.IsNullOrWhiteSpace(Lyrics) && !IsInstrumental)
             {
-                Announcer.Announce("Add lyrics, or tick Instrumental.");
+                Announcer.Announce(T("Add lyrics, or tick Instrumental."));
                 return Task.CompletedTask;
             }
             return StartSongsAsync(GenerateRequest.Modes.Custom);
@@ -188,12 +189,12 @@ namespace TinPan.ViewModels
         {
             if (SelectedModel == null)
             {
-                Announcer.Announce("Models haven't loaded yet. Press F5 to refresh, then try again.");
+                Announcer.Announce(T("Models haven't loaded yet. Press F5 to refresh, then try again."));
                 return null;
             }
 
-            var weird = ParsePercent(Weirdness, "Weirdness");
-            var influence = ParsePercent(StyleInfluence, "Style influence");
+            var weird = ParsePercent(Weirdness, T("Weirdness"));
+            var influence = ParsePercent(StyleInfluence, T("Style influence"));
             if (double.IsNaN(weird ?? 0) || double.IsNaN(influence ?? 0)) return null;
 
             var inspiration = mode == GenerateRequest.Modes.Inspiration;
@@ -226,14 +227,14 @@ namespace TinPan.ViewModels
         {
             var checks = new (string Name, string Value, int Limit)[]
             {
-                ("Title", r.Title, limits.Title),
-                ("Style", r.Tags, limits.Tags),
-                ("Exclude styles", r.NegativeTags, limits.NegativeTags),
-                (inspiration ? "Description" : "Lyrics", r.Prompt, inspiration ? limits.Description : limits.Prompt)
+                (T("Title"), r.Title, limits.Title),
+                (T("Style"), r.Tags, limits.Tags),
+                (T("Exclude styles"), r.NegativeTags, limits.NegativeTags),
+                (inspiration ? T("Description") : T("Lyrics"), r.Prompt, inspiration ? limits.Description : limits.Prompt)
             };
             foreach (var (name, value, limit) in checks)
                 if (limit > 0 && value.Length > limit)
-                    return $"{name} is {value.Length} characters. This model allows {limit}.";
+                    return T("{0} is {1} characters. This model allows {2}.", name, value.Length, limit);
             return null;
         }
 
@@ -243,7 +244,7 @@ namespace TinPan.ViewModels
             if (string.IsNullOrWhiteSpace(text)) return null;
             var value = NumberField.Parse(text.Trim(), isTime: false);
             if (value is >= 0 and <= 100) return value;
-            Announcer.Announce($"{name} must be a number from 0 to 100, or empty.");
+            Announcer.Announce(T("{0} must be a number from 0 to 100, or empty.", name));
             return double.NaN;
         }
 
@@ -251,21 +252,21 @@ namespace TinPan.ViewModels
         {
             if (!_auth.IsAuthenticated)
             {
-                Announcer.Announce("Sign in from Settings first.");
+                Announcer.Announce(T("Sign in from Settings first."));
                 return;
             }
             var request = BuildRequest(mode);
             if (request == null) return;
 
-            Announcer.Announce("Sending to Suno.");
+            Announcer.Announce(T("Sending to Suno."));
             await RunAsync(async () =>
             {
                 var clips = await _api.GenerateAsync(request);
                 SongsStarted?.Invoke(this, clips);
                 _watcher.Watch(clips);
                 Announcer.Announce(clips.Count == 1
-                    ? "Making 1 song. You'll hear when it's ready."
-                    : $"Making {clips.Count} songs. You'll hear when they're ready.");
+                    ? T("Making 1 song. You'll hear when it's ready.")
+                    : T("Making {0} songs. You'll hear when they're ready.", clips.Count));
                 _ = LoadAccountAsync(background: true);
             });
         }
@@ -275,16 +276,16 @@ namespace TinPan.ViewModels
         {
             if (string.IsNullOrWhiteSpace(LyricsTopic))
             {
-                Announcer.Announce("Type a topic first.");
+                Announcer.Announce(T("Type a topic first."));
                 return;
             }
-            Announcer.Announce("Writing lyrics.");
+            Announcer.Announce(T("Writing lyrics."));
             await RunAsync(async () =>
             {
                 var result = await _api.GenerateLyricsAsync(LyricsTopic.Trim());
                 GeneratedLyrics = result.Text;
                 if (string.IsNullOrWhiteSpace(SongTitle) && !string.IsNullOrWhiteSpace(result.Title)) SongTitle = result.Title;
-                Announcer.Announce("Lyrics ready.");
+                Announcer.Announce(T("Lyrics ready."));
             });
         }
 
@@ -294,14 +295,14 @@ namespace TinPan.ViewModels
         {
             if (string.IsNullOrWhiteSpace(Style))
             {
-                Announcer.Announce("Type a style first, even a word or two.");
+                Announcer.Announce(T("Type a style first, even a word or two."));
                 return;
             }
-            Announcer.Announce("Boosting the style.");
+            Announcer.Announce(T("Boosting the style."));
             await RunAsync(async () =>
             {
                 Style = await _api.BoostStyleAsync(Style.Trim(), IsInstrumental ? null : Lyrics, IsInstrumental, null);
-                Announcer.Announce("Style boosted: " + Style);
+                Announcer.Announce(T("Style boosted: {0}", Style));
             });
         }
 
@@ -311,19 +312,19 @@ namespace TinPan.ViewModels
         {
             if (string.IsNullOrWhiteSpace(Lyrics))
             {
-                Announcer.Announce("Put lyrics in the Lyrics box first. Write lyrics makes some from a topic.");
+                Announcer.Announce(T("Put lyrics in the Lyrics box first. Write lyrics makes some from a topic."));
                 return;
             }
             if (string.IsNullOrWhiteSpace(CowriteInstruction))
             {
-                Announcer.Announce("Say what to change, for example: make the chorus rhyme.");
+                Announcer.Announce(T("Say what to change, for example: make the chorus rhyme."));
                 return;
             }
-            Announcer.Announce("Rewriting the lyrics.");
+            Announcer.Announce(T("Rewriting the lyrics."));
             await RunAsync(async () =>
             {
                 GeneratedLyrics = await _api.CowriteLyricsAsync(Lyrics, CowriteInstruction.Trim(), SongTitle, Style);
-                Announcer.Announce("New lyrics ready in Generated lyrics. Use these lyrics copies them in.");
+                Announcer.Announce(T("New lyrics ready in Generated lyrics. Use these lyrics copies them in."));
             });
         }
 
@@ -332,7 +333,7 @@ namespace TinPan.ViewModels
         {
             if (string.IsNullOrWhiteSpace(GeneratedLyrics)) return;
             Lyrics = GeneratedLyrics;
-            Announcer.Announce("Copied into Lyrics.");
+            Announcer.Announce(T("Copied into Lyrics."));
         }
 
         // ── Trending ────────────────────────────────────────────────────────
@@ -346,7 +347,7 @@ namespace TinPan.ViewModels
         {
             if (!_auth.IsAuthenticated)
             {
-                Announcer.Announce("Sign in from Settings first.");
+                Announcer.Announce(T("Sign in from Settings first."));
                 return;
             }
             await RunAsync(async () =>
@@ -355,7 +356,7 @@ namespace TinPan.ViewModels
                 Trending.Clear();
                 foreach (var clip in clips) Trending.Add(clip);
                 SelectedTrending = Trending.FirstOrDefault();
-                Announcer.Announce(clips.Count == 0 ? "Nothing trending came back." : $"{clips.Count} trending songs.");
+                Announcer.Announce(clips.Count == 0 ? T("Nothing trending came back.") : Plural(clips.Count, "{0} trending song.", "{0} trending songs."));
             });
         }
 
@@ -366,11 +367,11 @@ namespace TinPan.ViewModels
             if (clip == null) return;
             if (!clip.CanPlay)
             {
-                Announcer.Announce("That song isn't ready yet.");
+                Announcer.Announce(T("That song isn't ready yet."));
                 return;
             }
             if (await RunAsync(() => _audio.PlayAsync(clip.Id, clip.DisplayTitle)))
-                Announcer.Announce($"Playing: {clip.DisplayTitle}.");
+                Announcer.Announce(T("Playing: {0}.", clip.DisplayTitle));
         }
     }
 }

@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TinPan.Services;
 using TinPan.Views;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.ViewModels
 {
@@ -16,7 +17,7 @@ namespace TinPan.ViewModels
         private readonly IDialogService _dialogs;
         private readonly IAudioService _audio;
 
-        [ObservableProperty] private string signInText = "Not signed in.";
+        [ObservableProperty] private string signInText = T("Not signed in.");
         [ObservableProperty] private bool isSignedIn;
         [ObservableProperty] private string downloadDir;
         [ObservableProperty] private string outputFormat;
@@ -30,9 +31,9 @@ namespace TinPan.ViewModels
 
         private static readonly (SpeechLevel Level, string Label)[] SpeechLevelChoices =
         {
-            (Services.SpeechLevel.Everything, "Everything"),
-            (Services.SpeechLevel.AskedFor, "What I ask for and errors, not background news"),
-            (Services.SpeechLevel.ErrorsOnly, "Only errors and what I ask to hear")
+            (Services.SpeechLevel.Everything, T("Everything")),
+            (Services.SpeechLevel.AskedFor, T("What I ask for and errors, not background news")),
+            (Services.SpeechLevel.ErrorsOnly, T("Only errors and what I ask to hear"))
         };
 
         public IReadOnlyList<string> SpeechLevels { get; } = SpeechLevelChoices.Select(c => c.Label).ToList();
@@ -51,10 +52,10 @@ namespace TinPan.ViewModels
 
         private static readonly (PlayingCueMode Mode, string Label)[] PlayingCueChoices =
         {
-            (PlayingCueMode.Click, "A short click"),
-            (PlayingCueMode.Say, "Say playing (also shown in braille)"),
-            (PlayingCueMode.ClickAndSay, "Click and say playing"),
-            (PlayingCueMode.Off, "Nothing")
+            (PlayingCueMode.Click, T("A short click")),
+            (PlayingCueMode.Say, T("Say playing (also shown in braille)")),
+            (PlayingCueMode.ClickAndSay, T("Click and say playing")),
+            (PlayingCueMode.Off, T("Nothing"))
         };
 
         public IReadOnlyList<string> PlayingCues { get; } = PlayingCueChoices.Select(c => c.Label).ToList();
@@ -67,6 +68,22 @@ namespace TinPan.ViewModels
             Views.PlayingCue.Instance.Mode = mode;
             _config.Current.PlayingCue = mode.ToString();
             _config.SaveSoon();
+        }
+
+        private readonly IReadOnlyList<(string Code, string Label)> _languages = Localization.Loc.Choices();
+
+        /// <summary>Each language in its own words, and in the current language's too.</summary>
+        public IReadOnlyList<string> Languages => _languages.Select(l => l.Label).ToList();
+
+        [ObservableProperty] private string language = "";
+
+        partial void OnLanguageChanged(string value)
+        {
+            var code = _languages.FirstOrDefault(l => l.Label == value).Code ?? "";
+            if (code == _config.Current.Language) return;
+            _config.Current.Language = code;
+            _config.SaveSoon();
+            Announcer.Announce(T("The language changes the next time Tin Pan starts."));
         }
 
         public SettingsPanelViewModel(IConfigService config, IAuthService auth, IDialogService dialogs, IAudioService audio, IAnnouncer announcer)
@@ -82,6 +99,7 @@ namespace TinPan.ViewModels
             var cue = Enum.TryParse<PlayingCueMode>(config.Current.PlayingCue, out var m) ? m : PlayingCueMode.Click;
             Views.PlayingCue.Instance.Mode = cue;
             playingCue = PlayingCueChoices.First(c => c.Mode == cue).Label;
+            language = (_languages.FirstOrDefault(l => l.Code == config.Current.Language).Label) ?? _languages[0].Label;
             var downloads = config.Current.Audio;
             saveLyrics = downloads.SaveLyrics;
             saveTimedLyrics = downloads.SaveTimedLyrics;
@@ -94,15 +112,15 @@ namespace TinPan.ViewModels
         private void UpdateSignInText()
         {
             IsSignedIn = _auth.IsAuthenticated;
-            SignInText = !_auth.IsAuthenticated ? "Not signed in."
-                : string.IsNullOrEmpty(_auth.UserName) ? "Signed in." : $"Signed in as {_auth.UserName}.";
+            SignInText = !_auth.IsAuthenticated ? T("Not signed in.")
+                : string.IsNullOrEmpty(_auth.UserName) ? T("Signed in.") : T("Signed in as {0}.", _auth.UserName);
         }
 
         [RelayCommand]
         private async Task SignInAsync()
         {
             if (await _auth.SignInAsync()) Announcer.Announce(SignInText);
-            else Announcer.Announce("Not signed in.");
+            else Announcer.Announce(T("Not signed in."));
         }
 
         [RelayCommand]
@@ -111,7 +129,7 @@ namespace TinPan.ViewModels
             if (!_auth.IsAuthenticated) return;
             _auth.SignOut();
             await _audio.ForgetSignInAsync();
-            Announcer.Announce("Signed out.");
+            Announcer.Announce(T("Signed out."));
         }
 
         [RelayCommand]
@@ -120,7 +138,7 @@ namespace TinPan.ViewModels
             var picked = _dialogs.PickFolder(string.IsNullOrEmpty(DownloadDir) ? null : DownloadDir);
             if (picked == null) return;
             DownloadDir = picked;
-            Announcer.Announce("Download folder set.");
+            Announcer.Announce(T("Download folder set."));
         }
 
         partial void OnDownloadDirChanged(string value)

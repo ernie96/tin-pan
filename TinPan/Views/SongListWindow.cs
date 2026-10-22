@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using TinPan.Models;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.Views
 {
@@ -40,7 +41,7 @@ namespace TinPan.Views
                 if (list.SelectedItem is SunoClip clip) await play(clip);
             };
 
-            var close = new Button { Content = "Close", IsCancel = true, Padding = new Thickness(15, 5, 15, 5), Margin = new Thickness(10), HorizontalAlignment = HorizontalAlignment.Right };
+            var close = new Button { Content = T("Close"), IsCancel = true, Padding = new Thickness(15, 5, 15, 5), Margin = new Thickness(10), HorizontalAlignment = HorizontalAlignment.Right };
             var dock = new DockPanel();
             DockPanel.SetDock(close, Dock.Bottom);
             dock.Children.Add(close);

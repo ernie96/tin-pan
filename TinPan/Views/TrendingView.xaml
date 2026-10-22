@@ -1,6 +1,7 @@
 <UserControl x:Class="TinPan.Views.TrendingView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:l="clr-namespace:TinPan.Localization"
              xmlns:local="clr-namespace:TinPan.Views">
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -8,11 +9,11 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-            <Label Content="_Trending songs" Target="{Binding ElementName=trending}" FontSize="18" FontWeight="Bold" Padding="0"/>
-            <Button Content="_Refresh trending" IsTabStop="False" Margin="10,0,0,0" Padding="10,5" Command="{Binding RefreshTrendingCommand}"/>
+            <Label Content="{l:T '_Trending songs'}" Target="{Binding ElementName=trending}" FontSize="18" FontWeight="Bold" Padding="0"/>
+            <Button Content="{l:T '_Refresh trending'}" IsTabStop="False" Margin="10,0,0,0" Padding="10,5" Command="{Binding RefreshTrendingCommand}"/>
         </StackPanel>
         <ListBox x:Name="trending" Grid.Row="1" ItemsSource="{Binding Trending}" SelectedItem="{Binding SelectedTrending}"
-                 local:PlayingCue.Songs="True" AutomationProperties.Name="Trending songs" PreviewKeyDown="Trending_PreviewKeyDown"
+                 local:PlayingCue.Songs="True" AutomationProperties.Name="{l:T 'Trending songs'}" PreviewKeyDown="Trending_PreviewKeyDown"
                  MouseDoubleClick="Trending_MouseDoubleClick">
             <ListBox.ItemTemplate>
                 <DataTemplate>

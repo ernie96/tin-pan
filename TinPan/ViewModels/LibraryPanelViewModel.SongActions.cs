@@ -12,6 +12,7 @@ using CommunityToolkit.Mvvm.Input;
 using TinPan.Models;
 using TinPan.Services;
 using TinPan.Views;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.ViewModels
 {
@@ -24,7 +25,7 @@ namespace TinPan.ViewModels
         private void Details(SunoClip? clip)
         {
             clip ??= SelectedClip;
-            if (clip != null) _dialogs.ShowDocument($"Details: {clip.DisplayTitle}", clip.DetailsText);
+            if (clip != null) _dialogs.ShowDocument(T("Details: {0}", clip.DisplayTitle), clip.DetailsText);
         }
 
         /// <summary>Song information one fact per line, like KeySoft's track information (Alt+Enter).</summary>
@@ -32,7 +33,7 @@ namespace TinPan.ViewModels
         private void SongInfo(SunoClip? clip)
         {
             clip ??= SelectedClip;
-            if (clip != null) _dialogs.ShowLines($"Information: {clip.DisplayTitle}", clip.InfoLines);
+            if (clip != null) _dialogs.ShowLines(T("Information: {0}", clip.DisplayTitle), clip.InfoLines);
         }
 
         /// <summary>Plays a song from a saved position. Carries on through the library when the song is in it.</summary>
@@ -43,8 +44,8 @@ namespace TinPan.ViewModels
             if (!await RunAsync(() => _audio.PlayAsync(clipId, clip?.DisplayTitle ?? title, clip != null ? this : null))) return;
             if (seconds > 5) _audio.CurrentPosition = TimeSpan.FromSeconds(seconds);
             Announcer.Announce(seconds > 5
-                ? $"Resuming {clip?.DisplayTitle ?? title} at {SunoClip.FormatTime(TimeSpan.FromSeconds(seconds))}."
-                : $"Playing: {clip?.DisplayTitle ?? title}.");
+                ? T("Resuming {0} at {1}.", clip?.DisplayTitle ?? title, SunoClip.FormatTime(TimeSpan.FromSeconds(seconds)))
+                : T("Playing: {0}.", clip?.DisplayTitle ?? title));
         }
 
         [RelayCommand]
@@ -62,8 +63,8 @@ namespace TinPan.ViewModels
                     lyrics = aligned == null ? null : JoinWords(aligned.Words);
                 });
             }
-            if (string.IsNullOrWhiteSpace(lyrics)) Announcer.Announce("This song has no lyrics.");
-            else _dialogs.ShowDocument($"Lyrics: {clip.DisplayTitle}", lyrics);
+            if (string.IsNullOrWhiteSpace(lyrics)) Announcer.Announce(T("This song has no lyrics."));
+            else _dialogs.ShowDocument(T("Lyrics: {0}", clip.DisplayTitle), lyrics);
         }
 
         private static string JoinWords(IEnumerable<AlignedWord> words)
@@ -86,11 +87,11 @@ namespace TinPan.ViewModels
             try
             {
                 Clipboard.SetText(clip.WebLink);
-                Announcer.Announce("Link copied.");
+                Announcer.Announce(T("Link copied."));
             }
             catch (System.Runtime.InteropServices.ExternalException)
             {
-                Announcer.Announce("Couldn't use the clipboard. Try again.");
+                Announcer.Announce(T("Couldn't use the clipboard. Try again."));
             }
         }
 
@@ -101,7 +102,7 @@ namespace TinPan.ViewModels
         {
             clip ??= SelectedClip;
             if (clip == null) return;
-            if (!_dialogs.Confirm($"Move \"{clip.DisplayTitle}\" to your Suno trash?", "Move to trash")) return;
+            if (!_dialogs.Confirm(T("Move \"{0}\" to your Suno trash?", clip.DisplayTitle), T("Move to trash"))) return;
 
             if (await RunAsync(() => _api.TrashAsync(clip.Id)))
             {
@@ -109,7 +110,7 @@ namespace TinPan.ViewModels
                 if (clip.Id == _audio.CurrentClipId) _audio.Stop();
                 Songs.Remove(clip);
                 if (Songs.Count > 0) SelectedClip = Songs[Math.Clamp(index, 0, Songs.Count - 1)];
-                Announcer.Announce($"Moved {clip.DisplayTitle} to trash.");
+                Announcer.Announce(T("Moved {0} to trash.", clip.DisplayTitle));
             }
         }
 
@@ -118,9 +119,9 @@ namespace TinPan.ViewModels
         {
             clip ??= SelectedClip;
             if (clip == null) return;
-            var title = new TextField("_Title", clip.Title ?? "", maxLength: 100);
-            var lyrics = new TextField("_Lyrics", clip.Metadata?.Prompt ?? "", multiline: true);
-            if (!_dialogs.ShowForm($"Edit {clip.DisplayTitle}", "Changes what Suno shows for this song. The audio stays the same.", "Save", new FormField[] { title, lyrics }))
+            var title = new TextField(T("_Title"), clip.Title ?? "", maxLength: 100);
+            var lyrics = new TextField(T("_Lyrics"), clip.Metadata?.Prompt ?? "", multiline: true);
+            if (!_dialogs.ShowForm(T("Edit {0}", clip.DisplayTitle), T("Changes what Suno shows for this song. The audio stays the same."), T("Save"), new FormField[] { title, lyrics }))
                 return;
 
             var newTitle = title.Value != (clip.Title ?? "") ? title.Value : null;
@@ -132,7 +133,7 @@ namespace TinPan.ViewModels
                 if (newTitle != null) clip.Title = newTitle;
                 if (newLyrics != null) (clip.Metadata ??= new ClipMetadata()).Prompt = newLyrics;
                 clip.NotifyChanged();
-                Announcer.Announce("Saved.");
+                Announcer.Announce(T("Saved."));
             }
         }
 
@@ -147,7 +148,7 @@ namespace TinPan.ViewModels
                 clip.IsPublic = makePublic;
                 clip.NotifyChanged();
                 OnPropertyChanged(nameof(VisibilityMenuText));
-                Announcer.Announce(makePublic ? $"{clip.DisplayTitle} is public." : $"{clip.DisplayTitle} is private.");
+                Announcer.Announce(makePublic ? T("{0} is public.", clip.DisplayTitle) : T("{0} is private.", clip.DisplayTitle));
             }
         }
 
@@ -164,11 +165,11 @@ namespace TinPan.ViewModels
                 try
                 {
                     Clipboard.SetText(link);
-                    Announcer.Announce("Share link copied.");
+                    Announcer.Announce(T("Share link copied."));
                 }
                 catch (System.Runtime.InteropServices.ExternalException)
                 {
-                    Announcer.Announce("Couldn't use the clipboard. Try again.");
+                    Announcer.Announce(T("Couldn't use the clipboard. Try again."));
                 }
             });
         }
@@ -183,7 +184,7 @@ namespace TinPan.ViewModels
             {
                 (clip.Metadata ??= new ClipMetadata()).CanRemix = allow;
                 OnPropertyChanged(nameof(RemixMenuText));
-                Announcer.Announce(allow ? "Others may now cover and remix it." : "Others can no longer cover or remix it.");
+                Announcer.Announce(allow ? T("Others may now cover and remix it.") : T("Others can no longer cover or remix it."));
             }
         }
 
@@ -196,12 +197,12 @@ namespace TinPan.ViewModels
             if (!await RunAsync(async () => similar = await _api.GetSimilarAsync(clip.Id))) return;
             if (similar.Count == 0)
             {
-                Announcer.Announce("Suno found no similar songs.");
+                Announcer.Announce(T("Suno found no similar songs."));
                 return;
             }
-            _dialogs.ShowSongs($"Songs similar to {clip.DisplayTitle}", similar, async s =>
+            _dialogs.ShowSongs(T("Songs similar to {0}", clip.DisplayTitle), similar, async s =>
             {
-                if (await RunAsync(() => _audio.PlayAsync(s.Id, s.DisplayTitle))) Announcer.Announce($"Playing: {s.DisplayTitle}.");
+                if (await RunAsync(() => _audio.PlayAsync(s.Id, s.DisplayTitle))) Announcer.Announce(T("Playing: {0}.", s.DisplayTitle));
             });
         }
 
@@ -214,11 +215,11 @@ namespace TinPan.ViewModels
             if (!await RunAsync(async () => comments = await _api.GetCommentsAsync(clip.Id))) return;
             if (comments.Count == 0)
             {
-                Announcer.Announce("No comments.");
+                Announcer.Announce(T("No comments."));
                 return;
             }
             var text = string.Join(Environment.NewLine + Environment.NewLine, comments.Select(c => c.ToString()));
-            _dialogs.ShowDocument($"Comments on {clip.DisplayTitle} ({comments.Count})", text);
+            _dialogs.ShowDocument(T("Comments on {0} ({1})", clip.DisplayTitle, comments.Count), text);
         }
 
         [RelayCommand]
@@ -226,10 +227,10 @@ namespace TinPan.ViewModels
         {
             clip ??= SelectedClip;
             if (clip == null) return;
-            var text = new TextField("_Comment", "", multiline: true, maxLength: 1000);
-            if (!_dialogs.ShowForm($"Comment on {clip.DisplayTitle}", "Comments are public on Suno.", "Post", new FormField[] { text })
+            var text = new TextField(T("_Comment"), "", multiline: true, maxLength: 1000);
+            if (!_dialogs.ShowForm(T("Comment on {0}", clip.DisplayTitle), T("Comments are public on Suno."), T("Post"), new FormField[] { text })
                 || text.Value.Length == 0) return;
-            if (await RunAsync(() => _api.PostCommentAsync(clip.Id, text.Value))) Announcer.Announce("Comment posted.");
+            if (await RunAsync(() => _api.PostCommentAsync(clip.Id, text.Value))) Announcer.Announce(T("Comment posted."));
         }
 
         [RelayCommand]
@@ -240,12 +241,12 @@ namespace TinPan.ViewModels
             IReadOnlyList<Playlist> playlists = Array.Empty<Playlist>();
             if (!await RunAsync(async () => playlists = await _api.GetPlaylistsAsync())) return;
 
-            const string newOne = "New playlist";
+            var newOne = T("New playlist");
             var choices = new List<object> { newOne };
             choices.AddRange(playlists);
-            var target = new ChoiceField("_Playlist", choices, playlists.FirstOrDefault() ?? (object)newOne);
-            var name = new TextField("Name for a _new playlist", "", maxLength: 100);
-            if (!_dialogs.ShowForm($"Add {clip.DisplayTitle} to a playlist", "Pick a playlist, or New playlist and give it a name.", "Add",
+            var target = new ChoiceField(T("_Playlist"), choices, playlists.FirstOrDefault() ?? (object)newOne);
+            var name = new TextField(T("Name for a _new playlist"), "", maxLength: 100);
+            if (!_dialogs.ShowForm(T("Add {0} to a playlist", clip.DisplayTitle), T("Pick a playlist, or New playlist and give it a name."), T("Add"),
                     new FormField[] { target, name })) return;
 
             await RunAsync(async () =>
@@ -255,13 +256,13 @@ namespace TinPan.ViewModels
                 {
                     if (name.Value.Length == 0)
                     {
-                        Announcer.Announce("Give the new playlist a name.");
+                        Announcer.Announce(T("Give the new playlist a name."));
                         return;
                     }
                     playlist = await _api.CreatePlaylistAsync(name.Value);
                 }
                 await _api.AddToPlaylistAsync(playlist.Id, new[] { clip.Id });
-                Announcer.Announce($"Added to {playlist.DisplayName}.");
+                Announcer.Announce(T("Added to {0}.", playlist.DisplayName));
             });
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.Services
 {
@@ -19,8 +20,8 @@ namespace TinPan.Services
     /// <summary>The saved sign-in no longer works; the user has to sign in again.</summary>
     public sealed class SunoSignInRequiredException : SunoApiException
     {
-        public SunoSignInRequiredException(string message = "Your Suno sign-in has expired. Sign in again from Settings.")
-            : base(message, 401)
+        public SunoSignInRequiredException(string? message = null)
+            : base(message ?? T("Your Suno sign-in has expired. Sign in again from Settings."), 401)
         {
         }
     }

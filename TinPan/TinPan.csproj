@@ -28,6 +28,8 @@
     <EmbeddedResource Include="THIRD_PARTY_NOTICES.md" LogicalName="TinPan.THIRD_PARTY_NOTICES.md" />
     <EmbeddedResource Include="..\deps\nvda\license.txt" LogicalName="TinPan.nvdaControllerClient-license.txt" />
     <EmbeddedResource Include="..\deps\nvda\x64\nvdaControllerClient.dll" LogicalName="TinPan.nvdaControllerClient.dll" />
+    <!-- Romanian, Ukrainian and Spanish, checked by build/translations/check.py (see Localization/Loc.cs). -->
+    <EmbeddedResource Include="Localization\translations.json" LogicalName="TinPan.translations.json" />
   </ItemGroup>
 
   <!-- Loose copies too, for the development build only; the published single file doesn't need them. -->

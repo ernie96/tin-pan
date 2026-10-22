@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Input;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.Views
 {
@@ -58,7 +59,7 @@ namespace TinPan.Views
         {
             var length = _box!.Text.Trim().Length;
             return MaxLength > 0 && length > MaxLength
-                ? $"{SpokenLabel} is {length} characters. The limit is {MaxLength}."
+                ? T("{0} is {1} characters. The limit is {2}.", SpokenLabel, length, MaxLength)
                 : null;
         }
 
@@ -95,11 +96,11 @@ namespace TinPan.Views
         internal override string? Validate()
         {
             var text = _box!.Text.Trim();
-            if (text.Length == 0) return AllowEmpty ? null : $"{SpokenLabel} is needed.";
+            if (text.Length == 0) return AllowEmpty ? null : T("{0} is needed.", SpokenLabel);
             var parsed = Parse(text, IsTime);
-            if (parsed == null) return IsTime ? $"{SpokenLabel}: type seconds, or minutes and seconds like 2:30." : $"{SpokenLabel} must be a number.";
+            if (parsed == null) return IsTime ? T("{0}: type seconds, or minutes and seconds like 2:30.", SpokenLabel) : T("{0} must be a number.", SpokenLabel);
             if (parsed < Min || parsed > Max)
-                return IsTime ? $"{SpokenLabel} must be between {FormatTime(Min)} and {FormatTime(Max)}." : $"{SpokenLabel} must be from {Min} to {Max}.";
+                return IsTime ? T("{0} must be between {1} and {2}.", SpokenLabel, FormatTime(Min), FormatTime(Max)) : T("{0} must be from {1} to {2}.", SpokenLabel, Min, Max);
             return null;
         }
 
@@ -125,7 +126,12 @@ namespace TinPan.Views
                 : null;
         }
 
-        private static string FormatTime(double seconds) => TimeSpan.FromSeconds(seconds).ToString(@"m\:ss");
+        // Total minutes, so an hour reads 60:00 rather than 0:00.
+        private static string FormatTime(double seconds)
+        {
+            var t = TimeSpan.FromSeconds(seconds);
+            return $"{(int)t.TotalMinutes}:{t.Seconds:00}";
+        }
     }
 
     public sealed class ChoiceField : FormField
@@ -196,7 +202,7 @@ namespace TinPan.Views
                     Text = intro, IsReadOnly = true, TextWrapping = TextWrapping.Wrap, BorderThickness = new Thickness(0),
                     Margin = new Thickness(0, 0, 0, 10)
                 };
-                AutomationProperties.SetName(introBox, "About this");
+                AutomationProperties.SetName(introBox, T("About this"));
                 panel.Children.Add(introBox);
                 _controls.Add(introBox);
             }
@@ -215,7 +221,7 @@ namespace TinPan.Views
 
             var buttons = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 15, 0, 0) };
             var ok = new Button { Content = okText, IsDefault = true, Padding = new Thickness(15, 5, 15, 5), MinWidth = 80 };
-            var cancel = new Button { Content = "Cancel", IsCancel = true, Padding = new Thickness(15, 5, 15, 5), MinWidth = 80, Margin = new Thickness(10, 0, 0, 0) };
+            var cancel = new Button { Content = T("Cancel"), IsCancel = true, Padding = new Thickness(15, 5, 15, 5), MinWidth = 80, Margin = new Thickness(10, 0, 0, 0) };
             ok.Click += (_, _) => Accept();
             buttons.Children.Add(ok);
             buttons.Children.Add(cancel);
@@ -261,7 +267,7 @@ namespace TinPan.Views
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto, Margin = new Thickness(10), IsReadOnlyCaretVisible = true
             };
             AutomationProperties.SetName(box, title);
-            var close = new Button { Content = "Close", IsCancel = true, Padding = new Thickness(15, 5, 15, 5), Margin = new Thickness(10), HorizontalAlignment = HorizontalAlignment.Right };
+            var close = new Button { Content = T("Close"), IsCancel = true, Padding = new Thickness(15, 5, 15, 5), Margin = new Thickness(10), HorizontalAlignment = HorizontalAlignment.Right };
 
             var dock = new DockPanel();
             DockPanel.SetDock(close, Dock.Bottom);
