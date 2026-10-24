@@ -1,9 +1,12 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
+using TinPan.Models;
 using TinPan.ViewModels;
 using TinPan.Views;
 using static TinPan.Localization.Loc;
@@ -25,6 +28,15 @@ public partial class MainWindow : Window
             libraryView.songList.ContextMenu = BuildSongContextMenu(vm, playlistItems: false);
             playlistsView.songList.ContextMenu = BuildSongContextMenu(vm, playlistItems: true);
             trendingView.trending.ContextMenu = BuildSongContextMenu(vm, playlistItems: false);
+            // The Library list handles its own song keys; these lists get the same ones from the Song menu.
+            AddSongKeys(vm, playlistsView.songList);
+            AddSongKeys(vm, trendingView.trending);
+            // Song lists in their own window (similar songs, a creator's songs, Explore) get the Song menu too.
+            SongListWindow.AddSongMenu = (list, selected) =>
+            {
+                list.ContextMenu = BuildSongContextMenu(vm, playlistItems: false, selected);
+                AddSongKeys(vm, list, selected);
+            };
             vm.SearchRequested += (_, _) => Dispatcher.BeginInvoke(DispatcherPriority.Input, () => libraryView.FocusSearch());
         };
         mainMenu.IsKeyboardFocusWithinChanged += (_, _) => Dispatcher.BeginInvoke(DispatcherPriority.Input, HideMenuIfLeft);
@@ -49,10 +61,33 @@ public partial class MainWindow : Window
         foreach (var group in vm.Commands.GroupBy(c => c.Group))
         {
             var top = new MenuItem { Header = MainViewModel.GroupLabel(group.Key) };
-            foreach (var entry in group) top.Items.Add(MenuItemFor(vm, entry));
+            AddEntries(vm, top, group);
             // Song commands act on the song selected in the tab you're on; decided as the menu opens.
-            top.SubmenuOpened += (_, _) => UpdateSongParameters(vm, top);
+            top.SubmenuOpened += (_, e) => { if (ReferenceEquals(e.OriginalSource, top)) UpdateSongItems(vm, top); };
             mainMenu.Items.Add(top);
+        }
+    }
+
+    /// <summary>Adds entries in order, with a line where one starts a new section and submenus where they ask for one.</summary>
+    private static void AddEntries(MainViewModel vm, ItemsControl menu, IEnumerable<CommandEntry> entries)
+    {
+        var submenus = new Dictionary<string, MenuItem>();
+        foreach (var entry in entries)
+        {
+            var parent = menu;
+            if (entry.Submenu != null)
+            {
+                if (!submenus.TryGetValue(entry.Submenu, out var sub))
+                {
+                    if (entry.SeparatorBefore && menu.Items.Count > 0) menu.Items.Add(new Separator());
+                    sub = new MenuItem { Header = MainViewModel.SubmenuLabel(entry.Submenu) };
+                    submenus[entry.Submenu] = sub;
+                    menu.Items.Add(sub);
+                }
+                parent = sub;
+            }
+            else if (entry.SeparatorBefore && menu.Items.Count > 0) menu.Items.Add(new Separator());
+            parent.Items.Add(MenuItemFor(vm, entry));
         }
     }
 
@@ -71,17 +106,56 @@ public partial class MainWindow : Window
         return item;
     }
 
-    private static void UpdateSongParameters(MainViewModel vm, ItemsControl menu)
+    /// <summary>
+    /// Points every song entry, in submenus too, at the song the menu acts on, and fits the labels that
+    /// depend on it. On the Playlists tab Delete removes from the playlist, so Move to trash shows no key there.
+    /// </summary>
+    private static void UpdateSongItems(MainViewModel vm, ItemsControl menu, bool inPlaylist = false, Func<SunoClip?>? selected = null)
     {
+        var song = selected != null ? selected() : vm.CurrentSong;
+        inPlaylist |= selected == null && vm.SelectedTab == MainViewModel.PlaylistsTab;
         foreach (var item in menu.Items.OfType<MenuItem>())
-            if (item.Tag is CommandEntry entry) item.CommandParameter = vm.SongParameter(entry);
+        {
+            if (item.Tag is CommandEntry entry)
+            {
+                item.CommandParameter = ParameterFor(vm, entry, selected);
+                if (vm.SongLabel(entry, song) is { } label) item.Header = label;
+                if (entry.Keys == "Delete") item.InputGestureText = inPlaylist || selected != null ? "" : entry.Keys;
+            }
+            else if (item.HasItems) UpdateSongItems(vm, item, inPlaylist, selected);
+        }
+    }
+
+    /// <summary>The song a Song entry acts on: the given list's selection, or else the tab's song.</summary>
+    private static object? ParameterFor(MainViewModel vm, CommandEntry entry, Func<SunoClip?>? selected) =>
+        selected != null && entry.Group == "Song" && entry.Parameter == null ? selected() : vm.SongParameter(entry);
+
+    /// <summary>
+    /// The Song menu's shortcuts (Ctrl+I, Alt+Enter, Ctrl+L, Ctrl+C, Ctrl+D, Ctrl+E) on a list other than the
+    /// Library's, acting on its selected song. Enter and Delete keep the list's own meaning.
+    /// </summary>
+    private static void AddSongKeys(MainViewModel vm, ListBox list, Func<SunoClip?>? selected = null)
+    {
+        list.PreviewKeyDown += (_, e) =>
+        {
+            var key = e.Key == Key.System ? e.SystemKey : e.Key;
+            var mods = Keyboard.Modifiers;
+            if (mods == ModifierKeys.None) return;
+            var gesture = (mods.HasFlag(ModifierKeys.Control) ? "Ctrl+" : "") + (mods.HasFlag(ModifierKeys.Shift) ? "Shift+" : "")
+                          + (mods.HasFlag(ModifierKeys.Alt) ? "Alt+" : "") + (key == Key.Return ? "Enter" : key.ToString());
+            var entry = vm.Commands.FirstOrDefault(c => c.Group == "Song" && c.Keys == gesture);
+            if (entry == null) return;
+            var parameter = ParameterFor(vm, entry, selected);
+            if (entry.Command.CanExecute(parameter)) entry.Command.Execute(parameter);
+            e.Handled = true;
+        };
     }
 
     /// <summary>
     /// The Applications key menu for the Library, a playlist's songs and Trending: the Song menu's
     /// commands for that song, with the playlist's own Remove and Move first.
     /// </summary>
-    private static ContextMenu BuildSongContextMenu(MainViewModel vm, bool playlistItems)
+    private static ContextMenu BuildSongContextMenu(MainViewModel vm, bool playlistItems, Func<SunoClip?>? selected = null)
     {
         var menu = new ContextMenu();
         if (playlistItems)
@@ -92,8 +166,9 @@ public partial class MainWindow : Window
             menu.Items.Add(new MenuItem { Header = T("Move down"), InputGestureText = "Ctrl+Down", Command = p.MoveDownCommand });
             menu.Items.Add(new Separator());
         }
-        foreach (var entry in vm.Commands.Where(c => c.Group == "Song")) menu.Items.Add(MenuItemFor(vm, entry));
-        menu.Opened += (_, _) => UpdateSongParameters(vm, menu);
+        // A window's own list plays with Enter itself; the Song menu's Play is for the tab's song.
+        AddEntries(vm, menu, vm.Commands.Where(c => c.Group == "Song" && (selected == null || c.Command != vm.PlaySongCommand)));
+        menu.Opened += (_, _) => UpdateSongItems(vm, menu, playlistItems, selected);
         return menu;
     }
 

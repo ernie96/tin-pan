@@ -8,7 +8,8 @@
     <UseWPF>true</UseWPF>
     <AssemblyTitle>Tin Pan</AssemblyTitle>
     <Product>Tin Pan</Product>
-    <Version>1.6.1</Version>
+    <Version>1.7.0</Version>
+    <Copyright>Copyright (C) 2026 Ernesto Melendez. GPL-3.0-or-later with additional terms (NOTICE.md).</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,6 +29,9 @@
 
   <!-- Built into TinPan.exe (see Services/EmbeddedFiles.cs), so the published app is one file. -->
   <ItemGroup>
+    <!-- Tin Pan's own license (GPL 3 or later) and its section 7 terms, shown in Help, Licenses and notices. -->
+    <EmbeddedResource Include="..\LICENSE" LogicalName="TinPan.LICENSE.txt" />
+    <EmbeddedResource Include="..\NOTICE.md" LogicalName="TinPan.NOTICE.md" />
     <EmbeddedResource Include="THIRD_PARTY_NOTICES.md" LogicalName="TinPan.THIRD_PARTY_NOTICES.md" />
     <EmbeddedResource Include="..\deps\nvda\license.txt" LogicalName="TinPan.nvdaControllerClient-license.txt" />
     <EmbeddedResource Include="..\deps\nvda\x64\nvdaControllerClient.dll" LogicalName="TinPan.nvdaControllerClient.dll" />

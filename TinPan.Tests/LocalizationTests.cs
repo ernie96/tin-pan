@@ -153,12 +153,24 @@ namespace TinPan.Tests
                 groups[Path.GetFileName(file)] = xaml.Matches(page).Select(m => m.Groups[1].Value.Replace("\\'", "'")).ToList();
             }
             var catalog = File.ReadAllText(Path.Combine(app, "ViewModels", "MainViewModel.Commands.cs"));
-            foreach (Match m in new Regex(@"new\(""(\w+)"", T\(""((?:[^""\\]|\\.)*)""\)").Matches(catalog))
+            // Each submenu is its own group, and its own label belongs to the menu it sits in.
+            var headers = new Regex(@"""(\w+)"" => T\(""((?:[^""\\]|\\.)*)""\),").Matches(catalog)
+                .GroupBy(m => m.Groups[1].Value).ToDictionary(g => g.Key, g => Regex.Unescape(g.First().Groups[2].Value));
+            List<string> Group(string name) => groups.TryGetValue(name, out var list) ? list : groups[name] = new List<string>();
+            foreach (Match m in new Regex(@"new\(""(\w+)"", T\(""((?:[^""\\]|\\.)*)""\)([^\n]*)").Matches(catalog))
             {
-                if (!groups.TryGetValue("Menu " + m.Groups[1].Value, out var list)) groups["Menu " + m.Groups[1].Value] = list = new List<string>();
-                list.Add(Regex.Unescape(m.Groups[2].Value));
+                var label = Regex.Unescape(m.Groups[2].Value);
+                var sub = Regex.Match(m.Groups[3].Value, @"Submenu: ""(\w+)""");
+                if (!sub.Success)
+                {
+                    Group("Menu " + m.Groups[1].Value).Add(label);
+                    continue;
+                }
+                var parent = Group("Menu " + m.Groups[1].Value);
+                if (!parent.Contains(headers[sub.Groups[1].Value])) parent.Add(headers[sub.Groups[1].Value]);
+                Group($"Menu {m.Groups[1].Value}, {sub.Groups[1].Value}").Add(label);
             }
-            groups["Menu Song, other labels"] = groups["Menu Song"].Select(l => l == "Make p_ublic" ? "Make p_rivate" : l == "Stop remi_xes" ? "Allow remi_xes" : l).ToList();
+            groups["Menu Song, Share, other labels"] = groups["Menu Song, Share"].Select(l => l == "Make p_ublic" ? "Make p_rivate" : l == "Stop remi_xes" ? "Allow remi_xes" : l).ToList();
 
             foreach (var language in new[] { "en", "ro", "uk", "es" })
             {

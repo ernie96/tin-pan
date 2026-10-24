@@ -41,7 +41,7 @@ def keys_in_code():
         if os.sep + 'obj' + os.sep in path:
             continue
         keys += [m.group(1).replace("\\'", "'").replace('&amp;', '&').replace('&quot;', '"') for m in xaml.finditer(open(path, encoding='utf-8').read())]
-    keys += ["Tin Pan, like all my apps, is dedicated to Jenni and Diana.", "Automatic (Windows language)", "Romanian", "Ukrainian", "Spanish", "English"]
+    keys += ["Tin Pan, like all my apps, is dedicated to Jenni and Diana.", "Tin Pan was created by Ernesto Melendez (github.com/ernie96/tin-pan).", "Automatic (Windows language)", "Romanian", "Ukrainian", "Spanish", "English"]
     return [k for k in dict.fromkeys(keys) if re.search('[A-Za-z]{2}', k)]
 
 
@@ -63,14 +63,24 @@ def xaml_groups():
 
 
 def command_groups():
+    """Each menu and submenu is its own group; a submenu's own label belongs to the menu it sits in."""
     text = open(os.path.join(APP, 'ViewModels', 'MainViewModel.Commands.cs'), encoding='utf-8').read()
+    headers = {m.group(1): unescape(m.group(2)) for m in re.finditer(r'"(\w+)" => T\("((?:[^"\\]|\\.)*)"\),', text)}
     groups = {}
-    for m in re.finditer(r'new\("(\w+)", T\("((?:[^"\\]|\\.)*)"\)', text):
-        groups.setdefault('Menu ' + m.group(1), []).append(unescape(m.group(2)))
-    song = groups['Menu Song']
+    for m in re.finditer(r'new\("(\w+)", T\("((?:[^"\\]|\\.)*)"\)([^\n]*)', text):
+        group, label, rest = m.group(1), unescape(m.group(2)), m.group(3)
+        sub = re.search(r'Submenu: "(\w+)"', rest)
+        if sub:
+            parent = groups.setdefault('Menu ' + group, [])
+            if headers.get(sub.group(1)) and headers[sub.group(1)] not in parent:
+                parent.append(headers[sub.group(1)])
+            groups.setdefault(f'Menu {group}, {sub.group(1)}', []).append(label)
+        else:
+            groups.setdefault('Menu ' + group, []).append(label)
     # Labels that swap with the song: check both forms.
-    groups['Menu Song (private, allow remixes)'] = [{'Make p_ublic': 'Make p_rivate', 'Stop remi_xes': 'Allow remi_xes'}.get(l, l) for l in song]
-    groups['Playlist songs menu'] = song + ['Remove from playlist', 'Move up', 'Move down']
+    share = groups['Menu Song, Share']
+    groups['Menu Song, Share (private, remixes off)'] = [{'Make p_ublic': 'Make p_rivate', 'Stop remi_xes': 'Allow remi_xes'}.get(l, l) for l in share]
+    groups['Playlist songs menu'] = groups['Menu Song'] + ['Remove from playlist', 'Move up', 'Move down']
     return groups
 
 
@@ -90,6 +100,10 @@ FORMS = {
     'Edit form': ["_Title", "_Lyrics"],
     'Upload form': ["_Title", "I _own this audio or have the rights to upload it, and I accept Suno's terms for uploads (suno.com/terms)"],
     'Playlist rename form': ["_Name", "_Description"],
+    'Find a creator form': ["_Handle: the name after suno.com/@, or the whole link"],
+    'Report form': ["_What happened, and what did you expect?", "_Email or other way to reach you (optional)",
+                    "Include Tin Pan's _log (it has no passwords, and your Windows user name is taken out)"],
+    'Suggestion form': ["_What would you like Tin Pan to do?", "_Email or other way to reach you (optional)"],
 }
 
 

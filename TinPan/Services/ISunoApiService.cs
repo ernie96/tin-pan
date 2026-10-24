@@ -180,6 +180,35 @@ namespace TinPan.Services
         Task SetRemixAllowedAsync(string clipId, bool allowed, CancellationToken ct = default);
 
         Task<IReadOnlyList<SunoClip>> GetSimilarAsync(string clipId, CancellationToken ct = default);
+
+        /// <summary>A creator's page: who they are and one page (20) of their public songs, newest first.</summary>
+        Task<CreatorPage> GetCreatorAsync(string handle, int page = 1, CancellationToken ct = default);
+
+        /// <summary>New songs from the people you follow.</summary>
+        Task<IReadOnlyList<SunoClip>> GetFollowingFeedAsync(CancellationToken ct = default);
+
+        /// <summary>Covers and remixes of a song.</summary>
+        Task<IReadOnlyList<SunoClip>> GetRemixesAsync(string clipId, CancellationToken ct = default);
+
+        /// <summary>The song a cover, extension or whole song was made from, or null when it wasn't made from one.</summary>
+        Task<SunoClip?> GetOriginalAsync(SunoClip clip, CancellationToken ct = default);
+
+        /// <summary>Explore's shelves of songs.</summary>
+        Task<IReadOnlyList<ExploreSection>> GetExploreAsync(CancellationToken ct = default);
+
+        Task<IReadOnlyList<Contest>> GetContestsAsync(CancellationToken ct = default);
+
+        /// <summary>Marks every notification so far as read and clears the unread count.</summary>
+        Task MarkNotificationsReadAsync(CancellationToken ct = default);
+
+        /// <summary>Style ideas Suno suggests for you.</summary>
+        Task<IReadOnlyList<string>> GetStyleSuggestionsAsync(CancellationToken ct = default);
+
+        /// <summary>Your drafts in Suno's lyrics editor, most recently changed first.</summary>
+        Task<IReadOnlyList<LyricsDraft>> GetLyricsDraftsAsync(CancellationToken ct = default);
+
+        /// <summary>The words of one lyrics draft, or null when it has none.</summary>
+        Task<string?> GetLyricsDraftTextAsync(string draftId, CancellationToken ct = default);
         Task<IReadOnlyList<SongComment>> GetCommentsAsync(string clipId, CancellationToken ct = default);
         Task PostCommentAsync(string clipId, string text, CancellationToken ct = default);
 

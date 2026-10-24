@@ -4,3 +4,6 @@ obj/
 *.user
 TestResults/
 .backup_graveyard/
+
+# wrangler's local cache (Cloudflare account id and email)
+report-relay/.wrangler/

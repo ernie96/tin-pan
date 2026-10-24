@@ -70,6 +70,8 @@ namespace TinPan
             services.AddSingleton<ICleanupService, CleanupService>();
             services.AddSingleton<IUploadService, UploadService>();
             services.AddSingleton<AccountState>();
+            services.AddSingleton<LiveLyrics>();
+            services.AddSingleton<IReportService, ReportService>();
 
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<SunoPanelViewModel>();

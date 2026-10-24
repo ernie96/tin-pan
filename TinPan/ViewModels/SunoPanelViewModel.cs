@@ -13,7 +13,7 @@ using static TinPan.Localization.Loc;
 
 namespace TinPan.ViewModels
 {
-    public partial class SunoPanelViewModel : ViewModelBase
+    public partial class SunoPanelViewModel : ViewModelBase, IPlaybackQueue
     {
         public static IReadOnlyList<string> VocalChoices { get; } = new[] { T("Any voice"), T("Male vocals"), T("Female vocals") };
 
@@ -22,10 +22,12 @@ namespace TinPan.ViewModels
         private readonly IAudioService _audio;
         private readonly IConfigService _config;
         private readonly SongWatcher _watcher;
+        private readonly IDialogService _dialogs;
 
         public SunoPanelViewModel(ISunoApiService api, IAuthService auth, IAudioService audio, IConfigService config,
-            SongWatcher watcher, AccountState account, IAnnouncer announcer) : base(announcer)
+            SongWatcher watcher, AccountState account, IDialogService dialogs, IAnnouncer announcer) : base(announcer)
         {
+            _dialogs = dialogs;
             _api = api;
             _auth = auth;
             _audio = audio;
@@ -33,6 +35,7 @@ namespace TinPan.ViewModels
             _watcher = watcher;
             Account = account;
             Account.PropertyChanged += OnAccountChanged;
+            _audio.TrackEnded += OnTrackEnded;
         }
 
         public AccountState Account { get; }
@@ -70,6 +73,17 @@ namespace TinPan.ViewModels
 
         [RelayCommand]
         private Task RefreshNotificationsAsync() => LoadNotificationsAsync(background: false);
+
+        [RelayCommand]
+        private async Task MarkNotificationsReadAsync()
+        {
+            if (!await RunAsync(() => _api.MarkNotificationsReadAsync())) return;
+            foreach (var n in Notifications) n.IsRead = true;
+            var items = Notifications.ToList();
+            Notifications.Clear();
+            foreach (var n in items) Notifications.Add(n);
+            Announcer.Announce(T("Notifications marked as read."));
+        }
 
         public async Task LoadNotificationsAsync(bool background)
         {
@@ -306,6 +320,52 @@ namespace TinPan.ViewModels
             });
         }
 
+        /// <summary>Style ideas from Suno; Enter puts one in the Style box.</summary>
+        [RelayCommand]
+        private async Task StyleIdeasAsync()
+        {
+            IReadOnlyList<string> ideas = Array.Empty<string>();
+            if (!await RunAsync(async () => ideas = await _api.GetStyleSuggestionsAsync())) return;
+            if (ideas.Count == 0)
+            {
+                Announcer.Announce(T("Suno has no style ideas right now."));
+                return;
+            }
+            _dialogs.ShowLines(T("Style ideas. Enter puts one in the Style box."), ideas, index =>
+            {
+                Style = ideas[index];
+                Announcer.Announce(T("Style: {0}", Style));
+            });
+        }
+
+        /// <summary>Drafts from Suno's lyrics editor; Enter puts one in the Lyrics box (asking first if it has words in it).</summary>
+        [RelayCommand]
+        private async Task LyricsDraftsAsync()
+        {
+            IReadOnlyList<LyricsDraft> drafts = Array.Empty<LyricsDraft>();
+            if (!await RunAsync(async () => drafts = await _api.GetLyricsDraftsAsync())) return;
+            if (drafts.Count == 0)
+            {
+                Announcer.Announce(T("You have no lyrics drafts on Suno."));
+                return;
+            }
+            _dialogs.ShowLines(T("Lyrics drafts. Enter puts one in the Lyrics box."), drafts.Select(d => d.ToString()).ToList(), async index =>
+            {
+                var draft = drafts[index];
+                string? text = null;
+                if (!await RunAsync(async () => text = await _api.GetLyricsDraftTextAsync(draft.Id))) return;
+                if (string.IsNullOrWhiteSpace(text))
+                {
+                    Announcer.Announce(T("That draft has no lyrics yet."));
+                    return;
+                }
+                if (!string.IsNullOrWhiteSpace(Lyrics) && !_dialogs.Confirm(T("Replace the lyrics in the Lyrics box?"), T("Lyrics drafts"))) return;
+                Lyrics = text;
+                if (string.IsNullOrWhiteSpace(SongTitle) && !string.IsNullOrWhiteSpace(draft.Title)) SongTitle = draft.Title;
+                Announcer.Announce(T("Lyrics from {0} are in the Lyrics box.", draft.ToString()));
+            });
+        }
+
         /// <summary>Lyric co-writing: Suno changes the Lyrics the way the instruction asks; the result lands in Generated lyrics.</summary>
         [RelayCommand]
         private async Task CowriteAsync()
@@ -360,7 +420,9 @@ namespace TinPan.ViewModels
             });
         }
 
-        [RelayCommand]
+        private SunoClip? _currentTrending;
+
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task PlayTrendingAsync(SunoClip? clip)
         {
             clip ??= SelectedTrending;
@@ -370,8 +432,44 @@ namespace TinPan.ViewModels
                 Announcer.Announce(T("That song isn't ready yet."));
                 return;
             }
-            if (await RunAsync(() => _audio.PlayAsync(clip.Id, clip.DisplayTitle)))
+            _currentTrending = clip;
+            if (await RunAsync(() => _audio.PlayAsync(clip.Id, clip.DisplayTitle, this)))
                 Announcer.Announce(T("Playing: {0}.", clip.DisplayTitle));
+        }
+
+        [RelayCommand]
+        private void PlayPauseTrending()
+        {
+            if (_audio.IsPlaying) { _audio.Pause(); Announcer.Announce(T("Paused.")); }
+            else if (_audio.IsPaused) { _audio.Resume(); Announcer.Announce(T("Playing.")); }
+            else _ = PlayTrendingAsync(SelectedTrending);
+        }
+
+        void IPlaybackQueue.PlayPause() => PlayPauseTrending();
+
+        Task IPlaybackQueue.NextAsync() => StepTrendingAsync(+1, T("End of list."));
+
+        Task IPlaybackQueue.PreviousAsync() => StepTrendingAsync(-1, T("First song."));
+
+        private async Task StepTrendingAsync(int direction, string atEnd, bool quietEnd = false)
+        {
+            var index = _currentTrending == null ? -1 : Trending.IndexOf(_currentTrending);
+            var candidates = index < 0 ? Enumerable.Empty<SunoClip>() : direction > 0 ? Trending.Skip(index + 1) : Trending.Take(index).Reverse();
+            var next = candidates.FirstOrDefault(c => c.CanPlay);
+            if (next == null)
+            {
+                Announcer.Announce(atEnd, interrupt: !quietEnd);
+                return;
+            }
+            SelectedTrending = next;
+            await PlayTrendingAsync(next);
+        }
+
+        private async void OnTrackEnded(object? sender, TrackEndedEventArgs e)
+        {
+            // Carry on through Trending only when Trending started this song.
+            if (!ReferenceEquals(e.Owner, this) || _currentTrending?.Id != e.ClipId) return;
+            await StepTrendingAsync(+1, T("End of list."), quietEnd: true);
         }
     }
 }

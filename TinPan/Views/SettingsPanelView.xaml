@@ -34,6 +34,7 @@
                 <Label Content="{l:T '_When a list reaches the playing song'}" Target="{Binding ElementName=playingCue}" Padding="0,10,0,5"/>
                 <ComboBox x:Name="playingCue" ItemsSource="{Binding PlayingCues}" SelectedItem="{Binding PlayingCue}"
                           HorizontalAlignment="Left" MinWidth="300" AutomationProperties.Name="{l:T 'When a list reaches the playing song'}"/>
+                <CheckBox Content="{l:T 'Li_ve lyrics: read each line aloud as it is sung (Shift+F3)'}" IsChecked="{Binding ReadLyricsLive}" Margin="0,10,0,0"/>
             </StackPanel>
         </GroupBox>
 

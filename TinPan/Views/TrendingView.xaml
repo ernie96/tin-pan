@@ -13,11 +13,11 @@
             <Button Content="{l:T '_Refresh trending'}" IsTabStop="False" Margin="10,0,0,0" Padding="10,5" Command="{Binding RefreshTrendingCommand}"/>
         </StackPanel>
         <ListBox x:Name="trending" Grid.Row="1" ItemsSource="{Binding Trending}" SelectedItem="{Binding SelectedTrending}"
-                 local:PlayingCue.Songs="True" AutomationProperties.Name="{l:T 'Trending songs'}" PreviewKeyDown="Trending_PreviewKeyDown"
+                 local:PlayingCue.SongsWithCreator="True" AutomationProperties.Name="{l:T 'Trending songs'}" PreviewKeyDown="Trending_PreviewKeyDown"
                  MouseDoubleClick="Trending_MouseDoubleClick">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding SpokenText}" Margin="2"/>
+                    <TextBlock Text="{Binding SpokenWithCreator}" Margin="2"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

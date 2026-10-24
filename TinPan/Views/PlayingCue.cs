@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using TinPan.Models;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.Views
 {
@@ -57,7 +58,7 @@ namespace TinPan.Views
 
         /// <summary>The spoken name of a song item, with ", playing" when it is the current song.</summary>
         public static string NameFor(string? spokenText, string? id, string? playingId, bool says) =>
-            says && id != null && id == playingId ? spokenText + ", playing" : spokenText ?? "";
+            says && id != null && id == playingId ? spokenText + ", " + T("playing") : spokenText ?? "";
 
         public static readonly DependencyProperty SongsProperty = DependencyProperty.RegisterAttached(
             "Songs", typeof(bool), typeof(PlayingCue), new PropertyMetadata(false, OnSongsChanged));
@@ -65,12 +66,27 @@ namespace TinPan.Views
         public static bool GetSongs(DependencyObject d) => (bool)d.GetValue(SongsProperty);
         public static void SetSongs(DependencyObject d, bool value) => d.SetValue(SongsProperty, value);
 
+        /// <summary>Like Songs, for lists of other people's songs: each item's name also says who made it.</summary>
+        public static readonly DependencyProperty SongsWithCreatorProperty = DependencyProperty.RegisterAttached(
+            "SongsWithCreator", typeof(bool), typeof(PlayingCue), new PropertyMetadata(false, OnSongsWithCreatorChanged));
+
+        public static bool GetSongsWithCreator(DependencyObject d) => (bool)d.GetValue(SongsWithCreatorProperty);
+        public static void SetSongsWithCreator(DependencyObject d, bool value) => d.SetValue(SongsWithCreatorProperty, value);
+
         private static void OnSongsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is not ListBox list || e.NewValue is not true) return;
+            if (d is ListBox list && e.NewValue is true) Attach(list, nameof(SunoClip.SpokenText));
+        }
 
+        private static void OnSongsWithCreatorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is ListBox list && e.NewValue is true) Attach(list, nameof(SunoClip.SpokenWithCreator));
+        }
+
+        private static void Attach(ListBox list, string spokenPath)
+        {
             var name = new MultiBinding { Converter = NameConverter.Instance };
-            name.Bindings.Add(new Binding(nameof(SunoClip.SpokenText)));
+            name.Bindings.Add(new Binding(spokenPath));
             name.Bindings.Add(new Binding(nameof(SunoClip.Id)));
             name.Bindings.Add(new Binding(nameof(ClipId)) { Source = Instance });
             name.Bindings.Add(new Binding(nameof(Mode)) { Source = Instance });

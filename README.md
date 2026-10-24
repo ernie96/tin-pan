@@ -22,6 +22,8 @@ dotnet publish TinPan -p:PublishProfile=OneFile
 
 The last one makes the single `TinPan\bin\publish\TinPan.exe`.
 
-## Licenses
+## License
+
+Copyright (C) 2026 Ernesto Melendez. Tin Pan is free software under the [GNU General Public License, version 3 or later](LICENSE), with additional terms under section 7 in [NOTICE.md](NOTICE.md): copies and changed versions must keep the author's credit and the dedication visible in their About or credits screen, and changed versions must be marked as changed. Those terms don't limit anything else the GPL lets you do.
 
 See [TinPan/THIRD_PARTY_NOTICES.md](TinPan/THIRD_PARTY_NOTICES.md) for the dedication and the components Tin Pan ships with. `deps/nvda` holds NV Access's NVDA Controller Client (LGPL 2.1) with its license.

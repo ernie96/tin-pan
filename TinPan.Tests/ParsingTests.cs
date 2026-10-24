@@ -631,5 +631,15 @@ namespace TinPan.Tests
         [Fact]
         public void The_dedication_names_Jenni_and_Diana() =>
             Assert.Equal("Tin Pan, like all my apps, is dedicated to Jenni and Diana.", MainViewModel.Dedication);
+
+        [Fact]
+        public void About_shows_the_attribution_the_license_terms_require()
+        {
+            var notice = EmbeddedFiles.ReadText("NOTICE.md");
+            Assert.NotNull(notice);
+            Assert.Contains("> " + MainViewModel.Attribution, notice);
+            Assert.Contains("> " + MainViewModel.Dedication, notice);
+            Assert.StartsWith("                    GNU GENERAL PUBLIC LICENSE", EmbeddedFiles.ReadText("LICENSE.txt"));
+        }
     }
 }

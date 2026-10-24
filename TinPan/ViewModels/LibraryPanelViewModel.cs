@@ -40,7 +40,6 @@ namespace TinPan.ViewModels
         public ObservableCollection<SunoClip> Songs { get; } = new();
 
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(VisibilityMenuText), nameof(RemixMenuText))]
         private SunoClip? selectedClip;
 
         [ObservableProperty] private string searchText = "";
@@ -69,8 +68,8 @@ namespace TinPan.ViewModels
         public string WavMenuText => _account.PaidLabel(T("Download _WAV"));
         public string CoverMenuText => _account.PaidLabel(T("_Cover..."));
         public string RemasterMenuText => _account.PaidLabel(T("Re_master..."));
-        public string VisibilityMenuText => SelectedClip?.IsPublic == true ? T("Make p_rivate") : T("Make p_ublic");
-        public string RemixMenuText => SelectedClip?.Metadata?.CanRemix == false ? T("Allow remi_xes") : T("Stop remi_xes");
+        public static string VisibilityLabel(SunoClip? song) => song?.IsPublic == true ? T("Make p_rivate") : T("Make p_ublic");
+        public static string RemixLabel(SunoClip? song) => song?.Metadata?.CanRemix == false ? T("Allow remi_xes") : T("Stop remi_xes");
 
         /// <summary>Disabled only when Suno says this is a free plan; unknown plans may try.</summary>
         private bool CanUsePaidFeatures() => _account.IsPaid != false;

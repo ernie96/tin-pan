@@ -1,0 +1,13 @@
+name = "tinpan-reports"
+main = "worker.js"
+compatibility_date = "2025-09-01"
+workers_dev = true
+
+[vars]
+REPORTS_REPO = "ernie96/tin-pan-reports"
+
+# At most 3 reports a minute from one internet address.
+[[ratelimits]]
+name = "LIMITER"
+namespace_id = "1002"  # its own counter, apart from TimePlayer's 1001
+simple = { limit = 3, period = 60 }

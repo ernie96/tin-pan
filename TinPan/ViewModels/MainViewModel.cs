@@ -21,6 +21,8 @@ namespace TinPan.ViewModels
         private readonly IDialogService _dialogs;
         private readonly IConfigService _config;
         private readonly IUpdateService _updates;
+        private readonly LiveLyrics _liveLyrics;
+        private readonly IReportService _reports;
 
         [ObservableProperty] private string title = AppTitle;
         [ObservableProperty] private int selectedTab;
@@ -31,7 +33,7 @@ namespace TinPan.ViewModels
         public PlaylistsViewModel PlaylistsVM { get; }
 
         public MainViewModel(SunoPanelViewModel sunoVM, LibraryPanelViewModel libraryVM, SettingsPanelViewModel settingsVM, PlaylistsViewModel playlistsVM,
-            IAuthService auth, IAudioService audio, IDialogService dialogs, IConfigService config, IUpdateService updates, SongWatcher watcher, IAnnouncer announcer)
+            IAuthService auth, IAudioService audio, IDialogService dialogs, IConfigService config, IUpdateService updates, SongWatcher watcher, LiveLyrics liveLyrics, IReportService reports, IAnnouncer announcer)
             : base(announcer)
         {
             SunoVM = sunoVM;
@@ -43,6 +45,8 @@ namespace TinPan.ViewModels
             _dialogs = dialogs;
             _config = config;
             _updates = updates;
+            _liveLyrics = liveLyrics;
+            _reports = reports;
 
             _auth.AuthStateChanged += (_, _) => OnAuthChanged();
             _auth.SignInExpired += (_, _) => _signInExpired = true;
@@ -188,6 +192,21 @@ namespace TinPan.ViewModels
             Announcer.Announce(text(), always: true);
         }
 
+        /// <summary>Shift+F3: reading timed lyrics aloud as they're sung, on or off. Kept in sync with the Settings check box.</summary>
+        [RelayCommand]
+        private async Task ToggleLiveLyricsAsync()
+        {
+            SettingsVM.ReadLyricsLive = !SettingsVM.ReadLyricsLive;
+            if (!SettingsVM.ReadLyricsLive)
+            {
+                Announcer.Announce(T("Lyrics won't be read as they're sung."), always: true);
+                return;
+            }
+            Announcer.Announce(T("Lyrics will be read as they're sung."), always: true);
+            if (await _liveLyrics.LoadAsync() == 0)
+                Announcer.Announce(T("This song has no timed lyrics."), interrupt: false, always: true);
+        }
+
         [RelayCommand]
         private void NowPlaying()
         {
@@ -229,7 +248,12 @@ namespace TinPan.ViewModels
         private void ShowTab(string index) => SelectedTab = int.Parse(index);
 
         /// <summary>The list that started the current song, or the Library when nothing list-based is playing.</summary>
-        private IPlaybackQueue Queue => _audio.CurrentOwner ?? (SelectedTab == PlaylistsTab ? PlaylistsVM : LibraryVM);
+        private IPlaybackQueue Queue => _audio.CurrentOwner ?? SelectedTab switch
+        {
+            PlaylistsTab => PlaylistsVM,
+            TrendingTab => SunoVM,
+            _ => LibraryVM
+        };
 
         [RelayCommand(AllowConcurrentExecutions = true)] private Task NextAsync() => Queue.NextAsync();
         [RelayCommand] private void PlayPause() => Queue.PlayPause();

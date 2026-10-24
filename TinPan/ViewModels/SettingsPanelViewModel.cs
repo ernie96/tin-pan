@@ -16,6 +16,7 @@ namespace TinPan.ViewModels
         private readonly IAuthService _auth;
         private readonly IDialogService _dialogs;
         private readonly IAudioService _audio;
+        private readonly LiveLyrics _liveLyrics;
 
         [ObservableProperty] private string signInText = T("Not signed in.");
         [ObservableProperty] private bool isSignedIn;
@@ -26,6 +27,7 @@ namespace TinPan.ViewModels
         [ObservableProperty] private bool saveDetails;
         [ObservableProperty] private bool saveCover;
         [ObservableProperty] private bool checkUpdatesAtStartup;
+        [ObservableProperty] private bool readLyricsLive;
 
         public IReadOnlyList<string> OutputFormats { get; } = new[] { "mp3", "wav" };
 
@@ -86,13 +88,15 @@ namespace TinPan.ViewModels
             Announcer.Announce(T("The language changes the next time Tin Pan starts."));
         }
 
-        public SettingsPanelViewModel(IConfigService config, IAuthService auth, IDialogService dialogs, IAudioService audio, IAnnouncer announcer)
+        public SettingsPanelViewModel(IConfigService config, IAuthService auth, IDialogService dialogs, IAudioService audio, LiveLyrics liveLyrics, IAnnouncer announcer)
             : base(announcer)
         {
             _config = config;
             _auth = auth;
             _dialogs = dialogs;
             _audio = audio;
+            _liveLyrics = liveLyrics;
+            readLyricsLive = liveLyrics.Enabled;
             downloadDir = config.Current.Audio.DownloadDir;
             outputFormat = OutputFormats.Contains(config.Current.Audio.OutputFormat) ? config.Current.Audio.OutputFormat : "mp3";
             speechLevel = SpeechLevelLabel(Enum.TryParse<SpeechLevel>(config.Current.SpeechLevel, out var lvl) ? lvl : Services.SpeechLevel.Everything);
@@ -151,6 +155,7 @@ namespace TinPan.ViewModels
         partial void OnSaveTimedLyricsChanged(bool value) { _config.Current.Audio.SaveTimedLyrics = value; _config.SaveSoon(); }
         partial void OnSaveDetailsChanged(bool value) { _config.Current.Audio.SaveDetails = value; _config.SaveSoon(); }
         partial void OnSaveCoverChanged(bool value) { _config.Current.Audio.SaveCover = value; _config.SaveSoon(); }
+        partial void OnReadLyricsLiveChanged(bool value) => _liveLyrics.Enabled = value;
         partial void OnCheckUpdatesAtStartupChanged(bool value) { _config.Current.Update.CheckAtStartup = value; _config.SaveSoon(); }
 
         partial void OnOutputFormatChanged(string value)

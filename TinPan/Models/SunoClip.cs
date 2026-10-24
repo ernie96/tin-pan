@@ -72,6 +72,13 @@ namespace TinPan.Models
         [JsonPropertyName("upvote_count")]
         public int UpvoteCount { get; set; }
 
+        /// <summary>The creator's handle (suno.com/@handle) and name.</summary>
+        [JsonPropertyName("handle")]
+        public string? Handle { get; set; }
+
+        [JsonPropertyName("display_name")]
+        public string? CreatorName { get; set; }
+
         [JsonPropertyName("metadata")]
         public ClipMetadata? Metadata { get; set; }
 
@@ -165,6 +172,8 @@ namespace TinPan.Models
                 if (!string.IsNullOrWhiteSpace(Metadata?.GptDescriptionPrompt)) lines.Add(T("Description: {0}", Metadata!.GptDescriptionPrompt));
                 if (Metadata?.AvgBpm is > 0) lines.Add(T("Tempo: about {0:0} beats per minute", Metadata!.AvgBpm));
                 if (!string.IsNullOrEmpty(ModelName)) lines.Add(T("Model: {0}", ModelName));
+                if (!string.IsNullOrWhiteSpace(Handle))
+                    lines.Add(T("By {0}", string.IsNullOrWhiteSpace(CreatorName) ? "@" + Handle : $"{CreatorName} (@{Handle})"));
                 if (CreatedAt != null) lines.Add(T("Made: {0}", CreatedAt.Value.ToLocalTime().ToString("f", TinPan.Localization.Loc.Culture)));
                 lines.Add(IsPublic ? T("Public") : T("Private"));
                 lines.Add(T("Plays: {0}. Likes: {1}.", PlayCount, UpvoteCount));
@@ -185,6 +194,11 @@ namespace TinPan.Models
             null or "" => T("unknown"),
             _ => Status
         };
+
+        /// <summary>SpokenText, then who made it, for lists of other people's songs.</summary>
+        public string SpokenWithCreator =>
+            string.IsNullOrWhiteSpace(CreatorName) && string.IsNullOrWhiteSpace(Handle) ? SpokenText
+            : SpokenText + ", " + T("by {0}", string.IsNullOrWhiteSpace(CreatorName) ? "@" + Handle : CreatorName);
 
         public override string ToString() => SpokenText;
 
@@ -243,5 +257,35 @@ namespace TinPan.Models
 
         [JsonPropertyName("error_message")]
         public string? ErrorMessage { get; set; }
+
+        /// <summary>For a cover, the song it covers.</summary>
+        [JsonPropertyName("cover_clip_id")]
+        public string? CoverClipId { get; set; }
+
+        /// <summary>For an extension, the songs it continues, oldest first.</summary>
+        /// <summary>Read loosely, so an unexpected shape never loses the song.</summary>
+        [JsonPropertyName("history")]
+        public JsonElement? History { get; set; }
+
+        /// <summary>For a whole song, the parts it joins.</summary>
+        [JsonPropertyName("concat_history")]
+        public JsonElement? ConcatHistory { get; set; }
+
+        /// <summary>The song this one was made from, when its own details say.</summary>
+        [JsonIgnore]
+        public string? OriginalId =>
+            !string.IsNullOrEmpty(CoverClipId) ? CoverClipId : FirstId(History) ?? FirstId(ConcatHistory);
+
+        private static string? FirstId(JsonElement? list)
+        {
+            if (list is not { ValueKind: JsonValueKind.Array } array) return null;
+            foreach (var item in array.EnumerateArray())
+            {
+                if (item.ValueKind == JsonValueKind.String && !string.IsNullOrEmpty(item.GetString())) return item.GetString();
+                if (item.ValueKind == JsonValueKind.Object && item.TryGetProperty("id", out var id)
+                    && id.ValueKind == JsonValueKind.String && !string.IsNullOrEmpty(id.GetString())) return id.GetString();
+            }
+            return null;
+        }
     }
 }

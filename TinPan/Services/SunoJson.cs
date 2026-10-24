@@ -11,7 +11,7 @@ namespace TinPan.Services
     /// Reads Suno replies that come in more than one shape (bare arrays, {"clips": [...]},
     /// nested sections). Kept separate so it can be tested without the network.
     /// </summary>
-    public static class SunoJson
+    public static partial class SunoJson
     {
         private static readonly JsonSerializerOptions JsonOpts = new() { PropertyNameCaseInsensitive = true };
 
@@ -159,7 +159,8 @@ namespace TinPan.Services
                 .Select(e => new Notification
                 {
                     Title = FirstString(e, "title", "heading", "type") ?? "",
-                    Message = FirstString(e, "message", "body", "content", "text") ?? ""
+                    Message = FirstString(e, "message", "body", "content", "text") ?? "",
+                    IsRead = !(e.TryGetProperty("is_read", out var read) && read.ValueKind == JsonValueKind.False)
                 })
                 .Where(n => n.Title.Length > 0 || n.Message.Length > 0)
                 .ToList();

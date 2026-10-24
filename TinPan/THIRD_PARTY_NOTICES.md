@@ -8,7 +8,7 @@ First and foremost, all my apps, vibecoded assisted and otherwise, are dedicated
 
 ## Components shipped with Tin Pan
 
-Tin Pan is by Ernesto Melendez. It is an unofficial client for Suno and is not affiliated with Suno.
+Tin Pan is by Ernesto Melendez. It is an unofficial client for Suno and is not affiliated with Suno. Tin Pan's own code is licensed under the GNU General Public License, version 3 or later, with the additional terms in NOTICE.md (shown at the top of Help, Licenses and notices).
 
 These components keep their own licenses when they are shipped with Tin Pan:
 

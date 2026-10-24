@@ -11,7 +11,10 @@
                       AutomationProperties.Name="{l:T 'Model'}" HorizontalAlignment="Left" MinWidth="200"/>
             <Label Content="{l:T '_Style'}" Target="{Binding ElementName=style}" Padding="0,5"/>
             <TextBox x:Name="style" Text="{Binding Style, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{l:T 'Style'}"/>
-            <Button Content="{l:T 'Style _boost'}" HorizontalAlignment="Left" Margin="0,5" Padding="10,5" Command="{Binding BoostStyleCommand}"/>
+            <StackPanel Orientation="Horizontal">
+                <Button Content="{l:T 'Style _boost'}" HorizontalAlignment="Left" Margin="0,5" Padding="10,5" Command="{Binding BoostStyleCommand}"/>
+                <Button Content="{l:T 'Style ideas...'}" HorizontalAlignment="Left" Margin="10,5,0,5" Padding="10,5" Command="{Binding StyleIdeasCommand}"/>
+            </StackPanel>
             <Label Content="{l:T '_Exclude styles'}" Target="{Binding ElementName=exclude}" Padding="0,5"/>
             <TextBox x:Name="exclude" Text="{Binding ExcludeStyles, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{l:T 'Exclude styles'}"/>
             <Label Content="{l:T '_Voice'}" Target="{Binding ElementName=voice}" Padding="0,5"/>
@@ -50,7 +53,10 @@
             <TextBlock Text="{l:T 'Write lyrics for me'}" FontSize="16" FontWeight="Bold" Margin="0,15,0,0"/>
             <Label Content="{l:T 'T_opic'}" Target="{Binding ElementName=topic}" Padding="0,5"/>
             <TextBox x:Name="topic" Text="{Binding LyricsTopic, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{l:T 'Topic'}"/>
-            <Button Content="{l:T 'Write l_yrics'}" HorizontalAlignment="Left" Margin="0,5" Padding="10,5" Command="{Binding WriteLyricsCommand}"/>
+            <StackPanel Orientation="Horizontal">
+                <Button Content="{l:T 'Write l_yrics'}" HorizontalAlignment="Left" Margin="0,5" Padding="10,5" Command="{Binding WriteLyricsCommand}"/>
+                <Button Content="{l:T 'Lyrics drafts...'}" HorizontalAlignment="Left" Margin="10,5,0,5" Padding="10,5" Command="{Binding LyricsDraftsCommand}"/>
+            </StackPanel>
             <Label Content="{l:T '_Generated lyrics'}" Target="{Binding ElementName=generated}" Padding="0,5"/>
             <TextBox x:Name="generated" Text="{Binding GeneratedLyrics, Mode=OneWay}" IsReadOnly="True" AutomationProperties.Name="{l:T 'Generated lyrics'}"
                      TextWrapping="Wrap" MinHeight="80" VerticalScrollBarVisibility="Auto"/>

@@ -6,7 +6,7 @@ By Ernesto Melendez. Unofficial: it uses the same private API as the Suno websit
 
 ## Keys
 
-Alt or F10 opens the menu bar, which has every command with its keys. It stays hidden otherwise, so Tab and the screen reader never run into it. The Song menu acts on the song selected in the tab you're on (Library, a playlist, or Trending). Ctrl+F1 lists the same commands; Enter runs one.
+Alt or F10 opens the menu bar, which has every command with its keys. It stays hidden otherwise, so Tab and the screen reader never run into it. The Song menu acts on the song selected in the tab you're on (Library, a playlist, or Trending). It's grouped into submenus: Download, Make from it (extend, cover, remaster, whole song, stems), Related songs, Comments and Sharing (links, public or private, remixes). Its keys (Ctrl+I, Alt+Enter, Ctrl+L, Ctrl+C, Ctrl+D, Ctrl+E) work in the Library, a playlist's songs and Trending. On Trending, Space pauses or resumes and F9 carries on down the list. The Help menu's Speech submenu sets how much Tin Pan says. Ctrl+F1 lists the same commands; Enter runs one.
 
 Tab only stops where it matters: on the Library, the search box, the song list and the volume; on Playlists, the two lists. The page buttons still work with their Alt letters. Switching pages with Ctrl+1 to Ctrl+6 puts you on the page's list or first field.
 
@@ -17,6 +17,7 @@ Anywhere:
 - Escape: step back one level.
 - F2: credits left. Shift+F2: your plan, when it renews, downloads left, and what it includes.
 - F3: what's playing and how far in.
+- Shift+F3: read the lyrics aloud, line by line, as they're sung (for songs with timed lyrics). Off to start with; also in Settings.
 - F5: refresh the current tab.
 - Ctrl+1 to Ctrl+6: Library, Playlists, Create, Trending, Account, Settings. Ctrl+F: search your songs.
 - F8 or the Play/Pause media key: play or pause. Shift+F8: stop.
@@ -86,6 +87,25 @@ dotnet publish TinPan -p:PublishProfile=OneFile
 
 That makes a single `TinPan\bin\publish\TinPan.exe` (about 60 MB) with .NET, WPF, WebView2's loader, NVDA's helper and the license texts inside. Nothing needs installing: WebView2 comes with Windows 10 and 11. On first run Windows unpacks the native parts to a temporary folder and Tin Pan unpacks NVDA's helper to `%LOCALAPPDATA%\Tin Pan\native`, so the second start is quicker. Help, Licenses and notices shows the licenses. A `nvdaControllerClient.dll` placed next to the exe is used instead of the built-in one.
 
+## Discover
+
+The Discover menu finds songs beyond your own:
+
+- **Explore**: Suno's shelves of songs. Enter opens a shelf.
+- **From people I follow**: new songs from the people you follow on Suno.
+- **Find a creator**: type a handle (the name after suno.com/@) or paste a profile link to list their songs, newest first.
+- **Contests**: Suno's contests, with when each ends and how many entries it has. Enter plays a contest's song.
+
+The Song menu's Related songs submenu (also in the Applications key menu) has **Similar songs**, **Creator's songs**, **Covers and remixes of it** and **Original song**, which finds what a cover, extension or whole song was made from. Songs open in their own list: Enter plays one, Escape closes it, and each says who made it.
+
+On the Create tab, **Style ideas** lists styles Suno suggests for you, and **Lyrics drafts** lists your drafts from Suno's lyrics editor; Enter puts one in the Style or Lyrics box. On the Account tab, notifications you haven't seen say "New", and **Mark all as read** marks them read on Suno too.
+
+These follow Nsomnia/chadvis-projectm-qt's endpoint inventory and suno-api-local-manager-frontend; Suno's own web code filled in the creator page's sort settings and the lyrics drafts' paging. The following feed's ranking settings and the shape of a lyrics draft weren't captured anywhere, so if either stops working, Tin Pan says so and logs Suno's reply.
+
+## Reporting a problem or suggesting a feature
+
+Help, **Report a problem** (Ctrl+Shift+B) and **Suggest a feature** (Ctrl+Shift+F) send a message privately to Tin Pan's author; no account is needed. A problem report can include Tin Pan's log. The log has no passwords, and your Windows user name is taken out before sending. Reports go through a small relay (in `report-relay/`) that files them in a private GitHub repository, the same way TimePlayer's do.
+
 ## Uploading songs
 
 Library menu, Upload a song (or the Upload button on the Library page, Alt+U) sends an audio file from your computer to your Suno account. There it becomes a song like any other: play it, extend it, cover it, remaster it. Choose the file, give it a title, and confirm you own it or have the rights to upload it and accept Suno's upload terms; Tin Pan never ticks that for you. MP3, WAV, M4A, FLAC, AAC and WMA all work: anything that isn't M4A is converted to M4A first with Windows' own encoder, because M4A is the upload Suno's web app was captured making. Suno checks every upload, which takes a minute or two, and may refuse music it finds is copyrighted. The shortest and longest upload come from your plan, and Tin Pan checks them before sending.
@@ -135,7 +155,9 @@ When the arrow keys reach the song that's playing or paused, Tin Pan gives a sho
 
 ## License and dedication
 
-Tin Pan, like all my apps, is dedicated to Jenni and Diana. The full dedication is at the top of [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md), which also lists the components Tin Pan ships with and their licenses. A license for Tin Pan's own code hasn't been chosen yet.
+Tin Pan, like all my apps, is dedicated to Jenni and Diana. The full dedication is at the top of [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md), which also lists the components Tin Pan ships with and their licenses.
+
+Copyright (C) 2026 Ernesto Melendez. Tin Pan is free software under the [GNU General Public License, version 3 or later](../LICENSE), with additional terms under section 7 in [NOTICE.md](../NOTICE.md). Anyone who shares Tin Pan or a version of it must keep "Tin Pan was created by Ernesto Melendez" and the dedication in its About or credits screen, next to the copyright and license notices, and mark a changed version as changed. Help, About shows them; Help, Licenses and notices shows the full license and terms.
 
 ## API references
 

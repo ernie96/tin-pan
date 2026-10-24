@@ -189,6 +189,66 @@
   "{0:N0} завантаження лишилося|{0:N0} завантаження лишилося|{0:N0} завантажень лишилося",
   "{0:N0} descarga restante|{0:N0} descargas restantes"
  ],
+ "{0}: {1} songs, {2} followers": [
+  "{0}: {1} cântece, {2} urmăritori",
+  "{0}: пісень {1}, підписників {2}",
+  "{0}: {1} canciones, {2} seguidores"
+ ],
+ "Songs: {0}": [
+  "Cântece: {0}",
+  "Пісні: {0}",
+  "Canciones: {0}"
+ ],
+ "Followers: {0}. Following: {1}.": [
+  "Urmăritori: {0}. Urmărește: {1}.",
+  "Підписники: {0}. Підписки: {1}.",
+  "Seguidores: {0}. Siguiendo: {1}."
+ ],
+ "Plays of all their songs: {0}": [
+  "Redări ale tuturor cântecelor: {0}",
+  "Прослуховування всіх пісень: {0}",
+  "Reproducciones de todas sus canciones: {0}"
+ ],
+ "Link: {0}": [
+  "Link: {0}",
+  "Посилання: {0}",
+  "Enlace: {0}"
+ ],
+ "{0}, {1} songs": [
+  "{0}, {1} cântece",
+  "{0}, пісень: {1}",
+  "{0}, {1} canciones"
+ ],
+ "ended {0}": [
+  "s-a încheiat pe {0}",
+  "завершився {0}",
+  "terminó el {0}"
+ ],
+ "ends {0}": [
+  "se încheie pe {0}",
+  "завершується {0}",
+  "termina el {0}"
+ ],
+ "Enter plays its song": [
+  "Enter redă cântecul lui",
+  "Enter відтворює його пісню",
+  "Intro reproduce su canción"
+ ],
+ "Untitled": [
+  "Fără titlu",
+  "Без назви",
+  "Sin título"
+ ],
+ "changed {0}": [
+  "modificat {0}",
+  "змінено {0}",
+  "cambiado {0}"
+ ],
+ "{0} entry|{0} entries": [
+  "{0} participare|{0} participări|{0} de participări",
+  "{0} заявка|{0} заявки|{0} заявок",
+  "{0} participación|{0} participaciones"
+ ],
  "Untitled playlist": [
   "Listă fără nume",
   "Плейлист без назви",
@@ -279,6 +339,11 @@
   "Модель: {0}",
   "Modelo: {0}"
  ],
+ "By {0}": [
+  "De {0}",
+  "Автор: {0}",
+  "De {0}"
+ ],
  "Made: {0}": [
   "Creată: {0}",
   "Створено: {0}",
@@ -303,11 +368,6 @@
   "Descărcată deja, așa că o nouă descărcare e gratuită.",
   "Уже завантажувалася, тож повторне завантаження безкоштовне.",
   "Ya la descargaste, así que volver a descargarla es gratis."
- ],
- "Link: {0}": [
-  "Link: {0}",
-  "Посилання: {0}",
-  "Enlace: {0}"
  ],
  "complete": [
   "gata",
@@ -338,6 +398,11 @@
   "necunoscută",
   "невідомо",
   "desconocido"
+ ],
+ "by {0}": [
+  "de {0}",
+  "автор {0}",
+  "de {0}"
  ],
  "Credits not loaded yet.": [
   "Creditele nu s-au încărcat încă.",
@@ -498,6 +563,26 @@
   "Melodii MP3 sau WAV",
   "Пісні MP3 або WAV",
   "Canciones MP3 o WAV"
+ ],
+ "Please describe it first.": [
+  "Vă rugăm să descrieți mai întâi.",
+  "Спершу опишіть, будь ласка.",
+  "Descríbalo primero, por favor."
+ ],
+ "Too many reports were sent from this connection just now. Wait a minute and try again.": [
+  "Prea multe rapoarte au fost trimise adineauri de pe această conexiune. Așteptați un minut și încercați din nou.",
+  "З цього підключення щойно надіслано забагато звітів. Зачекайте хвилину й спробуйте знову.",
+  "Se acaban de enviar demasiados informes desde esta conexión. Espere un minuto y vuelva a intentarlo."
+ ],
+ "The report service answered with an error ({0}).": [
+  "Serviciul de rapoarte a răspuns cu o eroare ({0}).",
+  "Служба звітів відповіла помилкою ({0}).",
+  "El servicio de informes respondió con un error ({0})."
+ ],
+ "Couldn't reach the report service. Check your internet connection and try again.": [
+  "Serviciul de rapoarte nu poate fi accesat. Verificați conexiunea la internet și încercați din nou.",
+  "Не вдалося зв’язатися зі службою звітів. Перевірте підключення до інтернету й спробуйте знову.",
+  "No se pudo contactar con el servicio de informes. Compruebe su conexión a internet y vuelva a intentarlo."
  ],
  "another screen reader": [
   "alt cititor de ecran",
@@ -904,6 +989,11 @@
   "Alt або F10: рядок меню, прихований до того. У ньому всі команди з клавішами. Вліво і вправо переходять між меню, Вниз відкриває меню, Escape або Alt виходить. Меню «Пісня» діє на пісню, вибрану на поточній вкладці.\nTab зупиняється лише там, де потрібно: поле пошуку, список і гучність. Кнопки на кожній сторінці й далі працюють зі своїми літерами Alt, а все є в рядку меню.\nF1: коротка довідка про те, де ви.\nCtrl+F1: усі команди списком; Enter виконує вибрану. Перший пункт — цей посібник.\nCtrl+R: повторити останнє повідомлення. Ctrl+Shift+R: історія повідомлень, новіші спершу.\nEscape: крок назад (до заголовків вкладок або від пісень плейлиста до плейлистів).\nF2: залишок кредитів.\nShift+F2: ваш план, дата поновлення, залишок кредитів і завантажень. Вкладка «Обліковий запис» показує все, що містить план.\nF3: що грає і скільки минуло.\nF5: оновити поточну вкладку.\nВід Ctrl+1 до Ctrl+6: Бібліотека, Плейлисти, Створення, У тренді, Обліковий запис, Налаштування. Кожна переводить до списку або першого поля сторінки.\nCtrl+F: пошук у ваших піснях.",
   "Alt o F10: la barra de menús, oculta hasta entonces. Tiene todos los comandos con sus teclas. Izquierda y derecha pasan de un menú a otro, Abajo abre uno, Escape o Alt sale. El menú Canción actúa sobre la canción seleccionada en la pestaña en la que estás.\nTab solo se detiene donde hace falta: el cuadro de búsqueda, la lista y el volumen. Los botones de cada página siguen funcionando con sus letras de Alt, y todo está en la barra de menús.\nF1: ayuda breve sobre dónde estás.\nCtrl+F1: todos los comandos en una lista; Intro ejecuta uno. El primer elemento es esta guía.\nCtrl+R: repite el último mensaje. Ctrl+Mayús+R: historial de mensajes, los más nuevos primero.\nEscape: retrocede un nivel (a los encabezados de las pestañas, o de las canciones de una lista a las listas).\nF2: créditos restantes.\nMayús+F2: tu plan, cuándo se renueva, los créditos y las descargas restantes. La pestaña Cuenta muestra todo lo que incluye el plan.\nF3: qué suena y cuánto lleva.\nF5: actualiza la pestaña actual.\nCtrl+1 a Ctrl+6: Biblioteca, Listas, Crear, Tendencias, Cuenta, Configuración. Cada una te lleva a la lista o al primer campo de la página.\nCtrl+F: busca en tus canciones."
  ],
+ "The Song menu groups its commands: Download, Make from it (extend, cover, remaster, whole song, stems), Related songs, Comments and Sharing (links, public or private, remixes). Its keys (Ctrl+I, Alt+Enter, Ctrl+L, Ctrl+C, Ctrl+D, Ctrl+E) work in the Library, a playlist's songs and Trending. The Help menu's Speech submenu sets how much Tin Pan says.": [
+  "Meniul Melodie își grupează comenzile: Descarcă, Creează din el (extindere, cover, remasterizare, cântec întreg, piste separate), Cântece înrudite, Comentarii și Partajare (linkuri, public sau privat, remixuri). Tastele lui (Ctrl+I, Alt+Enter, Ctrl+L, Ctrl+C, Ctrl+D, Ctrl+E) funcționează în Bibliotecă, în cântecele unei liste de redare și în În tendințe. Submeniul Vorbire din meniul Ajutor stabilește cât vorbește Tin Pan.",
+  "Меню «Пісня» групує свої команди: Завантажити, Створити з неї (продовження, кавер, ремастер, ціла пісня, доріжки), Пов’язані пісні, Коментарі та Поширення (посилання, публічна чи приватна, ремікси). Його клавіші (Ctrl+I, Alt+Enter, Ctrl+L, Ctrl+C, Ctrl+D, Ctrl+E) працюють у Бібліотеці, у піснях плейлиста й у вкладці «У тренді». Підменю «Мовлення» в меню «Довідка» визначає, скільки говорить Tin Pan.",
+  "El menú Canción agrupa sus comandos: Descargar, Crear a partir de ella (extender, versión, remasterizar, canción completa, pistas), Canciones relacionadas, Comentarios y Compartir (enlaces, pública o privada, remixes). Sus teclas (Ctrl+I, Alt+Enter, Ctrl+L, Ctrl+C, Ctrl+D, Ctrl+E) funcionan en la Biblioteca, en las canciones de una lista y en Tendencias. El submenú Voz del menú Ayuda decide cuánto habla Tin Pan."
+ ],
  "Playing": [
   "Redare",
   "Відтворення",
@@ -944,15 +1034,30 @@
   "Модель, стиль, стилі для виключення, голос, інструментал, режим Max, дивність, вплив стилю й персона (виберіть свою або введіть ID) стосуються обох способів створення пісні.\n«Опишіть пісню» дає Suno написати слова. «Ваш текст» використовує вашу назву й текст. «Написати текст» створює текст за темою, а «Використати цей текст» копіює його.\n«Посилення стилю» переписує поле «Стиль» у повніший опис.\n«Змінити мій текст»: скажіть, що змінити, потім «Переписати мій текст зараз». Результат з'являється в «Згенерованому тексті»; «Використати цей текст» копіює його.\nНові пісні з'являються вгорі бібліотеки. Ви почуєте, коли вони будуть готові.\nЯкщо Suno просить капчу, програма проходить її сама. Якщо Suno хоче клацання, з'являється вікно перевірки Suno з прапорцем.",
   "El modelo, el estilo, los estilos a excluir, la voz, el modo instrumental, el modo Max, la rareza, la influencia del estilo y la persona (elige una tuya o escribe un ID) sirven para las dos formas de crear una canción.\nDescribe una canción deja que Suno escriba la letra. Tu propia letra usa tu título y tu letra. Escribir letra crea una letra a partir de un tema, y Usar esta letra la copia.\nMejorar estilo reescribe el cuadro Estilo con una descripción más completa.\nCambiar mi letra: di qué cambiar y luego Reescribir mi letra ahora. El resultado va a Letra generada; Usar esta letra la copia.\nLas canciones nuevas aparecen arriba en tu biblioteca. Oirás cuando estén listas.\nSi Suno pide un captcha, la app lo pasa sola. Si Suno quiere un clic, aparece una ventana de verificación de Suno con la casilla."
  ],
+ "Style ideas lists styles Suno suggests; Enter puts one in the Style box. Lyrics drafts lists your drafts from Suno's lyrics editor; Enter puts one in the Lyrics box, asking first if it has words in it.": [
+  "Idei de stil arată stilurile sugerate de Suno; Enter pune unul în caseta Stil. Ciorne de versuri arată ciornele din editorul de versuri Suno; Enter pune una în caseta Versuri, întrebând mai întâi dacă aceasta are deja text.",
+  "Ідеї стилю показують стилі, які пропонує Suno; Enter вставляє один у поле «Стиль». Чернетки тексту показують ваші чернетки з редактора тексту Suno; Enter вставляє одну в поле «Текст», спершу запитавши, якщо в ньому вже щось є.",
+  "Ideas de estilo muestra los estilos que sugiere Suno; Intro pone uno en el cuadro Estilo. Borradores de letras muestra sus borradores del editor de letras de Suno; Intro pone uno en el cuadro Letra, preguntando antes si ya tiene texto."
+ ],
  "Trending tab": [
   "Fila În tendințe",
   "Вкладка «У тренді»",
   "Pestaña Tendencias"
  ],
- "Loads when you first open it. Enter or Space plays a song; the Applications key has every Song command.": [
-  "Se încarcă prima dată când o deschizi. Enter sau Spațiu redă o melodie; tasta Aplicații are toate comenzile Melodie.",
-  "Завантажується, коли ви вперше її відкриваєте. Enter або Пробіл відтворює пісню; клавіша контекстного меню містить усі команди меню «Пісня».",
-  "Se carga la primera vez que la abres. Intro o Espacio reproduce una canción; la tecla de aplicaciones tiene todos los comandos de Canción."
+ "Loads when you first open it. Enter plays a song and Space pauses or resumes; F9 and the end of a song carry on down the list. Each song says who made it. The Song menu's keys work here too, and the Applications key has every Song command.": [
+  "Se încarcă prima dată când îl deschideți. Enter redă un cântec, iar Spațiu pune pe pauză sau reia; F9 și sfârșitul unui cântec continuă în jos pe listă. Fiecare cântec spune cine l-a făcut. Tastele meniului Melodie funcționează și aici, iar tasta Aplicații are toate comenzile pentru melodie.",
+  "Завантажується, коли ви вперше відкриваєте вкладку. Enter відтворює пісню, а Пробіл ставить на паузу чи відновлює; F9 і кінець пісні переходять далі списком. Кожна пісня називає свого автора. Клавіші меню «Пісня» працюють і тут, а клавіша «Програми» має всі команди пісні.",
+  "Se carga la primera vez que la abre. Intro reproduce una canción y Espacio pausa o reanuda; F9 y el final de una canción siguen por la lista. Cada canción dice quién la hizo. Las teclas del menú Canción también funcionan aquí, y la tecla Aplicaciones tiene todos los comandos de canción."
+ ],
+ "Discover": [
+  "Descoperă",
+  "Відкриття",
+  "Descubrir"
+ ],
+ "Discover menu: Explore, Suno's shelves of songs (Enter opens one); From people I follow; Find a creator, by handle or link; and Contests (Enter plays a contest's song). Songs open in their own list, where Enter plays one and Escape closes it; each says who made it.\nSong menu, Related songs (also in the Applications key menu): Similar songs, Creator's songs, Covers and remixes of it, and Original song (what a cover, extension or whole song was made from).": [
+  "Meniul Descoperă: Explorează, rafturile de cântece ale Suno (Enter deschide unul); De la oamenii pe care îi urmăresc; Găsește un creator, după nume sau link; și Concursuri (Enter redă cântecul concursului). Cântecele se deschid într-o listă proprie, unde Enter redă unul și Escape o închide; fiecare spune cine l-a făcut.\nMeniul Melodie, Cântece înrudite (și în meniul tastei Aplicații): Cântece similare, Cântecele creatorului, Covere și remixuri după el și Cântecul original (din ce a fost făcut un cover, o extindere sau un cântec întreg).",
+  "Меню «Відкриття»: Огляд, добірки пісень Suno (Enter відкриває одну); Від тих, за ким я стежу; Знайти автора, за іменем або посиланням; і Конкурси (Enter відтворює пісню конкурсу). Пісні відкриваються в окремому списку, де Enter відтворює пісню, а Escape закриває його; кожна пісня називає свого автора.\nМеню «Пісня», «Пов’язані пісні» (також у меню клавіші «Програми»): Схожі пісні, Пісні автора, Кавери й ремікси на неї та Оригінальна пісня (з чого зроблено кавер, продовження чи цілу пісню).",
+  "Menú Descubrir: Explorar, los estantes de canciones de Suno (Intro abre uno); De quienes sigo; Buscar un creador, por nombre o enlace; y Concursos (Intro reproduce la canción del concurso). Las canciones se abren en su propia lista, donde Intro reproduce una y Escape la cierra; cada una dice quién la hizo.\nMenú Canción, Canciones relacionadas (también en el menú de la tecla Aplicaciones): Canciones similares, Canciones del creador, Versiones y remixes de ella y Canción original (de qué se hizo una versión, una extensión o una canción completa)."
  ],
  "Account tab": [
   "Fila Cont",
@@ -963,6 +1068,11 @@
   "Planul tău, creditele și ce include planul, apoi notificările Suno.",
   "Ваш план, кредити та що входить у план, потім сповіщення Suno.",
   "Tu plan, tus créditos y lo que incluye el plan, y luego las notificaciones de Suno."
+ ],
+ "Notifications you haven't seen say New. Mark all as read (also in the Account menu) marks them read on Suno too.": [
+  "Notificările pe care nu le-ați văzut spun Nou. Marchează toate ca citite (și în meniul Cont) le marchează ca citite și pe Suno.",
+  "Сповіщення, яких ви ще не бачили, мають позначку «Нове». «Позначити все прочитаним» (також у меню «Обліковий запис») позначає їх прочитаними і в Suno.",
+  "Las notificaciones que no ha visto dicen Nuevo. Marcar todo como leído (también en el menú Cuenta) las marca como leídas también en Suno."
  ],
  "Playlists tab": [
   "Fila Liste de redare",
@@ -994,6 +1104,11 @@
   "Меню «Довідка» або Налаштування, «Tin Pan каже»: усе; те, що ви просите, і помилки (без фонових новин); або лише помилки й те, що ви просите почути. F1, F2, F3 і Ctrl+R говорять завжди, а кожне повідомлення зберігається в історії.\nНалаштування, «Коли список доходить до пісні, що грає»: короткий клацок (типово), сказати «грає» (також шрифтом Брайля), обидва або нічого.",
   "Menú Ayuda o Configuración, Tin Pan dice: todo; lo que pides y los errores (sin novedades de fondo); o solo los errores y lo que pides oír. F1, F2, F3 y Ctrl+R siempre hablan, y cada mensaje queda en el historial.\nConfiguración, Cuando una lista llega a la canción que suena: un clic corto (lo predeterminado), decir «sonando» (también en braille), ambos o nada."
  ],
+ "Shift+F3, or Settings, Live lyrics: when a song has timed lyrics, Tin Pan says each line as it starts, also in braille. Off to start with. Section tags such as [Chorus] aren't read.": [
+  "Shift+F3 sau Setări, Versuri în direct: când un cântec are versuri sincronizate, Tin Pan spune fiecare vers când începe, și în braille. Este oprit la început. Etichetele de secțiune, cum ar fi [Chorus], nu sunt citite.",
+  "Shift+F3 або Налаштування, Живі слова: якщо пісня має синхронізовані слова, Tin Pan промовляє кожен рядок, щойно він починається, також шрифтом Брайля. Спочатку вимкнено. Позначки розділів, як-от [Chorus], не читаються.",
+  "Shift+F3 o Configuración, Letra en directo: cuando una canción tiene letra sincronizada, Tin Pan dice cada verso al empezar, también en braille. Está desactivado al principio. Las etiquetas de sección como [Chorus] no se leen."
+ ],
  "Settings": [
   "Setări",
   "Налаштування",
@@ -1023,6 +1138,16 @@
   "Descarcă (Ctrl+D) întreabă de fiecare dată dacă să curețe melodia cu sunscreen, care elimină zgomotul de fond și bâzâitul din melodiile Suno. Descarcă MP3, Descarcă WAV și Descarcă tot nu întreabă; curăță când spun Setările. Curăță descărcarea, din meniul Melodie, curăță o melodie pe care o ai deja.\nRezultatul e un WAV pe 24 de biți lângă descărcare, cu (clean) adăugat la nume, adesea de 10 până la 20 de ori mai mare. sunscreen citește MP3 și WAV, așa că fișierele M4A de la Suno sunt convertite întâi. Rulează pe acest calculator și durează cam 10 secunde pentru o melodie de 5 minute.\nSetările au fiecare pas: bâzâitul decodorului, modelul auditiv, pâlpâirea, lărgirea, octava de sus, potrivirea tonului și nivelul sonor, cu valorile lor, și dacă să păstreze descărcarea originală.",
   "«Завантажити» (Ctrl+D) щоразу запитує, чи очистити пісню за допомогою sunscreen, який прибирає шум і гудіння в піснях Suno. «Завантажити MP3», «Завантажити WAV» і «Завантажити все» не запитують; вони очищають, якщо так задано в Налаштуваннях. «Очистити завантаження» в меню «Пісня» очищає пісню, яка у вас уже є.\nРезультат — 24-бітний WAV поруч із завантаженням, з (clean) у назві, часто в 10–20 разів більший. sunscreen читає MP3 і WAV, тож файли M4A від Suno спершу перетворюються. Він працює на цьому комп'ютері й триває близько 10 секунд для 5-хвилинної пісні.\nУ Налаштуваннях є кожен крок: гудіння декодера, модель слуху, тремтіння, розширення, верхня октава, підгонка тембру й гучність, з їхніми значеннями, а також чи зберігати оригінальне завантаження.",
   "Descargar (Ctrl+D) pregunta cada vez si limpiar la canción con sunscreen, que quita el ruido de fondo y el zumbido de las canciones de Suno. Descargar MP3, Descargar WAV y Descargar todo no preguntan; limpian cuando lo dice Configuración. Limpiar la descarga, en el menú Canción, limpia una canción que ya tienes.\nEl resultado es un WAV de 24 bits junto a la descarga, con (clean) añadido al nombre, a menudo de 10 a 20 veces más grande. sunscreen lee MP3 y WAV, así que los archivos M4A de Suno se convierten primero. Funciona en esta computadora y tarda unos 10 segundos por cada canción de 5 minutos.\nConfiguración tiene cada paso: zumbido del decodificador, modelo auditivo, parpadeo, ampliación, octava alta, imitación del tono y volumen, con sus valores, y si conservar la descarga original."
+ ],
+ "Problems and ideas": [
+  "Probleme și idei",
+  "Проблеми та ідеї",
+  "Problemas e ideas"
+ ],
+ "Help menu, Report a problem (Ctrl+Shift+B) and Suggest a feature (Ctrl+Shift+F) send a message privately to Tin Pan's author; no account is needed. A problem report can include Tin Pan's log, which has no passwords; your Windows user name is taken out first.": [
+  "Meniul Ajutor, Raportează o problemă (Ctrl+Shift+B) și Sugerează o funcție (Ctrl+Shift+F) trimit un mesaj doar autorului Tin Pan; nu e nevoie de cont. Un raport de problemă poate include jurnalul Tin Pan, care nu conține parole; numele de utilizator Windows este eliminat mai întâi.",
+  "Меню «Довідка», «Повідомити про проблему» (Ctrl+Shift+B) і «Запропонувати функцію» (Ctrl+Shift+F) надсилають повідомлення лише авторові Tin Pan; обліковий запис не потрібен. Звіт про проблему може містити журнал Tin Pan, у якому немає паролів; ім’я користувача Windows спершу видаляється.",
+  "Menú Ayuda, Informar de un problema (Ctrl+Shift+B) y Sugerir una función (Ctrl+Shift+F) envían un mensaje en privado al autor de Tin Pan; no hace falta cuenta. Un informe de problema puede incluir el registro de Tin Pan, que no tiene contraseñas; antes se quita su nombre de usuario de Windows."
  ],
  "Updates": [
   "Actualizări",
@@ -1594,6 +1719,91 @@
   "{0} пісня.|{0} пісні.|{0} пісень.",
   "{0} canción.|{0} canciones."
  ],
+ "Suno didn't say who made this song.": [
+  "Suno nu a spus cine a făcut acest cântec.",
+  "Suno не вказав, хто створив цю пісню.",
+  "Suno no dijo quién hizo esta canción."
+ ],
+ "_Handle: the name after suno.com/@, or the whole link": [
+  "_Numele: cel de după suno.com/@, sau tot linkul",
+  "_Ім’я: те, що після suno.com/@, або все посилання",
+  "_Nombre: lo que va tras suno.com/@, o el enlace completo"
+ ],
+ "Find a creator": [
+  "Găsește un creator",
+  "Знайти автора",
+  "Buscar un creador"
+ ],
+ "Shows a Suno creator's songs, newest first.": [
+  "Arată cântecele unui creator Suno, cele mai noi întâi.",
+  "Показує пісні автора Suno, спершу найновіші.",
+  "Muestra las canciones de un creador de Suno, primero las más nuevas."
+ ],
+ "Find": [
+  "Caută",
+  "Знайти",
+  "Buscar"
+ ],
+ "{0} has no public songs.": [
+  "{0} nu are cântece publice.",
+  "{0} не має публічних пісень.",
+  "{0} no tiene canciones públicas."
+ ],
+ "No one has covered or remixed {0} yet.": [
+  "Nimeni nu a făcut încă un cover sau un remix după {0}.",
+  "Ще ніхто не зробив кавер чи ремікс на {0}.",
+  "Nadie ha hecho todavía una versión o un remix de {0}."
+ ],
+ "Covers and remixes of {0}": [
+  "Covere și remixuri după {0}",
+  "Кавери й ремікси на {0}",
+  "Versiones y remixes de {0}"
+ ],
+ "{0} wasn't made from another song.": [
+  "{0} nu a fost făcut dintr-un alt cântec.",
+  "{0} не створено з іншої пісні.",
+  "{0} no se hizo a partir de otra canción."
+ ],
+ "{0} was made from": [
+  "{0} a fost făcut din",
+  "{0} створено з",
+  "{0} se hizo a partir de"
+ ],
+ "Explore has nothing to show right now.": [
+  "Explorează nu are nimic de arătat acum.",
+  "В огляді зараз нічого немає.",
+  "Explorar no tiene nada que mostrar ahora."
+ ],
+ "Explore. Enter opens a section.": [
+  "Explorează. Enter deschide o secțiune.",
+  "Огляд. Enter відкриває розділ.",
+  "Explorar. Intro abre una sección."
+ ],
+ "Nothing new from the people you follow.": [
+  "Nimic nou de la oamenii pe care îi urmăriți.",
+  "Нічого нового від тих, за ким ви стежите.",
+  "Nada nuevo de las personas que sigue."
+ ],
+ "From people you follow": [
+  "De la oamenii pe care îi urmăriți",
+  "Від тих, за ким ви стежите",
+  "De las personas que sigue"
+ ],
+ "Suno has no contests right now.": [
+  "Suno nu are concursuri acum.",
+  "Зараз у Suno немає конкурсів.",
+  "Suno no tiene concursos ahora."
+ ],
+ "Suno contests": [
+  "Concursuri Suno",
+  "Конкурси Suno",
+  "Concursos de Suno"
+ ],
+ "{0} has no song to play.": [
+  "{0} nu are un cântec de redat.",
+  "{0} не має пісні для відтворення.",
+  "{0} no tiene canción para reproducir."
+ ],
  "WAV needs Pro or Premier, so this is an MP3.": [
   "WAV necesită Pro sau Premier, așa că acesta e un MP3.",
   "Для WAV потрібен Pro або Premier, тож це MP3.",
@@ -2019,6 +2229,36 @@
   "Довідка",
   "Ayuda"
  ],
+ "D_ownload": [
+  "_Descarcă",
+  "_Завантажити",
+  "Descar_gar"
+ ],
+ "_Make from it": [
+  "_Creează din el",
+  "_Створити з неї",
+  "_Crear a partir de ella"
+ ],
+ "Related so_ngs": [
+  "Cântece î_nrudite",
+  "П_ов’язані пісні",
+  "C_anciones relacionadas"
+ ],
+ "_Comments": [
+  "Co_mentarii",
+  "_Коментарі",
+  "Co_mentarios"
+ ],
+ "S_haring": [
+  "_Partajare",
+  "По_ширення",
+  "C_ompartir"
+ ],
+ "_Speech": [
+  "_Vorbire",
+  "_Мовлення",
+  "_Voz"
+ ],
  "_Play or pause": [
   "_Redare sau pauză",
   "_Відтворення або пауза",
@@ -2074,6 +2314,11 @@
   "_Що грає",
   "_Qué suena"
  ],
+ "Read _lyrics as they're sung, on or off": [
+  "Citește _versurile pe măsură ce sunt cântate, pornit sau oprit",
+  "Читати с_лова пісні під час співу, увімкнути чи вимкнути",
+  "Leer la _letra mientras se canta, activar o desactivar"
+ ],
  "Volume d_own": [
   "Volum mai înce_t",
   "_Тихіше",
@@ -2099,35 +2344,10 @@
   "Ві_домості про пісню",
   "_Información de la canción"
  ],
- "Copy l_ink": [
-  "Copiază _linkul",
-  "Копіювати по_силання",
-  "Copiar _enlace"
- ],
- "Copy Suno share lin_k": [
-  "Copiază linkul de _partajare Suno",
-  "Копіювати посилання для по_ширення",
-  "Copiar enlace para comp_artir de Suno"
- ],
- "Similar so_ngs...": [
-  "_Melodii asemănătoare...",
-  "С_хожі пісні...",
-  "Canciones _parecidas..."
- ],
- "S_how comments": [
-  "Arată c_omentariile",
-  "Показати _коментарі",
-  "Ver come_ntarios"
- ],
- "Write a comment...": [
-  "Scrie un comentariu...",
-  "Написати коментар...",
-  "Escribir un comentario..."
- ],
- "D_ownload": [
-  "_Descarcă",
-  "_Завантажити",
-  "Descar_gar"
+ "_Download...": [
+  "_Descarcă...",
+  "_Завантажити...",
+  "_Descargar..."
  ],
  "Download MP_3": [
   "Descarcă MP_3",
@@ -2158,6 +2378,46 @@
   "_Stem-uri",
   "Стем_и",
   "_Stems"
+ ],
+ "Similar so_ngs...": [
+  "_Melodii asemănătoare...",
+  "С_хожі пісні...",
+  "Canciones _parecidas..."
+ ],
+ "_Creator's songs...": [
+  "Cântecele _creatorului...",
+  "Пісні _автора...",
+  "Canciones del _creador..."
+ ],
+ "Covers and _remixes of it...": [
+  "Covere și _remixuri după el...",
+  "Кавери й _ремікси на неї...",
+  "Versiones y _remixes de ella..."
+ ],
+ "_Original song...": [
+  "Cântecul _original...",
+  "_Оригінальна пісня...",
+  "Canción _original..."
+ ],
+ "S_how comments": [
+  "Arată c_omentariile",
+  "Показати _коментарі",
+  "Ver come_ntarios"
+ ],
+ "_Write a comment...": [
+  "_Scrie un comentariu...",
+  "_Написати коментар...",
+  "_Escribir un comentario..."
+ ],
+ "Copy l_ink": [
+  "Copiază _linkul",
+  "Копіювати по_силання",
+  "Copiar _enlace"
+ ],
+ "Copy Suno share lin_k": [
+  "Copiază linkul de _partajare Suno",
+  "Копіювати посилання для по_ширення",
+  "Copiar enlace para comp_artir de Suno"
  ],
  "Edit title and l_yrics...": [
   "Schim_bă titlul și versurile...",
@@ -2229,6 +2489,26 @@
   "_Налаштування",
   "C_onfiguración"
  ],
+ "_Explore...": [
+  "_Explorează...",
+  "_Огляд...",
+  "_Explorar..."
+ ],
+ "From people I _follow...": [
+  "De la oamenii pe care îi _urmăresc...",
+  "Від тих, за ким я _стежу...",
+  "De quienes _sigo..."
+ ],
+ "Find a c_reator...": [
+  "Găsește un _creator...",
+  "Знайти _автора...",
+  "Buscar un c_reador..."
+ ],
+ "_Contests...": [
+  "C_oncursuri...",
+  "_Конкурси...",
+  "_Concursos..."
+ ],
  "_Credits left": [
   "_Credite rămase",
   "_Залишок кредитів",
@@ -2238,6 +2518,11 @@
   "_Plan și descărcări",
   "_План і завантаження",
   "_Plan y descargas"
+ ],
+ "Mark _notifications as read": [
+  "Marchează _notificările ca citite",
+  "Позначити _сповіщення прочитаними",
+  "Marcar las _notificaciones como leídas"
  ],
  "Sign _in": [
   "C_onectare",
@@ -2283,6 +2568,16 @@
   "Spune doar _erorile",
   "Казати лише по_милки",
   "Decir solo los _errores"
+ ],
+ "Report a _problem...": [
+  "Raportează o _problemă...",
+  "Повідомити про п_роблему...",
+  "_Informar de un problema..."
+ ],
+ "Suggest a _feature...": [
+  "Sugerează o _funcție...",
+  "Запропонувати _функцію...",
+  "Sugerir una _función..."
  ],
  "Check for _updates": [
   "Caută act_ualizări",
@@ -2359,10 +2654,15 @@
   "Ліцензії та примітки",
   "Licencias y avisos"
  ],
- "Tin Pan {0}, by Ernesto Melendez.": [
-  "Tin Pan {0}, de Ernesto Melendez.",
-  "Tin Pan {0}, автор Ernesto Melendez.",
-  "Tin Pan {0}, de Ernesto Melendez."
+ "Tin Pan {0}.": [
+  "Tin Pan {0}.",
+  "Tin Pan {0}.",
+  "Tin Pan {0}."
+ ],
+ "Copyright (C) 2026 Ernesto Melendez. Tin Pan is free software under the GNU General Public License, version 3 or later, with terms that keep this credit and dedication visible. It comes with no warranty. Help, Licenses and notices has the license and its terms.": [
+  "Copyright (C) 2026 Ernesto Melendez. Tin Pan este software liber, sub Licența Publică Generală GNU, versiunea 3 sau ulterioară, cu condiții care păstrează vizibile acest credit și această dedicație. Vine fără nicio garanție. În Ajutor, Licențe și note găsiți licența și condițiile ei.",
+  "Copyright (C) 2026 Ernesto Melendez. Tin Pan — вільне програмне забезпечення за Загальною публічною ліцензією GNU, версії 3 або новішої, з умовами, які зберігають видимими цю подяку та присвяту. Воно надається без жодних гарантій. Ліцензію та її умови можна знайти в меню Довідка, Ліцензії та примітки.",
+  "Copyright (C) 2026 Ernesto Melendez. Tin Pan es software libre bajo la Licencia Pública General de GNU, versión 3 o posterior, con condiciones que mantienen visibles este crédito y esta dedicatoria. Se ofrece sin ninguna garantía. En Ayuda, Licencias y avisos están la licencia y sus condiciones."
  ],
  "An accessible, unofficial client for Suno. Not affiliated with Suno.": [
   "Un client accesibil, neoficial, pentru Suno. Nu e afiliat cu Suno.",
@@ -2464,6 +2764,21 @@
   "Ctrl+F1 — усі команди.",
   "Ctrl+F1 para todos los comandos."
  ],
+ "Lyrics won't be read as they're sung.": [
+  "Versurile nu vor mai fi citite pe măsură ce sunt cântate.",
+  "Слова пісні не читатимуться під час співу.",
+  "La letra no se leerá mientras se canta."
+ ],
+ "Lyrics will be read as they're sung.": [
+  "Versurile vor fi citite pe măsură ce sunt cântate.",
+  "Слова пісні читатимуться під час співу.",
+  "La letra se leerá mientras se canta."
+ ],
+ "This song has no timed lyrics.": [
+  "Acest cântec nu are versuri sincronizate.",
+  "Ця пісня не має синхронізованих слів.",
+  "Esta canción no tiene letra sincronizada."
+ ],
  "Nothing playing.": [
   "Nu se redă nimic.",
   "Нічого не грає.",
@@ -2488,6 +2803,71 @@
   "{0} melodie a eșuat.|{0} melodii au eșuat.|{0} de melodii au eșuat.",
   "{0} пісня не вдалася.|{0} пісні не вдалися.|{0} пісень не вдалося.",
   "Falló {0} canción.|Fallaron {0} canciones."
+ ],
+ "_What happened, and what did you expect?": [
+  "_Ce s-a întâmplat și ce vă așteptați să se întâmple?",
+  "_Що сталося і чого ви очікували?",
+  "¿_Qué pasó y qué esperaba que pasara?"
+ ],
+ "_What would you like Tin Pan to do?": [
+  "_Ce ați vrea să facă Tin Pan?",
+  "_Що ви хотіли б, щоб робив Tin Pan?",
+  "¿_Qué le gustaría que hiciera Tin Pan?"
+ ],
+ "_Email or other way to reach you (optional)": [
+  "_E-mail sau alt mod de a vă contacta (opțional)",
+  "_Ел. пошта або інший спосіб зв’язку (необов’язково)",
+  "_Correo u otra forma de contactarle (opcional)"
+ ],
+ "Include Tin Pan's _log (it has no passwords, and your Windows user name is taken out)": [
+  "Include _jurnalul Tin Pan (nu conține parole, iar numele de utilizator Windows este eliminat)",
+  "Додати _журнал Tin Pan (у ньому немає паролів, а ім’я користувача Windows видаляється)",
+  "Incluir el _registro de Tin Pan (no tiene contraseñas y se quita su nombre de usuario de Windows)"
+ ],
+ "Goes privately to Tin Pan's author. The log helps find the cause.": [
+  "Ajunge doar la autorul Tin Pan. Jurnalul ajută la găsirea cauzei.",
+  "Надходить лише авторові Tin Pan. Журнал допомагає знайти причину.",
+  "Llega en privado al autor de Tin Pan. El registro ayuda a encontrar la causa."
+ ],
+ "Goes privately to Tin Pan's author.": [
+  "Ajunge doar la autorul Tin Pan.",
+  "Надходить лише авторові Tin Pan.",
+  "Llega en privado al autor de Tin Pan."
+ ],
+ "Report a problem": [
+  "Raportează o problemă",
+  "Повідомити про проблему",
+  "Informar de un problema"
+ ],
+ "Suggest a feature": [
+  "Sugerează o funcție",
+  "Запропонувати функцію",
+  "Sugerir una función"
+ ],
+ "Send": [
+  "Trimite",
+  "Надіслати",
+  "Enviar"
+ ],
+ "Nothing sent: the description was empty.": [
+  "Nu s-a trimis nimic: descrierea era goală.",
+  "Нічого не надіслано: опис порожній.",
+  "No se envió nada: la descripción estaba vacía."
+ ],
+ "Sending.": [
+  "Se trimite.",
+  "Надсилання.",
+  "Enviando."
+ ],
+ "Sent as report {0}. Thank you.": [
+  "Trimis ca raportul {0}. Mulțumim.",
+  "Надіслано як звіт {0}. Дякуємо.",
+  "Enviado como informe {0}. Gracias."
+ ],
+ "Sent as suggestion {0}. Thank you.": [
+  "Trimis ca sugestia {0}. Mulțumim.",
+  "Надіслано як пропозицію {0}. Дякуємо.",
+  "Enviado como sugerencia {0}. Gracias."
  ],
  "The last update couldn't be installed. Help, Check for updates tries again.": [
   "Ultima actualizare nu s-a putut instala. Ajutor, Caută actualizări încearcă din nou.",
@@ -2729,6 +3109,11 @@
   "Жіночий вокал",
   "Voz femenina"
  ],
+ "Notifications marked as read.": [
+  "Notificările au fost marcate ca citite.",
+  "Сповіщення позначено прочитаними.",
+  "Notificaciones marcadas como leídas."
+ ],
  "No notifications.": [
   "Nicio notificare.",
   "Сповіщень немає.",
@@ -2834,6 +3219,46 @@
   "Посилений стиль: {0}",
   "Estilo mejorado: {0}"
  ],
+ "Suno has no style ideas right now.": [
+  "Suno nu are idei de stil acum.",
+  "Зараз у Suno немає ідей стилю.",
+  "Suno no tiene ideas de estilo ahora."
+ ],
+ "Style ideas. Enter puts one in the Style box.": [
+  "Idei de stil. Enter pune una în caseta Stil.",
+  "Ідеї стилю. Enter вставляє одну в поле «Стиль».",
+  "Ideas de estilo. Intro pone una en el cuadro Estilo."
+ ],
+ "You have no lyrics drafts on Suno.": [
+  "Nu aveți ciorne de versuri pe Suno.",
+  "У вас немає чернеток тексту в Suno.",
+  "No tiene borradores de letras en Suno."
+ ],
+ "Lyrics drafts. Enter puts one in the Lyrics box.": [
+  "Ciorne de versuri. Enter pune una în caseta Versuri.",
+  "Чернетки тексту. Enter вставляє одну в поле «Текст».",
+  "Borradores de letras. Intro pone uno en el cuadro Letra."
+ ],
+ "That draft has no lyrics yet.": [
+  "Ciorna aceasta nu are încă versuri.",
+  "У цій чернетці ще немає тексту.",
+  "Ese borrador aún no tiene letra."
+ ],
+ "Replace the lyrics in the Lyrics box?": [
+  "Înlocuiți versurile din caseta Versuri?",
+  "Замінити текст у полі «Текст»?",
+  "¿Reemplazar la letra del cuadro Letra?"
+ ],
+ "Lyrics drafts": [
+  "Ciorne de versuri",
+  "Чернетки тексту",
+  "Borradores de letras"
+ ],
+ "Lyrics from {0} are in the Lyrics box.": [
+  "Versurile din {0} sunt în caseta Versuri.",
+  "Текст із {0} тепер у полі «Текст».",
+  "La letra de {0} está en el cuadro Letra."
+ ],
  "Put lyrics in the Lyrics box first. Write lyrics makes some from a topic.": [
   "Întâi pune versuri în caseta Versuri. Generează versuri le face dintr-o temă.",
   "Спершу додайте текст у поле «Текст». «Написати текст» створить його за темою.",
@@ -2929,6 +3354,11 @@
   "Вхід у Suno",
   "Iniciar sesión en Suno"
  ],
+ "playing": [
+  "se redă",
+  "грає",
+  "sonando"
+ ],
  "Menu bar": [
   "Bara de meniu",
   "Рядок меню",
@@ -2964,6 +3394,11 @@
   "Оновити спо_віщення",
   "Actualizar n_otificaciones"
  ],
+ "_Mark all as read": [
+  "_Marchează toate ca citite",
+  "_Позначити все прочитаним",
+  "_Marcar todo como leído"
+ ],
  "Notifications": [
   "Notificări",
   "Сповіщення",
@@ -2988,6 +3423,11 @@
   "Îm_bogățește stilul",
   "Посил_ити стиль",
   "Me_jorar estilo"
+ ],
+ "Style ideas...": [
+  "Idei de stil...",
+  "Ідеї стилю...",
+  "Ideas de estilo..."
  ],
  "_Voice": [
   "V_oce",
@@ -3068,6 +3508,11 @@
   "_Generează versuri",
   "Написати текст",
   "Escri_bir letra"
+ ],
+ "Lyrics drafts...": [
+  "Ciorne de versuri...",
+  "Чернетки тексту...",
+  "Borradores de letras..."
  ],
  "_Generated lyrics": [
   "Versuri ge_nerate",
@@ -3274,6 +3719,11 @@
   "Коли список доходить до пісні, що грає",
   "Cuando una lista llega a la canción que suena"
  ],
+ "Li_ve lyrics: read each line aloud as it is sung (Shift+F3)": [
+  "Versuri _în direct: citește fiecare vers cu voce tare când e cântat (Shift+F3)",
+  "_Живі слова: читати кожен рядок уголос під час співу (Shift+F3)",
+  "Letra en directo: leer cada verso en voz alta mientras se canta (S_hift+F3)"
+ ],
  "Check for _new versions when Tin Pan starts": [
   "Caută _versiuni noi la pornirea Tin Pan",
   "Перевіряти _нові версії під час запуску Tin Pan",
@@ -3478,6 +3928,11 @@
   "Tin Pan, ca toate aplicațiile mele, e dedicat lui Jenni și Diana.",
   "Tin Pan, як і всі мої програми, присвячено Дженні та Діані.",
   "Tin Pan, como todas mis apps, está dedicado a Jenni y Diana."
+ ],
+ "Tin Pan was created by Ernesto Melendez (github.com/ernie96/tin-pan).": [
+  "Tin Pan a fost creat de Ernesto Melendez (github.com/ernie96/tin-pan).",
+  "Tin Pan створив Ernesto Melendez (github.com/ernie96/tin-pan).",
+  "Tin Pan fue creado por Ernesto Melendez (github.com/ernie96/tin-pan)."
  ],
  "Automatic (Windows language)": [
   "Automat (limba Windows)",

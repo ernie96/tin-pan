@@ -14,7 +14,10 @@ namespace TinPan.Views
     /// <summary>A list of songs in a small window (similar songs and the like). Enter plays one, Escape closes.</summary>
     public sealed class SongListWindow : Window
     {
-        public SongListWindow(string title, IReadOnlyList<SunoClip> songs, Func<SunoClip, Task> play)
+        /// <summary>Set by the main window: gives a list the Song menu (Applications key) and its keys, for the selected song.</summary>
+        public static Action<ListBox, Func<SunoClip?>>? AddSongMenu { get; set; }
+
+        public SongListWindow(string title, IReadOnlyList<SunoClip> songs, Func<SunoClip, Task> play, bool sayCreator = true)
         {
             Title = title;
             Width = 560;
@@ -24,9 +27,11 @@ namespace TinPan.Views
 
             var list = new ListBox { ItemsSource = songs, Margin = new Thickness(10) };
             AutomationProperties.SetName(list, title);
-            PlayingCue.SetSongs(list, true);
-            list.DisplayMemberPath = nameof(SunoClip.SpokenText);
+            if (sayCreator) PlayingCue.SetSongsWithCreator(list, true);
+            else PlayingCue.SetSongs(list, true);
+            list.DisplayMemberPath = sayCreator ? nameof(SunoClip.SpokenWithCreator) : nameof(SunoClip.SpokenText);
             if (songs.Count > 0) list.SelectedIndex = 0;
+            AddSongMenu?.Invoke(list, () => list.SelectedItem as SunoClip);
 
             list.PreviewKeyDown += async (_, e) =>
             {

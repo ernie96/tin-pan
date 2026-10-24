@@ -147,7 +147,6 @@ namespace TinPan.ViewModels
             {
                 clip.IsPublic = makePublic;
                 clip.NotifyChanged();
-                OnPropertyChanged(nameof(VisibilityMenuText));
                 Announcer.Announce(makePublic ? T("{0} is public.", clip.DisplayTitle) : T("{0} is private.", clip.DisplayTitle));
             }
         }
@@ -183,7 +182,6 @@ namespace TinPan.ViewModels
             if (await RunAsync(() => _api.SetRemixAllowedAsync(clip.Id, allow)))
             {
                 (clip.Metadata ??= new ClipMetadata()).CanRemix = allow;
-                OnPropertyChanged(nameof(RemixMenuText));
                 Announcer.Announce(allow ? T("Others may now cover and remix it.") : T("Others can no longer cover or remix it."));
             }
         }

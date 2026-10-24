@@ -16,9 +16,11 @@ namespace TinPan.ViewModels
     /// <summary>
     /// One action, its group, its keys and the command that runs it. The menu bar and the Ctrl+F1
     /// command list are both built from these, so they can't drift apart.
-    /// HeaderPath names a LibraryPanelViewModel property when the label changes (plan, public or private).
+    /// HeaderPath names a LibraryPanelViewModel property when the label changes with the plan.
+    /// Submenu puts it in a submenu of its group (see MainViewModel.SubmenuLabel); SeparatorBefore draws a line above it.
     /// </summary>
-    public sealed record CommandEntry(string Group, string Label, string Keys, ICommand Command, object? Parameter = null, string? HeaderPath = null)
+    public sealed record CommandEntry(string Group, string Label, string Keys, ICommand Command, object? Parameter = null, string? HeaderPath = null,
+        string? Submenu = null, bool SeparatorBefore = false)
     {
         public string SpokenLabel => Label.Replace("_", "").Replace("...", "");
     }
@@ -26,6 +28,10 @@ namespace TinPan.ViewModels
     // Menu bar, command list, repeat and history, resume, skips, speech level and About.
     public partial class MainViewModel
     {
+        /// <summary>The Attribution Notice from NOTICE.md; the license's terms require it in About.</summary>
+        public const string Attribution =
+            "Tin Pan was created by Ernesto Melendez (github.com/ernie96/tin-pan).";
+
         public const string Dedication =
             "Tin Pan, like all my apps, is dedicated to Jenni and Diana.";
 
@@ -43,10 +49,32 @@ namespace TinPan.ViewModels
             "Song" => T("Song"),
             "Library" => T("Library"),
             "View" => T("View"),
+            "Discover" => T("Discover"),
             "Account" => T("Account"),
             "Help" => T("Help"),
             _ => group
         };
+
+        /// <summary>A submenu's name as shown, with its access key.</summary>
+        public static string SubmenuLabel(string submenu) => submenu switch
+        {
+            "Download" => T("D_ownload"),
+            "Make" => T("_Make from it"),
+            "Related" => T("Related so_ngs"),
+            "Comments" => T("_Comments"),
+            "Share" => T("S_haring"),
+            "Speech" => T("_Speech"),
+            _ => submenu
+        };
+
+        /// <summary>
+        /// A label that depends on the song the menu acts on, decided as the menu opens: public or private,
+        /// remixes allowed or not. Null keeps the entry's own label.
+        /// </summary>
+        public string? SongLabel(CommandEntry entry, SunoClip? song) =>
+            entry.Command == LibraryVM.ToggleVisibilityCommand ? LibraryPanelViewModel.VisibilityLabel(song)
+            : entry.Command == LibraryVM.ToggleRemixCommand ? LibraryPanelViewModel.RemixLabel(song)
+            : null;
 
         public IReadOnlyList<CommandEntry> Commands => _commands ??= BuildCommands();
 
@@ -59,45 +87,49 @@ namespace TinPan.ViewModels
                 new("Playback", T("_Stop"), "Shift+F8", lib.StopCommand),
                 new("Playback", T("Pre_vious song"), "F7", PreviousCommand),
                 new("Playback", T("_Next song"), "F9", NextCommand),
-                new("Playback", T("_Back 10 seconds"), "Shift+F7", lib.SeekCommand, "-10"),
+                new("Playback", T("_Back 10 seconds"), "Shift+F7", lib.SeekCommand, "-10", SeparatorBefore: true),
                 new("Playback", T("_Forward 10 seconds"), "Shift+F9", lib.SeekCommand, "10"),
                 new("Playback", T("Bac_k 10 percent"), "Ctrl+F7", SeekPercentCommand, "-10"),
                 new("Playback", T("Forwar_d 10 percent"), "Ctrl+F9", SeekPercentCommand, "10"),
                 new("Playback", T("Back to the s_tart"), "Ctrl+F8", RestartCommand),
                 new("Playback", T("_Resume where I left off"), "Ctrl+Shift+F8", ResumeCommand),
-                new("Playback", T("_What's playing"), "F3", NowPlayingCommand),
-                new("Playback", T("Volume d_own"), "F11", lib.VolumeDownCommand),
+                new("Playback", T("_What's playing"), "F3", NowPlayingCommand, SeparatorBefore: true),
+                new("Playback", T("Read _lyrics as they're sung, on or off"), "Shift+F3", ToggleLiveLyricsCommand),
+                new("Playback", T("Volume d_own"), "F11", lib.VolumeDownCommand, SeparatorBefore: true),
                 new("Playback", T("Volume _up"), "F12", lib.VolumeUpCommand),
 
                 new("Song", T("_Play"), "Enter", PlaySongCommand),
                 new("Song", T("_Details"), "Ctrl+I", lib.DetailsCommand),
                 new("Song", T("Song in_formation"), "Alt+Enter", lib.SongInfoCommand),
                 new("Song", T("_Lyrics"), "Ctrl+L", lib.LyricsCommand),
-                new("Song", T("Copy l_ink"), "Ctrl+C", lib.CopyLinkCommand),
-                new("Song", T("Copy Suno share lin_k"), "", lib.ShareLinkCommand),
-                new("Song", T("Similar so_ngs..."), "", lib.SimilarCommand),
-                new("Song", T("S_how comments"), "", lib.CommentsCommand),
-                new("Song", T("Write a comment..."), "", lib.WriteCommentCommand),
-                new("Song", T("D_ownload"), "Ctrl+D", lib.DownloadCommand),
-                new("Song", T("Download MP_3"), "", lib.DownloadMp3Command),
-                new("Song", T("Download _WAV"), "", lib.DownloadWavCommand, HeaderPath: nameof(LibraryPanelViewModel.WavMenuText)),
-                new("Song", T("Download _video"), "", lib.DownloadVideoCommand),
-                new("Song", T("Clean up download (remove ha_ze)"), "", lib.CleanUpDownloadCommand),
-                new("Song", T("_Extend..."), "Ctrl+E", lib.ExtendCommand),
-                new("Song", T("_Cover..."), "", lib.CoverCommand, HeaderPath: nameof(LibraryPanelViewModel.CoverMenuText)),
-                new("Song", T("Re_master..."), "", lib.RemasterCommand, HeaderPath: nameof(LibraryPanelViewModel.RemasterMenuText)),
-                new("Song", T("_Get whole song"), "", lib.WholeSongCommand),
-                new("Song", T("S_tems"), "", lib.StemsCommand),
-                new("Song", T("Edit title and l_yrics..."), "", lib.EditCommand),
+                new("Song", T("_Download..."), "Ctrl+D", lib.DownloadCommand, Submenu: "Download", SeparatorBefore: true),
+                new("Song", T("Download MP_3"), "", lib.DownloadMp3Command, Submenu: "Download"),
+                new("Song", T("Download _WAV"), "", lib.DownloadWavCommand, HeaderPath: nameof(LibraryPanelViewModel.WavMenuText), Submenu: "Download"),
+                new("Song", T("Download _video"), "", lib.DownloadVideoCommand, Submenu: "Download"),
+                new("Song", T("Clean up download (remove ha_ze)"), "", lib.CleanUpDownloadCommand, Submenu: "Download"),
+                new("Song", T("_Extend..."), "Ctrl+E", lib.ExtendCommand, Submenu: "Make"),
+                new("Song", T("_Cover..."), "", lib.CoverCommand, HeaderPath: nameof(LibraryPanelViewModel.CoverMenuText), Submenu: "Make"),
+                new("Song", T("Re_master..."), "", lib.RemasterCommand, HeaderPath: nameof(LibraryPanelViewModel.RemasterMenuText), Submenu: "Make"),
+                new("Song", T("_Get whole song"), "", lib.WholeSongCommand, Submenu: "Make"),
+                new("Song", T("S_tems"), "", lib.StemsCommand, Submenu: "Make"),
+                new("Song", T("Similar so_ngs..."), "", lib.SimilarCommand, Submenu: "Related"),
+                new("Song", T("_Creator's songs..."), "", lib.CreatorCommand, Submenu: "Related"),
+                new("Song", T("Covers and _remixes of it..."), "", lib.RemixesCommand, Submenu: "Related"),
+                new("Song", T("_Original song..."), "", lib.OriginalCommand, Submenu: "Related"),
+                new("Song", T("S_how comments"), "", lib.CommentsCommand, Submenu: "Comments"),
+                new("Song", T("_Write a comment..."), "", lib.WriteCommentCommand, Submenu: "Comments"),
+                new("Song", T("Copy l_ink"), "Ctrl+C", lib.CopyLinkCommand, Submenu: "Share"),
+                new("Song", T("Copy Suno share lin_k"), "", lib.ShareLinkCommand, Submenu: "Share"),
+                new("Song", T("Make p_ublic"), "", lib.ToggleVisibilityCommand, Submenu: "Share"),
+                new("Song", T("Stop remi_xes"), "", lib.ToggleRemixCommand, Submenu: "Share"),
+                new("Song", T("Edit title and l_yrics..."), "", lib.EditCommand, SeparatorBefore: true),
                 new("Song", T("Add to playli_st..."), "", lib.AddToPlaylistCommand),
-                new("Song", T("Make p_ublic"), "", lib.ToggleVisibilityCommand, HeaderPath: nameof(LibraryPanelViewModel.VisibilityMenuText)),
-                new("Song", T("Stop remi_xes"), "", lib.ToggleRemixCommand, HeaderPath: nameof(LibraryPanelViewModel.RemixMenuText)),
                 new("Song", T("Move to tr_ash"), "Delete", lib.TrashCommand),
 
                 new("Library", T("_Refresh"), "F5", RefreshCommand),
                 new("Library", T("_Search"), "Ctrl+F", SearchCommand),
                 new("Library", T("_Filters..."), "", lib.FiltersCommand),
-                new("Library", T("Download _all..."), "", lib.DownloadAllCommand),
+                new("Library", T("Download _all..."), "", lib.DownloadAllCommand, SeparatorBefore: true),
                 new("Library", T("_Upload a song..."), "", lib.UploadCommand),
 
                 new("View", T("_Library"), "Ctrl+1", ShowTabCommand, "0"),
@@ -107,19 +139,27 @@ namespace TinPan.ViewModels
                 new("View", T("_Account"), "Ctrl+5", ShowTabCommand, "4"),
                 new("View", T("_Settings"), "Ctrl+6", ShowTabCommand, "5"),
 
+                new("Discover", T("_Explore..."), "", lib.ExploreCommand),
+                new("Discover", T("From people I _follow..."), "", lib.FollowingCommand),
+                new("Discover", T("Find a c_reator..."), "", lib.FindCreatorCommand),
+                new("Discover", T("_Contests..."), "", lib.ContestsCommand),
+
                 new("Account", T("_Credits left"), "F2", ReadCreditsCommand),
                 new("Account", T("_Plan and downloads"), "Shift+F2", ReadSubscriptionCommand),
-                new("Account", T("Sign _in"), "", SettingsVM.SignInCommand),
+                new("Account", T("Mark _notifications as read"), "", SunoVM.MarkNotificationsReadCommand),
+                new("Account", T("Sign _in"), "", SettingsVM.SignInCommand, SeparatorBefore: true),
                 new("Account", T("Sign _out"), "", SettingsVM.SignOutCommand),
 
                 new("Help", T("_Help for here"), "F1", ContextHelpCommand),
                 new("Help", T("_All commands"), "Ctrl+F1", FullHelpCommand),
                 new("Help", T("_Repeat last message"), "Ctrl+R", RepeatCommand),
                 new("Help", T("_Message history"), "Ctrl+Shift+R", HistoryCommand),
-                new("Help", T("Speak e_verything"), "", SetSpeechLevelCommand, nameof(SpeechLevel.Everything)),
-                new("Help", T("Speak only what I as_k for"), "", SetSpeechLevelCommand, nameof(SpeechLevel.AskedFor)),
-                new("Help", T("Speak only _errors"), "", SetSpeechLevelCommand, nameof(SpeechLevel.ErrorsOnly)),
-                new("Help", T("Check for _updates"), "", CheckForUpdatesCommand),
+                new("Help", T("Speak e_verything"), "", SetSpeechLevelCommand, nameof(SpeechLevel.Everything), Submenu: "Speech"),
+                new("Help", T("Speak only what I as_k for"), "", SetSpeechLevelCommand, nameof(SpeechLevel.AskedFor), Submenu: "Speech"),
+                new("Help", T("Speak only _errors"), "", SetSpeechLevelCommand, nameof(SpeechLevel.ErrorsOnly), Submenu: "Speech"),
+                new("Help", T("Report a _problem..."), "Ctrl+Shift+B", ReportProblemCommand, SeparatorBefore: true),
+                new("Help", T("Suggest a _feature..."), "Ctrl+Shift+F", SuggestFeatureCommand),
+                new("Help", T("Check for _updates"), "", CheckForUpdatesCommand, SeparatorBefore: true),
                 new("Help", T("_Licenses and notices"), "", LicensesCommand),
                 new("Help", T("About Tin Pa_n"), "", AboutCommand)
             };
@@ -132,7 +172,8 @@ namespace TinPan.ViewModels
         {
             var entries = Commands;
             var lines = new List<string> { T("Read the full key guide") };
-            lines.AddRange(entries.Select(c => $"{GroupLabel(c.Group)}: {c.SpokenLabel}{(c.Keys.Length > 0 ? ", " + c.Keys : "")}"));
+            lines.AddRange(entries.Select(c =>
+                $"{GroupLabel(c.Group)}{(c.Submenu == null ? "" : ", " + SubmenuLabel(c.Submenu).Replace("_", ""))}: {c.SpokenLabel}{(c.Keys.Length > 0 ? ", " + c.Keys : "")}"));
             _dialogs.ShowLines(T("All commands. Enter runs one."), lines, index =>
             {
                 if (index == 0)
@@ -268,17 +309,20 @@ namespace TinPan.ViewModels
 
         // ── About ───────────────────────────────────────────────────────────
 
-        /// <summary>The dedication, the components and their licenses, built into the exe.</summary>
+        /// <summary>Tin Pan's copyright, license terms and attribution, the components and their licenses, built into the exe.</summary>
         [RelayCommand]
         private void Licenses()
         {
+            var own = EmbeddedFiles.ReadText("NOTICE.md") ?? "";
+            var gpl = EmbeddedFiles.ReadText("LICENSE.txt") ?? "";
             var notices = EmbeddedFiles.ReadText("THIRD_PARTY_NOTICES.md") ?? "";
             var nvda = EmbeddedFiles.ReadText("nvdaControllerClient-license.txt") ?? "";
             var sunscreen = EmbeddedFiles.ReadText("sunscreen-license.txt") ?? "";
             // The notices and licenses are legal texts; they stay in English.
-            var text = notices.Replace("Its license text is in `deps/nvda/license.txt`.", "Its license text follows.")
+            var text = own + Environment.NewLine + Environment.NewLine + notices.Replace("Its license text is in `deps/nvda/license.txt`.", "Its license text follows.")
                        + Environment.NewLine + Environment.NewLine + "NVDA Controller Client license" + Environment.NewLine + Environment.NewLine + nvda
-                       + Environment.NewLine + Environment.NewLine + "sunscreen license" + Environment.NewLine + Environment.NewLine + sunscreen;
+                       + Environment.NewLine + Environment.NewLine + "sunscreen license" + Environment.NewLine + Environment.NewLine + sunscreen
+                       + Environment.NewLine + Environment.NewLine + "Tin Pan's license" + Environment.NewLine + Environment.NewLine + gpl;
             _dialogs.ShowDocument(T("Licenses and notices"), text.Trim());
         }
 
@@ -288,8 +332,10 @@ namespace TinPan.ViewModels
             var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "?";
             var lines = new List<string>
             {
-                T("Tin Pan {0}, by Ernesto Melendez.", version),
+                T("Tin Pan {0}.", version),
+                T(Attribution),
                 T(Dedication),
+                T("Copyright (C) 2026 Ernesto Melendez. Tin Pan is free software under the GNU General Public License, version 3 or later, with terms that keep this credit and dedication visible. It comes with no warranty. Help, Licenses and notices has the license and its terms."),
                 T("An accessible, unofficial client for Suno. Not affiliated with Suno."),
                 T("Speech goes through {0}.", Announcer.OutputName),
                 !_auth.IsAuthenticated ? T("Not signed in.")

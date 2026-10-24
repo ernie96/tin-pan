@@ -1,5 +1,30 @@
 # Tin Pan changelog
 
+## 1.7.0 (2026-10-23)
+
+### New
+
+- Discover menu: Explore (Suno's shelves of songs), From people I follow, Find a creator (by handle or link) and Contests.
+- Song menu: Creator's songs, Covers and remixes of it, and Original song (what a cover, extension or whole song was made from). Lists of other people's songs say who made each one, and song information says who made it.
+- Create tab: Style ideas from Suno, and your Lyrics drafts from Suno's lyrics editor; Enter puts one in the Style or Lyrics box.
+- Account tab: notifications you haven't seen say "New", and Mark all as read (also in the Account menu) marks them read on Suno.
+- Help menu: Report a problem (Ctrl+Shift+B) and Suggest a feature (Ctrl+Shift+F), sent privately to Tin Pan's author, as in TimePlayer. A problem report can include the log, with your Windows user name taken out.
+- Read lyrics aloud as they're sung: Shift+F3 (Playback menu, or Settings) turns it on or off. When a song has timed lyrics, Tin Pan says each line as it starts, also in braille, and after a jump only the line being sung. Off to start with.
+
+### Changed
+
+- Tidier menus: the Song menu groups its commands into Download, Make from it, Related songs, Comments and Sharing, and the Help menu's speech levels are in a Speech submenu. Lines separate each menu's sections.
+- Trending works like the other lists: Space pauses or resumes, F9 and the end of a song carry on down the list, and each song says who made it.
+- Tin Pan is now free software under the GNU General Public License, version 3 or later. Its extra terms ask anyone sharing Tin Pan, or a changed version of it, to keep the author's credit and the dedication in its About screen and to mark changed versions as changed. Help, About shows the copyright and license; Help, Licenses and notices has the full license and terms.
+
+### Fixed
+
+- The Song menu's keys (Ctrl+I, Alt+Enter, Ctrl+L, Ctrl+C, Ctrl+D, Ctrl+E) only worked in the Library. They now work in a playlist's songs and in Trending too.
+- On the Playlists tab, Make public or private and Allow or stop remixes showed the Library song's state instead of the playlist song's. In a playlist, Move to trash no longer shows Delete as its key, since Delete removes the song from the playlist there.
+- After a Trending song, F9 played the next Library song instead of the next Trending one, and Play or pause (F8) on the Trending tab could start a Library song.
+- Enter on a Trending song could be ignored while another was still starting.
+- The "playing" said by lists for the current song wasn't translated.
+
 ## 1.6.1 (2026-10-22)
 
 ### Fixed

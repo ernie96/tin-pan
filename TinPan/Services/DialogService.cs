@@ -36,8 +36,8 @@ namespace TinPan.Services
         /// </summary>
         void ShowLines(string title, IReadOnlyList<string> lines, Action<int>? onEnter = null);
 
-        /// <summary>A list of songs; Enter plays the chosen one through the given action.</summary>
-        void ShowSongs(string title, IReadOnlyList<Models.SunoClip> songs, Func<Models.SunoClip, Task> play);
+        /// <summary>A list of songs; Enter plays the chosen one through the given action. Each says who made it unless sayCreator is false.</summary>
+        void ShowSongs(string title, IReadOnlyList<Models.SunoClip> songs, Func<Models.SunoClip, Task> play, bool sayCreator = true);
     }
 
     public sealed class DialogService : IDialogService
@@ -63,8 +63,8 @@ namespace TinPan.Services
                 Application.Current.Dispatcher.BeginInvoke(() => onEnter!(index));
         }
 
-        public void ShowSongs(string title, IReadOnlyList<Models.SunoClip> songs, Func<Models.SunoClip, Task> play) =>
-            new SongListWindow(title, songs, play) { Owner = Application.Current.MainWindow }.ShowDialog();
+        public void ShowSongs(string title, IReadOnlyList<Models.SunoClip> songs, Func<Models.SunoClip, Task> play, bool sayCreator = true) =>
+            new SongListWindow(title, songs, play, sayCreator) { Owner = Application.Current.MainWindow }.ShowDialog();
 
         public string? PickFolder(string? startIn)
         {

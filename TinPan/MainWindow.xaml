@@ -14,6 +14,7 @@
         <KeyBinding Key="F7" Modifiers="Shift" Command="{Binding LibraryVM.SeekCommand}" CommandParameter="-10" />
         <KeyBinding Key="F9" Modifiers="Shift" Command="{Binding LibraryVM.SeekCommand}" CommandParameter="10" />
         <KeyBinding Key="F3" Command="{Binding NowPlayingCommand}" />
+        <KeyBinding Key="F3" Modifiers="Shift" Command="{Binding ToggleLiveLyricsCommand}" />
         <KeyBinding Key="F5" Command="{Binding RefreshCommand}" />
         <KeyBinding Key="D1" Modifiers="Ctrl" Command="{Binding ShowTabCommand}" CommandParameter="0" />
         <KeyBinding Key="D2" Modifiers="Ctrl" Command="{Binding ShowTabCommand}" CommandParameter="1" />
@@ -38,6 +39,8 @@
         <KeyBinding Key="R" Modifiers="Ctrl" Command="{Binding RepeatCommand}" />
         <KeyBinding Key="R" Modifiers="Ctrl+Shift" Command="{Binding HistoryCommand}" />
         <KeyBinding Key="F" Modifiers="Ctrl" Command="{Binding SearchCommand}" />
+        <KeyBinding Key="B" Modifiers="Ctrl+Shift" Command="{Binding ReportProblemCommand}" />
+        <KeyBinding Key="F" Modifiers="Ctrl+Shift" Command="{Binding SuggestFeatureCommand}" />
     </Window.InputBindings>
 
     <DockPanel>

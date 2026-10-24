@@ -23,11 +23,11 @@ namespace TinPan.Views
 
         private void Trending_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key is Key.Enter or Key.Space && Keyboard.Modifiers == ModifierKeys.None && ViewModel != null)
-            {
-                ViewModel.PlayTrendingCommand.Execute(null);
-                e.Handled = true;
-            }
+            if (Keyboard.Modifiers != ModifierKeys.None || ViewModel == null) return;
+            if (e.Key == Key.Enter) ViewModel.PlayTrendingCommand.Execute(null);
+            else if (e.Key == Key.Space) ViewModel.PlayPauseTrendingCommand.Execute(null);
+            else return;
+            e.Handled = true;
         }
 
         private void Trending_MouseDoubleClick(object sender, MouseButtonEventArgs e) => ViewModel?.PlayTrendingCommand.Execute(null);

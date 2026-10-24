@@ -84,6 +84,9 @@ namespace TinPan.Models
         public string DownloadDir { get; set; } = "";
         public float DefaultVolume { get; set; } = 0.8f;
 
+        /// <summary>Read timed lyrics aloud as they're sung (Shift+F3). Off to start with.</summary>
+        public bool ReadLyricsLive { get; set; }
+
         // Extra files written next to each download.
         public bool SaveLyrics { get; set; }
         public bool SaveTimedLyrics { get; set; }
