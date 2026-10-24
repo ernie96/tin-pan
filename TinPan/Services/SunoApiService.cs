@@ -21,7 +21,7 @@ namespace TinPan.Services
     {
         public const string BaseUrl = "https://studio-api-prod.suno.com";
 
-        private static readonly JsonSerializerOptions JsonOpts = new() { PropertyNameCaseInsensitive = true };
+        private static readonly JsonSerializerOptions JsonOpts = LenientJson.Options(new() { PropertyNameCaseInsensitive = true });
         private static readonly TimeSpan PollInterval = TimeSpan.FromSeconds(2);
 
         private readonly HttpClient _http;
@@ -94,14 +94,14 @@ namespace TinPan.Services
         {
             using var doc = ParseDocument(await SendAsync(HttpMethod.Get, "/api/project/me", null, ct));
             var list = new List<Workspace>();
-            if (doc.RootElement.TryGetProperty("projects", out var projects) && projects.ValueKind == JsonValueKind.Array)
+            if (doc.RootElement.ValueKind == JsonValueKind.Object && doc.RootElement.TryGetProperty("projects", out var projects) && projects.ValueKind == JsonValueKind.Array)
             {
-                foreach (var p in projects.EnumerateArray())
+                foreach (var p in projects.EnumerateArray().Where(p => p.ValueKind == JsonValueKind.Object))
                 {
                     var id = p.TryGetProperty("id", out var i) ? i.ToString() : "";
                     if (id.Length == 0) continue;
                     var name = p.TryGetProperty("name", out var n) && n.ValueKind == JsonValueKind.String ? n.GetString()! : "";
-                    int? count = p.TryGetProperty("clip_count", out var c) && c.TryGetInt32(out var cc) ? cc : null;
+                    int? count = p.TryGetProperty("clip_count", out var c) ? SunoJson.AsInt(c) : null;
                     list.Add(new Workspace(id, name.Length > 0 ? name : id == "default" ? T("My Workspace") : T("Untitled workspace"), count));
                 }
             }
@@ -113,9 +113,9 @@ namespace TinPan.Services
         {
             using var doc = ParseDocument(await SendAsync(HttpMethod.Get, "/api/persona/get-personas/", null, ct));
             var list = new List<Persona>();
-            if (doc.RootElement.TryGetProperty("personas", out var personas) && personas.ValueKind == JsonValueKind.Array)
+            if (doc.RootElement.ValueKind == JsonValueKind.Object && doc.RootElement.TryGetProperty("personas", out var personas) && personas.ValueKind == JsonValueKind.Array)
             {
-                foreach (var p in personas.EnumerateArray())
+                foreach (var p in personas.EnumerateArray().Where(p => p.ValueKind == JsonValueKind.Object))
                 {
                     var id = p.TryGetProperty("id", out var i) ? i.ToString() : "";
                     var name = p.TryGetProperty("name", out var n) && n.ValueKind == JsonValueKind.String ? n.GetString()! : "";
@@ -398,7 +398,7 @@ namespace TinPan.Services
                     var container = SunoDrm.DetectContainer(header.AsSpan(0, read));
                     if (container == "unknown")
                     {
-                        throw new SunoApiException(T("The free file didn't download: {0}", "unrecognized audio format"));
+                        throw new SunoApiException(T("The free file didn't download: it isn't a song file Tin Pan recognizes."));
                     }
                 }
 
@@ -432,7 +432,7 @@ namespace TinPan.Services
                 new { content_id = clipId }
             };
 
-            var hosts = new[] { BaseUrl, "https://studio-api-prod.suno.com" };
+            var hosts = new[] { BaseUrl };
             int lastStatus = 0;
 
             foreach (var host in hosts)
@@ -577,7 +577,7 @@ namespace TinPan.Services
             return (int)code switch
             {
                 401 => T("Suno turned the request down. If it keeps happening, sign in again from Settings."),
-                403 when lower.Contains("pro") || lower.Contains("premier") || lower.Contains("subscri") || lower.Contains("plan") =>
+                403 when System.Text.RegularExpressions.Regex.IsMatch(lower, @"\b(pro|premier|plan)\b|subscri") =>
                     T("That needs a Pro or Premier plan."),
                 403 => T("Suno says this account can't do that."),
                 402 => T("Not enough credits."),

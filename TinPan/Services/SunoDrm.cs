@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using TinPan.Models;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.Services
 {
@@ -163,8 +164,12 @@ namespace TinPan.Services
         /// </summary>
         public static SunoRights? ParseRights(string json, string clipId)
         {
-            using var doc = JsonDocument.Parse(json);
+            JsonDocument doc;
+            try { doc = JsonDocument.Parse(json); }
+            catch (JsonException) { return null; } // an error page, not a rights reply
+            using var _ = doc;
             var root = doc.RootElement;
+            if (root.ValueKind != JsonValueKind.Object) return null;
             var data = root.TryGetProperty("data", out var d) && d.ValueKind == JsonValueKind.Object ? d : root;
 
             string? key = FirstString(data, "key", "content_key") ?? FirstString(root, "key", "content_key");
@@ -211,7 +216,7 @@ namespace TinPan.Services
             var rawKey = DecodeKeyMaterial(rights.Key);
             var rawIv = DecodeKeyMaterial(rights.Iv);
             if (rawKey.Length == 0 || rawIv.Length == 0)
-                throw new SunoApiException("Suno rights payload is missing key material.");
+                throw new SunoApiException(T("Suno didn't send the key for this song's free file."));
 
             var aadText = string.IsNullOrEmpty(rights.Aad) ? clipId : rights.Aad;
             var aadBytes = Encoding.UTF8.GetBytes(aadText);
@@ -243,7 +248,7 @@ namespace TinPan.Services
                 }
             }
 
-            throw new SunoApiException("Failed to unlock media decryption keys with account credentials.", null, lastEx);
+            throw new SunoApiException(T("Couldn't unlock this song's free file with your account."), null, lastEx);
         }
 
         /// <summary>

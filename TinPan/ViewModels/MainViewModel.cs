@@ -13,8 +13,83 @@ namespace TinPan.ViewModels
     public partial class MainViewModel : ViewModelBase
     {
         private static string AppTitle => T("Tin Pan, by Ernesto Melendez");
-        // Tab order, which is also Ctrl+1 to Ctrl+6.
-        public const int LibraryTab = 0, PlaylistsTab = 1, CreateTab = 2, TrendingTab = 3, AccountTab = 4, SettingsTab = 5;
+        // Tab order, which is also Ctrl+1 to Ctrl+5. Create is a window of its own (Ctrl+N).
+        public const int LibraryTab = 0, PlaylistsTab = 1, TrendingTab = 2, AccountTab = 3, SettingsTab = 4;
+
+        /// <summary>Asks the window to open the Create window, or bring it forward (Ctrl+N).</summary>
+        public event EventHandler? CreateRequested;
+
+        // ── Audio output ────────────────────────────────────────────────────
+
+        /// <summary>Choose the main output from the ones Windows has; Enter picks one.</summary>
+        [RelayCommand]
+        private void ChooseOutput() => PickOutput(T("Audio output. Enter plays songs there."), includeNone: false, _outputs.Main, name =>
+        {
+            _outputs.SetMain(name ?? "");
+            Announcer.Announce(_outputs.OnSecond
+                ? T("Main output: {0}. Ctrl+Shift+F12 goes back to it.", AudioOutputs.Spoken(name))
+                : T("Playing on {0}.", AudioOutputs.Spoken(name)), always: true);
+        });
+
+        /// <summary>Choose the output Ctrl+Shift+F12 flips to and back; or none.</summary>
+        [RelayCommand]
+        private void ChooseSecondOutput() => PickOutput(T("Second audio output, for Ctrl+Shift+F12. Enter chooses it."), includeNone: true, _outputs.Second, name =>
+        {
+            _outputs.SetSecond(name);
+            Announcer.Announce(name == null
+                ? T("No second output. Ctrl+Shift+F12 does nothing.")
+                : T("Second output: {0}. Ctrl+Shift+F12 switches to it and back.", AudioOutputs.Spoken(name)), always: true);
+        });
+
+        /// <summary>Ctrl+Shift+F12: flip between the main and second output, even while a song plays.</summary>
+        [RelayCommand]
+        private void ToggleOutput()
+        {
+            if (!_outputs.Toggle())
+            {
+                Announcer.Announce(T("Choose a second output first: Playback menu, Second audio output."), always: true);
+                return;
+            }
+            SettingsVM.RefreshOutputs();
+            Announcer.Announce(T("Playing on {0}.", AudioOutputs.Spoken(_outputs.Current)), always: true);
+        }
+
+        /// <param name="current">The output to start on: a Windows name, "" for the Windows default, null for none.</param>
+        private void PickOutput(string title, bool includeNone, string? current, Action<string?> chosen)
+        {
+            var names = new List<string?>();
+            if (includeNone) names.Add(null);
+            names.Add("");
+            names.AddRange(AudioOutputs.List());
+            if (current is { Length: > 0 } && !names.Contains(current)) names.Add(current);
+            var lines = names.Select(n => (n == null ? T("None") : AudioOutputs.Spoken(n))
+                                          + (n == current ? ", " + T("chosen") : "")
+                                          + (n == current && n != null && !AudioOutputs.List().Contains(n) && n.Length > 0 ? ", " + T("not connected") : ""))
+                .ToList();
+            _dialogs.ShowLines(title, lines, index =>
+            {
+                chosen(names[index]);
+                SettingsVM.RefreshOutputs();
+            });
+        }
+
+        /// <summary>Speaks a line the user asked for (F1 in a tool window).</summary>
+        public void Say(string text) => Announcer.Announce(text, always: true);
+
+        [RelayCommand]
+        private void OpenCreate() => CreateRequested?.Invoke(this, EventArgs.Empty);
+
+        /// <summary>F6 and Shift+F6: on to the next open window (Create, a Cover form), or back.</summary>
+        [RelayCommand]
+        private void NextWindow(string? direction)
+        {
+            if (Views.ToolWindows.All.Count == 0)
+            {
+                Announcer.Announce(T("No other Tin Pan windows are open."), always: true);
+                return;
+            }
+            Views.ToolWindows.Next(System.Windows.Application.Current.MainWindow, back: direction == "back");
+        }
 
         private readonly IAuthService _auth;
         private readonly IAudioService _audio;
@@ -23,6 +98,7 @@ namespace TinPan.ViewModels
         private readonly IUpdateService _updates;
         private readonly LiveLyrics _liveLyrics;
         private readonly IReportService _reports;
+        private readonly OutputSwitch _outputs;
 
         [ObservableProperty] private string title = AppTitle;
         [ObservableProperty] private int selectedTab;
@@ -33,7 +109,7 @@ namespace TinPan.ViewModels
         public PlaylistsViewModel PlaylistsVM { get; }
 
         public MainViewModel(SunoPanelViewModel sunoVM, LibraryPanelViewModel libraryVM, SettingsPanelViewModel settingsVM, PlaylistsViewModel playlistsVM,
-            IAuthService auth, IAudioService audio, IDialogService dialogs, IConfigService config, IUpdateService updates, SongWatcher watcher, LiveLyrics liveLyrics, IReportService reports, IAnnouncer announcer)
+            IAuthService auth, IAudioService audio, IDialogService dialogs, IConfigService config, IUpdateService updates, SongWatcher watcher, LiveLyrics liveLyrics, IReportService reports, OutputSwitch outputs, IAnnouncer announcer)
             : base(announcer)
         {
             SunoVM = sunoVM;
@@ -47,6 +123,8 @@ namespace TinPan.ViewModels
             _updates = updates;
             _liveLyrics = liveLyrics;
             _reports = reports;
+            _outputs = outputs;
+            _audio.OutputFailed += (_, message) => Announcer.Announce(message, interrupt: false, always: true);
 
             _auth.AuthStateChanged += (_, _) => OnAuthChanged();
             _auth.SignInExpired += (_, _) => _signInExpired = true;
@@ -104,7 +182,7 @@ namespace TinPan.ViewModels
                     : _dialogs.Ask(T("Welcome to Tin Pan. To browse, play and make songs, sign in to your Suno account. Suno's own sign-in page opens, and closes by itself once you're in. Sign in now?"), T("Welcome to Tin Pan"));
                 if (yes) await SettingsVM.SignInCommand.ExecuteAsync(null);
                 if (!_auth.IsAuthenticated)
-                    Announcer.Announce(T("Not signed in. You can sign in any time from Settings, Ctrl+6. Press F1 for help."), always: true);
+                    Announcer.Announce(T("Not signed in. You can sign in any time from Settings, Ctrl+5. Press F1 for help."), always: true);
             }
             finally
             {
@@ -151,7 +229,6 @@ namespace TinPan.ViewModels
         {
             var text = SelectedTab switch
             {
-                CreateTab => HelpText.Create,
                 TrendingTab => HelpText.Trending,
                 AccountTab => HelpText.Account,
                 SettingsTab => HelpText.Settings,
@@ -224,7 +301,6 @@ namespace TinPan.ViewModels
         private Task RefreshAsync() => SelectedTab switch
         {
             LibraryTab => LibraryVM.RefreshCommand.ExecuteAsync(null),
-            CreateTab => SunoVM.RefreshAccountCommand.ExecuteAsync(null),
             TrendingTab => SunoVM.RefreshTrendingCommand.ExecuteAsync(null),
             AccountTab => RefreshAccountPageAsync(),
             PlaylistsTab => PlaylistsVM.RefreshCommand.ExecuteAsync(null),
@@ -234,6 +310,7 @@ namespace TinPan.ViewModels
         /// <summary>Trending loads the first time you open it, instead of waiting for F5.</summary>
         partial void OnSelectedTabChanged(int value)
         {
+            if (value == SettingsTab) SettingsVM.RefreshOutputs();
             if (value == TrendingTab && _auth.IsAuthenticated && SunoVM.Trending.Count == 0 && SunoVM.RefreshTrendingCommand.CanExecute(null))
                 _ = SunoVM.RefreshTrendingCommand.ExecuteAsync(null);
         }

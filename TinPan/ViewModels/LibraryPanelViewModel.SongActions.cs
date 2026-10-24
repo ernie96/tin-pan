@@ -57,11 +57,12 @@ namespace TinPan.ViewModels
             if (string.IsNullOrEmpty(lyrics))
             {
                 // Description-mode songs keep their words only in the timed lyrics.
-                await RunAsync(async () =>
-                {
-                    var aligned = await _api.GetAlignedLyricsAsync(clip.Id);
-                    lyrics = aligned == null ? null : JoinWords(aligned.Words);
-                });
+                // A failed fetch has already said why; "no lyrics" on top would be wrong.
+                if (!await RunAsync(async () =>
+                    {
+                        var aligned = await _api.GetAlignedLyricsAsync(clip.Id);
+                        lyrics = aligned == null ? null : JoinWords(aligned.Words);
+                    })) return;
             }
             if (string.IsNullOrWhiteSpace(lyrics)) Announcer.Announce(T("This song has no lyrics."));
             else _dialogs.ShowDocument(T("Lyrics: {0}", clip.DisplayTitle), lyrics);
@@ -108,8 +109,12 @@ namespace TinPan.ViewModels
             {
                 var index = Songs.IndexOf(clip);
                 if (clip.Id == _audio.CurrentClipId) _audio.Stop();
-                Songs.Remove(clip);
-                if (Songs.Count > 0) SelectedClip = Songs[Math.Clamp(index, 0, Songs.Count - 1)];
+                // A song trashed from a playlist or Trending may not be in the Library list at all.
+                if (index >= 0)
+                {
+                    Songs.RemoveAt(index);
+                    if (Songs.Count > 0) SelectedClip = Songs[Math.Clamp(index, 0, Songs.Count - 1)];
+                }
                 Announcer.Announce(T("Moved {0} to trash.", clip.DisplayTitle));
             }
         }

@@ -19,6 +19,10 @@ namespace TinPan.ViewModels
         private readonly IAudioService _audio;
         private readonly IDialogService _dialogs;
         private SunoClip? _current;
+
+        // The songs of the playlist the current song was started from: looking at another playlist meanwhile
+        // replaces Songs, but Next and the end of the song still carry on through this one.
+        private List<SunoClip> _queue = new();
         private int _songsVersion;
 
         public ObservableCollection<Playlist> Playlists { get; } = new();
@@ -41,6 +45,7 @@ namespace TinPan.ViewModels
         {
             _songsVersion++;
             _current = null;
+            _queue = new List<SunoClip>();
             Playlists.Clear();
             Songs.Clear();
         }
@@ -150,6 +155,7 @@ namespace TinPan.ViewModels
                 return;
             }
             _current = clip;
+            if (Songs.Contains(clip)) _queue = Songs.ToList();
             if (await RunAsync(() => _audio.PlayAsync(clip.Id, clip.DisplayTitle, this)))
                 Announcer.Announce(T("Playing: {0}.", clip.DisplayTitle));
         }
@@ -188,12 +194,12 @@ namespace TinPan.ViewModels
         /// <summary>Plays the next or previous playable song after the current one. False when there is none.</summary>
         private async Task<bool> StepAsync(int direction)
         {
-            var index = _current == null ? -1 : Songs.IndexOf(_current);
+            var index = _current == null ? -1 : _queue.IndexOf(_current);
             if (index < 0) return false;
-            var candidates = direction > 0 ? Songs.Skip(index + 1) : Songs.Take(index).Reverse();
+            var candidates = direction > 0 ? _queue.Skip(index + 1) : _queue.Take(index).Reverse();
             var next = candidates.FirstOrDefault(c => c.CanPlay);
             if (next == null) return false;
-            SelectedSong = next;
+            if (Songs.Contains(next)) SelectedSong = next;
             await StartAsync(next);
             return true;
         }

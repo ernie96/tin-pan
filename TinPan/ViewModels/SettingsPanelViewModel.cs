@@ -17,6 +17,8 @@ namespace TinPan.ViewModels
         private readonly IDialogService _dialogs;
         private readonly IAudioService _audio;
         private readonly LiveLyrics _liveLyrics;
+        private readonly OutputSwitch _outputs;
+        private bool _syncingOutputs;
 
         [ObservableProperty] private string signInText = T("Not signed in.");
         [ObservableProperty] private bool isSignedIn;
@@ -28,6 +30,14 @@ namespace TinPan.ViewModels
         [ObservableProperty] private bool saveCover;
         [ObservableProperty] private bool checkUpdatesAtStartup;
         [ObservableProperty] private bool readLyricsLive;
+        [ObservableProperty] private IReadOnlyList<string> outputChoices = Array.Empty<string>();
+        [ObservableProperty] private IReadOnlyList<string> secondOutputChoices = Array.Empty<string>();
+        [ObservableProperty] private string? mainOutput;
+        [ObservableProperty] private string? secondOutput;
+
+        // The Windows names behind the choices; "" is the Windows default and null is none.
+        private List<string> _outputNames = new();
+        private List<string?> _secondNames = new();
 
         public IReadOnlyList<string> OutputFormats { get; } = new[] { "mp3", "wav" };
 
@@ -88,7 +98,7 @@ namespace TinPan.ViewModels
             Announcer.Announce(T("The language changes the next time Tin Pan starts."));
         }
 
-        public SettingsPanelViewModel(IConfigService config, IAuthService auth, IDialogService dialogs, IAudioService audio, LiveLyrics liveLyrics, IAnnouncer announcer)
+        public SettingsPanelViewModel(IConfigService config, IAuthService auth, IDialogService dialogs, IAudioService audio, LiveLyrics liveLyrics, OutputSwitch outputs, IAnnouncer announcer)
             : base(announcer)
         {
             _config = config;
@@ -96,6 +106,8 @@ namespace TinPan.ViewModels
             _dialogs = dialogs;
             _audio = audio;
             _liveLyrics = liveLyrics;
+            _outputs = outputs;
+            RefreshOutputs();
             readLyricsLive = liveLyrics.Enabled;
             downloadDir = config.Current.Audio.DownloadDir;
             outputFormat = OutputFormats.Contains(config.Current.Audio.OutputFormat) ? config.Current.Audio.OutputFormat : "mp3";
@@ -156,6 +168,45 @@ namespace TinPan.ViewModels
         partial void OnSaveDetailsChanged(bool value) { _config.Current.Audio.SaveDetails = value; _config.SaveSoon(); }
         partial void OnSaveCoverChanged(bool value) { _config.Current.Audio.SaveCover = value; _config.SaveSoon(); }
         partial void OnReadLyricsLiveChanged(bool value) => _liveLyrics.Enabled = value;
+
+        /// <summary>Lists the outputs Windows has now, keeping a saved one that isn't plugged in.</summary>
+        public void RefreshOutputs()
+        {
+            _syncingOutputs = true;
+            try
+            {
+                var connected = AudioOutputs.List();
+                _outputNames = new List<string> { "" };
+                _outputNames.AddRange(connected);
+                if (_outputs.Main.Length > 0 && !_outputNames.Contains(_outputs.Main)) _outputNames.Add(_outputs.Main);
+                _secondNames = new List<string?> { null, "" };
+                _secondNames.AddRange(connected);
+                if (_outputs.Second is { Length: > 0 } second && !_secondNames.Contains(second)) _secondNames.Add(second);
+
+                OutputChoices = _outputNames.Select(AudioOutputs.Spoken).ToList();
+                SecondOutputChoices = _secondNames.Select(n => n == null ? T("None") : AudioOutputs.Spoken(n)).ToList();
+                MainOutput = OutputChoices[Math.Max(0, _outputNames.IndexOf(_outputs.Main))];
+                SecondOutput = SecondOutputChoices[Math.Max(0, _secondNames.IndexOf(_outputs.Second))];
+            }
+            finally
+            {
+                _syncingOutputs = false;
+            }
+        }
+
+        partial void OnMainOutputChanged(string? value)
+        {
+            if (_syncingOutputs || value == null) return;
+            var index = OutputChoices.ToList().IndexOf(value);
+            if (index >= 0) _outputs.SetMain(_outputNames[index]);
+        }
+
+        partial void OnSecondOutputChanged(string? value)
+        {
+            if (_syncingOutputs || value == null) return;
+            var index = SecondOutputChoices.ToList().IndexOf(value);
+            if (index >= 0) _outputs.SetSecond(_secondNames[index]);
+        }
         partial void OnCheckUpdatesAtStartupChanged(bool value) { _config.Current.Update.CheckAtStartup = value; _config.SaveSoon(); }
 
         partial void OnOutputFormatChanged(string value)

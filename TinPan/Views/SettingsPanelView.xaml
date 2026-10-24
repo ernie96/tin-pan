@@ -38,6 +38,17 @@
             </StackPanel>
         </GroupBox>
 
+        <GroupBox Header="{l:T 'Audio output'}" Margin="0,0,0,10" Padding="10">
+            <StackPanel>
+                <Label Content="{l:T 'Output device'}" Target="{Binding ElementName=mainOutput}" Padding="0,0,0,5"/>
+                <ComboBox x:Name="mainOutput" ItemsSource="{Binding OutputChoices}" SelectedItem="{Binding MainOutput}"
+                          HorizontalAlignment="Left" MinWidth="300" AutomationProperties.Name="{l:T 'Output device'}"/>
+                <Label Content="{l:T '_Quick switch output, for Ctrl+Shift+F12'}" Target="{Binding ElementName=secondOutput}" Padding="0,10,0,5"/>
+                <ComboBox x:Name="secondOutput" ItemsSource="{Binding SecondOutputChoices}" SelectedItem="{Binding SecondOutput}"
+                          HorizontalAlignment="Left" MinWidth="300" AutomationProperties.Name="{l:T 'Quick switch output, for Ctrl+Shift+F12'}"/>
+            </StackPanel>
+        </GroupBox>
+
         <GroupBox Header="{l:T 'Updates'}" Margin="0,0,0,10" Padding="10">
             <CheckBox Content="{l:T 'Check for _new versions when Tin Pan starts'}" IsChecked="{Binding CheckUpdatesAtStartup}"/>
         </GroupBox>

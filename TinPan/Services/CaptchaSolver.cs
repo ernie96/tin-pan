@@ -32,15 +32,20 @@ namespace TinPan.Services
         private Window? _window;
         private WebView2? _view;
         private bool _shown;
+        private Window? _returnTo;
+
+        // Several songs can start at once (up to five); they take turns on the one check page.
+        private readonly System.Threading.SemaphoreSlim _gate = new(1, 1);
 
         public CaptchaSolver(IAnnouncer announcer) => _announcer = announcer;
 
         public async Task<(string Token, int Provider)> SolveAsync(int provider)
         {
             _announcer.Announce(T("Passing Suno's captcha first. This can take half a minute."), interrupt: false);
-            await EnsureWindowAsync();
+            await _gate.WaitAsync();
             try
             {
+                await EnsureWindowAsync();
                 // One short invisible try. Trusted accounts pass here; others need the check box,
                 // so don't keep them waiting. (hCaptcha never loads when Suno asks for Turnstile.)
                 var token = await TryAsync(provider == 2 ? 2 : 1, visible: false);
@@ -56,6 +61,7 @@ namespace TinPan.Services
             finally
             {
                 HideOffScreen();
+                _gate.Release();
             }
         }
 
@@ -204,6 +210,7 @@ namespace TinPan.Services
             _window.Top = area.Top + (area.Height - _window.Height) / 2;
             _window.ShowInTaskbar = true;
             _shown = true;
+            _returnTo = Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive && w != _window);
             _window.Activate();
             _view?.Focus();
         }
@@ -215,8 +222,9 @@ namespace TinPan.Services
             _window.Top = -32000;
             _window.ShowInTaskbar = false;
             // Give focus back only if the check window took it; otherwise leave the user where they are.
-            if (_shown) Application.Current.MainWindow?.Activate();
+            if (_shown) (_returnTo is { IsVisible: true } back ? back : Application.Current.MainWindow)?.Activate();
             _shown = false;
+            _returnTo = null;
         }
 
         public void Dispose()

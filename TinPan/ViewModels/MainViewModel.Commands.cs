@@ -97,6 +97,9 @@ namespace TinPan.ViewModels
                 new("Playback", T("Read _lyrics as they're sung, on or off"), "Shift+F3", ToggleLiveLyricsCommand),
                 new("Playback", T("Volume d_own"), "F11", lib.VolumeDownCommand, SeparatorBefore: true),
                 new("Playback", T("Volume _up"), "F12", lib.VolumeUpCommand),
+                new("Playback", T("_Audio output..."), "", ChooseOutputCommand, SeparatorBefore: true),
+                new("Playback", T("Se_cond audio output..."), "", ChooseSecondOutputCommand),
+                new("Playback", T("Switc_h to the other output"), "Ctrl+Shift+F12", ToggleOutputCommand),
 
                 new("Song", T("_Play"), "Enter", PlaySongCommand),
                 new("Song", T("_Details"), "Ctrl+I", lib.DetailsCommand),
@@ -126,7 +129,8 @@ namespace TinPan.ViewModels
                 new("Song", T("Add to playli_st..."), "", lib.AddToPlaylistCommand),
                 new("Song", T("Move to tr_ash"), "Delete", lib.TrashCommand),
 
-                new("Library", T("_Refresh"), "F5", RefreshCommand),
+                new("Library", T("_New song..."), "Ctrl+N", OpenCreateCommand),
+                new("Library", T("_Refresh"), "F5", RefreshCommand, SeparatorBefore: true),
                 new("Library", T("_Search"), "Ctrl+F", SearchCommand),
                 new("Library", T("_Filters..."), "", lib.FiltersCommand),
                 new("Library", T("Download _all..."), "", lib.DownloadAllCommand, SeparatorBefore: true),
@@ -134,10 +138,10 @@ namespace TinPan.ViewModels
 
                 new("View", T("_Library"), "Ctrl+1", ShowTabCommand, "0"),
                 new("View", T("_Playlists"), "Ctrl+2", ShowTabCommand, "1"),
-                new("View", T("_Create"), "Ctrl+3", ShowTabCommand, "2"),
-                new("View", T("_Trending"), "Ctrl+4", ShowTabCommand, "3"),
-                new("View", T("_Account"), "Ctrl+5", ShowTabCommand, "4"),
-                new("View", T("_Settings"), "Ctrl+6", ShowTabCommand, "5"),
+                new("View", T("_Trending"), "Ctrl+3", ShowTabCommand, "2"),
+                new("View", T("_Account"), "Ctrl+4", ShowTabCommand, "3"),
+                new("View", T("_Settings"), "Ctrl+5", ShowTabCommand, "4"),
+                new("View", T("Next _window"), "F6", NextWindowCommand, SeparatorBefore: true),
 
                 new("Discover", T("_Explore..."), "", lib.ExploreCommand),
                 new("Discover", T("From people I _follow..."), "", lib.FollowingCommand),

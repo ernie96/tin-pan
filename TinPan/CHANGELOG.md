@@ -1,5 +1,32 @@
 # Tin Pan changelog
 
+## 1.8.0 (2026-10-24)
+
+### New
+
+- Choose the audio output songs play on (Playback menu, Audio output, or Settings), and a second one to flip to with Ctrl+Shift+F12, for example external speakers to show someone a song. It switches even mid-song. Tin Pan always starts on the main output, and says so if one is unplugged.
+- Extend, Cover and Remaster forms stay open until you close them (Escape or Close): make a variation, listen to it, change something and make another. F6 moves between the form and the main window, and the playback keys work in the form. You can start up to five at once, as Suno allows.
+- The Cover form has Rewrite the lyrics now (Suno changes the words the way you ask), Back to the original words, Style boost and Style ideas. Extend has Style boost and Style ideas.
+
+### Changed
+
+- Create is now a window instead of a tab: Ctrl+N, or New song on the Library page. It stays open beside the Library, with the same fields and keys as before. The tabs are now Ctrl+1 to Ctrl+5: Library, Playlists, Trending, Account, Settings.
+- Trending's quick help says Space pauses, as it now does.
+
+### Fixed
+
+- A song Suno described with an empty or odd count (a play count of null, say) was left out of the list. It's kept now, with the count read as 0. Empty totals no longer cut playlists short after the first page.
+- When Suno's sign-in service said you were no longer signed in, Tin Pan took it for an unreadable reply and never asked you to sign in again. It asks now. An account without a name no longer stops sign-in.
+- Saving settings in the background while they were changing (the Library filters, say) could close Tin Pan.
+- After playing a song from a playlist, looking at another playlist lost your place: Next and the end of the song said "End of playlist". They carry on through the playlist the song came from.
+- If the free file failed and you took Suno's own MP3 download, it could be saved with the free file's .m4a name.
+- Several songs started at once that each needed Suno's captcha fought over the one check page; they take turns. After the check, focus goes back to the window you were in.
+- Some refusals were reported as "That needs a Pro or Premier plan" when Suno's message only mentioned "process" or "problem".
+- Next in the Library stopped at songs still being made near the end of a page instead of loading further.
+- Moving a song to the trash from a playlist or Trending changed the Library's selection; showing a song's lyrics after a failed fetch also said it had none.
+- Uploads and update downloads that stall now end with a message instead of waiting forever; an upload that fails to convert says why. Two download error messages weren't translated.
+- The audio-device permission given to Suno's player page is taken back when you return to the Windows default output.
+
 ## 1.7.0 (2026-10-23)
 
 ### New

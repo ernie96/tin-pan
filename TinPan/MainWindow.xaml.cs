@@ -38,6 +38,13 @@ public partial class MainWindow : Window
                 AddSongKeys(vm, list, selected);
             };
             vm.SearchRequested += (_, _) => Dispatcher.BeginInvoke(DispatcherPriority.Input, () => libraryView.FocusSearch());
+            vm.CreateRequested += (_, _) =>
+            {
+                if (ToolWindows.Find<CreateWindow>(_ => true) is { } open) open.Activate();
+                else ToolWindows.Show(new CreateWindow(vm.SunoVM), HelpText.Create);
+            };
+            ToolWindows.Say = text => vm.Say(text);
+            ToolWindows.AddMainKeys = AddMainKeys;
         };
         mainMenu.IsKeyboardFocusWithinChanged += (_, _) => Dispatcher.BeginInvoke(DispatcherPriority.Input, HideMenuIfLeft);
         // Choosing a command closes the bar and puts focus back first, so the command starts from where you were.
@@ -65,6 +72,22 @@ public partial class MainWindow : Window
             // Song commands act on the song selected in the tab you're on; decided as the menu opens.
             top.SubmenuOpened += (_, e) => { if (ReferenceEquals(e.OriginalSource, top)) UpdateSongItems(vm, top); };
             mainMenu.Items.Add(top);
+        }
+    }
+
+    /// <summary>
+    /// The main window's keys in a tool window, so you can play, pause, skip and switch output while you
+    /// fine-tune. Not the ones that move around the main window (Ctrl+1 to Ctrl+5, Ctrl+F), F1 (the tool
+    /// window says its own help) or keys the tool window already has (F5 in Create).
+    /// </summary>
+    private void AddMainKeys(Window window)
+    {
+        foreach (var binding in InputBindings.OfType<KeyBinding>())
+        {
+            if (binding.Gesture is not KeyGesture gesture || binding.Command == null) continue;
+            if (gesture.Key == Key.F1 || gesture.Key == Key.F6 || (gesture.Modifiers == ModifierKeys.Control && gesture.Key is >= Key.D1 and <= Key.D9 or Key.F)) continue;
+            if (window.InputBindings.OfType<KeyBinding>().Any(b => b.Gesture is KeyGesture g && g.Key == gesture.Key && g.Modifiers == gesture.Modifiers)) continue;
+            window.InputBindings.Add(new KeyBinding(binding.Command, gesture) { CommandParameter = binding.CommandParameter });
         }
     }
 
@@ -251,7 +274,7 @@ public partial class MainWindow : Window
     // ── Pages ───────────────────────────────────────────────────────────────
 
     /// <summary>
-    /// Ctrl+1 to Ctrl+6 (or a menu) changed the page while focus was on the old one, which is now
+    /// Ctrl+1 to Ctrl+5 (or a menu) changed the page while focus was on the old one, which is now
     /// hidden; put focus on the new page's main list instead of leaving it nowhere.
     /// Arrowing along the tab headers keeps focus on the headers.
     /// </summary>
@@ -272,7 +295,6 @@ public partial class MainWindow : Window
         {
             case MainViewModel.LibraryTab: libraryView.FocusMain(); break;
             case MainViewModel.PlaylistsTab: playlistsView.FocusPlaylists(); break;
-            case MainViewModel.CreateTab: createView.FocusMain(); break;
             case MainViewModel.TrendingTab: trendingView.FocusMain(); break;
             case MainViewModel.AccountTab: accountView.FocusMain(); break;
             case MainViewModel.SettingsTab: settingsView.MoveFocus(new TraversalRequest(FocusNavigationDirection.First)); break;

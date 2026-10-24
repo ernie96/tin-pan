@@ -154,7 +154,14 @@ namespace TinPan.ViewModels
                     Announcer.Announce(ex.Message, always: true);
                     return;
                 }
-                if (await DownloadThroughSunoAsync(clip, format, path) && clean) await CleanUpAsync(clip, path);
+                // Suno's own download is the format asked for (an MP3, say), whatever the free file was.
+                var sunoPath = Path.ChangeExtension(path, format);
+                if (File.Exists(sunoPath))
+                {
+                    Announcer.Announce(T("{0} is already downloaded.", clip.DisplayTitle));
+                    return;
+                }
+                if (await DownloadThroughSunoAsync(clip, format, sunoPath) && clean) await CleanUpAsync(clip, sunoPath);
             }
         }
 

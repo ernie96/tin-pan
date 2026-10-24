@@ -13,7 +13,15 @@ namespace TinPan.Services
     /// </summary>
     public static partial class SunoJson
     {
-        private static readonly JsonSerializerOptions JsonOpts = new() { PropertyNameCaseInsensitive = true };
+        private static readonly JsonSerializerOptions JsonOpts = LenientJson.Options(new() { PropertyNameCaseInsensitive = true });
+
+        /// <summary>A whole number, or null for null, text that isn't one, or anything else. TryGetInt32 alone throws on those.</summary>
+        internal static int? AsInt(JsonElement e) => e.ValueKind switch
+        {
+            JsonValueKind.Number when e.TryGetInt32(out var n) => n,
+            JsonValueKind.String when int.TryParse(e.GetString(), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var s) => s,
+            _ => null
+        };
 
         public static FeedPage ReadFeedPage(string json)
         {
@@ -22,7 +30,7 @@ namespace TinPan.Services
             if (root.ValueKind == JsonValueKind.Array) return new FeedPage(ToClips(root), null);
             if (root.ValueKind != JsonValueKind.Object) return new FeedPage(new List<SunoClip>(), null);
 
-            int? total = root.TryGetProperty("num_total", out var t) && t.TryGetInt32(out var n) ? n : null;
+            int? total = root.TryGetProperty("num_total", out var t) ? AsInt(t) : null;
             var cursor = root.TryGetProperty("next_cursor", out var c) && c.ValueKind == JsonValueKind.String ? c.GetString() : null;
             bool? hasMore = root.TryGetProperty("has_more", out var h) && h.ValueKind is JsonValueKind.True or JsonValueKind.False
                 ? h.GetBoolean()
@@ -86,7 +94,7 @@ namespace TinPan.Services
                 Description = FirstString(p, "description") ?? "",
                 IsPublic = p.TryGetProperty("is_public", out var pub) && pub.ValueKind == JsonValueKind.True
             };
-            if (p.TryGetProperty("num_total_results", out var n) && n.TryGetInt32(out var count)) playlist.SongCount = count;
+            if (p.TryGetProperty("num_total_results", out var n) && AsInt(n) is { } count) playlist.SongCount = count;
             else if (p.TryGetProperty("playlist_clips", out var clips) && clips.ValueKind == JsonValueKind.Array) playlist.SongCount = clips.GetArrayLength();
             return playlist;
         }
@@ -98,7 +106,7 @@ namespace TinPan.Services
             var root = doc.RootElement;
             var clips = new List<SunoClip>();
             if (root.ValueKind != JsonValueKind.Object) return (clips, null);
-            int? total = root.TryGetProperty("num_total_results", out var t) && t.TryGetInt32(out var n) ? n : null;
+            int? total = root.TryGetProperty("num_total_results", out var t) ? AsInt(t) : null;
             if (root.TryGetProperty("playlist_clips", out var list) && list.ValueKind == JsonValueKind.Array)
             {
                 foreach (var entry in list.EnumerateArray().Where(e => e.ValueKind == JsonValueKind.Object))
@@ -142,7 +150,7 @@ namespace TinPan.Services
         private static int ReadNumber(JsonElement obj, params string[] names)
         {
             foreach (var name in names)
-                if (obj.TryGetProperty(name, out var v) && v.TryGetInt32(out var n)) return n;
+                if (obj.TryGetProperty(name, out var v) && AsInt(v) is { } n) return n;
             return 0;
         }
 
@@ -179,7 +187,7 @@ namespace TinPan.Services
         {
             using var doc = Parse(json);
             return doc.RootElement.ValueKind == JsonValueKind.Object
-                   && doc.RootElement.TryGetProperty(name, out var v) && v.TryGetInt32(out var n)
+                   && doc.RootElement.TryGetProperty(name, out var v) && AsInt(v) is { } n
                 ? n
                 : null;
         }

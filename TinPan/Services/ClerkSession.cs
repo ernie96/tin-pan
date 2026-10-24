@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -64,8 +65,12 @@ namespace TinPan.Services
                     }
 
                     using var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync(ct));
-                    var client = doc.RootElement.TryGetProperty("response", out var r) ? r : doc.RootElement;
-                    var sid = client.TryGetProperty("last_active_session_id", out var s) ? s.GetString() : null;
+                    var root = doc.RootElement;
+                    // Clerk answers {"response": null} when this browser has no signed-in client left.
+                    var client = root.ValueKind == JsonValueKind.Object && root.TryGetProperty("response", out var r) ? r : root;
+                    if (client.ValueKind != JsonValueKind.Object)
+                        throw new SunoSignInRequiredException(T("Not signed in to Suno."));
+                    var sid = Text(client, "last_active_session_id");
                     if (string.IsNullOrEmpty(sid))
                         throw new SunoSignInRequiredException(T("Not signed in to Suno."));
 
@@ -162,18 +167,22 @@ namespace TinPan.Services
             return response;
         }
 
+        /// <summary>A text field, or null when it's missing, null or not text (GetString throws on those).</summary>
+        private static string? Text(JsonElement obj, string name) =>
+            obj.TryGetProperty(name, out var v) && v.ValueKind == JsonValueKind.String ? v.GetString() : null;
+
         private static string? ReadUserName(JsonElement client, string sid)
         {
             if (!client.TryGetProperty("sessions", out var sessions) || sessions.ValueKind != JsonValueKind.Array)
                 return null;
-            foreach (var session in sessions.EnumerateArray())
+            foreach (var session in sessions.EnumerateArray().Where(e => e.ValueKind == JsonValueKind.Object))
             {
-                if (session.TryGetProperty("id", out var id) && id.GetString() != sid) continue;
-                if (!session.TryGetProperty("user", out var user)) return null;
-                var username = user.TryGetProperty("username", out var u) ? u.GetString() : null;
+                if (Text(session, "id") != sid) continue;
+                if (!session.TryGetProperty("user", out var user) || user.ValueKind != JsonValueKind.Object) return null;
+                var username = Text(user, "username");
                 if (!string.IsNullOrWhiteSpace(username)) return username;
-                var first = user.TryGetProperty("first_name", out var f) ? f.GetString() : null;
-                var last = user.TryGetProperty("last_name", out var l) ? l.GetString() : null;
+                var first = Text(user, "first_name");
+                var last = Text(user, "last_name");
                 var full = $"{first} {last}".Trim();
                 return full.Length > 0 ? full : null;
             }

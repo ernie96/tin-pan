@@ -29,7 +29,7 @@ namespace TinPan.Services
                 if (root.ValueKind != JsonValueKind.Object || !root.TryGetProperty("playlists", out var list) || list.ValueKind != JsonValueKind.Array) break;
                 var before = result.Count;
                 foreach (var p in list.EnumerateArray().Where(p => p.ValueKind == JsonValueKind.Object)) result.Add(SunoJson.ReadPlaylist(p));
-                var total = root.TryGetProperty("num_total_results", out var t) && t.TryGetInt32(out var n) ? n : result.Count;
+                var total = root.TryGetProperty("num_total_results", out var t) && SunoJson.AsInt(t) is { } n ? n : result.Count;
                 if (result.Count == before || result.Count >= total) break;
             }
             return result;
@@ -46,7 +46,8 @@ namespace TinPan.Services
                 var known = result.Select(c => c.Id).ToHashSet();
                 var added = clips.Where(c => known.Add(c.Id)).ToList();
                 result.AddRange(added);
-                if (added.Count == 0 || total == null || result.Count >= total) break;
+                // Without a total, carry on until a page brings nothing new.
+                if (added.Count == 0 || (total != null && result.Count >= total)) break;
             }
             return result;
         }

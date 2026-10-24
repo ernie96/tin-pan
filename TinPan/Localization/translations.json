@@ -419,6 +419,11 @@
   "{0} (потрібен Pro або Premier)",
   "{0} (necesita Pro o Premier)"
  ],
+ "Windows default output": [
+  "Ieșirea implicită Windows",
+  "Типовий вихід Windows",
+  "Salida predeterminada de Windows"
+ ],
  "Not signed in. Sign in from Settings.": [
   "Nu ești conectat. Conectează-te din Setări.",
   "Ви не ввійшли. Увійдіть у Налаштуваннях.",
@@ -543,6 +548,11 @@
   "Conectarea Suno nu a trimis niciun token.",
   "Вхід у Suno не повернув токена.",
   "El inicio de sesión de Suno no devolvió ningún token."
+ ],
+ "{0}. Tab moves between the fields. {1} starts another with these settings, and this stays open to try again. F6 goes to the main window and back, so you can listen in between; F8 plays or pauses from here. Escape closes.": [
+  "{0}. Tab trece de la un câmp la altul. {1} pornește încă unul cu aceste setări, iar fereastra rămâne deschisă ca să încerci din nou. F6 te duce la fereastra principală și înapoi, ca să asculți între timp; F8 redă sau pune pe pauză de aici. Escape închide.",
+  "{0}. Tab переходить між полями. {1} запускає ще один з цими налаштуваннями, а вікно лишається відкритим, щоб спробувати знову. F6 переходить до головного вікна й назад, тож можна послухати між спробами; F8 відтворює або ставить на паузу звідси. Escape закриває.",
+  "{0}. Tab pasa de un campo a otro. {1} inicia otro con estos ajustes, y esto se queda abierto para volver a probar. F6 lleva a la ventana principal y de vuelta, para escuchar entretanto; F8 reproduce o pausa desde aquí. Escape cierra."
  ],
  "Choose where songs are saved": [
   "Alege unde se salvează melodiile",
@@ -704,10 +714,10 @@
   "Завантаження не почалося вчасно. Спробуйте ще раз.",
   "La descarga no empezó a tiempo. Vuelve a intentarlo."
  ],
- "The free file didn't download: {0}": [
-  "Fișierul gratuit nu s-a descărcat: {0}",
-  "Безкоштовний файл не завантажився: {0}",
-  "El archivo gratuito no se descargó: {0}"
+ "The free file didn't download: it isn't a song file Tin Pan recognizes.": [
+  "Fișierul gratuit nu s-a descărcat: nu este un fișier audio pe care Tin Pan îl recunoaște.",
+  "Безкоштовний файл не завантажився: це не аудіофайл, який розпізнає Tin Pan.",
+  "El archivo gratuito no se descargó: no es un archivo de canción que Tin Pan reconozca."
  ],
  "Suno didn't answer in time. Try again.": [
   "Suno nu a răspuns la timp. Încearcă din nou.",
@@ -834,6 +844,16 @@
   "Suno обробив файл, але не створив із нього пісню. Оновіть бібліотеку, щоб перевірити.",
   "Suno procesó la subida pero no creó una canción con ella. Actualiza la biblioteca para comprobarlo."
  ],
+ "Suno didn't send the key for this song's free file.": [
+  "Suno nu a trimis cheia pentru fișierul gratuit al acestei melodii.",
+  "Suno не надіслав ключ до безкоштовного файлу цієї пісні.",
+  "Suno no envió la clave del archivo gratuito de esta canción."
+ ],
+ "Couldn't unlock this song's free file with your account.": [
+  "Fișierul gratuit al acestei melodii nu a putut fi deblocat cu contul tău.",
+  "Не вдалося розблокувати безкоштовний файл цієї пісні вашим обліковим записом.",
+  "No se pudo desbloquear el archivo gratuito de esta canción con tu cuenta."
+ ],
  "Suno's player didn't offer this song. It may be private to another account, or still being made.": [
   "Playerul Suno nu a oferit melodia. Poate fi privată pentru alt cont sau încă se creează.",
   "Плеєр Suno не запропонував цю пісню. Можливо, вона приватна для іншого облікового запису або ще створюється.",
@@ -853,6 +873,16 @@
   "Redarea are nevoie de Microsoft Edge WebView2 Runtime. Instalează-l de la Microsoft, apoi încearcă din nou.",
   "Для відтворення потрібен Microsoft Edge WebView2 Runtime. Установіть його з сайту Microsoft і спробуйте ще раз.",
   "Para reproducir se necesita Microsoft Edge WebView2 Runtime. Instálalo desde Microsoft y vuelve a intentarlo."
+ ],
+ "{0} isn't connected, so the song plays on the Windows default output.": [
+  "{0} nu este conectat, așa că melodia se redă pe ieșirea implicită Windows.",
+  "{0} не під’єднано, тому пісня грає через типовий вихід Windows.",
+  "{0} no está conectado, así que la canción suena en la salida predeterminada de Windows."
+ ],
+ "Couldn't switch to {0}, so the song plays on the Windows default output.": [
+  "Nu s-a putut trece la {0}, așa că melodia se redă pe ieșirea implicită Windows.",
+  "Не вдалося перемкнутися на {0}, тому пісня грає через типовий вихід Windows.",
+  "No se pudo cambiar a {0}, así que la canción suena en la salida predeterminada de Windows."
  ],
  "Playback stopped because of an error.": [
   "Redarea s-a oprit din cauza unei erori.",
@@ -893,6 +923,11 @@
   "Descărcarea actualizării a fost anulată.",
   "Завантаження оновлення скасовано.",
   "Se canceló la descarga de la actualización."
+ ],
+ "The update download stalled. Check your internet connection and try again.": [
+  "Descărcarea actualizării s-a blocat. Verifică conexiunea la internet și încearcă din nou.",
+  "Завантаження оновлення зависло. Перевірте підключення до інтернету й спробуйте знову.",
+  "La descarga de la actualización se detuvo. Comprueba tu conexión a internet y vuelve a intentarlo."
  ],
  "Couldn't download the update. Check your internet connection and try again.": [
   "Nu am putut descărca actualizarea. Verifică-ți conexiunea la internet și încearcă din nou.",
@@ -949,15 +984,15 @@
   "Бібліотека. Переходьте між піснями стрілками. Enter відтворює, Пробіл ставить на паузу, стрілки вліво і вправо перемотують. Клавіша контекстного меню — продовження, кавер, завантаження та інше. Ctrl+F шукає. Ctrl+Shift+F8 продовжує з місця, де ви зупинилися. Alt+F — фільтри.",
   "Biblioteca. Recorre tus canciones con las flechas. Intro reproduce, Espacio pausa, izquierda y derecha avanzan o retroceden. Tecla de aplicaciones para extender, cover, descargas y más. Ctrl+F busca. Ctrl+Mayús+F8 sigue donde lo dejaste. Alt+F para los filtros."
  ],
- "Create. Set the model, style and voice, then describe a song or use your own lyrics. Tab moves between fields. F5 reloads the models.": [
-  "Creare. Alege modelul, stilul și vocea, apoi descrie o melodie sau folosește versurile tale. Tab trece de la un câmp la altul. F5 reîncarcă modelele.",
-  "Створення. Виберіть модель, стиль і голос, потім опишіть пісню або використайте власний текст. Tab переходить між полями. F5 перезавантажує моделі.",
-  "Crear. Elige el modelo, el estilo y la voz; luego describe una canción o usa tu propia letra. Tab pasa de un campo a otro. F5 vuelve a cargar los modelos."
+ "Create a song. Set the model, style and voice, then describe a song or use your own lyrics. Tab moves between fields. F5 reloads the models. The window stays open: F6 goes to the main window and back, F8 plays or pauses, Escape closes.": [
+  "Creează o melodie. Alege modelul, stilul și vocea, apoi descrie o melodie sau folosește versurile tale. Tab trece de la un câmp la altul. F5 reîncarcă modelele. Fereastra rămâne deschisă: F6 te duce la fereastra principală și înapoi, F8 redă sau pune pe pauză, Escape închide.",
+  "Створити пісню. Виберіть модель, стиль і голос, потім опишіть пісню або використайте свій текст. Tab переходить між полями. F5 перезавантажує моделі. Вікно лишається відкритим: F6 переходить до головного вікна й назад, F8 відтворює або ставить на паузу, Escape закриває.",
+  "Crear una canción. Elige el modelo, el estilo y la voz, y luego describe una canción o usa tu propia letra. Tab pasa de un campo a otro. F5 vuelve a cargar los modelos. La ventana se queda abierta: F6 lleva a la ventana principal y de vuelta, F8 reproduce o pausa, Escape cierra."
  ],
- "Trending. Enter or Space plays a song. Applications key for more. F5 refreshes.": [
-  "În tendințe. Enter sau Spațiu redă o melodie. Tasta Aplicații pentru mai mult. F5 reîmprospătează.",
-  "У тренді. Enter або Пробіл відтворює пісню. Клавіша контекстного меню — більше дій. F5 оновлює.",
-  "Tendencias. Intro o Espacio reproduce una canción. Tecla de aplicaciones para más. F5 actualiza."
+ "Trending. Enter plays a song, Space pauses. Applications key for more. F5 refreshes.": [
+  "În tendințe. Enter redă o melodie, Spațiu pune pe pauză. Tasta Aplicații pentru mai mult. F5 reîmprospătează.",
+  "У тренді. Enter відтворює пісню, Пробіл ставить на паузу. Клавіша «Програми» — більше. F5 оновлює.",
+  "Tendencias. Intro reproduce una canción, Espacio pausa. Tecla Aplicaciones para más. F5 actualiza."
  ],
  "Account. Your plan and credits, then Suno's notifications. F2 and Shift+F2 read them from anywhere. F5 refreshes.": [
   "Cont. Planul și creditele tale, apoi notificările Suno. F2 și Shift+F2 le citesc de oriunde. F5 reîmprospătează.",
@@ -974,20 +1009,20 @@
   "Налаштування. Вхід і вихід, вибір мови й місця збереження пісень.",
   "Configuración. Inicia o cierra sesión, elige el idioma y dónde se guardan las canciones."
  ],
- "You're not signed in. Ctrl+6 opens Settings.": [
-  "Nu ești conectat. Ctrl+6 deschide Setările.",
-  "Ви не ввійшли. Ctrl+6 відкриває Налаштування.",
-  "No iniciaste sesión. Ctrl+6 abre Configuración."
+ "You're not signed in. Ctrl+5 opens Settings.": [
+  "Nu ești conectat. Ctrl+5 deschide Setări.",
+  "Ви не ввійшли. Ctrl+5 відкриває Налаштування.",
+  "No has iniciado sesión. Ctrl+5 abre Configuración."
  ],
  "Anywhere": [
   "Oriunde",
   "Будь-де",
   "En cualquier lugar"
  ],
- "Alt or F10: the menu bar, hidden until then. Every command is in it, with its keys. Left and Right move between menus, Down opens one, Escape or Alt leaves. The Song menu acts on the song selected in the tab you're on.\nTab only stops on what you need: the search box, the list and the volume. The buttons on each page still work with their Alt letters, and everything is in the menu bar.\nF1: short help for where you are.\nCtrl+F1: all commands in a list; Enter runs one. Its first item is this guide.\nCtrl+R: repeat the last message. Ctrl+Shift+R: message history, newest first.\nEscape: step back one level (to the tab headers, or from a playlist's songs to the playlists).\nF2: credits left.\nShift+F2: your plan, when it renews, credits and downloads left. The Account tab lists everything the plan includes.\nF3: what's playing and how far in.\nF5: refresh the current tab.\nCtrl+1 to Ctrl+6: Library, Playlists, Create, Trending, Account, Settings. Each puts you on that page's list or first field.\nCtrl+F: search your songs.": [
-  "Alt sau F10: bara de meniu, ascunsă până atunci. Conține toate comenzile, cu tastele lor. Stânga și dreapta trec de la un meniu la altul, Jos deschide unul, Escape sau Alt iese. Meniul Melodie lucrează cu melodia selectată în fila în care ești.\nTab se oprește doar unde e nevoie: caseta de căutare, lista și volumul. Butoanele de pe fiecare pagină funcționează în continuare cu literele Alt, iar totul e în bara de meniu.\nF1: ajutor scurt pentru locul în care ești.\nCtrl+F1: toate comenzile într-o listă; Enter rulează una. Primul element este acest ghid.\nCtrl+R: repetă ultimul mesaj. Ctrl+Shift+R: istoricul mesajelor, cele mai noi primele.\nEscape: un pas înapoi (la antetele filelor sau de la melodiile unei liste la liste).\nF2: creditele rămase.\nShift+F2: planul, când se reînnoiește, creditele și descărcările rămase. Fila Cont arată tot ce include planul.\nF3: ce se redă și cât a trecut.\nF5: reîmprospătează fila curentă.\nCtrl+1 până la Ctrl+6: Bibliotecă, Liste de redare, Creare, În tendințe, Cont, Setări. Fiecare te duce la lista sau la primul câmp al paginii.\nCtrl+F: caută în melodiile tale.",
-  "Alt або F10: рядок меню, прихований до того. У ньому всі команди з клавішами. Вліво і вправо переходять між меню, Вниз відкриває меню, Escape або Alt виходить. Меню «Пісня» діє на пісню, вибрану на поточній вкладці.\nTab зупиняється лише там, де потрібно: поле пошуку, список і гучність. Кнопки на кожній сторінці й далі працюють зі своїми літерами Alt, а все є в рядку меню.\nF1: коротка довідка про те, де ви.\nCtrl+F1: усі команди списком; Enter виконує вибрану. Перший пункт — цей посібник.\nCtrl+R: повторити останнє повідомлення. Ctrl+Shift+R: історія повідомлень, новіші спершу.\nEscape: крок назад (до заголовків вкладок або від пісень плейлиста до плейлистів).\nF2: залишок кредитів.\nShift+F2: ваш план, дата поновлення, залишок кредитів і завантажень. Вкладка «Обліковий запис» показує все, що містить план.\nF3: що грає і скільки минуло.\nF5: оновити поточну вкладку.\nВід Ctrl+1 до Ctrl+6: Бібліотека, Плейлисти, Створення, У тренді, Обліковий запис, Налаштування. Кожна переводить до списку або першого поля сторінки.\nCtrl+F: пошук у ваших піснях.",
-  "Alt o F10: la barra de menús, oculta hasta entonces. Tiene todos los comandos con sus teclas. Izquierda y derecha pasan de un menú a otro, Abajo abre uno, Escape o Alt sale. El menú Canción actúa sobre la canción seleccionada en la pestaña en la que estás.\nTab solo se detiene donde hace falta: el cuadro de búsqueda, la lista y el volumen. Los botones de cada página siguen funcionando con sus letras de Alt, y todo está en la barra de menús.\nF1: ayuda breve sobre dónde estás.\nCtrl+F1: todos los comandos en una lista; Intro ejecuta uno. El primer elemento es esta guía.\nCtrl+R: repite el último mensaje. Ctrl+Mayús+R: historial de mensajes, los más nuevos primero.\nEscape: retrocede un nivel (a los encabezados de las pestañas, o de las canciones de una lista a las listas).\nF2: créditos restantes.\nMayús+F2: tu plan, cuándo se renueva, los créditos y las descargas restantes. La pestaña Cuenta muestra todo lo que incluye el plan.\nF3: qué suena y cuánto lleva.\nF5: actualiza la pestaña actual.\nCtrl+1 a Ctrl+6: Biblioteca, Listas, Crear, Tendencias, Cuenta, Configuración. Cada una te lleva a la lista o al primer campo de la página.\nCtrl+F: busca en tus canciones."
+ "Alt or F10: the menu bar, hidden until then. Every command is in it, with its keys. Left and Right move between menus, Down opens one, Escape or Alt leaves. The Song menu acts on the song selected in the tab you're on.\nTab only stops on what you need: the search box, the list and the volume. The buttons on each page still work with their Alt letters, and everything is in the menu bar.\nF1: short help for where you are.\nCtrl+F1: all commands in a list; Enter runs one. Its first item is this guide.\nCtrl+R: repeat the last message. Ctrl+Shift+R: message history, newest first.\nEscape: step back one level (to the tab headers, or from a playlist's songs to the playlists).\nF2: credits left.\nShift+F2: your plan, when it renews, credits and downloads left. The Account tab lists everything the plan includes.\nF3: what's playing and how far in.\nF5: refresh the current tab.\nCtrl+1 to Ctrl+5: Library, Playlists, Trending, Account, Settings. Each puts you on that page's list or first field.\nCtrl+N: create a song, in a window that stays open. F6 and Shift+F6: move between Tin Pan's open windows.\nCtrl+F: search your songs.": [
+  "Alt sau F10: bara de meniu, ascunsă până atunci. Conține toate comenzile, cu tastele lor. Stânga și dreapta trec de la un meniu la altul, Jos deschide unul, Escape sau Alt iese. Meniul Melodie lucrează cu melodia selectată în fila în care ești.\nTab se oprește doar unde e nevoie: caseta de căutare, lista și volumul. Butoanele de pe fiecare pagină funcționează în continuare cu literele Alt, iar totul e în bara de meniu.\nF1: ajutor scurt pentru locul în care ești.\nCtrl+F1: toate comenzile într-o listă; Enter rulează una. Primul element este acest ghid.\nCtrl+R: repetă ultimul mesaj. Ctrl+Shift+R: istoricul mesajelor, cele mai noi primele.\nEscape: un pas înapoi (la antetele filelor sau de la melodiile unei liste la liste).\nF2: creditele rămase.\nShift+F2: planul, când se reînnoiește, creditele și descărcările rămase. Fila Cont arată tot ce include planul.\nF3: ce se redă și cât a trecut.\nF5: reîmprospătează fila curentă.\nCtrl+N: creează o melodie, într-o fereastră care rămâne deschisă. F6 și Shift+F6: trec de la o fereastră Tin Pan deschisă la alta.\nCtrl+1 până la Ctrl+5: Bibliotecă, Liste de redare, În tendințe, Cont, Setări. Fiecare te duce la lista sau la primul câmp al paginii.\nCtrl+F: caută în melodiile tale.",
+  "Alt або F10: рядок меню, прихований до того. У ньому всі команди з клавішами. Вліво і вправо переходять між меню, Вниз відкриває меню, Escape або Alt виходить. Меню «Пісня» діє на пісню, вибрану на поточній вкладці.\nTab зупиняється лише там, де потрібно: поле пошуку, список і гучність. Кнопки на кожній сторінці й далі працюють зі своїми літерами Alt, а все є в рядку меню.\nF1: коротка довідка про те, де ви.\nCtrl+F1: усі команди списком; Enter виконує вибрану. Перший пункт — цей посібник.\nCtrl+R: повторити останнє повідомлення. Ctrl+Shift+R: історія повідомлень, новіші спершу.\nEscape: крок назад (до заголовків вкладок або від пісень плейлиста до плейлистів).\nF2: залишок кредитів.\nShift+F2: ваш план, дата поновлення, залишок кредитів і завантажень. Вкладка «Обліковий запис» показує все, що містить план.\nF3: що грає і скільки минуло.\nF5: оновити поточну вкладку.\nCtrl+N: створити пісню у вікні, що лишається відкритим. F6 і Shift+F6: перехід між відкритими вікнами Tin Pan.\nВід Ctrl+1 до Ctrl+5: Бібліотека, Плейлисти, У тренді, Обліковий запис, Налаштування. Кожна переводить до списку або першого поля сторінки.\nCtrl+F: пошук у ваших піснях.",
+  "Alt o F10: la barra de menús, oculta hasta entonces. Tiene todos los comandos con sus teclas. Izquierda y derecha pasan de un menú a otro, Abajo abre uno, Escape o Alt sale. El menú Canción actúa sobre la canción seleccionada en la pestaña en la que estás.\nTab solo se detiene donde hace falta: el cuadro de búsqueda, la lista y el volumen. Los botones de cada página siguen funcionando con sus letras de Alt, y todo está en la barra de menús.\nF1: ayuda breve sobre dónde estás.\nCtrl+F1: todos los comandos en una lista; Intro ejecuta uno. El primer elemento es esta guía.\nCtrl+R: repite el último mensaje. Ctrl+Mayús+R: historial de mensajes, los más nuevos primero.\nEscape: retrocede un nivel (a los encabezados de las pestañas, o de las canciones de una lista a las listas).\nF2: créditos restantes.\nMayús+F2: tu plan, cuándo se renueva, los créditos y las descargas restantes. La pestaña Cuenta muestra todo lo que incluye el plan.\nF3: qué suena y cuánto lleva.\nF5: actualiza la pestaña actual.\nCtrl+N: crea una canción, en una ventana que se queda abierta. F6 y Mayús+F6: pasan de una ventana abierta de Tin Pan a otra.\nCtrl+1 a Ctrl+5: Biblioteca, Listas, Tendencias, Cuenta, Configuración. Cada una te lleva a la lista o al primer campo de la página.\nCtrl+F: busca en tus canciones."
  ],
  "The Song menu groups its commands: Download, Make from it (extend, cover, remaster, whole song, stems), Related songs, Comments and Sharing (links, public or private, remixes). Its keys (Ctrl+I, Alt+Enter, Ctrl+L, Ctrl+C, Ctrl+D, Ctrl+E) work in the Library, a playlist's songs and Trending. The Help menu's Speech submenu sets how much Tin Pan says.": [
   "Meniul Melodie își grupează comenzile: Descarcă, Creează din el (extindere, cover, remasterizare, cântec întreg, piste separate), Cântece înrudite, Comentarii și Partajare (linkuri, public sau privat, remixuri). Tastele lui (Ctrl+I, Alt+Enter, Ctrl+L, Ctrl+C, Ctrl+D, Ctrl+E) funcționează în Bibliotecă, în cântecele unei liste de redare și în În tendințe. Submeniul Vorbire din meniul Ajutor stabilește cât vorbește Tin Pan.",
@@ -1003,6 +1038,16 @@
   "F8 sau tasta media Redare/Pauză: redare sau pauză; dacă nu se redă nimic, pornește melodia selectată din fila Bibliotecă sau Liste de redare.\nShift+F8: oprire.\nF7 și F9: melodia anterioară și următoarea.\nShift+F7 și Shift+F9: înapoi și înainte 10 secunde.\nCtrl+F7 și Ctrl+F9: înapoi și înainte 10 la sută din melodie.\nCtrl+F8: înapoi la începutul melodiei.\nCtrl+Shift+F8: reia ultima melodie de unde ai rămas, chiar și după ce ai închis Tin Pan.\nF11 și F12: volumul mai încet și mai tare.\nMelodiile se redau prin playerul Suno, ascuns în aplicație.",
   "F8 або медіаклавіша «Відтворення/Пауза»: відтворення або пауза; якщо нічого не грає, запускає вибрану пісню на вкладці «Бібліотека» або «Плейлисти».\nShift+F8: зупинити.\nF7 і F9: попередня й наступна пісня.\nShift+F7 і Shift+F9: назад і вперед на 10 секунд.\nCtrl+F7 і Ctrl+F9: назад і вперед на 10 відсотків пісні.\nCtrl+F8: на початок пісні.\nCtrl+Shift+F8: продовжити останню пісню з місця, де ви зупинилися, навіть після закриття Tin Pan.\nF11 і F12: тихіше й гучніше.\nПісні грають через власний плеєр Suno, прихований у програмі.",
   "F8 o la tecla multimedia Reproducir/Pausa: reproduce o pausa; si no suena nada, inicia la canción seleccionada en la pestaña Biblioteca o Listas.\nMayús+F8: detener.\nF7 y F9: canción anterior y siguiente.\nMayús+F7 y Mayús+F9: retrocede y avanza 10 segundos.\nCtrl+F7 y Ctrl+F9: retrocede y avanza el 10 por ciento de la canción.\nCtrl+F8: vuelve al principio de la canción.\nCtrl+Mayús+F8: sigue la última canción donde la dejaste, incluso después de cerrar Tin Pan.\nF11 y F12: baja y sube el volumen.\nLas canciones suenan con el propio reproductor de Suno, oculto dentro de la app."
+ ],
+ "Audio output": [
+  "Ieșire audio",
+  "Аудіовихід",
+  "Salida de audio"
+ ],
+ "Playback menu, Audio output: choose the output songs play on (headphones, speakers, a USB box), or the Windows default. Second audio output: one more, say external speakers to show someone a song; Ctrl+Shift+F12 switches to it and back, even mid-song. Both are also in Settings. Tin Pan always starts on the main output, and if an output is unplugged it says so and plays on the Windows default.": [
+  "Meniul Redare, Ieșire audio: alege ieșirea pe care se redau melodiile (căști, boxe, o placă USB) sau ieșirea implicită Windows. A doua ieșire audio: încă una, de exemplu boxe externe ca să arăți cuiva o melodie; Ctrl+Shift+F12 trece la ea și înapoi, chiar în mijlocul melodiei. Ambele sunt și în Setări. Tin Pan pornește mereu pe ieșirea principală, iar dacă o ieșire e deconectată, spune asta și redă pe ieșirea implicită Windows.",
+  "Меню «Відтворення», «Аудіовихід»: виберіть вихід для пісень (навушники, колонки, USB-пристрій) або типовий вихід Windows. «Другий аудіовихід»: ще один, наприклад зовнішні колонки, щоб показати комусь пісню; Ctrl+Shift+F12 перемикає на нього й назад навіть посеред пісні. Обидва є й у Налаштуваннях. Tin Pan завжди запускається на основному виході, а якщо вихід від’єднано, каже про це й грає через типовий вихід Windows.",
+  "Menú Reproducción, Salida de audio: elige la salida en la que suenan las canciones (auriculares, altavoces, una tarjeta USB) o la predeterminada de Windows. Segunda salida de audio: una más, por ejemplo altavoces externos para enseñarle una canción a alguien; Ctrl+Mayús+F12 cambia a ella y de vuelta, incluso a mitad de canción. Ambas están también en Configuración. Tin Pan siempre empieza en la salida principal, y si una salida está desconectada lo dice y suena en la predeterminada de Windows."
  ],
  "Library list": [
   "Lista Bibliotecă",
@@ -1024,15 +1069,15 @@
   "Enter шукає, Escape очищає пошук.",
   "Intro busca, Escape borra la búsqueda."
  ],
- "Create tab": [
-  "Fila Creare",
-  "Вкладка «Створення»",
-  "Pestaña Crear"
+ "Create window": [
+  "Fereastra Creare",
+  "Вікно «Створення»",
+  "Ventana Crear"
  ],
- "Model, style, styles to exclude, voice, instrumental, max mode, weirdness, style influence and persona (pick one of yours, or type an ID) apply to both ways of making a song.\nDescribe a song lets Suno write the words. Your own lyrics uses your title and lyrics. Write lyrics makes lyrics from a topic, and Use these lyrics copies them in.\nStyle boost rewrites the Style box into a fuller description.\nChange my lyrics: say what to change, then Rewrite my lyrics now. The result goes into Generated lyrics; Use these lyrics copies it in.\nNew songs appear at the top of your library. You'll hear when they're ready.\nIf Suno asks for a captcha, the app passes it itself. If Suno wants a click, a Suno check window comes forward with the check box.": [
-  "Modelul, stilul, stilurile de exclus, vocea, instrumentalul, modul Max, ciudățenia, influența stilului și persona (alege una de-a ta sau scrie un ID) se aplică ambelor feluri de a crea o melodie.\nDescrie o melodie o lasă pe Suno să scrie cuvintele. Versurile tale folosește titlul și versurile tale. Scrie versuri face versuri dintr-o temă, iar Folosește aceste versuri le copiază.\nAmplificare stil rescrie caseta Stil într-o descriere mai bogată.\nSchimbă-mi versurile: spune ce să schimbe, apoi Rescrie-mi versurile acum. Rezultatul ajunge în Versuri generate; Folosește aceste versuri îl copiază.\nMelodiile noi apar în capul bibliotecii. Vei auzi când sunt gata.\nDacă Suno cere un captcha, aplicația trece singură de el. Dacă Suno vrea un clic, apare o fereastră de verificare Suno cu căsuța.",
-  "Модель, стиль, стилі для виключення, голос, інструментал, режим Max, дивність, вплив стилю й персона (виберіть свою або введіть ID) стосуються обох способів створення пісні.\n«Опишіть пісню» дає Suno написати слова. «Ваш текст» використовує вашу назву й текст. «Написати текст» створює текст за темою, а «Використати цей текст» копіює його.\n«Посилення стилю» переписує поле «Стиль» у повніший опис.\n«Змінити мій текст»: скажіть, що змінити, потім «Переписати мій текст зараз». Результат з'являється в «Згенерованому тексті»; «Використати цей текст» копіює його.\nНові пісні з'являються вгорі бібліотеки. Ви почуєте, коли вони будуть готові.\nЯкщо Suno просить капчу, програма проходить її сама. Якщо Suno хоче клацання, з'являється вікно перевірки Suno з прапорцем.",
-  "El modelo, el estilo, los estilos a excluir, la voz, el modo instrumental, el modo Max, la rareza, la influencia del estilo y la persona (elige una tuya o escribe un ID) sirven para las dos formas de crear una canción.\nDescribe una canción deja que Suno escriba la letra. Tu propia letra usa tu título y tu letra. Escribir letra crea una letra a partir de un tema, y Usar esta letra la copia.\nMejorar estilo reescribe el cuadro Estilo con una descripción más completa.\nCambiar mi letra: di qué cambiar y luego Reescribir mi letra ahora. El resultado va a Letra generada; Usar esta letra la copia.\nLas canciones nuevas aparecen arriba en tu biblioteca. Oirás cuando estén listas.\nSi Suno pide un captcha, la app lo pasa sola. Si Suno quiere un clic, aparece una ventana de verificación de Suno con la casilla."
+ "Ctrl+N or New song on the Library page opens this window, which stays open beside the Library until you close it (Escape or Close). F6 goes to the main window and back, and the playback keys work here, so you can listen to what you made and make another.\nModel, style, styles to exclude, voice, instrumental, max mode, weirdness, style influence and persona (pick one of yours, or type an ID) apply to both ways of making a song.\nDescribe a song lets Suno write the words. Your own lyrics uses your title and lyrics. Write lyrics makes lyrics from a topic, and Use these lyrics copies them in.\nStyle boost rewrites the Style box into a fuller description.\nChange my lyrics: say what to change, then Rewrite my lyrics now. The result goes into Generated lyrics; Use these lyrics copies it in.\nNew songs appear at the top of your library. You'll hear when they're ready.\nIf Suno asks for a captcha, the app passes it itself. If Suno wants a click, a Suno check window comes forward with the check box.": [
+  "Ctrl+N sau Melodie nouă pe pagina Bibliotecă deschide această fereastră, care rămâne deschisă lângă Bibliotecă până o închizi (Escape sau Închide). F6 te duce la fereastra principală și înapoi, iar tastele de redare funcționează aici, ca să asculți ce ai făcut și să faci alta.\nModelul, stilul, stilurile de exclus, vocea, instrumentalul, modul Max, ciudățenia, influența stilului și persona (alege una de-a ta sau scrie un ID) se aplică ambelor feluri de a crea o melodie.\nDescrie o melodie o lasă pe Suno să scrie cuvintele. Versurile tale folosește titlul și versurile tale. Scrie versuri face versuri dintr-o temă, iar Folosește aceste versuri le copiază.\nAmplificare stil rescrie caseta Stil într-o descriere mai bogată.\nSchimbă-mi versurile: spune ce să schimbe, apoi Rescrie-mi versurile acum. Rezultatul ajunge în Versuri generate; Folosește aceste versuri îl copiază.\nMelodiile noi apar în capul bibliotecii. Vei auzi când sunt gata.\nDacă Suno cere un captcha, aplicația trece singură de el. Dacă Suno vrea un clic, apare o fereastră de verificare Suno cu căsuța.",
+  "Ctrl+N або «Нова пісня» на сторінці «Бібліотека» відкриває це вікно; воно лишається відкритим поруч із бібліотекою, доки ви його не закриєте (Escape або «Закрити»). F6 переходить до головного вікна й назад, а клавіші відтворення працюють тут, тож можна послухати створене й зробити ще одну.\nМодель, стиль, стилі для виключення, голос, інструментал, режим Max, дивність, вплив стилю й персона (виберіть свою або введіть ID) стосуються обох способів створення пісні.\n«Опишіть пісню» дає Suno написати слова. «Ваш текст» використовує вашу назву й текст. «Написати текст» створює текст за темою, а «Використати цей текст» копіює його.\n«Посилення стилю» переписує поле «Стиль» у повніший опис.\n«Змінити мій текст»: скажіть, що змінити, потім «Переписати мій текст зараз». Результат з'являється в «Згенерованому тексті»; «Використати цей текст» копіює його.\nНові пісні з'являються вгорі бібліотеки. Ви почуєте, коли вони будуть готові.\nЯкщо Suno просить капчу, програма проходить її сама. Якщо Suno хоче клацання, з'являється вікно перевірки Suno з прапорцем.",
+  "Ctrl+N o Canción nueva en la página Biblioteca abre esta ventana, que se queda abierta junto a la Biblioteca hasta que la cierras (Escape o Cerrar). F6 lleva a la ventana principal y de vuelta, y las teclas de reproducción funcionan aquí, para escuchar lo que hiciste y hacer otra.\nEl modelo, el estilo, los estilos a excluir, la voz, el modo instrumental, el modo Max, la rareza, la influencia del estilo y la persona (elige una tuya o escribe un ID) sirven para las dos formas de crear una canción.\nDescribe una canción deja que Suno escriba la letra. Tu propia letra usa tu título y tu letra. Escribir letra crea una letra a partir de un tema, y Usar esta letra la copia.\nMejorar estilo reescribe el cuadro Estilo con una descripción más completa.\nCambiar mi letra: di qué cambiar y luego Reescribir mi letra ahora. El resultado va a Letra generada; Usar esta letra la copia.\nLas canciones nuevas aparecen arriba en tu biblioteca. Oirás cuando estén listas.\nSi Suno pide un captcha, la app lo pasa sola. Si Suno quiere un clic, aparece una ventana de verificación de Suno con la casilla."
  ],
  "Style ideas lists styles Suno suggests; Enter puts one in the Style box. Lyrics drafts lists your drafts from Suno's lyrics editor; Enter puts one in the Lyrics box, asking first if it has words in it.": [
   "Idei de stil arată stilurile sugerate de Suno; Enter pune unul în caseta Stil. Ciorne de versuri arată ciornele din editorul de versuri Suno; Enter pune una în caseta Versuri, întrebând mai întâi dacă aceasta are deja text.",
@@ -1089,10 +1134,15 @@
   "Продовження, кавер і ремастер",
   "Extender, Cover y Remasterizar"
  ],
- "Each opens a short form. Tab moves between fields, Enter on OK starts it, Escape cancels.\nExtend continues a song from a time you choose; then use Get whole song to join the parts.\nCover keeps the melody in a new style; you can change the title and lyrics, which start as the original words, and set audio influence, weirdness, style influence and persona. Remaster makes a cleaner version with a newer model: pick strength (Subtle, Normal, High), kind (Natural, Boost, Clarity) and, if you like, the fine controls.": [
-  "Fiecare deschide un formular scurt. Tab trece de la un câmp la altul, Enter pe OK pornește, Escape anulează.\nExtinde continuă o melodie din momentul ales; apoi folosește Melodia întreagă ca să unești părțile.\nCover păstrează melodia într-un stil nou; poți schimba titlul și versurile, care pornesc de la cuvintele originale, și poți seta influența audio, ciudățenia, influența stilului și persona. Remasterizarea face o versiune mai curată cu un model mai nou: alege intensitatea (Subtilă, Normală, Mare), felul (Natural, Amplificat, Claritate) și, dacă vrei, reglajele fine.",
-  "Кожна відкриває коротку форму. Tab переходить між полями, Enter на OK запускає, Escape скасовує.\n«Продовжити» продовжує пісню з вибраного моменту; потім «Ціла пісня» об'єднує частини.\nКавер зберігає мелодію в новому стилі; можна змінити назву й текст, які спершу збігаються з оригіналом, і задати вплив аудіо, дивність, вплив стилю й персону. Ремастер робить чистішу версію новішою моделлю: виберіть силу (Легка, Звичайна, Сильна), тип (Природний, Підсилений, Чіткість) і, за бажання, точні налаштування.",
-  "Cada uno abre un formulario breve. Tab pasa de un campo a otro, Intro en Aceptar lo inicia, Escape cancela.\nExtender continúa una canción desde el momento que elijas; luego usa Canción completa para unir las partes.\nCover conserva la melodía con un estilo nuevo; puedes cambiar el título y la letra, que empiezan siendo los originales, y ajustar la influencia del audio, la rareza, la influencia del estilo y la persona. Remasterizar crea una versión más limpia con un modelo más nuevo: elige la intensidad (Sutil, Normal, Alta), el tipo (Natural, Realce, Claridad) y, si quieres, los ajustes finos."
+ "Each opens a form that stays open until you close it (Escape or Close). Tab moves between fields; the button at the bottom starts it, and you can change something and start another. F6 goes to the main window and back, and the playback keys work in the form, so you can listen while you fine-tune.\nExtend continues a song from a time you choose; then use Get whole song to join the parts.\nCover keeps the melody in a new style; you can change the title and lyrics, which start as the original words, and set audio influence, weirdness, style influence and persona. Remaster makes a cleaner version with a newer model: pick strength (Subtle, Normal, High), kind (Natural, Boost, Clarity) and, if you like, the fine controls.": [
+  "Fiecare deschide un formular care rămâne deschis până îl închizi (Escape sau Închide). Tab trece de la un câmp la altul; butonul de jos pornește, iar apoi poți schimba ceva și porni altul. F6 te duce la fereastra principală și înapoi, iar tastele de redare funcționează în formular, ca să asculți în timp ce reglezi.\nExtinde continuă o melodie din momentul ales; apoi folosește Melodia întreagă ca să unești părțile.\nCover păstrează melodia într-un stil nou; poți schimba titlul și versurile, care pornesc de la cuvintele originale, și poți seta influența audio, ciudățenia, influența stilului și persona. Remasterizarea face o versiune mai curată cu un model mai nou: alege intensitatea (Subtilă, Normală, Mare), felul (Natural, Amplificat, Claritate) și, dacă vrei, reglajele fine.",
+  "Кожна відкриває форму, що лишається відкритою, доки ви її не закриєте (Escape або «Закрити»). Tab переходить між полями; кнопка внизу запускає, а потім можна щось змінити й запустити ще раз. F6 переходить до головного вікна й назад, а клавіші відтворення працюють у формі, тож можна слухати, поки налаштовуєте.\n«Продовжити» продовжує пісню з вибраного моменту; потім «Ціла пісня» об'єднує частини.\nКавер зберігає мелодію в новому стилі; можна змінити назву й текст, які спершу збігаються з оригіналом, і задати вплив аудіо, дивність, вплив стилю й персону. Ремастер робить чистішу версію новішою моделлю: виберіть силу (Легка, Звичайна, Сильна), тип (Природний, Підсилений, Чіткість) і, за бажання, точні налаштування.",
+  "Cada uno abre un formulario que se queda abierto hasta que lo cierras (Escape o Cerrar). Tab pasa de un campo a otro; el botón de abajo lo inicia, y puedes cambiar algo e iniciar otro. F6 lleva a la ventana principal y de vuelta, y las teclas de reproducción funcionan en el formulario, para escuchar mientras ajustas.\nExtender continúa una canción desde el momento que elijas; luego usa Canción completa para unir las partes.\nCover conserva la melodía con un estilo nuevo; puedes cambiar el título y la letra, que empiezan siendo los originales, y ajustar la influencia del audio, la rareza, la influencia del estilo y la persona. Remasterizar crea una versión más limpia con un modelo más nuevo: elige la intensidad (Sutil, Normal, Alta), el tipo (Natural, Realce, Claridad) y, si quieres, los ajustes finos."
+ ],
+ "In Cover, Rewrite the lyrics now changes the Lyrics box the way the How to change box says, and Back to the original words undoes it. Cover and Extend have Style boost and Style ideas for the Style box. You can start up to five at once, as Suno allows; the button waits only while five are still being started.": [
+  "În Cover, Rescrie versurile acum schimbă caseta Versuri așa cum spune caseta Cum să schimbi, iar Înapoi la cuvintele originale anulează. Cover și Extinde au Îmbogățește stilul și Idei de stil pentru caseta Stil. Poți porni până la cinci deodată, cât permite Suno; butonul așteaptă doar cât timp cinci încă pornesc.",
+  "У «Кавері» «Переписати текст зараз» змінює поле «Текст» так, як сказано в полі «Як змінити», а «Повернути оригінальні слова» скасовує зміну. «Кавер» і «Продовжити» мають «Посилити стиль» та «Ідеї стилю» для поля «Стиль». Можна запустити до п’яти одночасно, як дозволяє Suno; кнопка чекає, лише поки п’ять ще запускаються.",
+  "En Versión, Reescribir la letra ahora cambia el cuadro Letra como dice el cuadro Cómo cambiar, y Volver a la letra original lo deshace. Versión y Extender tienen Mejorar estilo e Ideas de estilo para el cuadro Estilo. Puedes iniciar hasta cinco a la vez, como permite Suno; el botón solo espera mientras cinco se siguen iniciando."
  ],
  "Speech": [
   "Vorbire",
@@ -1169,10 +1219,10 @@
   "Пісня ще не готова.",
   "Esa canción todavía no está terminada."
  ],
- "Models haven't loaded yet. Press F5 on the Create tab, then try again.": [
-  "Modelele nu s-au încărcat încă. Apasă F5 în fila Creare, apoi încearcă din nou.",
-  "Моделі ще не завантажено. Натисніть F5 на вкладці «Створення» й спробуйте ще раз.",
-  "Los modelos aún no se cargaron. Pulsa F5 en la pestaña Crear y vuelve a intentarlo."
+ "Models haven't loaded yet. Press F5 in the Create window (Ctrl+N), then try again.": [
+  "Modelele nu s-au încărcat încă. Apasă F5 în fereastra Creare (Ctrl+N), apoi încearcă din nou.",
+  "Моделі ще не завантажилися. Натисніть F5 у вікні «Створення» (Ctrl+N), потім спробуйте знову.",
+  "Los modelos aún no se han cargado. Pulsa F5 en la ventana Crear (Ctrl+N) y vuelve a intentarlo."
  ],
  "Extend f_rom (seconds, or minutes:seconds)": [
   "Extinde _de la (secunde sau minute:secunde)",
@@ -1193,6 +1243,16 @@
   "_Stil",
   "_Стиль",
   "_Estilo"
+ ],
+ "Style _boost": [
+  "Îm_bogățește stilul",
+  "Посил_ити стиль",
+  "Me_jorar estilo"
+ ],
+ "Style i_deas...": [
+  "Idei de sti_l...",
+  "Ідеї стил_ю...",
+  "Ideas de e_stilo..."
  ],
  "_Exclude styles": [
   "Stiluri de _exclus",
@@ -1239,6 +1299,51 @@
   "Без персони",
   "Sin persona"
  ],
+ "Put lyrics in the Lyrics box first.": [
+  "Pune mai întâi versuri în caseta Versuri.",
+  "Спершу додайте текст у поле «Текст».",
+  "Pon primero una letra en el cuadro Letra."
+ ],
+ "Say how to change them in the How to change box first.": [
+  "Spune mai întâi în caseta Cum să schimbi ce să se schimbe.",
+  "Спершу напишіть у полі «Як змінити», що змінити.",
+  "Di primero en el cuadro Cómo cambiar qué hay que cambiar."
+ ],
+ "Rewriting the lyrics.": [
+  "Rescriu versurile.",
+  "Переписую текст.",
+  "Reescribiendo la letra."
+ ],
+ "New lyrics are in the Lyrics box. Back to the original words undoes it.": [
+  "Versurile noi sunt în caseta Versuri. Înapoi la cuvintele originale anulează schimbarea.",
+  "Новий текст у полі «Текст». «Повернути оригінальні слова» скасовує зміну.",
+  "La letra nueva está en el cuadro Letra. Volver a la letra original lo deshace."
+ ],
+ "Type a style first, even a word or two.": [
+  "Întâi scrie un stil, măcar un cuvânt sau două.",
+  "Спершу введіть стиль, хоч слово чи два.",
+  "Primero escribe un estilo, aunque sea una o dos palabras."
+ ],
+ "Boosting the style.": [
+  "Îmbogățesc stilul.",
+  "Посилюю стиль.",
+  "Mejorando el estilo."
+ ],
+ "Style boosted: {0}": [
+  "Stilul îmbogățit: {0}",
+  "Посилений стиль: {0}",
+  "Estilo mejorado: {0}"
+ ],
+ "Suno has no style ideas right now.": [
+  "Suno nu are idei de stil acum.",
+  "Зараз у Suno немає ідей стилю.",
+  "Suno no tiene ideas de estilo ahora."
+ ],
+ "Style ideas. Enter puts one in the Style box.": [
+  "Idei de stil. Enter pune una în caseta Stil.",
+  "Ідеї стилю. Enter вставляє одну в поле «Стиль».",
+  "Ideas de estilo. Intro pone una en el cuadro Estilo."
+ ],
  "_Persona": [
   "_Persona",
   "_Персона",
@@ -1254,6 +1359,11 @@
   "_Текст (змініть його або залиште оригінальні слова)",
   "_Letra (cámbiala o conserva la original)"
  ],
+ "_How to change the lyrics (for example: make the chorus rhyme)": [
+  "Cum să sc_himbi versurile (de exemplu: fă refrenul să rimeze)",
+  "_Як змінити текст (наприклад: зробити рими в приспіві)",
+  "_Cómo cambiar la letra (por ejemplo: que el estribillo rime)"
+ ],
  "_Instrumental (no singing)": [
   "Instrumentală (_fără voce)",
   "_Інструментал (без співу)",
@@ -1263,6 +1373,21 @@
   "_Stil nou",
   "Новий _стиль",
   "Nuevo _estilo"
+ ],
+ "_Rewrite the lyrics now": [
+  "Rescrie versurile ac_um",
+  "Переписати текст _зараз",
+  "Reescribir la letra a_hora"
+ ],
+ "Back to the ori_ginal words": [
+  "Înapoi la cuvintele ori_ginale",
+  "Повернути _оригінальні слова",
+  "Volver a la letra ori_ginal"
+ ],
+ "The original words are back in the Lyrics box.": [
+  "Cuvintele originale sunt din nou în caseta Versuri.",
+  "Оригінальні слова знову в полі «Текст».",
+  "La letra original vuelve a estar en el cuadro Letra."
  ],
  "_Audio influence: how closely to follow the original, 0 to 100 (empty lets Suno choose)": [
   "Influența _audio: cât de aproape să rămână de original, de la 0 la 100 (gol: alege Suno)",
@@ -1324,10 +1449,10 @@
   "Чіткість",
   "Claridad"
  ],
- "Plan details haven't loaded yet. Press F5 on the Create tab, then try again.": [
-  "Detaliile planului nu s-au încărcat încă. Apasă F5 în fila Creare, apoi încearcă din nou.",
-  "Подробиці плану ще не завантажено. Натисніть F5 на вкладці «Створення» й спробуйте ще раз.",
-  "Los detalles del plan aún no se cargaron. Pulsa F5 en la pestaña Crear y vuelve a intentarlo."
+ "Plan details haven't loaded yet. Press F5 in the Create window (Ctrl+N), then try again.": [
+  "Detaliile planului nu s-au încărcat încă. Apasă F5 în fereastra Creare (Ctrl+N), apoi încearcă din nou.",
+  "Дані плану ще не завантажилися. Натисніть F5 у вікні «Створення» (Ctrl+N), потім спробуйте знову.",
+  "Los detalles del plan aún no se han cargado. Pulsa F5 en la ventana Crear (Ctrl+N) y vuelve a intentarlo."
  ],
  "Suno offers no remaster models to this account.": [
   "Suno nu oferă modele de remasterizare acestui cont.",
@@ -1864,6 +1989,11 @@
   "Збережено «{0}».",
   "Se guardó {0}."
  ],
+ "The free file didn't download: {0}": [
+  "Fișierul gratuit nu s-a descărcat: {0}",
+  "Безкоштовний файл не завантажився: {0}",
+  "El archivo gratuito no se descargó: {0}"
+ ],
  "Suno gave no file address for this song.": [
   "Suno nu a dat nicio adresă de fișier pentru melodie.",
   "Suno не надав адреси файлу для цієї пісні.",
@@ -2329,6 +2459,21 @@
   "_Гучніше",
   "S_ubir volumen"
  ],
+ "_Audio output...": [
+  "Ie_șire audio...",
+  "_Аудіовихід...",
+  "Salida d_e audio..."
+ ],
+ "Se_cond audio output...": [
+  "A dou_ă ieșire audio...",
+  "Друг_ий аудіовихід...",
+  "Segu_nda salida de audio..."
+ ],
+ "Switc_h to the other output": [
+  "Treci _la cealaltă ieșire",
+  "Перемкнути на інший ви_хід",
+  "Cambiar a la _otra salida"
+ ],
  "_Play": [
   "_Redă",
   "_Відтворити",
@@ -2434,6 +2579,11 @@
   "_У кошик",
   "_Borrar (a la papelera)"
  ],
+ "_New song...": [
+  "Melodie _nouă...",
+  "Нов_а пісня...",
+  "Canción _nueva..."
+ ],
  "_Refresh": [
   "_Reîmprospătează",
   "_Оновити",
@@ -2469,11 +2619,6 @@
   "_Плейлисти",
   "_Listas"
  ],
- "_Create": [
-  "_Creare",
-  "_Створення",
-  "_Crear"
- ],
  "_Trending": [
   "În _tendințe",
   "У _тренді",
@@ -2488,6 +2633,11 @@
   "_Setări",
   "_Налаштування",
   "C_onfiguración"
+ ],
+ "Next _window": [
+  "_Fereastra următoare",
+  "Наступне _вікно",
+  "_Ventana siguiente"
  ],
  "_Explore...": [
   "_Explorează...",
@@ -2709,6 +2859,61 @@
   "Tin Pan, автор Ernesto Melendez",
   "Tin Pan, de Ernesto Melendez"
  ],
+ "Audio output. Enter plays songs there.": [
+  "Ieșire audio. Enter redă melodiile acolo.",
+  "Аудіовихід. Enter відтворює пісні там.",
+  "Salida de audio. Intro reproduce las canciones ahí."
+ ],
+ "Main output: {0}. Ctrl+Shift+F12 goes back to it.": [
+  "Ieșirea principală: {0}. Ctrl+Shift+F12 revine la ea.",
+  "Основний вихід: {0}. Ctrl+Shift+F12 повертає до нього.",
+  "Salida principal: {0}. Ctrl+Mayús+F12 vuelve a ella."
+ ],
+ "Playing on {0}.": [
+  "Se redă pe {0}.",
+  "Грає через {0}.",
+  "Sonando en {0}."
+ ],
+ "Second audio output, for Ctrl+Shift+F12. Enter chooses it.": [
+  "A doua ieșire audio, pentru Ctrl+Shift+F12. Enter o alege.",
+  "Другий аудіовихід, для Ctrl+Shift+F12. Enter вибирає його.",
+  "Segunda salida de audio, para Ctrl+Mayús+F12. Intro la elige."
+ ],
+ "No second output. Ctrl+Shift+F12 does nothing.": [
+  "Fără a doua ieșire. Ctrl+Shift+F12 nu face nimic.",
+  "Другого виходу немає. Ctrl+Shift+F12 нічого не робить.",
+  "Sin segunda salida. Ctrl+Mayús+F12 no hace nada."
+ ],
+ "Second output: {0}. Ctrl+Shift+F12 switches to it and back.": [
+  "A doua ieșire: {0}. Ctrl+Shift+F12 trece la ea și înapoi.",
+  "Другий вихід: {0}. Ctrl+Shift+F12 перемикає на нього й назад.",
+  "Segunda salida: {0}. Ctrl+Mayús+F12 cambia a ella y de vuelta."
+ ],
+ "Choose a second output first: Playback menu, Second audio output.": [
+  "Alege mai întâi a doua ieșire: meniul Redare, A doua ieșire audio.",
+  "Спершу виберіть другий вихід: меню «Відтворення», «Другий аудіовихід».",
+  "Elige primero una segunda salida: menú Reproducción, Segunda salida de audio."
+ ],
+ "None": [
+  "Niciuna",
+  "Немає",
+  "Ninguna"
+ ],
+ "chosen": [
+  "aleasă",
+  "вибрано",
+  "elegida"
+ ],
+ "not connected": [
+  "neconectată",
+  "не під’єднано",
+  "no conectada"
+ ],
+ "No other Tin Pan windows are open.": [
+  "Nu sunt deschise alte ferestre Tin Pan.",
+  "Інших вікон Tin Pan не відкрито.",
+  "No hay otras ventanas de Tin Pan abiertas."
+ ],
  "Tin Pan ready. {0} Press F1 for help.": [
   "Tin Pan e gata. {0} Apasă F1 pentru ajutor.",
   "Tin Pan готовий. {0} Натисніть F1 для довідки.",
@@ -2744,10 +2949,10 @@
   "Ласкаво просимо до Tin Pan",
   "Bienvenida a Tin Pan"
  ],
- "Not signed in. You can sign in any time from Settings, Ctrl+6. Press F1 for help.": [
-  "Nu ești conectat. Te poți conecta oricând din Setări, Ctrl+6. Apasă F1 pentru ajutor.",
-  "Ви не ввійшли. Увійти можна будь-коли в Налаштуваннях, Ctrl+6. Натисніть F1 для довідки.",
-  "No iniciaste sesión. Puedes hacerlo cuando quieras desde Configuración, Ctrl+6. Pulsa F1 para la ayuda."
+ "Not signed in. You can sign in any time from Settings, Ctrl+5. Press F1 for help.": [
+  "Nu ești conectat. Te poți conecta oricând din Setări, Ctrl+5. Apasă F1 pentru ajutor.",
+  "Ви не ввійшли. Увійти можна будь-коли в Налаштуваннях, Ctrl+5. Натисніть F1, щоб отримати довідку.",
+  "No has iniciado sesión. Puedes hacerlo cuando quieras desde Configuración, Ctrl+5. Pulsa F1 para obtener ayuda."
  ],
  "Tin Pan - signed in": [
   "Tin Pan - conectat",
@@ -3204,31 +3409,6 @@
   "Текст готовий.",
   "La letra está lista."
  ],
- "Type a style first, even a word or two.": [
-  "Întâi scrie un stil, măcar un cuvânt sau două.",
-  "Спершу введіть стиль, хоч слово чи два.",
-  "Primero escribe un estilo, aunque sea una o dos palabras."
- ],
- "Boosting the style.": [
-  "Îmbogățesc stilul.",
-  "Посилюю стиль.",
-  "Mejorando el estilo."
- ],
- "Style boosted: {0}": [
-  "Stilul îmbogățit: {0}",
-  "Посилений стиль: {0}",
-  "Estilo mejorado: {0}"
- ],
- "Suno has no style ideas right now.": [
-  "Suno nu are idei de stil acum.",
-  "Зараз у Suno немає ідей стилю.",
-  "Suno no tiene ideas de estilo ahora."
- ],
- "Style ideas. Enter puts one in the Style box.": [
-  "Idei de stil. Enter pune una în caseta Stil.",
-  "Ідеї стилю. Enter вставляє одну в поле «Стиль».",
-  "Ideas de estilo. Intro pone una en el cuadro Estilo."
- ],
  "You have no lyrics drafts on Suno.": [
   "Nu aveți ciorne de versuri pe Suno.",
   "У вас немає чернеток тексту в Suno.",
@@ -3269,11 +3449,6 @@
   "Скажіть, що змінити, наприклад: зробити риму в приспіві.",
   "Di qué cambiar, por ejemplo: que el coro rime."
  ],
- "Rewriting the lyrics.": [
-  "Rescriu versurile.",
-  "Переписую текст.",
-  "Reescribiendo la letra."
- ],
  "New lyrics ready in Generated lyrics. Use these lyrics copies them in.": [
   "Versurile noi sunt gata în Versuri generate. Folosește aceste versuri le copiază.",
   "Новий текст готовий у «Згенерованому тексті». «Використати цей текст» скопіює його.",
@@ -3298,6 +3473,16 @@
   "{0} melodie în tendințe.|{0} melodii în tendințe.|{0} de melodii în tendințe.",
   "{0} пісня у тренді.|{0} пісні у тренді.|{0} пісень у тренді.",
   "{0} canción en tendencia.|{0} canciones en tendencia."
+ ],
+ "Create a song": [
+  "Creează o melodie",
+  "Створити пісню",
+  "Crear una canción"
+ ],
+ "Close": [
+  "Închide",
+  "Закрити",
+  "Cerrar"
  ],
  "{0} is {1} characters. The limit is {2}.": [
   "{0} are {1} caractere. Limita e {2}.",
@@ -3339,11 +3524,6 @@
   "Скасувати",
   "Cancelar"
  ],
- "Close": [
-  "Închide",
-  "Закрити",
-  "Cerrar"
- ],
  "Signing in needs the Microsoft Edge WebView2 Runtime. Install it from Microsoft, then try again.": [
   "Conectarea are nevoie de Microsoft Edge WebView2 Runtime. Instalează-l de la Microsoft, apoi încearcă din nou.",
   "Для входу потрібен Microsoft Edge WebView2 Runtime. Установіть його з сайту Microsoft і спробуйте ще раз.",
@@ -3368,11 +3548,6 @@
   "Liste de redare",
   "Плейлисти",
   "Listas"
- ],
- "Create": [
-  "Creare",
-  "Створення",
-  "Crear"
  ],
  "Trending": [
   "În tendințe",
@@ -3418,11 +3593,6 @@
   "Model",
   "Модель",
   "Modelo"
- ],
- "Style _boost": [
-  "Îm_bogățește stilul",
-  "Посил_ити стиль",
-  "Me_jorar estilo"
  ],
  "Style ideas...": [
   "Idei de stil...",
@@ -3723,6 +3893,21 @@
   "Versuri _în direct: citește fiecare vers cu voce tare când e cântat (Shift+F3)",
   "_Живі слова: читати кожен рядок уголос під час співу (Shift+F3)",
   "Letra en directo: leer cada verso en voz alta mientras se canta (S_hift+F3)"
+ ],
+ "Output device": [
+  "Dispozitiv de ieșire",
+  "Пристрій виходу",
+  "Dispositivo de salida"
+ ],
+ "_Quick switch output, for Ctrl+Shift+F12": [
+  "Ie_șire pentru comutare rapidă, cu Ctrl+Shift+F12",
+  "Ви_хід для швидкого перемикання, Ctrl+Shift+F12",
+  "Salida de cambio r_ápido, para Ctrl+Mayús+F12"
+ ],
+ "Quick switch output, for Ctrl+Shift+F12": [
+  "Ieșire pentru comutare rapidă, cu Ctrl+Shift+F12",
+  "Вихід для швидкого перемикання, Ctrl+Shift+F12",
+  "Salida de cambio rápido, para Ctrl+Mayús+F12"
  ],
  "Check for _new versions when Tin Pan starts": [
   "Caută _versiuni noi la pornirea Tin Pan",

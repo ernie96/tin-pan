@@ -35,7 +35,7 @@ namespace TinPan.ViewModels
         private bool ModelsLoaded()
         {
             if (_account.Models.Count > 0) return true;
-            Announcer.Announce(T("Models haven't loaded yet. Press F5 on the Create tab, then try again."));
+            Announcer.Announce(T("Models haven't loaded yet. Press F5 in the Create window (Ctrl+N), then try again."));
             return false;
         }
 
@@ -50,6 +50,8 @@ namespace TinPan.ViewModels
             var title = new TextField(T("_Title"), clip.Title ?? "", maxLength: 100);
             var lyrics = new TextField(T("_Lyrics for the new part"), "", multiline: true);
             var style = new TextField(T("_Style"), clip.Metadata?.Tags ?? "");
+            var boost = new ButtonField(T("Style _boost"), () => BoostStyleAsync(style, lyrics, null));
+            var ideas = new ButtonField(T("Style i_deas..."), () => StyleIdeasAsync(style));
             var exclude = new TextField(T("_Exclude styles"), "");
             var model = ModelChoice();
             var weirdness = new NumberField(T("_Weirdness, 0 to 100 (empty lets Suno choose)"), null, 0, 100);
@@ -57,27 +59,86 @@ namespace TinPan.ViewModels
             var persona = await PersonaChoiceAsync();
             var maxMode = new CheckField(T("Ma_x mode"), false);
             var intro = T("Continues {0} from a point you choose. Leave lyrics empty to let Suno carry on. Use Get whole song afterwards to join the parts.", clip.DisplayTitle);
-            if (!_dialogs.ShowForm(T("Extend {0}", clip.DisplayTitle), intro, T("Extend"),
-                    new FormField[] { from, title, lyrics, style, exclude, model, weirdness, styleInfluence, persona, maxMode })) return;
-
-            var chosen = (SunoModel?)model.Selected ?? _account.DefaultModel!;
-            var request = new GenerateRequest(chosen.ExternalKey, GenerateRequest.Modes.Custom)
-            {
-                Title = title.Value,
-                Prompt = lyrics.Value,
-                Tags = style.Value,
-                NegativeTags = exclude.Value,
-                ContinueClipId = clip.Id,
-                ContinueAt = from.Value,
-                Task = "extend",
-                PersonaId = SelectedPersonaId(persona)
-            };
-            request.Metadata.ControlSliders = ControlSliders.FromPercent(weirdness.Value, styleInfluence.Value, null);
-            request.Metadata.IsMaxMode = maxMode.Value;
-            await StartJobAsync(clip, T("Extending {0}."), c => _api.GenerateAsync(request));
+            // Stays open: extend, listen, change something and extend again.
+            _dialogs.ShowToolForm(T("Extend {0}", clip.DisplayTitle), intro, T("Extend"),
+                new FormField[] { from, title, lyrics, style, boost, ideas, exclude, model, weirdness, styleInfluence, persona, maxMode }, () =>
+                {
+                    var chosen = (SunoModel?)model.Selected ?? _account.DefaultModel!;
+                    var request = new GenerateRequest(chosen.ExternalKey, GenerateRequest.Modes.Custom)
+                    {
+                        Title = title.Value,
+                        Prompt = lyrics.Value,
+                        Tags = style.Value,
+                        NegativeTags = exclude.Value,
+                        ContinueClipId = clip.Id,
+                        ContinueAt = from.Value,
+                        Task = "extend",
+                        PersonaId = SelectedPersonaId(persona)
+                    };
+                    request.Metadata.ControlSliders = ControlSliders.FromPercent(weirdness.Value, styleInfluence.Value, null);
+                    request.Metadata.IsMaxMode = maxMode.Value;
+                    return StartJobAsync(clip, T("Extending {0}."), c => _api.GenerateAsync(request));
+                });
         }
 
         private static Persona NoPersona => new("", T("No persona"));
+
+        // ── Writing help inside the Extend and Cover forms ─────────────────
+
+        /// <summary>Suno's lyric co-writing on the form's Lyrics box, as the How to change box asks.</summary>
+        private async Task RewriteLyricsAsync(TextField lyrics, TextField change, TextField title, TextField style)
+        {
+            if (string.IsNullOrWhiteSpace(lyrics.Current))
+            {
+                Announcer.Announce(T("Put lyrics in the Lyrics box first."));
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(change.Current))
+            {
+                Announcer.Announce(T("Say how to change them in the How to change box first."));
+                return;
+            }
+            Announcer.Announce(T("Rewriting the lyrics."));
+            await RunAsync(async () =>
+            {
+                lyrics.Current = await _api.CowriteLyricsAsync(lyrics.Current, change.Current.Trim(), title.Current, style.Current);
+                Announcer.Announce(T("New lyrics are in the Lyrics box. Back to the original words undoes it."));
+            });
+        }
+
+        /// <summary>Style boost on the form's Style box, using its lyrics unless it's instrumental.</summary>
+        private async Task BoostStyleAsync(TextField style, TextField lyrics, CheckField? instrumental)
+        {
+            if (string.IsNullOrWhiteSpace(style.Current))
+            {
+                Announcer.Announce(T("Type a style first, even a word or two."));
+                return;
+            }
+            var noWords = instrumental?.Current == true;
+            Announcer.Announce(T("Boosting the style."));
+            await RunAsync(async () =>
+            {
+                style.Current = await _api.BoostStyleAsync(style.Current.Trim(), noWords ? null : lyrics.Current, noWords, null);
+                Announcer.Announce(T("Style boosted: {0}", style.Current));
+            });
+        }
+
+        /// <summary>Suno's style ideas; Enter puts one in the form's Style box.</summary>
+        private async Task StyleIdeasAsync(TextField style)
+        {
+            IReadOnlyList<string> ideas = Array.Empty<string>();
+            if (!await RunAsync(async () => ideas = await _api.GetStyleSuggestionsAsync())) return;
+            if (ideas.Count == 0)
+            {
+                Announcer.Announce(T("Suno has no style ideas right now."));
+                return;
+            }
+            _dialogs.ShowLines(T("Style ideas. Enter puts one in the Style box."), ideas, index =>
+            {
+                style.Current = ideas[index];
+                Announcer.Announce(T("Style: {0}", style.Current));
+            });
+        }
 
         /// <summary>A Persona field filled with the account's personas; just "No persona" if they don't load.</summary>
         private async Task<ChoiceField> PersonaChoiceAsync()
@@ -118,8 +179,18 @@ namespace TinPan.ViewModels
 
             var title = new TextField(T("_Title"), string.IsNullOrWhiteSpace(clip.Title) ? "" : T("{0} (Cover)", clip.Title.Trim()), maxLength: 100);
             var lyrics = new TextField(T("_Lyrics (change them, or keep the original words)"), original, multiline: true);
+            var change = new TextField(T("_How to change the lyrics (for example: make the chorus rhyme)"), "");
             var instrumental = new CheckField(T("_Instrumental (no singing)"), wasInstrumental);
             var style = new TextField(T("New _style"), clip.Metadata?.Tags ?? "");
+            var rewrite = new ButtonField(T("_Rewrite the lyrics now"), () => RewriteLyricsAsync(lyrics, change, title, style));
+            var restore = new ButtonField(T("Back to the ori_ginal words"), () =>
+            {
+                lyrics.Current = original;
+                Announcer.Announce(T("The original words are back in the Lyrics box."));
+                return Task.CompletedTask;
+            });
+            var boost = new ButtonField(T("Style _boost"), () => BoostStyleAsync(style, lyrics, instrumental));
+            var ideas = new ButtonField(T("Style i_deas..."), () => StyleIdeasAsync(style));
             var exclude = new TextField(T("_Exclude styles"), "");
             var influence = new NumberField(T("_Audio influence: how closely to follow the original, 0 to 100 (empty lets Suno choose)"), null, 0, 100);
             var weirdness = new NumberField(T("_Weirdness, 0 to 100 (empty lets Suno choose)"), null, 0, 100);
@@ -128,30 +199,32 @@ namespace TinPan.ViewModels
             var persona = await PersonaChoiceAsync();
             var maxMode = new CheckField(T("Ma_x mode"), false);
             var intro = T("Makes a new version of {0} in another style, keeping its melody. The lyrics start as the original words.", clip.DisplayTitle);
-            if (!_dialogs.ShowForm(T("Cover {0}", clip.DisplayTitle), intro, T("Make cover"),
-                    new FormField[] { title, lyrics, instrumental, style, exclude, influence, weirdness, styleInfluence, model, persona, maxMode })) return;
+            // Stays open: make a cover, listen to it, fine-tune and make another.
+            _dialogs.ShowToolForm(T("Cover {0}", clip.DisplayTitle), intro, T("Make cover"),
+                new FormField[] { title, lyrics, change, rewrite, restore, instrumental, style, boost, ideas, exclude, influence, weirdness, styleInfluence, model, persona, maxMode }, () =>
+                {
+                    if (!instrumental.Value && lyrics.Value.Length == 0)
+                    {
+                        Announcer.Announce(T("Add lyrics, or tick Instrumental."));
+                        return Task.CompletedTask;
+                    }
 
-            if (!instrumental.Value && lyrics.Value.Length == 0)
-            {
-                Announcer.Announce(T("Add lyrics, or tick Instrumental."));
-                return;
-            }
-
-            var chosen = (SunoModel?)model.Selected ?? _account.DefaultModel!;
-            var request = new GenerateRequest(chosen.ExternalKey, GenerateRequest.Modes.Cover)
-            {
-                Title = title.Value,
-                Prompt = instrumental.Value ? "" : lyrics.Value,
-                MakeInstrumental = instrumental.Value,
-                Tags = style.Value,
-                NegativeTags = exclude.Value,
-                CoverClipId = clip.Id,
-                Task = "cover",
-                PersonaId = SelectedPersonaId(persona)
-            };
-            request.Metadata.ControlSliders = ControlSliders.FromPercent(weirdness.Value, styleInfluence.Value, influence.Value);
-            request.Metadata.IsMaxMode = maxMode.Value;
-            await StartJobAsync(clip, T("Covering {0}."), c => _api.GenerateAsync(request));
+                    var chosen = (SunoModel?)model.Selected ?? _account.DefaultModel!;
+                    var request = new GenerateRequest(chosen.ExternalKey, GenerateRequest.Modes.Cover)
+                    {
+                        Title = title.Value,
+                        Prompt = instrumental.Value ? "" : lyrics.Value,
+                        MakeInstrumental = instrumental.Value,
+                        Tags = style.Value,
+                        NegativeTags = exclude.Value,
+                        CoverClipId = clip.Id,
+                        Task = "cover",
+                        PersonaId = SelectedPersonaId(persona)
+                    };
+                    request.Metadata.ControlSliders = ControlSliders.FromPercent(weirdness.Value, styleInfluence.Value, influence.Value);
+                    request.Metadata.IsMaxMode = maxMode.Value;
+                    return StartJobAsync(clip, T("Covering {0}."), c => _api.GenerateAsync(request));
+                });
         }
 
         // Suno's own values and labels for remaster strength (variation_category) and kind (style_profile).
@@ -159,7 +232,7 @@ namespace TinPan.ViewModels
         private static (string Value, string Label)[] RemasterProfiles => new[] { ("natural", T("Natural")), ("boost", T("Boost")), ("clarity", T("Clarity")) };
 
         [RelayCommand(CanExecute = nameof(CanUsePaidFeatures))]
-        private async Task RemasterAsync(SunoClip? clip)
+        private void Remaster(SunoClip? clip)
         {
             clip ??= SelectedClip;
             if (clip == null || !Finished(clip)) return;
@@ -167,7 +240,7 @@ namespace TinPan.ViewModels
             if (models.Count == 0)
             {
                 Announcer.Announce(_account.Billing == null
-                    ? T("Plan details haven't loaded yet. Press F5 on the Create tab, then try again.")
+                    ? T("Plan details haven't loaded yet. Press F5 in the Create window (Ctrl+N), then try again.")
                     : T("Suno offers no remaster models to this account."));
                 return;
             }
@@ -186,17 +259,18 @@ namespace TinPan.ViewModels
             var fine = new NumberField(T("Stre_ngth, 0 to 100 (empty keeps Suno's 50)"), null, 0, 100);
             var stereo = new NumberField(T("Stereo _width, 0 to 100 (empty keeps Suno's 50)"), null, 0, 100);
             var intro = T("Makes a cleaner, newer-sounding version of the same song. Strength is how much it may change. Kind: Natural stays close to the original, Boost lifts it, Clarity sharpens it. The five numbers are Suno's fine controls.");
-            if (!_dialogs.ShowForm(T("Remaster {0}", clip.DisplayTitle), intro, T("Remaster"),
-                    new FormField[] { model, strength, profile, style, freedom, tone, clarity, fine, stereo })) return;
-
-            var request = new RemasterRequest(
-                clip.Id,
-                ((SunoModel)model.Selected!).ExternalKey,
-                style.Value,
-                RemasterStrengths.First(x => x.Label == (string?)strength.Selected).Value,
-                RemasterProfiles.First(x => x.Label == (string?)profile.Selected).Value,
-                freedom.Value / 100, tone.Value / 100, clarity.Value / 100, fine.Value / 100, stereo.Value / 100);
-            await StartJobAsync(clip, T("Remastering {0}."), c => _api.RemasterAsync(request));
+            _dialogs.ShowToolForm(T("Remaster {0}", clip.DisplayTitle), intro, T("Remaster"),
+                new FormField[] { model, strength, profile, style, freedom, tone, clarity, fine, stereo }, () =>
+                {
+                    var request = new RemasterRequest(
+                        clip.Id,
+                        ((SunoModel)model.Selected!).ExternalKey,
+                        style.Value,
+                        RemasterStrengths.First(x => x.Label == (string?)strength.Selected).Value,
+                        RemasterProfiles.First(x => x.Label == (string?)profile.Selected).Value,
+                        freedom.Value / 100, tone.Value / 100, clarity.Value / 100, fine.Value / 100, stereo.Value / 100);
+                    return StartJobAsync(clip, T("Remastering {0}."), c => _api.RemasterAsync(request));
+                });
         }
 
         [RelayCommand]

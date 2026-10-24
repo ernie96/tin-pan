@@ -35,7 +35,12 @@ namespace TinPan.Services
         public ConfigService()
         {
             _configPath = Path.Combine(AppFolders.Settings, "config.json");
-            _saveTimer = new Timer(_ => Save());
+            // The settings belong to the window's thread; saving there means they can't change mid-save.
+            _saveTimer = new Timer(_ =>
+            {
+                if (System.Windows.Application.Current?.Dispatcher is { } ui) ui.BeginInvoke(Save);
+                else Save();
+            });
             Load();
         }
 
@@ -51,7 +56,7 @@ namespace TinPan.Services
                 {
                     // Keep the damaged file for inspection instead of silently overwriting it.
                     var broken = _configPath + $".broken-{DateTime.Now:yyyyMMdd-HHmmss}";
-                    try { File.Move(_configPath, broken); } catch (IOException) { }
+                    try { File.Move(_configPath, broken); } catch (Exception moveEx) when (moveEx is IOException or UnauthorizedAccessException) { }
                     Log.Error("Settings file was unreadable; started with defaults", ex);
                     Current = new AppConfig();
                 }
@@ -104,6 +109,12 @@ namespace TinPan.Services
                 catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
                 {
                     Log.Error("Couldn't save settings", ex);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    // Changed while being written (a save from another thread); the next save gets it.
+                    Log.Warn($"Settings changed while saving; trying again: {ex.Message}");
+                    SaveSoon();
                 }
             }
         }

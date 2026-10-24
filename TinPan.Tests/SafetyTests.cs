@@ -42,10 +42,11 @@ namespace TinPan.Tests
         [Fact]
         public void One_oddly_typed_song_does_not_lose_the_page()
         {
-            var json = """{"clips":[{"id":"a1","title":"Good","status":"complete"},{"id":"b2","play_count":"lots"}]}""";
+            // An odd count is read as 0 and the song stays; a song that can't be read at all is the only one lost.
+            var json = """{"clips":[{"id":"a1","title":"Good","status":"complete"},{"id":"b2","play_count":"lots"},{"id":"c3","metadata":"broken"}]}""";
             var page = SunoJson.ReadFeedPage(json);
-            Assert.Single(page.Clips);
-            Assert.Equal("a1", page.Clips[0].Id);
+            Assert.Equal(new[] { "a1", "b2" }, page.Clips.Select(c => c.Id));
+            Assert.Equal(0, page.Clips[1].PlayCount);
         }
 
         [Fact]

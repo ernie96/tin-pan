@@ -50,7 +50,8 @@ namespace TinPan.Services
         internal UploadService(ISunoApiService api, HttpMessageHandler storage)
         {
             _api = api;
-            _storage = new HttpClient(storage) { Timeout = Timeout.InfiniteTimeSpan };
+            // Big files on slow connections take a while, but a stalled upload still ends.
+            _storage = new HttpClient(storage) { Timeout = TimeSpan.FromMinutes(30) };
         }
 
         public TimeSpan? Duration(string path)
@@ -114,7 +115,8 @@ namespace TinPan.Services
                     MediaFoundationEncoder.EncodeToAac(reader, target, 256000);
                 }, ct);
             }
-            catch (Exception ex) when (ex is System.Runtime.InteropServices.COMException or InvalidOperationException or ArgumentException)
+            catch (Exception ex) when (ex is System.Runtime.InteropServices.COMException or InvalidOperationException or ArgumentException
+                                           or IOException or UnauthorizedAccessException)
             {
                 Log.Warn($"Couldn't encode {Path.GetExtension(path)} to M4A: {ex.Message}");
                 throw new SunoApiException(T("Windows couldn't turn this file into M4A for uploading. Try an MP3, WAV or M4A file."), null, ex);
@@ -166,6 +168,11 @@ namespace TinPan.Services
             catch (HttpRequestException ex)
             {
                 Log.Warn($"Upload storage POST couldn't connect: {ex.Message}");
+                return (false, true, 0);
+            }
+            catch (TaskCanceledException ex) when (!ct.IsCancellationRequested)
+            {
+                Log.Warn($"Upload storage POST timed out: {ex.Message}");
                 return (false, true, 0);
             }
         }

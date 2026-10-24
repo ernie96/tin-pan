@@ -416,8 +416,12 @@ namespace TinPan.ViewModels
         {
             var index = _current == null ? -1 : Songs.IndexOf(_current);
             if (index < 0) return null;
-            if (index == Songs.Count - 1) await LoadMoreAsync(announce: false);
-            return Songs.Skip(index + 1).FirstOrDefault(c => c.CanPlay);
+            // Songs still being made don't count; load further pages until a playable one turns up.
+            for (var page = 0; ; page++)
+            {
+                var next = Songs.Skip(index + 1).FirstOrDefault(c => c.CanPlay);
+                if (next != null || page >= 3 || await LoadMoreAsync(announce: false) == 0) return next;
+            }
         }
 
         private async void OnTrackEnded(object? sender, TrackEndedEventArgs e)

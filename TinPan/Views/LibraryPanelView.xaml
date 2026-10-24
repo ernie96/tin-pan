@@ -13,6 +13,8 @@
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
             <Label Content="{l:T '_Songs'}" Target="{Binding ElementName=songList}" FontSize="18" FontWeight="Bold" Padding="0" Margin="0,0,10,0"/>
+            <Button Content="{l:T '_New song...'}" IsTabStop="False" Padding="10,5" Margin="0,0,8,0"
+                    Command="{Binding DataContext.OpenCreateCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
             <Button Content="{l:T '_Refresh'}" IsTabStop="False" Padding="10,5" Command="{Binding RefreshCommand}"/>
             <Button Content="{l:T '_Filters...'}" IsTabStop="False" Padding="10,5" Margin="8,0,0,0" Command="{Binding FiltersCommand}"/>
             <Button Content="{l:T 'Download a_ll...'}" IsTabStop="False" Padding="10,5" Margin="8,0,0,0" Command="{Binding DownloadAllCommand}"/>

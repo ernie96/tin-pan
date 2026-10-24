@@ -119,8 +119,8 @@ namespace TinPan.Services
         internal static UpdateInfo? PickAssets(GitHubRelease release, Version version)
         {
             var assets = release.Assets ?? new List<GitHubAsset>();
-            var file = assets.FirstOrDefault(a => a.Name.Equals(AssetName, StringComparison.OrdinalIgnoreCase));
-            var signature = assets.FirstOrDefault(a => a.Name.Equals(AssetName + ".sig", StringComparison.OrdinalIgnoreCase));
+            var file = assets.FirstOrDefault(a => string.Equals(a.Name, AssetName, StringComparison.OrdinalIgnoreCase));
+            var signature = assets.FirstOrDefault(a => string.Equals(a.Name, AssetName + ".sig", StringComparison.OrdinalIgnoreCase));
             var page = release.HtmlUrl ?? $"https://github.com/{Repository}/releases/latest";
             return file == null || signature == null
                 ? null
@@ -152,6 +152,11 @@ namespace TinPan.Services
         public async Task<string> DownloadAsync(UpdateInfo update, IProgress<double>? progress, CancellationToken ct = default)
         {
             var target = Path.Combine(Folder, AssetName);
+            // This client has no time limit of its own (the exe is big); a download that stalls still ends.
+            using var limit = CancellationTokenSource.CreateLinkedTokenSource(ct);
+            limit.CancelAfter(TimeSpan.FromMinutes(15));
+            var userCt = ct;
+            ct = limit.Token;
             try
             {
                 Directory.CreateDirectory(Folder);
@@ -185,7 +190,9 @@ namespace TinPan.Services
             catch (OperationCanceledException)
             {
                 TryDelete(target);
-                throw new UpdateException(T("The update download was cancelled."));
+                throw new UpdateException(userCt.IsCancellationRequested
+                    ? T("The update download was cancelled.")
+                    : T("The update download stalled. Check your internet connection and try again."));
             }
             catch (Exception ex) when (ex is HttpRequestException or IOException or UnauthorizedAccessException)
             {

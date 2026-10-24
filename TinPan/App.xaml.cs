@@ -71,6 +71,7 @@ namespace TinPan
             services.AddSingleton<IUploadService, UploadService>();
             services.AddSingleton<AccountState>();
             services.AddSingleton<LiveLyrics>();
+            services.AddSingleton<OutputSwitch>();
             services.AddSingleton<IReportService, ReportService>();
 
             services.AddSingleton<MainViewModel>();

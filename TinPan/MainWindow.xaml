@@ -21,13 +21,16 @@
         <KeyBinding Key="D3" Modifiers="Ctrl" Command="{Binding ShowTabCommand}" CommandParameter="2" />
         <KeyBinding Key="D4" Modifiers="Ctrl" Command="{Binding ShowTabCommand}" CommandParameter="3" />
         <KeyBinding Key="D5" Modifiers="Ctrl" Command="{Binding ShowTabCommand}" CommandParameter="4" />
-        <KeyBinding Key="D6" Modifiers="Ctrl" Command="{Binding ShowTabCommand}" CommandParameter="5" />
+        <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding OpenCreateCommand}" />
+        <KeyBinding Key="F6" Command="{Binding NextWindowCommand}" />
+        <KeyBinding Key="F6" Modifiers="Shift" Command="{Binding NextWindowCommand}" CommandParameter="back" />
         <KeyBinding Key="F7" Command="{Binding PreviousCommand}" />
         <KeyBinding Key="F8" Command="{Binding PlayPauseCommand}" />
         <KeyBinding Key="F8" Modifiers="Shift" Command="{Binding LibraryVM.StopCommand}" />
         <KeyBinding Key="F9" Command="{Binding NextCommand}" />
         <KeyBinding Key="F11" Command="{Binding LibraryVM.VolumeDownCommand}" />
         <KeyBinding Key="F12" Command="{Binding LibraryVM.VolumeUpCommand}" />
+        <KeyBinding Key="F12" Modifiers="Ctrl+Shift" Command="{Binding ToggleOutputCommand}" />
         <KeyBinding Key="MediaPlayPause" Command="{Binding PlayPauseCommand}" />
         <KeyBinding Key="MediaStop" Command="{Binding LibraryVM.StopCommand}" />
         <KeyBinding Key="MediaPreviousTrack" Command="{Binding PreviousCommand}" />
@@ -48,15 +51,12 @@
          Hidden until Alt or F10, like a classic Windows menu, so Tab and the screen reader don't meet it. -->
     <Menu x:Name="mainMenu" DockPanel.Dock="Top" Visibility="Collapsed" AutomationProperties.Name="{l:T 'Menu bar'}"/>
     <TabControl x:Name="mainTabs" Margin="10" SelectedIndex="{Binding SelectedTab}" SelectionChanged="MainTabs_SelectionChanged">
-        <!-- Order matches Ctrl+1 to Ctrl+6 and the tab numbers in MainViewModel. -->
+        <!-- Order matches Ctrl+1 to Ctrl+5 and the tab numbers in MainViewModel. Create is a window of its own (Ctrl+N). -->
         <TabItem Header="{l:T 'Library'}">
             <localViews:LibraryPanelView x:Name="libraryView" DataContext="{Binding LibraryVM}" />
         </TabItem>
         <TabItem Header="{l:T 'Playlists'}">
             <localViews:PlaylistsView x:Name="playlistsView" DataContext="{Binding PlaylistsVM}" />
-        </TabItem>
-        <TabItem Header="{l:T 'Create'}">
-            <localViews:CreateView x:Name="createView" DataContext="{Binding SunoVM}" />
         </TabItem>
         <TabItem Header="{l:T 'Trending'}">
             <localViews:TrendingView x:Name="trendingView" DataContext="{Binding SunoVM}" />

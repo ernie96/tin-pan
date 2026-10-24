@@ -138,7 +138,7 @@ namespace TinPan.Services
             {
                 using var doc = JsonDocument.Parse(json);
                 return doc.RootElement.ValueKind == JsonValueKind.Object
-                       && doc.RootElement.TryGetProperty("number", out var n) && n.TryGetInt32(out var number) ? number : null;
+                       && doc.RootElement.TryGetProperty("number", out var n) && n.ValueKind == JsonValueKind.Number && n.TryGetInt32(out var number) ? number : null;
             }
             catch (JsonException)
             {

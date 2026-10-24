@@ -85,9 +85,10 @@ def command_groups():
 
 
 FORMS = {
-    'Extend form': ["Extend f_rom (seconds, or minutes:seconds)", "_Title", "_Lyrics for the new part", "_Style", "_Exclude styles", "_Model",
+    'Extend form': ["Extend f_rom (seconds, or minutes:seconds)", "_Title", "_Lyrics for the new part", "_Style", "Style _boost", "Style i_deas...", "_Exclude styles", "_Model",
                     "_Weirdness, 0 to 100 (empty lets Suno choose)", "Style in_fluence, 0 to 100 (empty lets Suno choose)", "_Persona", "Ma_x mode"],
-    'Cover form': ["_Title", "_Lyrics (change them, or keep the original words)", "_Instrumental (no singing)", "New _style", "_Exclude styles",
+    'Cover form': ["_Title", "_Lyrics (change them, or keep the original words)", "_How to change the lyrics (for example: make the chorus rhyme)",
+                   "_Rewrite the lyrics now", "Back to the ori_ginal words", "_Instrumental (no singing)", "New _style", "Style _boost", "Style i_deas...", "_Exclude styles",
                    "_Audio influence: how closely to follow the original, 0 to 100 (empty lets Suno choose)", "_Weirdness, 0 to 100 (empty lets Suno choose)",
                    "Style in_fluence, 0 to 100 (empty lets Suno choose)", "_Model", "_Persona", "Ma_x mode"],
     'Remaster form': ["Remaster _model", "Remaster s_trength", "Remaster _kind", "_Style (optional)", "_Freedom, 0 to 100 (empty keeps Suno's 0)",

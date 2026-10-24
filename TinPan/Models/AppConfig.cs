@@ -84,6 +84,12 @@ namespace TinPan.Models
         public string DownloadDir { get; set; } = "";
         public float DefaultVolume { get; set; } = 0.8f;
 
+        /// <summary>The output songs play on, by its Windows name; empty is the Windows default.</summary>
+        public string OutputDevice { get; set; } = "";
+
+        /// <summary>A second output Ctrl+Shift+F12 switches to and back (external speakers, say); empty is none.</summary>
+        public string SecondOutputDevice { get; set; } = "";
+
         /// <summary>Read timed lyrics aloud as they're sung (Shift+F3). Off to start with.</summary>
         public bool ReadLyricsLive { get; set; }
 

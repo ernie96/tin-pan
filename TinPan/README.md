@@ -8,7 +8,7 @@ By Ernesto Melendez. Unofficial: it uses the same private API as the Suno websit
 
 Alt or F10 opens the menu bar, which has every command with its keys. It stays hidden otherwise, so Tab and the screen reader never run into it. The Song menu acts on the song selected in the tab you're on (Library, a playlist, or Trending). It's grouped into submenus: Download, Make from it (extend, cover, remaster, whole song, stems), Related songs, Comments and Sharing (links, public or private, remixes). Its keys (Ctrl+I, Alt+Enter, Ctrl+L, Ctrl+C, Ctrl+D, Ctrl+E) work in the Library, a playlist's songs and Trending. On Trending, Space pauses or resumes and F9 carries on down the list. The Help menu's Speech submenu sets how much Tin Pan says. Ctrl+F1 lists the same commands; Enter runs one.
 
-Tab only stops where it matters: on the Library, the search box, the song list and the volume; on Playlists, the two lists. The page buttons still work with their Alt letters. Switching pages with Ctrl+1 to Ctrl+6 puts you on the page's list or first field.
+Tab only stops where it matters: on the Library, the search box, the song list and the volume; on Playlists, the two lists. The page buttons still work with their Alt letters. Switching pages with Ctrl+1 to Ctrl+5 puts you on the page's list or first field.
 
 Anywhere:
 
@@ -19,7 +19,10 @@ Anywhere:
 - F3: what's playing and how far in.
 - Shift+F3: read the lyrics aloud, line by line, as they're sung (for songs with timed lyrics). Off to start with; also in Settings.
 - F5: refresh the current tab.
-- Ctrl+1 to Ctrl+6: Library, Playlists, Create, Trending, Account, Settings. Ctrl+F: search your songs.
+- Ctrl+1 to Ctrl+5: Library, Playlists, Trending, Account, Settings. Ctrl+F: search your songs.
+- Ctrl+N: create a song, in a window that stays open (also New song on the Library page).
+- F6 and Shift+F6: move between Tin Pan's open windows (the main one, Create, and any Extend, Cover or Remaster form).
+- Ctrl+Shift+F12: switch between your main and second audio output.
 - F8 or the Play/Pause media key: play or pause. Shift+F8: stop.
 - F7 and F9: previous and next song. Shift+F7 and Shift+F9: back and forward 10 seconds. Ctrl+F7 and Ctrl+F9: 10 percent.
 - Ctrl+F8: back to the start. Ctrl+Shift+F8: resume the last song where you left off, even after closing Tin Pan.
@@ -34,6 +37,12 @@ In the Library list:
 - When you reach the end of the list, the next page loads by itself.
 - Filters (Alt+F): workspace, disliked songs, and every other filter Suno's own library has: trash, stems, Suno Studio songs, liked, public or private, uploaded, covers, extended, remasters, whole songs, personas, songs in a playlist and songs downloaded before. Each shows those songs, shows only them, or hides them; the defaults are Suno's (trash, stems and Studio songs hidden). Sort newest, oldest, most liked or least liked first. Suno applies them itself, so paging and search follow them, and they're kept between runs.
 - Download all (Alt+L): every finished song in the list, through the free direct download only. Songs already in the folder are skipped, and the summary names any that need Suno's own download.
+
+## Audio output
+
+Playback menu, **Audio output** chooses where songs play: headphones, speakers, a USB box, or the Windows default. **Second audio output** is one more, for example external speakers to show someone a song; **Ctrl+Shift+F12** switches to it and back, even in the middle of a song. Both are in Settings too. Tin Pan always starts on the main output. If an output is unplugged, Tin Pan says so and the song plays on the Windows default.
+
+Suno's own player plays the songs, so Tin Pan moves it to the output you choose. For that, Suno's player page is allowed to see the names of your audio devices, which Windows and Edge count as microphone permission; Tin Pan turns recording off on that page, so it can never listen. This is only switched on once you choose an output other than the Windows default.
 
 ## Playlists
 
@@ -51,9 +60,11 @@ Extend, Cover, Remaster and Edit open a short form: Tab between fields, Enter on
 
 ## Creating
 
+Ctrl+N (or New song on the Library page) opens the Create window. It stays open beside the main window until you close it with Escape or Close, so you can make a song, go back to the Library with F6 to listen, change the style and make another. F8, F9 and the other playback keys work in it too. Extend, Cover and Remaster open the same kind of form: it stays open after each one, so you can make a variation, listen, fine-tune and make another. You can start up to five at once, as Suno allows; the button only waits while five are still being started. The Cover form also has **Rewrite the lyrics now** (it changes the Lyrics box the way the How to change box says), **Back to the original words**, **Style boost** and **Style ideas**; Extend has Style boost and Style ideas too.
+
 Style boost rewrites the Style box into a fuller description. Change my lyrics takes your Lyrics and an instruction ("make the chorus rhyme") and puts Suno's rewrite in Generated lyrics.
 
-The Create tab has one set of settings used both ways: model, style, styles to exclude, voice, instrumental, weirdness, style influence and persona ID. Leave weirdness or style influence empty to let Suno choose. Then either describe the song, or give a title and your own lyrics. Lengths are checked against the chosen model's limits before anything is sent, so no credits are spent on a request Suno would refuse.
+The Create window has one set of settings used both ways: model, style, styles to exclude, voice, instrumental, weirdness, style influence and persona ID. Leave weirdness or style influence empty to let Suno choose. Then either describe the song, or give a title and your own lyrics. Lengths are checked against the chosen model's limits before anything is sent, so no credits are spent on a request Suno would refuse.
 
 If Suno asks for a captcha, the app passes it itself with Suno's own check on suno.com/create, in your signed-in browser and out of sight. Usually no puzzle appears. If Suno does want a click, a "Suno check" window comes forward with the check box; when it's done the app goes on and makes the song.
 
@@ -98,7 +109,7 @@ The Discover menu finds songs beyond your own:
 
 The Song menu's Related songs submenu (also in the Applications key menu) has **Similar songs**, **Creator's songs**, **Covers and remixes of it** and **Original song**, which finds what a cover, extension or whole song was made from. Songs open in their own list: Enter plays one, Escape closes it, and each says who made it.
 
-On the Create tab, **Style ideas** lists styles Suno suggests for you, and **Lyrics drafts** lists your drafts from Suno's lyrics editor; Enter puts one in the Style or Lyrics box. On the Account tab, notifications you haven't seen say "New", and **Mark all as read** marks them read on Suno too.
+In the Create window, **Style ideas** lists styles Suno suggests for you, and **Lyrics drafts** lists your drafts from Suno's lyrics editor; Enter puts one in the Style or Lyrics box. On the Account tab, notifications you haven't seen say "New", and **Mark all as read** marks them read on Suno too.
 
 These follow Nsomnia/chadvis-projectm-qt's endpoint inventory and suno-api-local-manager-frontend; Suno's own web code filled in the creator page's sort settings and the lyrics drafts' paging. The following feed's ranking settings and the shape of a lyrics draft weren't captured anywhere, so if either stops working, Tin Pan says so and logs Suno's reply.
 

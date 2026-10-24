@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
@@ -64,6 +65,43 @@ namespace TinPan.Views
         }
 
         internal override void Commit() => Value = _box!.Text.Trim();
+
+        /// <summary>What the box holds right now, before OK; setting it changes the box.</summary>
+        public string Current
+        {
+            get => _box?.Text ?? Value;
+            set
+            {
+                if (_box != null) _box.Text = value;
+                else Value = value;
+            }
+        }
+    }
+
+    /// <summary>A button inside a form that does something with the other fields (Style boost, say). It never closes the form.</summary>
+    public sealed class ButtonField : FormField
+    {
+        private readonly Func<Task> _click;
+
+        public ButtonField(string label, Func<Task> click) : base(label) => _click = click;
+
+        internal override Control Build()
+        {
+            var button = new Button { Content = Label, HorizontalAlignment = HorizontalAlignment.Left, Padding = new Thickness(10, 4, 10, 4) };
+            button.Click += async (_, _) =>
+            {
+                button.IsEnabled = false;
+                try { await _click(); }
+                finally
+                {
+                    button.IsEnabled = true;
+                    if (Keyboard.FocusedElement == null) button.Focus();
+                }
+            };
+            return button;
+        }
+
+        internal override void Commit() { }
     }
 
     /// <summary>A number typed into a box. Empty means "let Suno choose" when AllowEmpty. Times accept m:ss.</summary>
@@ -164,6 +202,9 @@ namespace TinPan.Views
 
         public bool Value { get; set; }
 
+        /// <summary>Whether it's ticked right now, before OK.</summary>
+        public bool Current => _check?.IsChecked ?? Value;
+
         internal override Control Build()
         {
             _check = new CheckBox { Content = Label, IsChecked = Value };
@@ -181,10 +222,21 @@ namespace TinPan.Views
     {
         private readonly IReadOnlyList<FormField> _fields;
         private readonly List<Control> _controls = new();
+        private readonly Func<Task>? _run;
+        private Button? _ok;
+        private int _running;
 
-        public FormWindow(string title, string intro, string okText, IReadOnlyList<FormField> fields)
+        /// <summary>Suno makes up to five songs at once, so OK only waits once five are still being started.</summary>
+        public const int MaxAtOnce = 5;
+
+        /// <param name="run">
+        /// Null for a dialog that closes on OK. Otherwise the window stays open (see ToolWindows): OK runs this
+        /// with the fields' new values and the form keeps them, so you can change one thing and run it again.
+        /// </param>
+        public FormWindow(string title, string intro, string okText, IReadOnlyList<FormField> fields, Func<Task>? run = null)
         {
             _fields = fields;
+            _run = run;
             Title = title;
             Width = 560;
             SizeToContent = SizeToContent.Height;
@@ -211,7 +263,7 @@ namespace TinPan.Views
             {
                 var control = field.Build();
                 AutomationProperties.SetName(control, field.SpokenLabel);
-                if (field is not CheckField)
+                if (field is not CheckField and not ButtonField)
                     panel.Children.Add(new Label { Content = field.Label, Target = control, Padding = new Thickness(0, 8, 0, 3) });
                 else
                     control.Margin = new Thickness(0, 10, 0, 0);
@@ -220,9 +272,10 @@ namespace TinPan.Views
             }
 
             var buttons = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 15, 0, 0) };
-            var ok = new Button { Content = okText, IsDefault = true, Padding = new Thickness(15, 5, 15, 5), MinWidth = 80 };
-            var cancel = new Button { Content = T("Cancel"), IsCancel = true, Padding = new Thickness(15, 5, 15, 5), MinWidth = 80, Margin = new Thickness(10, 0, 0, 0) };
-            ok.Click += (_, _) => Accept();
+            var ok = _ok = new Button { Content = okText, IsDefault = true, Padding = new Thickness(15, 5, 15, 5), MinWidth = 80 };
+            var cancel = new Button { Content = run == null ? T("Cancel") : T("Close"), IsCancel = run == null, Padding = new Thickness(15, 5, 15, 5), MinWidth = 80, Margin = new Thickness(10, 0, 0, 0) };
+            if (run != null) cancel.Click += (_, _) => Close();
+            ok.Click += async (_, _) => await AcceptAsync();
             buttons.Children.Add(ok);
             buttons.Children.Add(cancel);
             panel.Children.Add(buttons);
@@ -233,7 +286,7 @@ namespace TinPan.Views
             Loaded += (_, _) => (first ?? (Control)ok).Focus();
         }
 
-        private void Accept()
+        private async Task AcceptAsync()
         {
             for (var i = 0; i < _fields.Count; i++)
             {
@@ -246,7 +299,24 @@ namespace TinPan.Views
                 return;
             }
             foreach (var field in _fields) field.Commit();
-            DialogResult = true;
+            if (_run == null)
+            {
+                DialogResult = true;
+                return;
+            }
+            // Each press starts another (and spends its credits); only a sixth waits for one of the five to be taken.
+            _running++;
+            if (_running >= MaxAtOnce) _ok!.IsEnabled = false;
+            try { await _run(); }
+            finally
+            {
+                _running--;
+                if (!_ok!.IsEnabled && _running < MaxAtOnce)
+                {
+                    _ok.IsEnabled = true;
+                    if (!IsKeyboardFocusWithin || Keyboard.FocusedElement == null) _ok.Focus();
+                }
+            }
         }
     }
 

@@ -353,7 +353,7 @@ namespace TinPan.Tests
             Assert.False(string.IsNullOrWhiteSpace(HelpText.Trending));
             Assert.False(string.IsNullOrWhiteSpace(HelpText.Account));
             Assert.False(string.IsNullOrWhiteSpace(HelpText.Settings));
-            foreach (var key in new[] { "F1", "F2", "F3", "F5", "F7", "F8", "F9", "F11", "Ctrl+1 to Ctrl+6", "Enter", "Delete" })
+            foreach (var key in new[] { "F1", "F2", "F3", "F5", "F7", "F8", "F9", "F11", "F12", "Ctrl+1 to Ctrl+5", "Ctrl+N", "F6", "Enter", "Delete" })
                 Assert.Contains(key, HelpText.Full);
         }
 

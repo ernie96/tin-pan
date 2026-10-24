@@ -56,5 +56,11 @@ namespace TinPan.Services
 
         /// <summary>Playback broke off. Raised on the UI thread with a speakable message.</summary>
         event EventHandler<string> PlaybackFailed;
+
+        /// <summary>The Windows name of the output to play on, or "" for the Windows default.</summary>
+        string OutputDevice { get; set; }
+
+        /// <summary>The chosen output couldn't be used (unplugged, say); the message says so, once per output.</summary>
+        event EventHandler<string>? OutputFailed;
     }
 }

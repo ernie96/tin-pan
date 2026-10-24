@@ -80,13 +80,14 @@ namespace TinPan.Services
                 var payload = parts[1].Replace('-', '+').Replace('_', '/');
                 payload = payload.PadRight(payload.Length + (4 - payload.Length % 4) % 4, '=');
                 using var doc = JsonDocument.Parse(Encoding.UTF8.GetString(Convert.FromBase64String(payload)));
-                return doc.RootElement.TryGetProperty("exp", out var exp) && exp.TryGetInt64(out var seconds)
+                return doc.RootElement.TryGetProperty("exp", out var exp) && exp.ValueKind == JsonValueKind.Number && exp.TryGetInt64(out var seconds)
                     ? DateTimeOffset.FromUnixTimeSeconds(seconds)
                     : null;
             }
             catch (FormatException) { return null; }
             catch (JsonException) { return null; }
             catch (ArgumentOutOfRangeException) { return null; }
+            catch (InvalidOperationException) { return null; }
         }
     }
 }

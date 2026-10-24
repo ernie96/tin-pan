@@ -27,9 +27,25 @@ namespace TinPan.Services
   const post = m => { try { window.chrome.webview.postMessage(JSON.stringify(m)); } catch (e) {} };
   let hooked = null, clicks = 0, clickedAt = 0, started = false, last = 0, tries = 0;
   const vol = parseFloat((location.hash.match(/cv=([0-9.]+)/) || [])[1]);
+  // The audio output Tin Pan plays on, by its Windows name; empty is the Windows default.
+  let sink = decodeURIComponent((location.hash.match(/[#&]co=([^&]*)/) || [])[1] || '');
+  // Tin Pan only plays here: the page may see the names of the audio devices, but never records.
+  try { if (navigator.mediaDevices) navigator.mediaDevices.getUserMedia = () => Promise.reject(new DOMException('Not allowed', 'NotAllowedError')); } catch (e) {}
+  const applySink = a => {
+    if (!a.setSinkId) { if (sink) post({ type: 'sinkfailed', why: 'unsupported' }); return; }
+    if (!sink) { a.setSinkId('').catch(() => {}); return; }
+    navigator.mediaDevices.enumerateDevices().then(list => {
+      const outs = list.filter(x => x.kind === 'audiooutput');
+      const d = outs.find(x => x.label === sink && x.deviceId !== 'default' && x.deviceId !== 'communications') || outs.find(x => x.label === sink);
+      if (!d) { post({ type: 'sinkfailed', why: outs.some(x => x.label) ? 'notfound' : 'nolabels' }); return; }
+      return a.setSinkId(d.deviceId).then(() => post({ type: 'sink' }));
+    }).catch(e => post({ type: 'sinkfailed', why: String((e && e.name) || e) }));
+  };
+  window.__tinpanSink = label => { sink = label || ''; if (hooked) applySink(hooked); };
   const hook = a => {
     if (hooked === a) return;
     hooked = a;
+    if (sink) applySink(a);
     if (!isNaN(vol)) { a.volume = vol; a.addEventListener('play', () => { if (!started) a.volume = vol; }); }
     a.addEventListener('playing', () => { started = true; post({ type: 'playing', d: a.duration || 0 }); });
     a.addEventListener('pause', () => post({ type: 'time', t: a.currentTime, d: a.duration || 0, paused: true }));
@@ -67,7 +83,67 @@ namespace TinPan.Services
         private double _duration;
         private bool _paused;
 
-        public SunoWebPlayer(IConfigService config) => _volume = Math.Clamp(config.Current.Audio.DefaultVolume, 0f, 1f);
+        public SunoWebPlayer(IConfigService config)
+        {
+            _volume = Math.Clamp(config.Current.Audio.DefaultVolume, 0f, 1f);
+            _output = config.Current.Audio.OutputDevice ?? "";
+        }
+
+        private string _output;
+        private string? _outputFailedFor;
+
+        public event EventHandler<string>? OutputFailed;
+
+        /// <summary>
+        /// The Windows name of the output to play on, or "" for the Windows default. Suno's page plays the song,
+        /// so this is applied there (setSinkId); a song already playing moves over at once.
+        /// </summary>
+        public string OutputDevice
+        {
+            get => _output;
+            set
+            {
+                value ??= "";
+                if (value == _output) return;
+                _output = value;
+                _outputFailedFor = null;
+                _ = ApplyOutputAsync();
+            }
+        }
+
+        private async Task ApplyOutputAsync()
+        {
+            if (_view?.CoreWebView2 is not { } core) return;
+            // Back on the Windows default, the page no longer needs to see the devices, so that's taken back.
+            await AllowDeviceNamesAsync(core, _output.Length > 0);
+            if (CurrentClipId == null) return;
+            try
+            {
+                await core.ExecuteScriptAsync($"window.__tinpanSink && window.__tinpanSink({JsonSerializer.Serialize(_output)});");
+            }
+            catch (Exception ex) when (ex is InvalidOperationException or System.Runtime.InteropServices.COMException)
+            {
+                Log.Warn($"Couldn't move the song to another output: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// A page only learns which audio outputs exist, by name, with Chromium's microphone permission, so the
+        /// player's suno.com gets it once you pick an output that isn't the Windows default. The page is never
+        /// allowed to record: the start-up script turns getUserMedia off.
+        /// </summary>
+        private static async Task AllowDeviceNamesAsync(CoreWebView2 core, bool allow = true)
+        {
+            try
+            {
+                await core.Profile.SetPermissionStateAsync(CoreWebView2PermissionKind.Microphone, "https://suno.com",
+                    allow ? CoreWebView2PermissionState.Allow : CoreWebView2PermissionState.Default);
+            }
+            catch (Exception ex) when (ex is InvalidOperationException or NotImplementedException or System.Runtime.InteropServices.COMException)
+            {
+                Log.Warn($"Couldn't let the player see the audio outputs: {ex.Message}");
+            }
+        }
 
         public event EventHandler<TrackEndedEventArgs>? TrackEnded;
         public event EventHandler<string>? PlaybackFailed;
@@ -154,7 +230,8 @@ namespace TinPan.Services
             _duration = 0;
             _paused = false;
             var volume = _volume.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
-            _view!.CoreWebView2.Navigate($"https://suno.com/song/{Uri.EscapeDataString(clipId)}#cv={volume}");
+            var output = _output.Length == 0 ? "" : "&co=" + Uri.EscapeDataString(_output);
+            _view!.CoreWebView2.Navigate($"https://suno.com/song/{Uri.EscapeDataString(clipId)}#cv={volume}{output}");
 
             var finished = await Task.WhenAny(start.Task, Task.Delay(StartTimeout));
             if (version != _playVersion) return "stopped";
@@ -240,6 +317,7 @@ namespace TinPan.Services
             core.Settings.AreDevToolsEnabled = false;
             core.Settings.IsStatusBarEnabled = false;
             await core.AddScriptToExecuteOnDocumentCreatedAsync(BootScript);
+            if (_output.Length > 0) await AllowDeviceNamesAsync(core);
             core.WebMessageReceived += OnMessage;
             WebViewEnvironment.KeepOnSuno(core, "player");
         }
@@ -254,6 +332,7 @@ namespace TinPan.Services
             string? type;
             double t = 0, d = 0;
             bool paused = false;
+            string? why = null;
             try
             {
                 using var doc = JsonDocument.Parse(e.TryGetWebMessageAsString());
@@ -262,6 +341,7 @@ namespace TinPan.Services
                 if (root.TryGetProperty("t", out var tv) && tv.ValueKind == JsonValueKind.Number) t = tv.GetDouble();
                 if (root.TryGetProperty("d", out var dv) && dv.ValueKind == JsonValueKind.Number) d = dv.GetDouble();
                 if (root.TryGetProperty("paused", out var pv) && pv.ValueKind is JsonValueKind.True or JsonValueKind.False) paused = pv.GetBoolean();
+                if (root.TryGetProperty("why", out var wv) && wv.ValueKind == JsonValueKind.String) why = wv.GetString();
             }
             catch (Exception ex) when (ex is JsonException or ArgumentException)
             {
@@ -283,6 +363,15 @@ namespace TinPan.Services
                     break;
                 case "nobutton":
                     _start?.TrySetResult("nobutton");
+                    break;
+                case "sinkfailed":
+                    // Once per output: every song after that would only repeat it.
+                    Log.Warn($"Couldn't play on \"{_output}\": {why}");
+                    if (_outputFailedFor == _output) break;
+                    _outputFailedFor = _output;
+                    OutputFailed?.Invoke(this, why == "notfound"
+                        ? T("{0} isn't connected, so the song plays on the Windows default output.", _output)
+                        : T("Couldn't switch to {0}, so the song plays on the Windows default output.", _output));
                     break;
                 case "error":
                     if (_start != null && !_start.Task.IsCompleted) _start.TrySetResult("error");
