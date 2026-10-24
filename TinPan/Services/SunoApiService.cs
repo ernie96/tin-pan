@@ -19,7 +19,6 @@ namespace TinPan.Services
     /// </summary>
     public partial class SunoApiService : ISunoApiService
     {
-        public const string BaseUrl = "https://studio-api-prod.suno.com";
 
         private static readonly JsonSerializerOptions JsonOpts = LenientJson.Options(new() { PropertyNameCaseInsensitive = true });
         private static readonly TimeSpan PollInterval = TimeSpan.FromSeconds(2);
@@ -41,8 +40,22 @@ namespace TinPan.Services
         public async Task<BillingInfo> GetBillingInfoAsync(CancellationToken ct = default) =>
             Deserialize<BillingInfo>(await SendAsync(HttpMethod.Get, "/api/billing/info/", null, ct)) ?? new BillingInfo();
 
-        public async Task<IReadOnlyList<Notification>> GetNotificationsAsync(CancellationToken ct = default) =>
-            SunoJson.ReadNotifications(await SendAsync(HttpMethod.Get, "/api/notification/v2", null, ct));
+        /// <summary>
+        /// GET /api/notification/v3?include_hooks=true, what Suno's site reads since 2026-10-24 (chadvis); its
+        /// entries are text segments. v2, the older list, if v3 isn't there.
+        /// </summary>
+        public async Task<IReadOnlyList<Notification>> GetNotificationsAsync(CancellationToken ct = default)
+        {
+            try
+            {
+                return SunoJson.ReadNotifications(await SendAsync(HttpMethod.Get, "/api/notification/v3?include_hooks=true", null, ct));
+            }
+            catch (SunoApiException ex) when (ex.StatusCode is 404 or 405)
+            {
+                Log.Warn("notification/v3 not available; using v2");
+                return SunoJson.ReadNotifications(await SendAsync(HttpMethod.Get, "/api/notification/v2", null, ct));
+            }
+        }
 
         // ── Songs ───────────────────────────────────────────────────────────
 
@@ -432,7 +445,7 @@ namespace TinPan.Services
                 new { content_id = clipId }
             };
 
-            var hosts = new[] { BaseUrl };
+            var hosts = HostOrder;
             int lastStatus = 0;
 
             foreach (var host in hosts)
@@ -441,6 +454,7 @@ namespace TinPan.Services
                 {
                     using var req = new HttpRequestMessage(HttpMethod.Post, host + "/api/mango/rights");
                     AddSunoHeaders(req, token);
+                    if (host == Hosts[0]) req.Headers.TryAddWithoutValidation("Cookie", "__session=" + token);
                     req.Content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
 
                     HttpResponseMessage resp;
@@ -478,57 +492,118 @@ namespace TinPan.Services
 
         private const int RateLimitRetries = 2;
 
+        /// <summary>
+        /// Where the API answers, in order. Suno's site moved to suno.com/a/api on 2026-10-24 (chadvis
+        /// ENDPOINT-INVENTORY: feed v3, unified/library and notification v3 there); the old host still
+        /// answered on 2026-10-21 and is kept as the fallback. Paths keep their "/api/..." spelling.
+        /// </summary>
+        public static readonly string[] Hosts = { "https://suno.com/a", "https://studio-api-prod.suno.com" };
+
+        /// <summary>The old host, used for the paths' own fallback and the rights call.</summary>
+        public const string BaseUrl = "https://studio-api-prod.suno.com";
+
+        // After the new host fails and the old one answers, the old one goes first for a while instead of
+        // every request paying for a failed try; then the new one is tried again.
+        private static readonly TimeSpan PreferOldFor = TimeSpan.FromMinutes(10);
+        private DateTime _oldFirstUntil = DateTime.MinValue;
+        private string? _lastHost;
+
+        /// <summary>The hosts in the order to try them now.</summary>
+        internal IReadOnlyList<string> HostOrder => DateTime.UtcNow < _oldFirstUntil ? new[] { Hosts[1], Hosts[0] } : Hosts;
+
         private async Task<string> SendAsync(HttpMethod method, string path, object? body, CancellationToken ct, bool retryAuth = true, int rateLimited = 0)
         {
             var token = await _auth.GetTokenAsync(forceRefresh: !retryAuth, ct);
-            using var request = new HttpRequestMessage(method, BaseUrl + path);
-            AddSunoHeaders(request, token);
-            if (body != null)
-                request.Content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
-
-            HttpResponseMessage response;
-            try
+            var hosts = HostOrder;
+            for (var i = 0; i < hosts.Count; i++)
             {
-                response = await _http.SendAsync(request, ct);
-            }
-            catch (HttpRequestException ex)
-            {
-                Log.Error($"{method} {Queryless(path)} failed", ex);
-                throw new SunoApiException(T("Can't reach Suno. Check your internet connection."), null, ex);
-            }
-            catch (TaskCanceledException ex) when (!ct.IsCancellationRequested)
-            {
-                Log.Error($"{method} {Queryless(path)} timed out", ex);
-                // A request that changes something may still have gone through; making songs costs credits.
-                throw new SunoApiException(method == HttpMethod.Get
-                    ? T("Suno didn't answer in time. Try again.")
-                    : T("Suno didn't answer in time. It may still have done it, so refresh to check before trying again."), null, ex);
-            }
+                var host = hosts[i];
+                var last = i == hosts.Count - 1;
+                using var request = new HttpRequestMessage(method, host + path);
+                AddSunoHeaders(request, token);
+                // The site host reads the signed-in session as the browser sends it, a __session cookie.
+                if (host == Hosts[0]) request.Headers.TryAddWithoutValidation("Cookie", "__session=" + token);
+                if (body != null)
+                    request.Content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
 
-            using (response)
-            {
-                var text = await response.Content.ReadAsStringAsync(ct);
-                if (response.IsSuccessStatusCode) return text;
-
-                var status = (int)response.StatusCode;
-                Log.Warn($"{method} {Queryless(path)} returned {status}: {Truncate(text.ReplaceLineEndings(" "), 300)}");
-
-                // Suno rejects tokens it considers stale even before they expire; one fresh token fixes it.
-                if (retryAuth && (status is 401 or 403 || LooksLikeStaleToken(text)))
-                    return await SendAsync(method, path, body, ct, retryAuth: false, rateLimited);
-
-                // Too many requests (a burst at startup, say): Suno turned it away without doing it, so when it
-                // says it may be retried, wait and try again rather than failing the whole load.
-                if (status == 429 && rateLimited < RateLimitRetries && (RetryableRateLimit(text) || response.Headers.RetryAfter != null))
+                HttpResponseMessage response;
+                try
                 {
-                    var wait = response.Headers.RetryAfter?.Delta is { } delta && delta <= TimeSpan.FromSeconds(10) ? delta : RateLimitWait(rateLimited + 1);
-                    Log.Info($"{method} {Queryless(path)}: too many requests, trying again in {wait.TotalSeconds:0.#} s");
-                    await Task.Delay(wait, ct);
-                    return await SendAsync(method, path, body, ct, retryAuth, rateLimited + 1);
+                    response = await _http.SendAsync(request, ct);
+                }
+                catch (HttpRequestException ex)
+                {
+                    // No connection to this host. Only reads move on: a POST may already have arrived.
+                    if (!last && method == HttpMethod.Get)
+                    {
+                        Log.Warn($"{method} {Queryless(path)} couldn't reach {host}; trying {hosts[i + 1]}");
+                        continue;
+                    }
+                    Log.Error($"{method} {Queryless(path)} failed", ex);
+                    throw new SunoApiException(T("Can't reach Suno. Check your internet connection."), null, ex);
+                }
+                catch (TaskCanceledException ex) when (!ct.IsCancellationRequested)
+                {
+                    Log.Error($"{method} {Queryless(path)} timed out", ex);
+                    // A request that changes something may still have gone through; making songs costs credits.
+                    throw new SunoApiException(method == HttpMethod.Get
+                        ? T("Suno didn't answer in time. Try again.")
+                        : T("Suno didn't answer in time. It may still have done it, so refresh to check before trying again."), null, ex);
                 }
 
-                throw new SunoApiException(DescribeFailure(response.StatusCode, text), status);
+                using (response)
+                {
+                    var text = await response.Content.ReadAsStringAsync(ct);
+                    var status = (int)response.StatusCode;
+                    if (!last && NotTakenHere(method, status, text, host == Hosts[0]))
+                    {
+                        Log.Warn($"{method} {Queryless(path)} on {host} answered {status}; trying {hosts[i + 1]}");
+                        continue;
+                    }
+                    if (i > 0 && host == Hosts[1] && response.IsSuccessStatusCode) _oldFirstUntil = DateTime.UtcNow + PreferOldFor;
+                    if (host != _lastHost)
+                    {
+                        _lastHost = host;
+                        Log.Info($"Suno API answering on {host}");
+                    }
+                    if (response.IsSuccessStatusCode) return text;
+
+                    Log.Warn($"{method} {Queryless(path)} returned {status}: {Truncate(text.ReplaceLineEndings(" "), 300)}");
+
+                    // Suno rejects tokens it considers stale even before they expire; one fresh token fixes it.
+                    if (retryAuth && (status is 401 or 403 || LooksLikeStaleToken(text)))
+                        return await SendAsync(method, path, body, ct, retryAuth: false, rateLimited);
+
+                    // Too many requests (a burst at startup, say): Suno turned it away without doing it, so when it
+                    // says it may be retried, wait and try again rather than failing the whole load.
+                    if (status == 429 && rateLimited < RateLimitRetries && (RetryableRateLimit(text) || response.Headers.RetryAfter != null))
+                    {
+                        var wait = response.Headers.RetryAfter?.Delta is { } delta && delta <= TimeSpan.FromSeconds(10) ? delta : RateLimitWait(rateLimited + 1);
+                        Log.Info($"{method} {Queryless(path)}: too many requests, trying again in {wait.TotalSeconds:0.#} s");
+                        await Task.Delay(wait, ct);
+                        return await SendAsync(method, path, body, ct, retryAuth, rateLimited + 1);
+                    }
+
+                    throw new SunoApiException(DescribeFailure(response.StatusCode, text), status);
+                }
             }
+            throw new SunoApiException(T("Can't reach Suno. Check your internet connection."));
+        }
+
+        /// <summary>
+        /// The host didn't take the request, so the other may: the route isn't there (404, 405: nothing was done,
+        /// so even a song request is safe to send on), the site host doesn't accept this sign-in (401), or it was
+        /// turned away before reaching Suno (a web page instead of JSON, as a firewall or gateway sends). Reads
+        /// also move on from a server error page. Any other JSON answer is Suno's own and is never sent elsewhere.
+        /// </summary>
+        public static bool NotTakenHere(HttpMethod method, int status, string body, bool siteHost)
+        {
+            if (status is >= 200 and < 300) return false;
+            if (status is 404 or 405) return true;
+            if (status == 401 && siteHost) return true;
+            var looksLikeJson = body.TrimStart() is { Length: > 0 } t && (t[0] == '{' || t[0] == '[');
+            if (looksLikeJson) return false;
+            return status is 403 or 421 or 502 or 503 or 520 or 521 or 522 or 523 or 524 || (method == HttpMethod.Get && status >= 500);
         }
 
         private void AddSunoHeaders(HttpRequestMessage request, string token)

@@ -1,5 +1,12 @@
 # Tin Pan changelog
 
+## 1.8.2 (2026-10-24)
+
+### Changed
+
+- Tin Pan now talks to Suno at the new address Suno's own site uses (suno.com), and falls back to the old one by itself when the new one doesn't take a request. That keeps everything working if Suno switches the old address off. A request that makes or changes something is only sent again when it's certain the first one wasn't done, so nothing is made or charged twice.
+- Notifications come from Suno's newer list, read as full sentences; the older list is used if the newer one isn't there.
+
 ## 1.8.1 (2026-10-24)
 
 ### Changed
@@ -46,7 +53,7 @@
 - Song menu: Creator's songs, Covers and remixes of it, and Original song (what a cover, extension or whole song was made from). Lists of other people's songs say who made each one, and song information says who made it.
 - Create tab: Style ideas from Suno, and your Lyrics drafts from Suno's lyrics editor; Enter puts one in the Style or Lyrics box.
 - Account tab: notifications you haven't seen say "New", and Mark all as read (also in the Account menu) marks them read on Suno.
-- Help menu: Report a problem (Ctrl+Shift+B) and Suggest a feature (Ctrl+Shift+F), sent privately to Tin Pan's author, as in TimePlayer. A problem report can include the log, with your Windows user name taken out.
+- Help menu: Report a problem (Ctrl+Shift+B) and Suggest a feature (Ctrl+Shift+F), sent privately to Tin Pan's author. A problem report can include the log, with your Windows user name taken out.
 - Read lyrics aloud as they're sung: Shift+F3 (Playback menu, or Settings) turns it on or off. When a song has timed lyrics, Tin Pan says each line as it starts, also in braille, and after a jump only the line being sung. Off to start with.
 
 ### Changed
@@ -113,7 +120,7 @@
 
 ### New
 
-- Tin Pan speaks Romanian, Ukrainian and Spanish as well as English, like TimePlayer. Settings, Language picks one, or follows Windows (the default); it changes the next time Tin Pan starts. Each language is named in its own words and in yours, so every voice can read the list. Menus, pages and forms have their own Alt letters in each language.
+- Tin Pan speaks Romanian, Ukrainian and Spanish as well as English. Settings, Language picks one, or follows Windows (the default); it changes the next time Tin Pan starts. Each language is named in its own words and in yours, so every voice can read the list. Menus, pages and forms have their own Alt letters in each language.
 - First time, or after signing out: a welcome that offers to sign in. If Suno ends your sign-in later (not a network problem), Tin Pan asks you to sign in again right away. Saying No points to Settings.
 
 ### Fixed

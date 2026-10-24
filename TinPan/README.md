@@ -111,17 +111,15 @@ The Song menu's Related songs submenu (also in the Applications key menu) has **
 
 In the Create window, **Style ideas** lists styles Suno suggests for you, and **Lyrics drafts** lists your drafts from Suno's lyrics editor; Enter puts one in the Style or Lyrics box. On the Account tab, notifications you haven't seen say "New", and **Mark all as read** marks them read on Suno too.
 
-These follow Nsomnia/chadvis-projectm-qt's endpoint inventory and suno-api-local-manager-frontend; Suno's own web code filled in the creator page's sort settings and the lyrics drafts' paging. The following feed's ranking settings and the shape of a lyrics draft weren't captured anywhere, so if either stops working, Tin Pan says so and logs Suno's reply.
+The following feed's ranking settings and the shape of a lyrics draft aren't known for certain, so if either stops working, Tin Pan says so and logs Suno's reply.
 
 ## Reporting a problem or suggesting a feature
 
-Help, **Report a problem** (Ctrl+Shift+B) and **Suggest a feature** (Ctrl+Shift+F) send a message privately to Tin Pan's author; no account is needed. A problem report can include Tin Pan's log. The log has no passwords, and your Windows user name is taken out before sending. Reports go through a small relay (in `report-relay/`) that files them in a private GitHub repository, the same way TimePlayer's do.
+Help, **Report a problem** (Ctrl+Shift+B) and **Suggest a feature** (Ctrl+Shift+F) send a message privately to Tin Pan's author; no account is needed. A problem report can include Tin Pan's log. The log has no passwords, and your Windows user name is taken out before sending. Reports go through a small relay (in `report-relay/`) that files them in a private GitHub repository.
 
 ## Uploading songs
 
 Library menu, Upload a song (or the Upload button on the Library page, Alt+U) sends an audio file from your computer to your Suno account. There it becomes a song like any other: play it, extend it, cover it, remaster it. Choose the file, give it a title, and confirm you own it or have the rights to upload it and accept Suno's upload terms; Tin Pan never ticks that for you. MP3, WAV, M4A, FLAC, AAC and WMA all work: anything that isn't M4A is converted to M4A first with Windows' own encoder, because M4A is the upload Suno's web app was captured making. Suno checks every upload, which takes a minute or two, and may refuse music it finds is copyrighted. The shortest and longest upload come from your plan, and Tin Pan checks them before sending.
-
-The upload steps follow Nsomnia/chadvis-projectm-qt's captured upload (start, send to Suno's storage, finish). The steps after that, waiting for Suno to process it and turning it into a song, aren't in chadvis yet, so they come from Suno's own web app.
 
 ## Clean-up (sunscreen)
 
@@ -147,7 +145,7 @@ The first time (or after Sign out), Tin Pan welcomes you and offers to sign in. 
 
 ## Updates
 
-Tin Pan looks for a new version on GitHub a few seconds after it starts, and says nothing unless there is one (Settings can turn this off). Help, Check for updates looks now. When there's a new version, Tin Pan reads what's new and asks. Yes downloads the new `TinPan.exe`, checks that it's signed by Tin Pan's publisher (Ed25519, the same scheme as TimePlayer), closes, swaps it in and starts again. If the swap fails, the old exe is put back and the next start says so. Saying No to a version offered at startup means it isn't offered again by itself.
+Tin Pan looks for a new version on GitHub a few seconds after it starts, and says nothing unless there is one (Settings can turn this off). Help, Check for updates looks now. When there's a new version, Tin Pan reads what's new and asks. Yes downloads the new `TinPan.exe`, checks that it's signed by Tin Pan's publisher (Ed25519), closes, swaps it in and starts again. If the swap fails, the old exe is put back and the next start says so. Saying No to a version offered at startup means it isn't offered again by itself.
 
 Only the one-file `TinPan.exe` from a release updates itself; a development build offers to open the release page instead.
 
@@ -173,6 +171,5 @@ Copyright (C) 2026 Ernesto Melendez. Tin Pan is free software under the [GNU Gen
 ## API references
 
 - Suno's own web code (suno.com/create): covers and extends send `task` ("cover" or "extend") with the song's id; remaster is `POST /api/generate/upsample`; Trending is `POST /api/unified/feed` with `feed_id: "trending"`.
-- [Nsomnia/suno-power-exporter](https://github.com/Nsomnia/suno-power-exporter): the free unencrypted file in `media_urls` (audio_url is a decoy), feed v3 filters (workspace, disliked, trash, stems, sort), workspaces, personas, and Studio downloads being counted since 2026-09-09.
-- [paperfoot/suno-cli](https://github.com/paperfoot/suno-cli): most recent, endpoints checked against the live API in 2026. Source of the `/api/generate/v2-web/` request, cover, remaster, feed v3 and search, trash, title/lyrics editing, visibility, plan fields and the Browser-Token header.
-- [gcui-art/suno-api](https://github.com/gcui-art/suno-api) and [Nsomnia/suno-api-local-manager-frontend](https://github.com/Nsomnia/suno-api-local-manager-frontend): Clerk sign-in (the `__client` cookie, `/v1/client` for the session, `/v1/client/sessions/{id}/tokens` for a JWT that lasts about a minute), stems, aligned lyrics and WAV conversion.
+
+The projects Tin Pan's Suno support learned from are credited in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

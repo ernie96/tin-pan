@@ -164,7 +164,14 @@ namespace TinPan.Services
 
             return array.EnumerateArray()
                 .Where(e => e.ValueKind == JsonValueKind.Object)
-                .Select(e => new Notification
+                .Select(e => SegmentText(e) is { Length: > 0 } sentence
+                    // v3: the sentence comes in text[] pieces ("Ana", " liked ", "Rain"), with no title.
+                    ? new Notification
+                    {
+                        Message = sentence,
+                        IsRead = !(e.TryGetProperty("is_read", out var read3) && read3.ValueKind == JsonValueKind.False)
+                    }
+                    : new Notification
                 {
                     Title = FirstString(e, "title", "heading", "type") ?? "",
                     Message = FirstString(e, "message", "body", "content", "text") ?? "",
@@ -172,6 +179,19 @@ namespace TinPan.Services
                 })
                 .Where(n => n.Title.Length > 0 || n.Message.Length > 0)
                 .ToList();
+        }
+
+        /// <summary>notification/v3's text: [{text, bold, action?}, ...] joined into one sentence; null if it isn't that shape.</summary>
+        private static string? SegmentText(JsonElement e)
+        {
+            if (!e.TryGetProperty("text", out var parts) || parts.ValueKind != JsonValueKind.Array) return null;
+            var sb = new System.Text.StringBuilder();
+            foreach (var part in parts.EnumerateArray())
+            {
+                if (part.ValueKind == JsonValueKind.String) sb.Append(part.GetString());
+                else if (part.ValueKind == JsonValueKind.Object && part.TryGetProperty("text", out var t) && t.ValueKind == JsonValueKind.String) sb.Append(t.GetString());
+            }
+            return System.Text.RegularExpressions.Regex.Replace(sb.ToString(), @"\s+", " ").Trim();
         }
 
         public static string? ReadString(string json, string name)
