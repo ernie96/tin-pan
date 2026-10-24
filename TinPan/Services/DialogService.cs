@@ -66,7 +66,7 @@ namespace TinPan.Services
 
         public void ShowToolForm(string title, string intro, string okText, IReadOnlyList<FormField> fields, Func<Task> run) =>
             ToolWindows.Show(new FormWindow(title, intro, okText, fields, run),
-                T("{0}. Tab moves between the fields. {1} starts another with these settings, and this stays open to try again. F6 goes to the main window and back, so you can listen in between; F8 plays or pauses from here. Escape closes.", title, okText));
+                T("{0}. Tab moves between the fields. {1} starts another with these settings, and this stays open to try again. F8 plays or pauses from here. Escape closes.", title, okText));
 
         public bool ShowForm(string title, string intro, string okText, IReadOnlyList<FormField> fields) =>
             new FormWindow(title, intro, okText, fields) { Owner = Parent }.ShowDialog() == true;

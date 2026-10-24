@@ -283,21 +283,18 @@ namespace TinPan.Services
 
         private async Task CreateAsync()
         {
-            // Off screen and never activated, so focus and the screen reader stay in the main window.
+            // Off screen, never activated and never in Alt+Tab, so focus and the screen reader stay in Tin Pan.
             _window = new Window
             {
                 Title = T("Suno player"),
                 Width = 900,
                 Height = 700,
-                Left = -32000,
-                Top = -32000,
                 WindowStyle = WindowStyle.None,
                 ResizeMode = ResizeMode.NoResize,
-                ShowInTaskbar = false,
-                ShowActivated = false,
                 Focusable = false,
                 Owner = Application.Current.MainWindow
             };
+            HiddenWindow.Keep(_window);
             _view = new WebView2 { Focusable = false };
             _window.Content = _view;
             _window.Show();

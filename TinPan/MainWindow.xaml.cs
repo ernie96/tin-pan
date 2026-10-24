@@ -54,7 +54,11 @@ public partial class MainWindow : Window
         }));
         Deactivated += (_, _) => _altAlone = false;
         // Start where the work is: on a song, not on nothing.
-        Loaded += (_, _) => libraryView.FocusMain();
+        Loaded += (_, _) =>
+        {
+            libraryView.FocusMain();
+            ToolWindows.WatchFocus(this);
+        };
     }
 
     /// <summary>

@@ -10,7 +10,7 @@ namespace TinPan.ViewModels
     {
         public static string Library => T("Library. Arrow through your songs. Enter plays, Space pauses, Left and Right seek. Applications key for extend, cover, downloads and more. Ctrl+F searches. Ctrl+Shift+F8 resumes where you left off. Alt+F for filters.");
 
-        public static string Create => T("Create a song. Set the model, style and voice, then describe a song or use your own lyrics. Tab moves between fields. F5 reloads the models. The window stays open: F6 goes to the main window and back, F8 plays or pauses, Escape closes.");
+        public static string Create => T("Create a song. Set the model, style and voice, then describe a song or use your own lyrics. Tab moves between fields. F5 reloads the models. F8 plays or pauses from here. The window stays open until you press Escape.");
 
         public static string Trending => T("Trending. Enter plays a song, Space pauses. Applications key for more. F5 refreshes.");
 

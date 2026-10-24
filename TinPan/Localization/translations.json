@@ -549,11 +549,6 @@
   "Вхід у Suno не повернув токена.",
   "El inicio de sesión de Suno no devolvió ningún token."
  ],
- "{0}. Tab moves between the fields. {1} starts another with these settings, and this stays open to try again. F6 goes to the main window and back, so you can listen in between; F8 plays or pauses from here. Escape closes.": [
-  "{0}. Tab trece de la un câmp la altul. {1} pornește încă unul cu aceste setări, iar fereastra rămâne deschisă ca să încerci din nou. F6 te duce la fereastra principală și înapoi, ca să asculți între timp; F8 redă sau pune pe pauză de aici. Escape închide.",
-  "{0}. Tab переходить між полями. {1} запускає ще один з цими налаштуваннями, а вікно лишається відкритим, щоб спробувати знову. F6 переходить до головного вікна й назад, тож можна послухати між спробами; F8 відтворює або ставить на паузу звідси. Escape закриває.",
-  "{0}. Tab pasa de un campo a otro. {1} inicia otro con estos ajustes, y esto se queda abierto para volver a probar. F6 lleva a la ventana principal y de vuelta, para escuchar entretanto; F8 reproduce o pausa desde aquí. Escape cierra."
- ],
  "Choose where songs are saved": [
   "Alege unde se salvează melodiile",
   "Виберіть, куди зберігати пісні",
@@ -983,11 +978,6 @@
   "Bibliotecă. Parcurge melodiile cu săgețile. Enter redă, Spațiu pune pauză, stânga și dreapta derulează. Tasta Aplicații pentru extindere, cover, descărcări și altele. Ctrl+F caută. Ctrl+Shift+F8 reia de unde ai rămas. Alt+F pentru filtre.",
   "Бібліотека. Переходьте між піснями стрілками. Enter відтворює, Пробіл ставить на паузу, стрілки вліво і вправо перемотують. Клавіша контекстного меню — продовження, кавер, завантаження та інше. Ctrl+F шукає. Ctrl+Shift+F8 продовжує з місця, де ви зупинилися. Alt+F — фільтри.",
   "Biblioteca. Recorre tus canciones con las flechas. Intro reproduce, Espacio pausa, izquierda y derecha avanzan o retroceden. Tecla de aplicaciones para extender, cover, descargas y más. Ctrl+F busca. Ctrl+Mayús+F8 sigue donde lo dejaste. Alt+F para los filtros."
- ],
- "Create a song. Set the model, style and voice, then describe a song or use your own lyrics. Tab moves between fields. F5 reloads the models. The window stays open: F6 goes to the main window and back, F8 plays or pauses, Escape closes.": [
-  "Creează o melodie. Alege modelul, stilul și vocea, apoi descrie o melodie sau folosește versurile tale. Tab trece de la un câmp la altul. F5 reîncarcă modelele. Fereastra rămâne deschisă: F6 te duce la fereastra principală și înapoi, F8 redă sau pune pe pauză, Escape închide.",
-  "Створити пісню. Виберіть модель, стиль і голос, потім опишіть пісню або використайте свій текст. Tab переходить між полями. F5 перезавантажує моделі. Вікно лишається відкритим: F6 переходить до головного вікна й назад, F8 відтворює або ставить на паузу, Escape закриває.",
-  "Crear una canción. Elige el modelo, el estilo y la voz, y luego describe una canción o usa tu propia letra. Tab pasa de un campo a otro. F5 vuelve a cargar los modelos. La ventana se queda abierta: F6 lleva a la ventana principal y de vuelta, F8 reproduce o pausa, Escape cierra."
  ],
  "Trending. Enter plays a song, Space pauses. Applications key for more. F5 refreshes.": [
   "În tendințe. Enter redă o melodie, Spațiu pune pe pauză. Tasta Aplicații pentru mai mult. F5 reîmprospătează.",
@@ -4143,5 +4133,30 @@
   "engleză",
   "англійська",
   "inglés"
+ ],
+ "Create a song. Set the model, style and voice, then describe a song or use your own lyrics. Tab moves between fields. F5 reloads the models. F8 plays or pauses from here. The window stays open until you press Escape.": [
+  "Creează o melodie. Alege modelul, stilul și vocea, apoi descrie o melodie sau folosește versurile tale. Tab trece de la un câmp la altul. F5 reîncarcă modelele. F8 redă sau pune pe pauză de aici. Fereastra rămâne deschisă până apeși Escape.",
+  "Створити пісню. Виберіть модель, стиль і голос, потім опишіть пісню або використайте свій текст. Tab переходить між полями. F5 перезавантажує моделі. F8 відтворює або ставить на паузу звідси. Вікно лишається відкритим, доки ви не натиснете Escape.",
+  "Crear una canción. Elige el modelo, el estilo y la voz, y luego describe una canción o usa tu propia letra. Tab pasa de un campo a otro. F5 vuelve a cargar los modelos. F8 reproduce o pausa desde aquí. La ventana se queda abierta hasta que pulses Escape."
+ ],
+ "{0}. Tab moves between the fields. {1} starts another with these settings, and this stays open to try again. F8 plays or pauses from here. Escape closes.": [
+  "{0}. Tab trece de la un câmp la altul. {1} pornește încă unul cu aceste setări, iar fereastra rămâne deschisă ca să încerci din nou. F8 redă sau pune pe pauză de aici. Escape închide.",
+  "{0}. Tab переходить між полями. {1} запускає ще один з цими налаштуваннями, а вікно лишається відкритим, щоб спробувати знову. F8 відтворює або ставить на паузу звідси. Escape закриває.",
+  "{0}. Tab pasa de un campo a otro. {1} inicia otro con estos ajustes, y esto se queda abierto para volver a probar. F8 reproduce o pausa desde aquí. Escape cierra."
+ ],
+ "F6 moves between this window and the main window.": [
+  "F6 trece între această fereastră și fereastra principală.",
+  "F6 перемикає між цим вікном і головним вікном.",
+  "F6 pasa de esta ventana a la ventana principal y de vuelta."
+ ],
+ "Ctrl+N opens Create; F6 then moves between it and the main window.": [
+  "Ctrl+N deschide Creare; apoi F6 trece între ea și fereastra principală.",
+  "Ctrl+N відкриває «Створення»; потім F6 перемикає між ним і головним вікном.",
+  "Ctrl+N abre Crear; luego F6 pasa de ella a la ventana principal y de vuelta."
+ ],
+ "F6 moves between the main window and {0}.": [
+  "F6 trece între fereastra principală și {0}.",
+  "F6 перемикає між головним вікном і {0}.",
+  "F6 pasa de la ventana principal a {0} y de vuelta."
  ]
 }

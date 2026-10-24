@@ -236,7 +236,11 @@ namespace TinPan.ViewModels
                 _ => HelpText.Library
             };
             if (!_auth.IsAuthenticated && SelectedTab != SettingsTab) text += HelpText.NotSignedIn;
-            Announcer.Announce(text + " " + T("Ctrl+F1 for all commands."), always: true);
+            var open = Views.ToolWindows.All.Where(w => w.IsVisible).Select(w => w.Title).ToList();
+            var windows = open.Count == 0
+                ? T("Ctrl+N opens Create; F6 then moves between it and the main window.")
+                : T("F6 moves between the main window and {0}.", string.Join(", ", open));
+            Announcer.Announce(windows + " " + text + " " + T("Ctrl+F1 for all commands."), always: true);
         }
 
         [RelayCommand]

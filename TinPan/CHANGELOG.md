@@ -1,5 +1,16 @@
 # Tin Pan changelog
 
+## 1.8.1 (2026-10-24)
+
+### Changed
+
+- F1 starts with the way between windows: in the main window, F6 to the open Create or Cover window (or Ctrl+N to open Create); in those windows, F6 back to the main window.
+
+### Fixed
+
+- Coming back to Tin Pan (Alt+Tab, or after Windows+D) put you in the main window even if you'd left from the Create window or a Cover, Extend or Remaster form. You're back where you were now.
+- Minimising Tin Pan (Alt+Space, Minimise) could leave you on a "Suno check" window showing Suno's web site. Suno's own pages (the player and the captcha check) are now kept out of reach: they're never in Alt+Tab, can't take focus, and the check window only exists while a captcha is running. If Windows lands on one anyway, Tin Pan takes focus back.
+
 ## 1.8.0 (2026-10-24)
 
 ### New

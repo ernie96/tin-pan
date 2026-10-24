@@ -175,12 +175,10 @@ namespace TinPan.Services
                 Title = T("Suno check"),
                 Width = 520,
                 Height = 640,
-                Left = -32000,
-                Top = -32000,
-                ShowInTaskbar = false,
-                ShowActivated = false,
                 Owner = Application.Current.MainWindow
             };
+            // Out of reach except while it's on screen for you to press the check box.
+            HiddenWindow.Keep(_window, () => _shown);
             // Closing it gives up on the check; a new window is made next time.
             _window.Closed += (_, _) =>
             {
@@ -205,11 +203,12 @@ namespace TinPan.Services
         private void ShowOnScreen()
         {
             if (_window == null) return;
+            _shown = true; // first, so the move on screen and the activation are allowed
+            HiddenWindow.SetReachable(_window, true);
             var area = SystemParameters.WorkArea;
             _window.Left = area.Left + (area.Width - _window.Width) / 2;
             _window.Top = area.Top + (area.Height - _window.Height) / 2;
             _window.ShowInTaskbar = true;
-            _shown = true;
             _returnTo = Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive && w != _window);
             _window.Activate();
             _view?.Focus();
@@ -218,9 +217,16 @@ namespace TinPan.Services
         private void HideOffScreen()
         {
             if (_window == null) return;
-            _window.Left = -32000;
-            _window.Top = -32000;
-            _window.ShowInTaskbar = false;
+            var wasShown = _shown;
+            _shown = false;
+            // The check page only lives while a check runs; nothing is left behind to land on later.
+            var window = _window;
+            var view = _view;
+            _window = null;
+            _view = null;
+            window.Close();
+            view?.Dispose();
+            _shown = wasShown;
             // Give focus back only if the check window took it; otherwise leave the user where they are.
             if (_shown) (_returnTo is { IsVisible: true } back ? back : Application.Current.MainWindow)?.Activate();
             _shown = false;
