@@ -224,7 +224,7 @@ namespace TinPan.Services
             var view = _view;
             _window = null;
             _view = null;
-            window.Close();
+            HiddenWindow.Close(window);
             view?.Dispose();
             _shown = wasShown;
             // Give focus back only if the check window took it; otherwise leave the user where they are.

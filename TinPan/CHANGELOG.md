@@ -1,5 +1,12 @@
 # Tin Pan changelog
 
+## 1.9.1 (2026-10-25)
+
+### Fixed
+
+- Alt+F4 sometimes didn't close Tin Pan. If Windows had put focus on one of Tin Pan's hidden Suno windows, Alt+F4 closed that one instead, and Tin Pan stayed open without its player. Alt+F4 now closes Tin Pan wherever it lands, and Tin Pan always ends when its main window closes. Library menu, Exit does the same.
+- After going back to the Windows default output, a page left over from an earlier choice could report that the output couldn't be used.
+
 ## 1.9.0 (2026-10-25)
 
 ### New

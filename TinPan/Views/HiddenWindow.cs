@@ -22,6 +22,20 @@ namespace TinPan.Services
         /// <summary>Far off screen, but not at -32000, which Windows treats as "minimised" and may restore on screen.</summary>
         public const double OffScreen = -20000;
 
+        // Windows Tin Pan itself is closing (the captcha after a check, the player at exit); any other close is
+        // Alt+F4 landing on a hidden window, which means "close Tin Pan".
+        private static readonly System.Collections.Generic.HashSet<Window> Closable = new();
+
+        /// <summary>Set as Tin Pan's main window starts closing: from then on the hidden windows simply close with it.</summary>
+        public static bool TinPanClosing { get; set; }
+
+        /// <summary>Closes a hidden window on Tin Pan's own behalf.</summary>
+        public static void Close(Window window)
+        {
+            Closable.Add(window);
+            window.Close();
+        }
+
         [DllImport("user32.dll", EntryPoint = "GetWindowLongPtrW")]
         private static extern IntPtr GetWindowLongPtr(IntPtr hWnd, int index);
 
@@ -52,6 +66,16 @@ namespace TinPan.Services
             {
                 if (allowed?.Invoke() != true && window.WindowState != WindowState.Normal) window.WindowState = WindowState.Normal;
             };
+            window.Closing += (_, e) =>
+            {
+                var app = Application.Current;
+                if (TinPanClosing || Closable.Contains(window) || app == null || app.Dispatcher.HasShutdownStarted || app.MainWindow is not { IsVisible: true } main) return;
+                // Alt+F4 while Windows had put focus here: you meant Tin Pan, and the player must stay.
+                e.Cancel = true;
+                Log.Warn($"Alt+F4 reached \"{window.Title}\"; closing Tin Pan instead");
+                window.Dispatcher.BeginInvoke(main.Close);
+            };
+            window.Closed += (_, _) => Closable.Remove(window);
         }
 
         /// <summary>On for a captcha the user has to press (in Alt+Tab, can take focus); off again afterwards.</summary>

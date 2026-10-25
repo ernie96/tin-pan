@@ -25,6 +25,8 @@ namespace TinPan
                 args.SetObserved();
             };
             Log.Info("Starting");
+            // Tin Pan ends when its main window closes, whatever hidden or tool windows are still around.
+            ShutdownMode = ShutdownMode.OnMainWindowClose;
             EmbeddedFiles.RegisterNativeLibraries();
 
             _services = ConfigureServices();
@@ -40,6 +42,7 @@ namespace TinPan
 
         protected override void OnExit(ExitEventArgs e)
         {
+            Log.Info("Closing");
             _services?.GetService<IConfigService>()?.Save();
             _services?.Dispose();
             base.OnExit(e);

@@ -135,6 +135,7 @@ namespace TinPan.ViewModels
                 new("Library", T("_Filters..."), "", lib.FiltersCommand),
                 new("Library", T("Download _all..."), "", lib.DownloadAllCommand, SeparatorBefore: true),
                 new("Library", T("_Upload a song..."), "", lib.UploadCommand),
+                new("Library", T("E_xit"), "Alt+F4", ExitCommand, SeparatorBefore: true),
 
                 new("View", T("_Library"), "Ctrl+1", ShowTabCommand, "0"),
                 new("View", T("_Playlists"), "Ctrl+2", ShowTabCommand, "1"),
@@ -168,6 +169,10 @@ namespace TinPan.ViewModels
                 new("Help", T("About Tin Pa_n"), "", AboutCommand)
             };
         }
+
+        /// <summary>Library menu, Exit (Alt+F4): closes Tin Pan.</summary>
+        [RelayCommand]
+        private void Exit() => System.Windows.Application.Current.MainWindow?.Close();
 
         // ── Help: the runnable command list (Ctrl+F1) ───────────────────────
 

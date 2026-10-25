@@ -54,6 +54,7 @@ public partial class MainWindow : Window
             if (e.OriginalSource is MenuItem { HasItems: false }) HideMenu(restoreFocus: true);
         }));
         Deactivated += (_, _) => _altAlone = false;
+        Closing += (_, e) => { if (!e.Cancel) Services.HiddenWindow.TinPanClosing = true; };
         // Start where the work is: on a song, not on nothing.
         Loaded += (_, _) =>
         {
@@ -220,6 +221,13 @@ public partial class MainWindow : Window
         else
         {
             _altAlone = false;
+            // Alt+F4 always closes Tin Pan from the main window, whatever has focus inside it.
+            if (key == Key.F4 && Keyboard.Modifiers == ModifierKeys.Alt)
+            {
+                e.Handled = true;
+                Close();
+                return;
+            }
             // Escape closes an open menu first (WPF does that); with none open it leaves the bar.
             if (key == Key.Escape && mainMenu.IsKeyboardFocusWithin && !mainMenu.Items.OfType<MenuItem>().Any(m => m.IsSubmenuOpen))
             {

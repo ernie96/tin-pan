@@ -362,6 +362,8 @@ namespace TinPan.Services
                     _start?.TrySetResult("nobutton");
                     break;
                 case "sinkfailed":
+                    // From a page still set up for an earlier choice: the Windows default can't fail.
+                    if (_output.Length == 0) break;
                     // Once per output: every song after that would only repeat it.
                     Log.Warn($"Couldn't play on \"{_output}\": {why}");
                     if (_outputFailedFor == _output) break;
@@ -419,7 +421,7 @@ namespace TinPan.Services
         public void Dispose()
         {
             _view?.Dispose();
-            _window?.Close();
+            if (_window != null) HiddenWindow.Close(_window);
         }
     }
 }
