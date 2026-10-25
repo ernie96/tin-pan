@@ -113,8 +113,11 @@ namespace TinPan.ViewModels
             var file = await _updates.DownloadAsync(update, progress);
 
             var exe = Environment.ProcessPath;
-            var others = Process.GetProcessesByName("TinPan").Count(p => p.Id != Environment.ProcessId
+            // Each Process holds a handle until it's disposed.
+            var processes = Process.GetProcessesByName("TinPan");
+            var others = processes.Count(p => p.Id != Environment.ProcessId
                 && string.Equals(SafePath(p), exe, StringComparison.OrdinalIgnoreCase));
+            foreach (var p in processes) p.Dispose();
             if (others > 0)
             {
                 Announcer.Announce(T("Another Tin Pan window is open, and the update can't install while it is. Close it, then check for updates again."), always: true);

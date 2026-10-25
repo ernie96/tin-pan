@@ -1,5 +1,16 @@
 # Tin Pan changelog
 
+## 1.9.0 (2026-10-25)
+
+### New
+
+- Keys for every Song command, in every song list (the Library, a playlist's songs, Trending and song windows): Ctrl+P adds to a playlist, Ctrl+T edits the title and lyrics, Ctrl+Shift+C covers, Ctrl+Shift+M remasters, Ctrl+J gets the whole song, Ctrl+Shift+S makes stems, Ctrl+Shift+D, W and V download the MP3, WAV and video, Ctrl+Shift+H cleans up the download, Ctrl+M finds similar songs, Ctrl+U the creator's songs, Ctrl+O the original, Ctrl+Shift+O covers and remixes, Ctrl+K shows comments, Ctrl+Shift+K writes one, Ctrl+Shift+L copies the share link, Ctrl+Shift+P makes it public or private and Ctrl+Shift+X allows or stops remixes. The Song menu shows each one, and a key for something that isn't available right now (WAV on the free plan, say) says so.
+
+### Fixed
+
+- Cover was marked "needs Pro or Premier" and blocked on the free plan, but Suno lets every plan cover songs now. It's open to everyone; if Suno ever refuses an account, Tin Pan says why. Thanks to the person who reported it.
+- The update check left Windows handles open, and choosing an audio output asked Windows for the device list once per line.
+
 ## 1.8.2 (2026-10-24)
 
 ### Changed

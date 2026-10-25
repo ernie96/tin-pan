@@ -66,7 +66,6 @@ namespace TinPan.ViewModels
         // ── Menu labels that depend on the plan or the song ────────────────
 
         public string WavMenuText => _account.PaidLabel(T("Download _WAV"));
-        public string CoverMenuText => _account.PaidLabel(T("_Cover..."));
         public string RemasterMenuText => _account.PaidLabel(T("Re_master..."));
         public static string VisibilityLabel(SunoClip? song) => song?.IsPublic == true ? T("Make p_rivate") : T("Make p_ublic");
         public static string RemixLabel(SunoClip? song) => song?.Metadata?.CanRemix == false ? T("Allow remi_xes") : T("Stop remi_xes");
@@ -78,10 +77,8 @@ namespace TinPan.ViewModels
         {
             if (e.PropertyName != nameof(AccountState.Billing)) return;
             OnPropertyChanged(nameof(WavMenuText));
-            OnPropertyChanged(nameof(CoverMenuText));
             OnPropertyChanged(nameof(RemasterMenuText));
             DownloadWavCommand.NotifyCanExecuteChanged();
-            CoverCommand.NotifyCanExecuteChanged();
             RemasterCommand.NotifyCanExecuteChanged();
         }
 

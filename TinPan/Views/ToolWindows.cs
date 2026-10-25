@@ -84,6 +84,7 @@ namespace TinPan.Views
             {
                 Open.Remove(window);
                 if (_lastActive == window) _lastActive = null;
+                if (_returnTo == window) _returnTo = null;
                 // Back to the main window, not to whatever Windows picks.
                 Application.Current.MainWindow?.Activate();
             };

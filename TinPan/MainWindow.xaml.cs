@@ -29,6 +29,7 @@ public partial class MainWindow : Window
             playlistsView.songList.ContextMenu = BuildSongContextMenu(vm, playlistItems: true);
             trendingView.trending.ContextMenu = BuildSongContextMenu(vm, playlistItems: false);
             // The Library list handles its own song keys; these lists get the same ones from the Song menu.
+            AddSongKeys(vm, libraryView.songList);
             AddSongKeys(vm, playlistsView.songList);
             AddSongKeys(vm, trendingView.trending);
             // Song lists in their own window (similar songs, a creator's songs, Explore) get the Song menu too.
@@ -153,18 +154,23 @@ public partial class MainWindow : Window
         }
     }
 
+    /// <summary>A label that changes with the plan ("Download WAV (needs Pro or Premier)"), as spoken.</summary>
+    private static string SpokenHeader(MainViewModel vm, CommandEntry entry) =>
+        (vm.LibraryVM.GetType().GetProperty(entry.HeaderPath!)?.GetValue(vm.LibraryVM) as string ?? entry.Label).Replace("_", "").Replace("...", "");
+
     /// <summary>The song a Song entry acts on: the given list's selection, or else the tab's song.</summary>
     private static object? ParameterFor(MainViewModel vm, CommandEntry entry, Func<SunoClip?>? selected) =>
         selected != null && entry.Group == "Song" && entry.Parameter == null ? selected() : vm.SongParameter(entry);
 
     /// <summary>
-    /// The Song menu's shortcuts (Ctrl+I, Alt+Enter, Ctrl+L, Ctrl+C, Ctrl+D, Ctrl+E) on a list other than the
-    /// Library's, acting on its selected song. Enter and Delete keep the list's own meaning.
+    /// The Song menu's shortcuts (Ctrl+P add to playlist, Ctrl+T edit, Ctrl+Shift+C cover and the rest) on a song
+    /// list, acting on its selected song. Enter and Delete keep the list's own meaning.
     /// </summary>
     private static void AddSongKeys(MainViewModel vm, ListBox list, Func<SunoClip?>? selected = null)
     {
         list.PreviewKeyDown += (_, e) =>
         {
+            if (e.Handled) return; // the list's own handler took it (the Library's Ctrl+I, say)
             var key = e.Key == Key.System ? e.SystemKey : e.Key;
             var mods = Keyboard.Modifiers;
             if (mods == ModifierKeys.None) return;
@@ -174,6 +180,8 @@ public partial class MainWindow : Window
             if (entry == null) return;
             var parameter = ParameterFor(vm, entry, selected);
             if (entry.Command.CanExecute(parameter)) entry.Command.Execute(parameter);
+            // A key that does nothing would leave you guessing (WAV on the free plan, say).
+            else vm.Say(T("{0} isn't available right now.", entry.HeaderPath == null ? entry.SpokenLabel : SpokenHeader(vm, entry)));
             e.Handled = true;
         };
     }

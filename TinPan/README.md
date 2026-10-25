@@ -20,6 +20,7 @@ Anywhere:
 - Shift+F3: read the lyrics aloud, line by line, as they're sung (for songs with timed lyrics). Off to start with; also in Settings.
 - F5: refresh the current tab.
 - Ctrl+1 to Ctrl+5: Library, Playlists, Trending, Account, Settings. Ctrl+F: search your songs.
+- In any song list: Ctrl+P add to a playlist, Ctrl+T edit the title and lyrics, Ctrl+Shift+C cover, Ctrl+Shift+M remaster, Ctrl+J get the whole song, Ctrl+Shift+S stems, Ctrl+Shift+D download MP3, Ctrl+Shift+W download WAV, Ctrl+Shift+V download the video, Ctrl+Shift+H clean up the download, Ctrl+M similar songs, Ctrl+U the creator's songs, Ctrl+O the original song, Ctrl+Shift+O covers and remixes of it, Ctrl+K comments, Ctrl+Shift+K write a comment, Ctrl+Shift+L copy the Suno share link, Ctrl+Shift+P public or private, Ctrl+Shift+X allow or stop remixes. The Song menu shows each key.
 - Ctrl+N: create a song, in a window that stays open (also New song on the Library page).
 - F6 and Shift+F6: move between Tin Pan's open windows (the main one, Create, and any Extend, Cover or Remaster form).
 - Ctrl+Shift+F12: switch between your main and second audio output.
@@ -54,7 +55,7 @@ Since September 2026 Suno encrypts song audio, and only Suno's own player can pl
 
 Downloads use each song's own file: the unencrypted one Suno lists in `media_urls` when there is one (it costs no download, and is often an M4A), otherwise `audio_url` as before. WAV uses Suno's WAV conversion. Settings can also save lyrics, timed lyrics (LRC), song details and cover art next to each download. If that fails for a song, the app asks whether to use Suno's own download instead. Suno counts those against your plan's downloads unless you have downloaded that song before. Since 2026-09-09 that includes Suno Studio downloads. Shift+F2 reads how many you have left.
 
-WAV downloads, covers and remasters need a Pro or Premier plan. On the free plan they're shown as unavailable. Until the plan has loaded they say "(needs Pro or Premier)".
+WAV downloads and remasters need a Pro or Premier plan; covers work on every plan. On the free plan they're shown as unavailable. Until the plan has loaded they say "(needs Pro or Premier)".
 
 Extend, Cover, Remaster and Edit open a short form: Tab between fields, Enter on OK, Escape to cancel. If something is wrong, the form says what and puts you back on that field.
 

@@ -60,11 +60,12 @@ namespace TinPan.ViewModels
             var names = new List<string?>();
             if (includeNone) names.Add(null);
             names.Add("");
-            names.AddRange(AudioOutputs.List());
+            var connected = AudioOutputs.List(); // once: each call asks Windows for every device
+            names.AddRange(connected);
             if (current is { Length: > 0 } && !names.Contains(current)) names.Add(current);
             var lines = names.Select(n => (n == null ? T("None") : AudioOutputs.Spoken(n))
                                           + (n == current ? ", " + T("chosen") : "")
-                                          + (n == current && n != null && !AudioOutputs.List().Contains(n) && n.Length > 0 ? ", " + T("not connected") : ""))
+                                          + (n == current && n is { Length: > 0 } && !connected.Contains(n) ? ", " + T("not connected") : ""))
                 .ToList();
             _dialogs.ShowLines(title, lines, index =>
             {

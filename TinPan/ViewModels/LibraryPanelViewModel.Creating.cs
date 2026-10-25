@@ -169,7 +169,7 @@ namespace TinPan.ViewModels
             }
         }
 
-        [RelayCommand(CanExecute = nameof(CanUsePaidFeatures))]
+        [RelayCommand]
         private async Task CoverAsync(SunoClip? clip)
         {
             clip ??= SelectedClip;
