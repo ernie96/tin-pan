@@ -152,10 +152,16 @@ namespace TinPan.ViewModels
         }
 
         /// <summary>Songs in their own window; Enter plays one. Each says who made it unless sayCreator is false.</summary>
-        private void ShowSongList(string title, IReadOnlyList<SunoClip> songs, bool sayCreator = true) =>
-            _dialogs.ShowSongs(title, songs, async s =>
-            {
-                if (await RunAsync(() => _audio.PlayAsync(s.Id, s.DisplayTitle))) Announcer.Announce(T("Playing: {0}.", s.DisplayTitle));
-            }, sayCreator);
+        private SongListQueue? _songListQueue;
+
+        /// <summary>Song windows play through a queue of their own, so F9 and the end of a song carry on down the window's list.</summary>
+        private SongListQueue SongListQueue => _songListQueue ??= new SongListQueue(_audio, Announcer, work => RunAsync(work));
+
+        private void ShowSongList(string title, IReadOnlyList<SunoClip> songs, bool sayCreator = true)
+        {
+            var queue = SongListQueue;
+            queue.Show(songs);
+            _dialogs.ShowSongs(title, songs, queue.PlayAsync, sayCreator, queue.PlayPauseAsync);
+        }
     }
 }

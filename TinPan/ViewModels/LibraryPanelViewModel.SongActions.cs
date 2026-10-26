@@ -228,10 +228,7 @@ namespace TinPan.ViewModels
                 Announcer.Announce(T("Suno found no similar songs."));
                 return;
             }
-            _dialogs.ShowSongs(T("Songs similar to {0}", clip.DisplayTitle), similar, async s =>
-            {
-                if (await RunAsync(() => _audio.PlayAsync(s.Id, s.DisplayTitle))) Announcer.Announce(T("Playing: {0}.", s.DisplayTitle));
-            });
+            ShowSongList(T("Songs similar to {0}", clip.DisplayTitle), similar);
         }
 
         [RelayCommand]

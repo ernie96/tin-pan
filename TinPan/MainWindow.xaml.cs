@@ -165,7 +165,7 @@ public partial class MainWindow : Window
 
     /// <summary>
     /// The Song menu's shortcuts (Ctrl+P add to playlist, Ctrl+T edit, Ctrl+Shift+C cover and the rest) on a song
-    /// list, acting on its selected song. Enter and Delete keep the list's own meaning.
+    /// list, acting on its selected song, and Left and Right to seek. Enter and Delete keep the list's own meaning.
     /// </summary>
     private static void AddSongKeys(MainViewModel vm, ListBox list, Func<SunoClip?>? selected = null)
     {
@@ -174,6 +174,13 @@ public partial class MainWindow : Window
             if (e.Handled) return; // the list's own handler took it (the Library's Ctrl+I, say)
             var key = e.Key == Key.System ? e.SystemKey : e.Key;
             var mods = Keyboard.Modifiers;
+            // Left and Right go back and forward 5 seconds in the playing song, as in the Library.
+            if (mods == ModifierKeys.None && key is Key.Left or Key.Right)
+            {
+                vm.LibraryVM.SeekCommand.Execute(key == Key.Left ? "-5" : "5");
+                e.Handled = true;
+                return;
+            }
             if (mods == ModifierKeys.None) return;
             var gesture = (mods.HasFlag(ModifierKeys.Control) ? "Ctrl+" : "") + (mods.HasFlag(ModifierKeys.Shift) ? "Shift+" : "")
                           + (mods.HasFlag(ModifierKeys.Alt) ? "Alt+" : "") + (key == Key.Return ? "Enter" : key.ToString());

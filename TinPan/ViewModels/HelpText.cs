@@ -12,11 +12,11 @@ namespace TinPan.ViewModels
 
         public static string Create => T("Create a song. Set the model, style and voice, then describe a song or use your own lyrics. Tab moves between fields. F5 reloads the models. F8 plays or pauses from here. The window stays open until you press Escape.");
 
-        public static string Trending => T("Trending. Enter plays a song, Space pauses. Applications key for more. F5 refreshes.");
+        public static string Trending => T("Trending. Enter plays a song, Space pauses, Left and Right seek. Applications key for more. F5 refreshes.");
 
         public static string Account => T("Account. Your plan and credits, then Suno's notifications. F2 and Shift+F2 read them from anywhere. F5 refreshes.");
 
-        public static string Playlists => T("Playlists. Pick a playlist and press Enter to open its songs. Enter plays, Space pauses, Delete removes a song, Ctrl+Up and Ctrl+Down move it. Applications key for more on either list.");
+        public static string Playlists => T("Playlists. Pick a playlist and press Enter to open its songs. Enter plays, Space pauses, Left and Right seek, Delete removes a song, Ctrl+Up and Ctrl+Down move it. Applications key for more on either list.");
 
         public static string Settings => T("Settings. Sign in or out, choose the language, and choose where songs are saved.");
 

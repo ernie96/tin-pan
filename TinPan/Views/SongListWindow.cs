@@ -17,7 +17,8 @@ namespace TinPan.Views
         /// <summary>Set by the main window: gives a list the Song menu (Applications key) and its keys, for the selected song.</summary>
         public static Action<ListBox, Func<SunoClip?>>? AddSongMenu { get; set; }
 
-        public SongListWindow(string title, IReadOnlyList<SunoClip> songs, Func<SunoClip, Task> play, bool sayCreator = true)
+        public SongListWindow(string title, IReadOnlyList<SunoClip> songs, Func<SunoClip, Task> play, bool sayCreator = true,
+            Func<SunoClip?, Task>? playPause = null)
         {
             Title = title;
             Width = 560;
@@ -35,11 +36,27 @@ namespace TinPan.Views
 
             list.PreviewKeyDown += async (_, e) =>
             {
-                if (e.Key is Key.Enter or Key.Space && Keyboard.Modifiers == ModifierKeys.None && list.SelectedItem is SunoClip clip)
+                if (Keyboard.Modifiers != ModifierKeys.None) return;
+                if (e.Key == Key.Enter && list.SelectedItem is SunoClip clip)
                 {
                     e.Handled = true;
                     await play(clip);
                 }
+                else if (e.Key == Key.Space)
+                {
+                    // Pause and resume, as Space does in every other song list.
+                    e.Handled = true;
+                    if (playPause != null) await playPause(list.SelectedItem as SunoClip);
+                    else if (list.SelectedItem is SunoClip selected) await play(selected);
+                }
+            };
+            // The main window's keys (F8, F9, volume, Ctrl+Shift+F12 and the rest) work here too, and F1 says what this is.
+            ToolWindows.AddMainKeys?.Invoke(this);
+            PreviewKeyDown += (_, e) =>
+            {
+                if (e.Key != Key.F1 || Keyboard.Modifiers != ModifierKeys.None) return;
+                e.Handled = true;
+                ToolWindows.Say?.Invoke(T("{0}. Enter plays a song and carries on down this list, Space pauses or resumes, Left and Right seek, F9 plays the next one. The Applications key has the Song menu. Escape closes.", title));
             };
             list.MouseDoubleClick += async (_, _) =>
             {

@@ -1,5 +1,13 @@
 # Tin Pan changelog
 
+## 1.10.1 (2026-10-26)
+
+### Fixed
+
+- In the song windows (Explore shelves, similar songs, a creator's songs), Space started the song over instead of pausing, a finished song didn't carry on to the next one, and F9 didn't step through them. They now behave like the other lists.
+- Those windows also ignored the main window's keys: F8, F9, F7, volume, Ctrl+Shift+F12 and the rest work in them now, and F1 says what you can do there.
+- Left and Right (back and forward 5 seconds) only worked in the Library. They work in a playlist's songs, Trending and the song windows (Explore, similar songs and the rest) too.
+
 ## 1.10.0 (2026-10-26)
 
 ### New
