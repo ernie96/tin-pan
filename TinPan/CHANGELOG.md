@@ -1,5 +1,11 @@
 # Tin Pan changelog
 
+## 1.10.2 (2026-10-26)
+
+### Fixed
+
+- Songs made with a persona didn't use it: Suno needs the persona's own source song and the matching kind of request with it, not just the persona's name. Tin Pan now sends them as Suno's own site does, for new songs, covers and extends, and for voice personas too. Song information says "Made with a persona", so you can check.
+
 ## 1.10.1 (2026-10-26)
 
 ### Fixed

@@ -176,6 +176,7 @@ namespace TinPan.Services
 
         public async Task<IReadOnlyList<SunoClip>> GenerateAsync(GenerateRequest request, CancellationToken ct = default)
         {
+            if (!string.IsNullOrEmpty(request.PersonaId)) await ApplyPersonaAsync(request, ct);
             var provider = await CaptchaProviderNeededAsync(ct);
             if (provider != null)
             {
@@ -192,6 +193,47 @@ namespace TinPan.Services
             if (clips.Count == 0)
                 throw new SunoApiException(T("Suno didn't say whether it started. Refresh the library before trying again, so you don't pay twice."));
             return clips;
+        }
+
+        /// <summary>
+        /// A persona only takes effect with its task and its source song, as Suno's Create page sends them: it reads
+        /// the persona (GET /api/persona/get-persona/{id}/) for root_clip_id and persona_type, then sends task
+        /// "artist_consistency" ("vox" for a voice persona) with artist_clip_id; a cover or extend becomes
+        /// "artist_cover"/"vox_cover" or "artist_extend"/"vox_extend" (Suno's own task list). persona_id alone is
+        /// ignored, and the song comes out as if no persona had been chosen.
+        /// </summary>
+        private async Task ApplyPersonaAsync(GenerateRequest request, CancellationToken ct)
+        {
+            string? root = null, type = null;
+            try
+            {
+                var json = await SendAsync(HttpMethod.Get, $"/api/persona/get-persona/{Uri.EscapeDataString(request.PersonaId!)}/", null, ct);
+                root = SunoJson.TryReadString(json, "root_clip_id");
+                type = SunoJson.TryReadString(json, "persona_type");
+            }
+            catch (SunoApiException ex) when (ex is not SunoSignInRequiredException)
+            {
+                Log.Warn($"Persona {request.PersonaId} details didn't load ({ex.Message}); sending it without its source song");
+            }
+            PersonaTask(request, root, type);
+            Log.Info($"Persona {request.PersonaId}: task {request.Task}, source song {(request.ArtistClipId ?? "none")}");
+        }
+
+        /// <summary>Sets the persona's task and source song on a request (see ApplyPersonaAsync).</summary>
+        public static void PersonaTask(GenerateRequest request, string? rootClipId, string? personaType)
+        {
+            var voice = personaType == "vox";
+            request.ArtistClipId ??= string.IsNullOrWhiteSpace(rootClipId) ? null : rootClipId;
+            // An ordinary persona without its source song can't be used as one (Suno's page refuses it too);
+            // the request goes as before rather than half-filled. A voice persona may have none.
+            if (!voice && request.ArtistClipId == null) return;
+            request.Task = request.Task switch
+            {
+                "cover" => voice ? "vox_cover" : "artist_cover",
+                "extend" => voice ? "vox_extend" : "artist_extend",
+                null or "" => voice ? "vox" : "artist_consistency",
+                var other => other
+            };
         }
 
         /// <summary>Null when Suno needs no captcha; otherwise 1 (hCaptcha) or 2 (Turnstile).</summary>

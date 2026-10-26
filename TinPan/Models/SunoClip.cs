@@ -195,6 +195,7 @@ namespace TinPan.Models
                 if (!string.IsNullOrWhiteSpace(Metadata?.GptDescriptionPrompt)) lines.Add(T("Description: {0}", Metadata!.GptDescriptionPrompt));
                 if (Metadata?.AvgBpm is > 0) lines.Add(T("Tempo: about {0:0} beats per minute", Metadata!.AvgBpm));
                 if (!string.IsNullOrEmpty(ModelName)) lines.Add(T("Model: {0}", ModelName));
+                if (!string.IsNullOrEmpty(Metadata?.PersonaId)) lines.Add(T("Made with a persona"));
                 if (!string.IsNullOrWhiteSpace(Handle))
                     lines.Add(T("By {0}", string.IsNullOrWhiteSpace(CreatorName) ? "@" + Handle : $"{CreatorName} (@{Handle})"));
                 if (CreatedAt != null) lines.Add(T("Made: {0}", CreatedAt.Value.ToLocalTime().ToString("f", TinPan.Localization.Loc.Culture)));
@@ -280,6 +281,13 @@ namespace TinPan.Models
 
         [JsonPropertyName("error_message")]
         public string? ErrorMessage { get; set; }
+
+        /// <summary>What Suno did to make it: "cover", "extend", "artist_consistency" (a persona) and so on.</summary>
+        [JsonPropertyName("task")]
+        public string? Task { get; set; }
+
+        [JsonPropertyName("persona_id")]
+        public string? PersonaId { get; set; }
 
         /// <summary>For a cover, the song it covers.</summary>
         [JsonPropertyName("cover_clip_id")]

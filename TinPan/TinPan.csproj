@@ -8,7 +8,7 @@
     <UseWPF>true</UseWPF>
     <AssemblyTitle>Tin Pan</AssemblyTitle>
     <Product>Tin Pan</Product>
-    <Version>1.10.1</Version>
+    <Version>1.10.2</Version>
     <Copyright>Copyright (C) 2026 Ernesto Melendez. GPL-3.0-or-later with additional terms (NOTICE.md).</Copyright>
   </PropertyGroup>
 
