@@ -231,7 +231,7 @@ namespace TinPan.ViewModels
         private static (string Value, string Label)[] RemasterStrengths => new[] { ("subtle", T("Subtle")), ("normal", T("Normal")), ("high", T("High")) };
         private static (string Value, string Label)[] RemasterProfiles => new[] { ("natural", T("Natural")), ("boost", T("Boost")), ("clarity", T("Clarity")) };
 
-        [RelayCommand(CanExecute = nameof(CanUsePaidFeatures))]
+        [RelayCommand(CanExecute = nameof(CanRemaster))]
         private void Remaster(SunoClip? clip)
         {
             clip ??= SelectedClip;

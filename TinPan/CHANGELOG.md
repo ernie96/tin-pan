@@ -1,5 +1,18 @@
 # Tin Pan changelog
 
+## 1.10.0 (2026-10-26)
+
+### New
+
+- Like and dislike songs: Song menu, or Ctrl+Shift+U and Ctrl+Shift+N in any song list. Press again to take it back. Songs you disliked say so in the list.
+- The free plan's allowances: the Song menu shows how many free covers and remasters are left ("Cover... (3 free left)"), and Shift+F2 reads them out. Remaster works on the free plan while free remasters are left.
+- The library loads 100 songs at a time instead of 50, so big libraries come in with half the waiting.
+
+### Fixed
+
+- Explore put the songs of a shelf inside another shelf ("Staff Picks", say) under the outer shelf's name. Each shelf now keeps its own name.
+- Adding a song to a playlist, or removing one, said it worked even when Suno turned it down. It says so now. Deleting a playlist sends the request the way Suno expects.
+
 ## 1.9.1 (2026-10-25)
 
 ### Fixed

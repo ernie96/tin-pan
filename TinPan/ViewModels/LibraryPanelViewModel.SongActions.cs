@@ -178,6 +178,31 @@ namespace TinPan.ViewModels
             });
         }
 
+        /// <summary>Like (Ctrl+Shift+U), or remove the like. Suno uses likes for your Liked filter and its suggestions.</summary>
+        [RelayCommand]
+        private Task ToggleLikeAsync(SunoClip? clip) => ReactAsync(clip ?? SelectedClip, like: true);
+
+        /// <summary>Dislike (Ctrl+Shift+N), or remove the dislike. Disliked songs are hidden unless the filters show them.</summary>
+        [RelayCommand]
+        private Task ToggleDislikeAsync(SunoClip? clip) => ReactAsync(clip ?? SelectedClip, like: false);
+
+        public static string LikeLabel(SunoClip? song) => song?.IsLiked == true ? T("Remove li_ke") : T("Li_ke");
+        public static string DislikeLabel(SunoClip? song) => song?.IsDisliked == true ? T("Remove d_islike") : T("D_islike");
+
+        private async Task ReactAsync(SunoClip? clip, bool like)
+        {
+            if (clip == null) return;
+            var undo = like ? clip.IsLiked : clip.IsDisliked;
+            string? state = null;
+            if (!await RunAsync(async () => state = await _api.SetReactionAsync(clip.Id, undo ? null : like ? "LIKE" : "DISLIKE"))) return;
+            clip.IsLiked = state == "L";
+            clip.IsDisliked = state == "D";
+            clip.NotifyChanged();
+            Announcer.Announce(undo
+                ? (like ? T("Like removed from {0}.", clip.DisplayTitle) : T("Dislike removed from {0}.", clip.DisplayTitle))
+                : (like ? T("Liked {0}.", clip.DisplayTitle) : T("Disliked {0}.", clip.DisplayTitle)));
+        }
+
         [RelayCommand]
         private async Task ToggleRemixAsync(SunoClip? clip)
         {

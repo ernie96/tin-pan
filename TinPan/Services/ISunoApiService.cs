@@ -181,6 +181,9 @@ namespace TinPan.Services
 
         Task<IReadOnlyList<SunoClip>> GetSimilarAsync(string clipId, CancellationToken ct = default);
 
+        /// <summary>Likes ("LIKE"), dislikes ("DISLIKE") or clears (null) a song. Returns Suno's new state: "L", "D" or null.</summary>
+        Task<string?> SetReactionAsync(string clipId, string? reaction, CancellationToken ct = default);
+
         /// <summary>A creator's page: who they are and one page (20) of their public songs, newest first.</summary>
         Task<CreatorPage> GetCreatorAsync(string handle, int page = 1, CancellationToken ct = default);
 

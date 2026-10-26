@@ -74,6 +74,8 @@ namespace TinPan.ViewModels
         public string? SongLabel(CommandEntry entry, SunoClip? song) =>
             entry.Command == LibraryVM.ToggleVisibilityCommand ? LibraryPanelViewModel.VisibilityLabel(song)
             : entry.Command == LibraryVM.ToggleRemixCommand ? LibraryPanelViewModel.RemixLabel(song)
+            : entry.Command == LibraryVM.ToggleLikeCommand ? LibraryPanelViewModel.LikeLabel(song)
+            : entry.Command == LibraryVM.ToggleDislikeCommand ? LibraryPanelViewModel.DislikeLabel(song)
             : null;
 
         public IReadOnlyList<CommandEntry> Commands => _commands ??= BuildCommands();
@@ -105,13 +107,15 @@ namespace TinPan.ViewModels
                 new("Song", T("_Details"), "Ctrl+I", lib.DetailsCommand),
                 new("Song", T("Song in_formation"), "Alt+Enter", lib.SongInfoCommand),
                 new("Song", T("_Lyrics"), "Ctrl+L", lib.LyricsCommand),
+                new("Song", T("Li_ke"), "Ctrl+Shift+U", lib.ToggleLikeCommand),
+                new("Song", T("D_islike"), "Ctrl+Shift+N", lib.ToggleDislikeCommand),
                 new("Song", T("_Download..."), "Ctrl+D", lib.DownloadCommand, Submenu: "Download", SeparatorBefore: true),
                 new("Song", T("Download MP_3"), "Ctrl+Shift+D", lib.DownloadMp3Command, Submenu: "Download"),
                 new("Song", T("Download _WAV"), "Ctrl+Shift+W", lib.DownloadWavCommand, HeaderPath: nameof(LibraryPanelViewModel.WavMenuText), Submenu: "Download"),
                 new("Song", T("Download _video"), "Ctrl+Shift+V", lib.DownloadVideoCommand, Submenu: "Download"),
                 new("Song", T("Clean up download (remove ha_ze)"), "Ctrl+Shift+H", lib.CleanUpDownloadCommand, Submenu: "Download"),
                 new("Song", T("_Extend..."), "Ctrl+E", lib.ExtendCommand, Submenu: "Make"),
-                new("Song", T("_Cover..."), "Ctrl+Shift+C", lib.CoverCommand, Submenu: "Make"),
+                new("Song", T("_Cover..."), "Ctrl+Shift+C", lib.CoverCommand, HeaderPath: nameof(LibraryPanelViewModel.CoverMenuText), Submenu: "Make"),
                 new("Song", T("Re_master..."), "Ctrl+Shift+M", lib.RemasterCommand, HeaderPath: nameof(LibraryPanelViewModel.RemasterMenuText), Submenu: "Make"),
                 new("Song", T("_Get whole song"), "Ctrl+J", lib.WholeSongCommand, Submenu: "Make"),
                 new("Song", T("S_tems"), "Ctrl+Shift+S", lib.StemsCommand, Submenu: "Make"),

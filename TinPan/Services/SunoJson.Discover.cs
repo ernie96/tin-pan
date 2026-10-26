@@ -32,24 +32,66 @@ namespace TinPan.Services
                 songs);
         }
 
-        /// <summary>POST /api/unified/explore: feeds[] each with a title (or name, label) and items holding clips.</summary>
+        /// <summary>
+        /// POST /api/unified/explore: feeds[] with feed_title (older replies: title, name) and items. An item's
+        /// content_item is a song, or itself a feed (content_type "generic_feed") whose items are the songs: that
+        /// one becomes a shelf of its own, so its title ("Staff Picks") isn't lost. Shortcut tiles carry no song
+        /// and are skipped. A shelf with no songs of its own isn't listed.
+        /// </summary>
         public static (IReadOnlyList<ExploreSection> Sections, string? NextCursor) ReadExplore(string json)
         {
             using var doc = Parse(json);
             var root = doc.RootElement;
             var sections = new List<ExploreSection>();
             if (FirstArray(root, "feeds", "sections") is { } feeds)
-            {
                 foreach (var feed in feeds.EnumerateArray().Where(f => f.ValueKind == JsonValueKind.Object))
+                    AddShelf(feed, sections, depth: 0);
+            return (sections, root.ValueKind == JsonValueKind.Object ? FirstString(root, "next_cursor") : null);
+        }
+
+        private static void AddShelf(JsonElement feed, List<ExploreSection> sections, int depth)
+        {
+            var title = FirstString(feed, "feed_title", "title", "name", "label", "display_name")
+                        ?? FirstString(feed, "feed_id", "id", "identifier") ?? "Explore";
+            var songs = new List<SunoClip>();
+            var nested = new List<JsonElement>();
+            if (feed.TryGetProperty("items", out var items) && items.ValueKind == JsonValueKind.Array)
+            {
+                foreach (var item in items.EnumerateArray().Where(i => i.ValueKind == JsonValueKind.Object))
                 {
-                    var songs = FindClipsIn(feed.TryGetProperty("items", out var items) ? items : feed);
-                    if (songs.Count == 0) continue;
-                    var title = FirstString(feed, "title", "name", "label", "display_name", "feed_title")
-                                ?? FirstString(feed, "id", "identifier", "feed_id") ?? "Explore";
-                    sections.Add(new ExploreSection(title, songs));
+                    var content = item.TryGetProperty("content_item", out var c) && c.ValueKind == JsonValueKind.Object ? c : item;
+                    if (depth < 2 && IsFeed(item, content)) nested.Add(content);
+                    else songs.AddRange(FindClipsIn(content).Where(s => songs.All(o => o.Id != s.Id)));
                 }
             }
-            return (sections, root.ValueKind == JsonValueKind.Object ? FirstString(root, "next_cursor") : null);
+            else songs.AddRange(FindClipsIn(feed));
+            if (songs.Count > 0) sections.Add(new ExploreSection(title, songs));
+            foreach (var inner in nested) AddShelf(inner, sections, depth + 1);
+        }
+
+        private static bool IsFeed(JsonElement item, JsonElement content) =>
+            FirstString(item, "content_type") == "generic_feed" || FirstString(content, "content_type") == "generic_feed"
+            || (content.TryGetProperty("items", out var i) && i.ValueKind == JsonValueKind.Array && FirstString(content, "feed_id", "feed_title") != null);
+
+        /// <summary>
+        /// tracks/add and tracks/remove answer {successes, failures}, as lists or counts (chadvis 2026-10-26). True when
+        /// something failed and nothing succeeded. Any other reply (an older empty one) counts as done.
+        /// </summary>
+        public static bool PlaylistChangeFailed(string json)
+        {
+            try
+            {
+                using var doc = JsonDocument.Parse(string.IsNullOrWhiteSpace(json) ? "{}" : json);
+                var root = doc.RootElement;
+                if (root.ValueKind != JsonValueKind.Object) return false;
+                static int Count(JsonElement o, string name) =>
+                    !o.TryGetProperty(name, out var v) ? 0 : v.ValueKind == JsonValueKind.Array ? v.GetArrayLength() : AsInt(v) ?? 0;
+                return Count(root, "failures") > 0 && Count(root, "successes") == 0;
+            }
+            catch (JsonException)
+            {
+                return false;
+            }
         }
 
         /// <summary>GET /api/contests/: {contests: [{title, description, end_time or ends_at, submission_count, base_clip_id}]}.</summary>

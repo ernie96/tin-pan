@@ -69,10 +69,15 @@
   "{0}: {1} на місяць, використано {2}.",
   "{0}: {1} al mes, {2} usadas."
  ],
- "WAV downloads, covers and remasters need Pro or Premier.": [
-  "Descărcările WAV, coverurile și remasterizările necesită Pro sau Premier.",
-  "Для завантаження WAV, каверів і ремастерів потрібен Pro або Premier.",
-  "Las descargas WAV, los covers y las remasterizaciones necesitan Pro o Premier."
+ "WAV downloads need Pro or Premier.": [
+  "Descărcările WAV necesită Pro sau Premier.",
+  "Для завантаження WAV потрібен Pro або Premier.",
+  "Las descargas WAV necesitan Pro o Premier."
+ ],
+ "Remasters need Pro or Premier.": [
+  "Remasterizările necesită Pro sau Premier.",
+  "Для ремастерів потрібен Pro або Premier.",
+  "Las remasterizaciones necesitan Pro o Premier."
  ],
  "Your plan includes: {0}.": [
   "Planul tău include: {0}.",
@@ -194,6 +199,16 @@
   "{0:N0} завантаження лишилося|{0:N0} завантаження лишилося|{0:N0} завантажень лишилося",
   "{0:N0} descarga restante|{0:N0} descargas restantes"
  ],
+ "{0} free cover left.|{0} free covers left.": [
+  "{0} cover gratuit rămas.|{0} covere gratuite rămase.|{0} de covere gratuite rămase.",
+  "Залишився {0} безкоштовний кавер.|Залишилося {0} безкоштовні кавери.|Залишилося {0} безкоштовних каверів.",
+  "Te queda {0} versión gratis.|Te quedan {0} versiones gratis."
+ ],
+ "{0} free remaster left.|{0} free remasters left.": [
+  "{0} remasterizare gratuită rămasă.|{0} remasterizări gratuite rămase.|{0} de remasterizări gratuite rămase.",
+  "Залишився {0} безкоштовний ремастер.|Залишилося {0} безкоштовні ремастери.|Залишилося {0} безкоштовних ремастерів.",
+  "Te queda {0} remasterización gratis.|Te quedan {0} remasterizaciones gratis."
+ ],
  "{0}: {1} songs, {2} followers": [
   "{0}: {1} cântece, {2} urmăritori",
   "{0}: пісень {1}, підписників {2}",
@@ -278,6 +293,11 @@
   "apreciată",
   "вподобана",
   "te gusta"
+ ],
+ "disliked": [
+  "neapreciată",
+  "не подобається",
+  "no te gusta"
  ],
  "failed": [
   "eșuată",
@@ -814,6 +834,16 @@
   "Suno не прийняв цю назву: {0}",
   "Suno no aceptó ese nombre: {0}"
  ],
+ "Suno didn't add it to the playlist.": [
+  "Suno nu a adăugat-o în listă.",
+  "Suno не додав її до плейлиста.",
+  "Suno no la añadió a la lista."
+ ],
+ "Suno didn't remove it from the playlist.": [
+  "Suno nu a scos-o din listă.",
+  "Suno не прибрав її з плейлиста.",
+  "Suno no la quitó de la lista."
+ ],
  "Suno gave no share link.": [
   "Suno nu a dat niciun link de distribuire.",
   "Suno не надав посилання для поширення.",
@@ -1058,16 +1088,6 @@
   "Lista Bibliotecă",
   "Список бібліотеки",
   "Lista de la biblioteca"
- ],
- "Enter: play.\nSpace: pause or resume.\nLeft and Right arrows: back and forward 5 seconds.\nCtrl+I: details (style, model, plays, link and lyrics) as one text.\nAlt+Enter: song information, one fact per line.\nCtrl+L: lyrics.\nCtrl+C: copy the song's link.\nCtrl+D: download in the format chosen in Settings. It uses the song's free unencrypted file when Suno has one; if the direct download fails, the app offers Suno's own download instead.\nCtrl+E: extend.\nDelete: move to Suno trash (asks first).\nApplications key or Shift+F10 for everything: Download WAV, Download video, Extend, Cover, Remaster, Get whole song, Stems, Edit title and lyrics, Make public or private, Add to playlist, Copy Suno share link, Allow or stop remixes, Similar songs, Show comments, Write a comment.\nWAV and Remaster need a Pro or Premier plan. They're unavailable on the free plan, and say so when the plan isn't known yet.\nReaching the end of the list loads more songs.\nAlt+F, Filters: workspace, disliked songs, trash, stems, Suno Studio songs, liked, public or private, uploaded, covers, extended, remasters, whole songs, personas, songs in a playlist and songs downloaded before. Each can show those songs, show only them, or hide them. Sort newest, oldest, most liked or least liked first. Kept between runs.\nAlt+L, Download all: every finished song in the list, using the free direct download only; songs already in the folder are skipped.\nSongs you liked say \"liked\".": [
-  "Enter: redare.\nSpațiu: pauză sau continuare.\nSăgețile stânga și dreapta: înapoi și înainte 5 secunde.\nCtrl+I: detalii (stil, model, redări, link și versuri) într-un singur text.\nAlt+Enter: informații despre melodie, câte una pe rând.\nCtrl+L: versuri.\nCtrl+C: copiază linkul melodiei.\nCtrl+D: descarcă în formatul ales în Setări. Folosește fișierul gratuit, necriptat, când Suno îl are; dacă descărcarea directă eșuează, aplicația îți oferă descărcarea Suno.\nCtrl+E: extinde.\nDelete: mută în coșul Suno (întreabă întâi).\nTasta Aplicații sau Shift+F10 pentru toate: Descarcă WAV, Descarcă video, Extinde, Cover, Remasterizează, Melodia întreagă, Stem-uri, Editează titlul și versurile, Fă publică sau privată, Adaugă la o listă, Copiază linkul de distribuire Suno, Permite sau oprește remixurile, Melodii asemănătoare, Arată comentariile, Scrie un comentariu.\nWAV și Remasterizarea necesită planul Pro sau Premier. Nu sunt disponibile pe planul gratuit și spun asta când planul nu e cunoscut încă.\nCând ajungi la capătul listei se încarcă mai multe melodii.\nAlt+F, Filtre: spațiu de lucru, melodii neapreciate, coș, stem-uri, melodii din Suno Studio, apreciate, publice sau private, încărcate, coveruri, extinse, remasterizări, melodii întregi, persona, melodii din liste de redare și melodii descărcate deja. Fiecare poate arăta acele melodii, doar acele melodii sau le poate ascunde. Ordinea: cele mai noi, cele mai vechi, cele mai apreciate sau cele mai puțin apreciate primele. Se păstrează între porniri.\nAlt+L, Descarcă tot: fiecare melodie terminată din listă, doar prin descărcarea directă gratuită; melodiile care sunt deja în dosar se sar.\nMelodiile apreciate spun „apreciată”.",
-  "Enter: відтворити.\nПробіл: пауза або продовження.\nСтрілки вліво і вправо: назад і вперед на 5 секунд.\nCtrl+I: подробиці (стиль, модель, прослуховування, посилання й текст) одним текстом.\nAlt+Enter: відомості про пісню, по одному факту в рядку.\nCtrl+L: текст пісні.\nCtrl+C: скопіювати посилання на пісню.\nCtrl+D: завантажити у форматі з Налаштувань. Використовує безкоштовний незашифрований файл пісні, коли він є в Suno; якщо пряме завантаження не вдається, програма пропонує завантаження через Suno.\nCtrl+E: продовжити.\nDelete: перемістити в кошик Suno (спершу запитує).\nКлавіша контекстного меню або Shift+F10 — усе інше: Завантажити WAV, Завантажити відео, Продовжити, Кавер, Ремастер, Ціла пісня, Стеми, Змінити назву й текст, Зробити публічною або приватною, Додати до плейлиста, Копіювати посилання Suno для поширення, Дозволити або заборонити ремікси, Схожі пісні, Показати коментарі, Написати коментар.\nДля WAV і ремастеру потрібен план Pro або Premier. На безкоштовному плані вони недоступні, а коли план ще невідомий, про це сказано.\nКоли ви доходите до кінця списку, завантажуються нові пісні.\nAlt+F, Фільтри: робочий простір, невподобані пісні, кошик, стеми, пісні з Suno Studio, вподобані, публічні чи приватні, завантажені, кавери, продовжені, ремастери, цілі пісні, персони, пісні в плейлистах і вже завантажувані пісні. Кожен може показувати ці пісні, показувати лише їх або ховати. Порядок: спершу нові, старі, з найбільшою або найменшою кількістю вподобань. Зберігаються між запусками.\nAlt+L, Завантажити все: кожна готова пісня зі списку, лише через безкоштовне пряме завантаження; пісні, що вже є в папці, пропускаються.\nВподобані пісні позначено словом «вподобана».",
-  "Intro: reproducir.\nEspacio: pausar o seguir.\nFlechas izquierda y derecha: retrocede y avanza 5 segundos.\nCtrl+I: detalles (estilo, modelo, reproducciones, enlace y letra) en un solo texto.\nAlt+Intro: información de la canción, un dato por línea.\nCtrl+L: letra.\nCtrl+C: copia el enlace de la canción.\nCtrl+D: descarga en el formato elegido en Configuración. Usa el archivo gratuito sin cifrar de la canción cuando Suno lo tiene; si la descarga directa falla, la app te ofrece la descarga de Suno.\nCtrl+E: extender.\nSuprimir: mover a la papelera de Suno (pregunta antes).\nTecla de aplicaciones o Mayús+F10 para todo: Descargar WAV, Descargar video, Extender, Cover, Remasterizar, Canción completa, Stems, Editar título y letra, Hacer pública o privada, Añadir a una lista, Copiar enlace para compartir de Suno, Permitir o impedir remixes, Canciones parecidas, Ver comentarios, Escribir un comentario.\nWAV y Remasterizar necesitan un plan Pro o Premier. No están disponibles en el plan gratuito, y lo dicen cuando el plan todavía no se conoce.\nAl llegar al final de la lista se cargan más canciones.\nAlt+F, Filtros: espacio de trabajo, canciones que no te gustaron, papelera, stems, canciones de Suno Studio, que me gustan, públicas o privadas, subidas, covers, extendidas, remasterizaciones, canciones completas, personas, canciones en listas y canciones descargadas antes. Cada uno puede mostrar esas canciones, mostrar solo esas u ocultarlas. Orden: más nuevas, más antiguas, más gustadas o menos gustadas primero. Se guardan entre sesiones.\nAlt+L, Descargar todo: cada canción terminada de la lista, solo con la descarga directa gratuita; se saltan las que ya están en la carpeta.\nLas canciones que te gustan dicen «te gusta»."
- ],
- "In every song list (the Library, a playlist's songs, Trending and song windows): Ctrl+P add to a playlist, Ctrl+T edit the title and lyrics, Ctrl+Shift+C cover, Ctrl+Shift+M remaster, Ctrl+J get the whole song, Ctrl+Shift+S stems, Ctrl+Shift+D download MP3, Ctrl+Shift+W download WAV, Ctrl+Shift+V download the video, Ctrl+Shift+H clean up the download, Ctrl+M similar songs, Ctrl+U the creator's songs, Ctrl+O the original song, Ctrl+Shift+O covers and remixes of it, Ctrl+K comments, Ctrl+Shift+K write a comment, Ctrl+Shift+L copy the Suno share link, Ctrl+Shift+P public or private, Ctrl+Shift+X allow or stop remixes. The Song menu shows each key.": [
-  "În orice listă de melodii (Biblioteca, melodiile unei liste de redare, În tendințe și ferestrele cu melodii): Ctrl+P adaugă la o listă, Ctrl+T editează titlul și versurile, Ctrl+Shift+C cover, Ctrl+Shift+M remasterizare, Ctrl+J melodia întreagă, Ctrl+Shift+S piste separate, Ctrl+Shift+D descarcă MP3, Ctrl+Shift+W descarcă WAV, Ctrl+Shift+V descarcă videoclipul, Ctrl+Shift+H curăță descărcarea, Ctrl+M melodii asemănătoare, Ctrl+U melodiile creatorului, Ctrl+O melodia originală, Ctrl+Shift+O covere și remixuri după ea, Ctrl+K comentarii, Ctrl+Shift+K scrie un comentariu, Ctrl+Shift+L copiază linkul de distribuire Suno, Ctrl+Shift+P publică sau privată, Ctrl+Shift+X permite sau oprește remixurile. Meniul Melodie arată fiecare tastă.",
-  "У кожному списку пісень (Бібліотека, пісні плейлиста, У тренді та вікна з піснями): Ctrl+P додати до плейлиста, Ctrl+T змінити назву й текст, Ctrl+Shift+C кавер, Ctrl+Shift+M ремастер, Ctrl+J ціла пісня, Ctrl+Shift+S доріжки, Ctrl+Shift+D завантажити MP3, Ctrl+Shift+W завантажити WAV, Ctrl+Shift+V завантажити відео, Ctrl+Shift+H очистити завантаження, Ctrl+M схожі пісні, Ctrl+U пісні автора, Ctrl+O оригінальна пісня, Ctrl+Shift+O кавери й ремікси на неї, Ctrl+K коментарі, Ctrl+Shift+K написати коментар, Ctrl+Shift+L копіювати посилання Suno для поширення, Ctrl+Shift+P публічна чи приватна, Ctrl+Shift+X дозволити чи заборонити ремікси. Меню «Пісня» показує кожну клавішу.",
-  "En cualquier lista de canciones (la Biblioteca, las canciones de una lista, Tendencias y las ventanas de canciones): Ctrl+P añadir a una lista, Ctrl+T editar el título y la letra, Ctrl+Mayús+C versión, Ctrl+Mayús+M remasterizar, Ctrl+J canción completa, Ctrl+Mayús+S pistas, Ctrl+Mayús+D descargar MP3, Ctrl+Mayús+W descargar WAV, Ctrl+Mayús+V descargar el video, Ctrl+Mayús+H limpiar la descarga, Ctrl+M canciones parecidas, Ctrl+U canciones del creador, Ctrl+O canción original, Ctrl+Mayús+O versiones y remixes de ella, Ctrl+K comentarios, Ctrl+Mayús+K escribir un comentario, Ctrl+Mayús+L copiar el enlace para compartir de Suno, Ctrl+Mayús+P pública o privada, Ctrl+Mayús+X permitir o impedir remixes. El menú Canción muestra cada tecla."
  ],
  "Search box": [
   "Caseta de căutare",
@@ -1569,10 +1589,25 @@
   "Завантажити _WAV",
   "Descargar _WAV"
  ],
+ "Re_master... ({0} free left)": [
+  "Remasteri_zează... ({0} rămase gratuit)",
+  "Ре_мастер... (безкоштовних залишилося: {0})",
+  "Re_masterizar... ({0} gratis restantes)"
+ ],
  "Re_master...": [
   "Remasteri_zează...",
   "Ре_мастер...",
   "Re_masterizar..."
+ ],
+ "_Cover... ({0} free left)": [
+  "_Cover... ({0} rămase gratuit)",
+  "Кав_ер... (безкоштовних залишилося: {0})",
+  "C_over... ({0} gratis restantes)"
+ ],
+ "_Cover...": [
+  "_Cover...",
+  "Кав_ер...",
+  "C_over..."
  ],
  "Make p_rivate": [
   "_Fă-o privată",
@@ -2184,6 +2219,46 @@
   "Посилання для поширення скопійовано.",
   "Enlace para compartir copiado."
  ],
+ "Remove li_ke": [
+  "Anul_ează aprecierea",
+  "Скасувати вподо_бання",
+  "Quitar m_e gusta"
+ ],
+ "Li_ke": [
+  "Apr_eciază",
+  "Вподо_бати",
+  "M_e gusta"
+ ],
+ "Remove d_islike": [
+  "Anulează nep_lăcerea",
+  "Скасувати «Н_е подобається»",
+  "Quitar «_No me gusta»"
+ ],
+ "D_islike": [
+  "Nu-mi p_lace",
+  "Н_е подобається",
+  "_No me gusta"
+ ],
+ "Like removed from {0}.": [
+  "Aprecierea pentru {0} a fost anulată.",
+  "Вподобання {0} скасовано.",
+  "Ya no te gusta {0}."
+ ],
+ "Dislike removed from {0}.": [
+  "Neplăcerea pentru {0} a fost anulată.",
+  "«Не подобається» для {0} скасовано.",
+  "Quitaste «No me gusta» de {0}."
+ ],
+ "Liked {0}.": [
+  "Ai apreciat {0}.",
+  "Ви вподобали {0}.",
+  "Te gusta {0}."
+ ],
+ "Disliked {0}.": [
+  "Nu-ți place {0}.",
+  "Вам не подобається {0}.",
+  "No te gusta {0}."
+ ],
  "Others may now cover and remix it.": [
   "Ceilalți pot acum să-i facă cover și remix.",
   "Тепер інші можуть робити кавери й ремікси.",
@@ -2518,11 +2593,6 @@
   "Exti_nde...",
   "П_родовжити...",
   "Ex_tender..."
- ],
- "_Cover...": [
-  "_Cover...",
-  "Кав_ер...",
-  "C_over..."
  ],
  "_Get whole song": [
   "Melodia întrea_gă",
@@ -4168,5 +4238,15 @@
   "engleză",
   "англійська",
   "inglés"
+ ],
+ "Enter: play.\nSpace: pause or resume.\nLeft and Right arrows: back and forward 5 seconds.\nCtrl+I: details (style, model, plays, link and lyrics) as one text.\nAlt+Enter: song information, one fact per line.\nCtrl+L: lyrics.\nCtrl+C: copy the song's link.\nCtrl+D: download in the format chosen in Settings. It uses the song's free unencrypted file when Suno has one; if the direct download fails, the app offers Suno's own download instead.\nCtrl+E: extend.\nDelete: move to Suno trash (asks first).\nApplications key or Shift+F10 for everything: Download WAV, Download video, Extend, Cover, Remaster, Get whole song, Stems, Edit title and lyrics, Make public or private, Add to playlist, Copy Suno share link, Allow or stop remixes, Similar songs, Show comments, Write a comment.\nWAV needs a Pro or Premier plan. Free plans get a few covers and remasters; the Song menu says how many are left, and Shift+F2 reads them out.\nReaching the end of the list loads more songs.\nAlt+F, Filters: workspace, disliked songs, trash, stems, Suno Studio songs, liked, public or private, uploaded, covers, extended, remasters, whole songs, personas, songs in a playlist and songs downloaded before. Each can show those songs, show only them, or hide them. Sort newest, oldest, most liked or least liked first. Kept between runs.\nAlt+L, Download all: every finished song in the list, using the free direct download only; songs already in the folder are skipped.\nSongs you liked say \"liked\".": [
+  "Enter: redare.\nSpațiu: pauză sau continuare.\nSăgețile stânga și dreapta: înapoi și înainte 5 secunde.\nCtrl+I: detalii (stil, model, redări, link și versuri) într-un singur text.\nAlt+Enter: informații despre melodie, câte una pe rând.\nCtrl+L: versuri.\nCtrl+C: copiază linkul melodiei.\nCtrl+D: descarcă în formatul ales în Setări. Folosește fișierul gratuit, necriptat, când Suno îl are; dacă descărcarea directă eșuează, aplicația îți oferă descărcarea Suno.\nCtrl+E: extinde.\nDelete: mută în coșul Suno (întreabă întâi).\nTasta Aplicații sau Shift+F10 pentru toate: Descarcă WAV, Descarcă video, Extinde, Cover, Remasterizează, Melodia întreagă, Stem-uri, Editează titlul și versurile, Fă publică sau privată, Adaugă la o listă, Copiază linkul de distribuire Suno, Permite sau oprește remixurile, Melodii asemănătoare, Arată comentariile, Scrie un comentariu.\nWAV necesită planul Pro sau Premier. Planurile gratuite au câteva covere și remasterizări; meniul Melodie spune câte au rămas, iar Shift+F2 le citește.\nCând ajungi la capătul listei se încarcă mai multe melodii.\nAlt+F, Filtre: spațiu de lucru, melodii neapreciate, coș, stem-uri, melodii din Suno Studio, apreciate, publice sau private, încărcate, coveruri, extinse, remasterizări, melodii întregi, persona, melodii din liste de redare și melodii descărcate deja. Fiecare poate arăta acele melodii, doar acele melodii sau le poate ascunde. Ordinea: cele mai noi, cele mai vechi, cele mai apreciate sau cele mai puțin apreciate primele. Se păstrează între porniri.\nAlt+L, Descarcă tot: fiecare melodie terminată din listă, doar prin descărcarea directă gratuită; melodiile care sunt deja în dosar se sar.\nMelodiile apreciate spun „apreciată”.",
+  "Enter: відтворити.\nПробіл: пауза або продовження.\nСтрілки вліво і вправо: назад і вперед на 5 секунд.\nCtrl+I: подробиці (стиль, модель, прослуховування, посилання й текст) одним текстом.\nAlt+Enter: відомості про пісню, по одному факту в рядку.\nCtrl+L: текст пісні.\nCtrl+C: скопіювати посилання на пісню.\nCtrl+D: завантажити у форматі з Налаштувань. Використовує безкоштовний незашифрований файл пісні, коли він є в Suno; якщо пряме завантаження не вдається, програма пропонує завантаження через Suno.\nCtrl+E: продовжити.\nDelete: перемістити в кошик Suno (спершу запитує).\nКлавіша контекстного меню або Shift+F10 — усе інше: Завантажити WAV, Завантажити відео, Продовжити, Кавер, Ремастер, Ціла пісня, Стеми, Змінити назву й текст, Зробити публічною або приватною, Додати до плейлиста, Копіювати посилання Suno для поширення, Дозволити або заборонити ремікси, Схожі пісні, Показати коментарі, Написати коментар.\nДля WAV потрібен план Pro або Premier. Безкоштовні плани мають кілька каверів і ремастерів; меню «Пісня» каже, скільки залишилося, а Shift+F2 зачитує це.\nКоли ви доходите до кінця списку, завантажуються нові пісні.\nAlt+F, Фільтри: робочий простір, невподобані пісні, кошик, стеми, пісні з Suno Studio, вподобані, публічні чи приватні, завантажені, кавери, продовжені, ремастери, цілі пісні, персони, пісні в плейлистах і вже завантажувані пісні. Кожен може показувати ці пісні, показувати лише їх або ховати. Порядок: спершу нові, старі, з найбільшою або найменшою кількістю вподобань. Зберігаються між запусками.\nAlt+L, Завантажити все: кожна готова пісня зі списку, лише через безкоштовне пряме завантаження; пісні, що вже є в папці, пропускаються.\nВподобані пісні позначено словом «вподобана».",
+  "Intro: reproducir.\nEspacio: pausar o seguir.\nFlechas izquierda y derecha: retrocede y avanza 5 segundos.\nCtrl+I: detalles (estilo, modelo, reproducciones, enlace y letra) en un solo texto.\nAlt+Intro: información de la canción, un dato por línea.\nCtrl+L: letra.\nCtrl+C: copia el enlace de la canción.\nCtrl+D: descarga en el formato elegido en Configuración. Usa el archivo gratuito sin cifrar de la canción cuando Suno lo tiene; si la descarga directa falla, la app te ofrece la descarga de Suno.\nCtrl+E: extender.\nSuprimir: mover a la papelera de Suno (pregunta antes).\nTecla de aplicaciones o Mayús+F10 para todo: Descargar WAV, Descargar video, Extender, Cover, Remasterizar, Canción completa, Stems, Editar título y letra, Hacer pública o privada, Añadir a una lista, Copiar enlace para compartir de Suno, Permitir o impedir remixes, Canciones parecidas, Ver comentarios, Escribir un comentario.\nWAV necesita un plan Pro o Premier. Los planes gratuitos tienen algunas versiones y remasterizaciones; el menú Canción dice cuántas quedan, y Mayús+F2 lo lee.\nAl llegar al final de la lista se cargan más canciones.\nAlt+F, Filtros: espacio de trabajo, canciones que no te gustaron, papelera, stems, canciones de Suno Studio, que me gustan, públicas o privadas, subidas, covers, extendidas, remasterizaciones, canciones completas, personas, canciones en listas y canciones descargadas antes. Cada uno puede mostrar esas canciones, mostrar solo esas u ocultarlas. Orden: más nuevas, más antiguas, más gustadas o menos gustadas primero. Se guardan entre sesiones.\nAlt+L, Descargar todo: cada canción terminada de la lista, solo con la descarga directa gratuita; se saltan las que ya están en la carpeta.\nLas canciones que te gustan dicen «te gusta»."
+ ],
+ "In every song list (the Library, a playlist's songs, Trending and song windows): Ctrl+Shift+U like, Ctrl+Shift+N dislike, Ctrl+P add to a playlist, Ctrl+T edit the title and lyrics, Ctrl+Shift+C cover, Ctrl+Shift+M remaster, Ctrl+J get the whole song, Ctrl+Shift+S stems, Ctrl+Shift+D download MP3, Ctrl+Shift+W download WAV, Ctrl+Shift+V download the video, Ctrl+Shift+H clean up the download, Ctrl+M similar songs, Ctrl+U the creator's songs, Ctrl+O the original song, Ctrl+Shift+O covers and remixes of it, Ctrl+K comments, Ctrl+Shift+K write a comment, Ctrl+Shift+L copy the Suno share link, Ctrl+Shift+P public or private, Ctrl+Shift+X allow or stop remixes. The Song menu shows each key.": [
+  "În orice listă de melodii (Biblioteca, melodiile unei liste de redare, În tendințe și ferestrele cu melodii): Ctrl+Shift+U apreciază, Ctrl+Shift+N nu-mi place, Ctrl+P adaugă la o listă, Ctrl+T editează titlul și versurile, Ctrl+Shift+C cover, Ctrl+Shift+M remasterizare, Ctrl+J melodia întreagă, Ctrl+Shift+S piste separate, Ctrl+Shift+D descarcă MP3, Ctrl+Shift+W descarcă WAV, Ctrl+Shift+V descarcă videoclipul, Ctrl+Shift+H curăță descărcarea, Ctrl+M melodii asemănătoare, Ctrl+U melodiile creatorului, Ctrl+O melodia originală, Ctrl+Shift+O covere și remixuri după ea, Ctrl+K comentarii, Ctrl+Shift+K scrie un comentariu, Ctrl+Shift+L copiază linkul de distribuire Suno, Ctrl+Shift+P publică sau privată, Ctrl+Shift+X permite sau oprește remixurile. Meniul Melodie arată fiecare tastă.",
+  "У кожному списку пісень (Бібліотека, пісні плейлиста, У тренді та вікна з піснями): Ctrl+Shift+U вподобати, Ctrl+Shift+N не подобається, Ctrl+P додати до плейлиста, Ctrl+T змінити назву й текст, Ctrl+Shift+C кавер, Ctrl+Shift+M ремастер, Ctrl+J ціла пісня, Ctrl+Shift+S доріжки, Ctrl+Shift+D завантажити MP3, Ctrl+Shift+W завантажити WAV, Ctrl+Shift+V завантажити відео, Ctrl+Shift+H очистити завантаження, Ctrl+M схожі пісні, Ctrl+U пісні автора, Ctrl+O оригінальна пісня, Ctrl+Shift+O кавери й ремікси на неї, Ctrl+K коментарі, Ctrl+Shift+K написати коментар, Ctrl+Shift+L копіювати посилання Suno для поширення, Ctrl+Shift+P публічна чи приватна, Ctrl+Shift+X дозволити чи заборонити ремікси. Меню «Пісня» показує кожну клавішу.",
+  "En cualquier lista de canciones (la Biblioteca, las canciones de una lista, Tendencias y las ventanas de canciones): Ctrl+Mayús+U me gusta, Ctrl+Mayús+N no me gusta, Ctrl+P añadir a una lista, Ctrl+T editar el título y la letra, Ctrl+Mayús+C versión, Ctrl+Mayús+M remasterizar, Ctrl+J canción completa, Ctrl+Mayús+S pistas, Ctrl+Mayús+D descargar MP3, Ctrl+Mayús+W descargar WAV, Ctrl+Mayús+V descargar el video, Ctrl+Mayús+H limpiar la descarga, Ctrl+M canciones parecidas, Ctrl+U canciones del creador, Ctrl+O canción original, Ctrl+Mayús+O versiones y remixes de ella, Ctrl+K comentarios, Ctrl+Mayús+K escribir un comentario, Ctrl+Mayús+L copiar el enlace para compartir de Suno, Ctrl+Mayús+P pública o privada, Ctrl+Mayús+X permitir o impedir remixes. El menú Canción muestra cada tecla."
  ]
 }

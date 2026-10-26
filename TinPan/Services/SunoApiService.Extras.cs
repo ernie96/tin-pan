@@ -69,18 +69,20 @@ namespace TinPan.Services
         }
 
         public async Task TrashPlaylistAsync(string playlistId, CancellationToken ct = default) =>
-            await SendAsync(HttpMethod.Post, "/api/playlist/trash/", new { playlist_id = playlistId, undo_trash = false, is_hidden = false }, ct);
+            await SendAsync(HttpMethod.Post, "/api/playlist/trash/", new { playlist_id = playlistId }, ct);
 
         public async Task AddToPlaylistAsync(string playlistId, IEnumerable<string> clipIds, CancellationToken ct = default)
         {
             foreach (var chunk in clipIds.Distinct().Chunk(100))
-                await SendAsync(HttpMethod.Post, $"/api/playlist/v2/{Uri.EscapeDataString(playlistId)}/tracks/add", new { clip_ids = chunk }, ct);
+                if (SunoJson.PlaylistChangeFailed(await SendAsync(HttpMethod.Post, $"/api/playlist/v2/{Uri.EscapeDataString(playlistId)}/tracks/add", new { clip_ids = chunk }, ct)))
+                    throw new SunoApiException(T("Suno didn't add it to the playlist."));
         }
 
         public async Task RemoveFromPlaylistAsync(string playlistId, IEnumerable<string> clipIds, CancellationToken ct = default)
         {
             foreach (var chunk in clipIds.Distinct().Chunk(100))
-                await SendAsync(HttpMethod.Post, $"/api/playlist/v2/{Uri.EscapeDataString(playlistId)}/tracks/remove", new { clip_ids = chunk }, ct);
+                if (SunoJson.PlaylistChangeFailed(await SendAsync(HttpMethod.Post, $"/api/playlist/v2/{Uri.EscapeDataString(playlistId)}/tracks/remove", new { clip_ids = chunk }, ct)))
+                    throw new SunoApiException(T("Suno didn't remove it from the playlist."));
         }
 
         public async Task MoveInPlaylistAsync(string playlistId, string clipId, int index, CancellationToken ct = default) =>
@@ -99,6 +101,17 @@ namespace TinPan.Services
 
         public async Task SetRemixAllowedAsync(string clipId, bool allowed, CancellationToken ct = default) =>
             await SendAsync(HttpMethod.Post, $"/api/clips/{Uri.EscapeDataString(clipId)}/toggle_remixes/", new { can_remix = allowed }, ct);
+
+        /// <summary>
+        /// POST /api/gen/{id}/update_reaction_type/ with {reaction: "LIKE" | "DISLIKE" | null, recommendation_metadata: {}}
+        /// (chadvis, captured 2026-10-26). The reply's reaction_type is the initial, "L" or "D", and is missing once cleared.
+        /// </summary>
+        public async Task<string?> SetReactionAsync(string clipId, string? reaction, CancellationToken ct = default)
+        {
+            var json = await SendAsync(HttpMethod.Post, $"/api/gen/{Uri.EscapeDataString(clipId)}/update_reaction_type/",
+                new { reaction, recommendation_metadata = new { } }, ct);
+            return SunoJson.TryReadString(json, "reaction_type");
+        }
 
         public async Task<IReadOnlyList<SunoClip>> GetSimilarAsync(string clipId, CancellationToken ct = default)
         {

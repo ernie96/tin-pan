@@ -66,7 +66,16 @@ namespace TinPan.ViewModels
         // ── Menu labels that depend on the plan or the song ────────────────
 
         public string WavMenuText => _account.PaidLabel(T("Download _WAV"));
-        public string RemasterMenuText => _account.PaidLabel(T("Re_master..."));
+        public string RemasterMenuText => _account.IsPaid == false && _account.Billing?.FreeRemastersLeft is > 0 and var left
+            ? T("Re_master... ({0} free left)", left)
+            : _account.PaidLabel(T("Re_master..."));
+
+        public string CoverMenuText => _account.IsPaid == false && _account.Billing?.FreeCoversLeft is { } covers
+            ? T("_Cover... ({0} free left)", covers)
+            : T("_Cover...");
+
+        /// <summary>Remaster on a paid plan, or while the free plan still has free remasters.</summary>
+        private bool CanRemaster() => _account.IsPaid != false || _account.Billing?.FreeRemastersLeft is > 0;
         public static string VisibilityLabel(SunoClip? song) => song?.IsPublic == true ? T("Make p_rivate") : T("Make p_ublic");
         public static string RemixLabel(SunoClip? song) => song?.Metadata?.CanRemix == false ? T("Allow remi_xes") : T("Stop remi_xes");
 
@@ -78,6 +87,7 @@ namespace TinPan.ViewModels
             if (e.PropertyName != nameof(AccountState.Billing)) return;
             OnPropertyChanged(nameof(WavMenuText));
             OnPropertyChanged(nameof(RemasterMenuText));
+            OnPropertyChanged(nameof(CoverMenuText));
             DownloadWavCommand.NotifyCanExecuteChanged();
             RemasterCommand.NotifyCanExecuteChanged();
         }

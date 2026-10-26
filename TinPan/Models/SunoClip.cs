@@ -29,6 +29,7 @@ namespace TinPan.Models
             UpvoteCount = newer.UpvoteCount;
             IsDownloadUnlocked = newer.IsDownloadUnlocked;
             IsLiked = newer.IsLiked;
+            Reaction = newer.Reaction;
             MediaUrls = newer.MediaUrls;
             ImageLargeUrl = newer.ImageLargeUrl;
             Metadata = newer.Metadata;
@@ -89,6 +90,27 @@ namespace TinPan.Models
         [JsonPropertyName("is_liked")]
         public bool IsLiked { get; set; }
 
+        /// <summary>Suno's reaction to a song, read loosely ({"reaction_type": "D"} or a plain "D"); "D" is disliked.</summary>
+        [JsonPropertyName("reaction")]
+        public JsonElement? Reaction { get; set; }
+
+        /// <summary>Set by Tin Pan after Dislike, or read from Suno's reaction.</summary>
+        [JsonIgnore]
+        public bool IsDisliked
+        {
+            get => _disliked ?? ReactionLetter(Reaction) == "D";
+            set => _disliked = value;
+        }
+
+        private bool? _disliked;
+
+        private static string? ReactionLetter(JsonElement? reaction) => reaction switch
+        {
+            { ValueKind: JsonValueKind.String } r => r.GetString(),
+            { ValueKind: JsonValueKind.Object } r when r.TryGetProperty("reaction_type", out var t) && t.ValueKind == JsonValueKind.String => t.GetString(),
+            _ => null
+        };
+
         /// <summary>
         /// The real files. audio_url is a decoy (/api/forbidden); an entry here without an
         /// "encoding" field is a plain, unencrypted file that downloads for free.
@@ -134,6 +156,7 @@ namespace TinPan.Models
                 var text = DisplayTitle;
                 if (Duration is > 0) text += ", " + FormatTime(TimeSpan.FromSeconds(Duration.Value));
                 if (IsLiked) text += ", " + T("liked");
+                else if (IsDisliked) text += ", " + T("disliked");
                 if (HasFailed) text += ", " + T("failed");
                 else if (!IsReady && !string.IsNullOrEmpty(Status)) text += ", " + T("still being made");
                 if (Metadata?.Type is "concat") text += ", " + T("whole song");

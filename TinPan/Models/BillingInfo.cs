@@ -48,6 +48,13 @@ namespace TinPan.Models
         [JsonPropertyName("download_usage")]
         public DownloadUsage? DownloadUsage { get; set; }
 
+        /// <summary>Covers and remasters the free plan still allows (chadvis billing capture, 2026-10-26).</summary>
+        [JsonPropertyName("free_cover_clips_remaining")]
+        public int? FreeCoversLeft { get; set; }
+
+        [JsonPropertyName("free_remasters_remaining")]
+        public int? FreeRemastersLeft { get; set; }
+
         /// <summary>Shortest and longest audio upload this account may make (chadvis inventory: numeric min and max).</summary>
         [JsonPropertyName("audio_upload_limits")]
         public AudioUploadLimits? AudioUploadLimits { get; set; }
@@ -191,7 +198,14 @@ namespace TinPan.Models
                     : u.Extra is > 0 ? T("{0}: {1} a month, {2} used, plus {3} extra.", count, N(limit), N(u.Used ?? 0), N(u.Extra.Value))
                     : T("{0}: {1} a month, {2} used.", count, N(limit), N(u.Used ?? 0)));
             }
-            if (info.IsPaid == false) parts.Add(T("WAV downloads, covers and remasters need Pro or Premier."));
+            if (info.IsPaid == false)
+            {
+                parts.Add(T("WAV downloads need Pro or Premier."));
+                if (info.FreeCoversLeft is { } covers) parts.Add(Loc.Plural(covers, "{0} free cover left.", "{0} free covers left."));
+                parts.Add(info.FreeRemastersLeft is > 0 and var remasters
+                    ? Loc.Plural(remasters, "{0} free remaster left.", "{0} free remasters left.")
+                    : T("Remasters need Pro or Premier."));
+            }
             return string.Join(" ", parts);
         }
 

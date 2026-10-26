@@ -63,7 +63,7 @@ namespace TinPan.Services
         {
             if (!_feedV3Missing)
             {
-                var body = new Dictionary<string, object> { ["limit"] = 50, ["filters"] = BuildFeedFilters(query) };
+                var body = new Dictionary<string, object> { ["limit"] = 100, ["filters"] = BuildFeedFilters(query) };
                 if (query.Cursor != null) body["cursor"] = query.Cursor;
                 try
                 {
