@@ -37,6 +37,9 @@ namespace TinPan.Services
         /// <summary>A song to upload: any common audio file. Null on Cancel.</summary>
         string? PickSongToUpload();
 
+        /// <summary>A JPG, PNG or WebP picture for a cover. Null on Cancel.</summary>
+        string? PickPicture();
+
         /// <summary>
         /// A list of short lines (message history, song information, the command list).
         /// When onEnter is given, Enter closes the window and runs it with the chosen line's index.
@@ -93,12 +96,23 @@ namespace TinPan.Services
             return dialog.ShowDialog(Parent) == true ? dialog.FolderName : null;
         }
 
+        public string? PickPicture()
+        {
+            var dialog = new OpenFileDialog
+            {
+                Title = T("Choose a picture"),
+                Filter = T("Pictures") + " (*.jpg;*.jpeg;*.png;*.webp)|*.jpg;*.jpeg;*.png;*.webp",
+                CheckFileExists = true
+            };
+            return dialog.ShowDialog(Parent) == true ? dialog.FileName : null;
+        }
+
         public string? PickSongToUpload()
         {
             var dialog = new OpenFileDialog
             {
                 Title = T("Choose a song to upload to Suno"),
-                Filter = T("Audio files") + " (*.mp3;*.wav;*.m4a;*.flac;*.aac;*.wma)|*.mp3;*.wav;*.m4a;*.flac;*.aac;*.wma",
+                Filter = T("Audio files") + " (*.mp3;*.wav;*.m4a;*.flac;*.ogg;*.aac;*.wma)|*.mp3;*.wav;*.m4a;*.flac;*.ogg;*.aac;*.wma",
                 CheckFileExists = true
             };
             return dialog.ShowDialog(Parent) == true ? dialog.FileName : null;

@@ -444,6 +444,16 @@
   "План ще не завантажено.",
   "El plan aún no se cargó."
  ],
+ "Style ideas and boosts are shaped to your taste.": [
+  "Ideile de stil și îmbunătățirile sunt potrivite gustului tău.",
+  "Ідеї стилю й підсилення налаштовані під ваш смак.",
+  "Las ideas de estilo y las mejoras se adaptan a tu gusto."
+ ],
+ "Style ideas and boosts aren't shaped to your taste.": [
+  "Ideile de stil și îmbunătățirile nu sunt potrivite gustului tău.",
+  "Ідеї стилю й підсилення не налаштовані під ваш смак.",
+  "Las ideas de estilo y las mejoras no se adaptan a tu gusto."
+ ],
  "{0} (needs Pro or Premier)": [
   "{0} (necesită Pro sau Premier)",
   "{0} (потрібен Pro або Premier)",
@@ -589,6 +599,16 @@
   "Виберіть, куди зберігати пісні",
   "Elige dónde se guardan las canciones"
  ],
+ "Choose a picture": [
+  "Alege o imagine",
+  "Виберіть зображення",
+  "Elige una imagen"
+ ],
+ "Pictures": [
+  "Imagini",
+  "Зображення",
+  "Imágenes"
+ ],
  "Choose a song to upload to Suno": [
   "Alege o melodie de încărcat pe Suno",
   "Виберіть пісню, щоб надіслати її в Suno",
@@ -603,6 +623,16 @@
   "Melodii MP3 sau WAV",
   "Пісні MP3 або WAV",
   "Canciones MP3 o WAV"
+ ],
+ "{0} isn't connected.": [
+  "{0} nu e conectat.",
+  "{0} не під'єднано.",
+  "{0} no está conectado."
+ ],
+ "Playback stopped because of an error.": [
+  "Redarea s-a oprit din cauza unei erori.",
+  "Відтворення зупинилося через помилку.",
+  "La reproducción se detuvo por un error."
  ],
  "Please describe it first.": [
   "Vă rugăm să descrieți mai întâi.",
@@ -673,6 +703,21 @@
   "Suno nu a spus dacă a început. Reîmprospătează biblioteca înainte să încerci din nou, ca să nu plătești de două ori.",
   "Suno не повідомив, чи почав. Оновіть бібліотеку, перш ніж пробувати знову, щоб не заплатити двічі.",
   "Suno no dijo si empezó. Actualiza la biblioteca antes de volver a intentarlo, para no pagar dos veces."
+ ],
+ "That persona is in the trash or hidden, so Suno can't use it. Choose another persona.": [
+  "Acel persona e în coșul de gunoi sau ascuns, așa că Suno nu îl poate folosi. Alege alt persona.",
+  "Ця персона в кошику або прихована, тож Suno не може її використати. Виберіть іншу персону.",
+  "Esa persona está en la papelera u oculta, así que Suno no puede usarla. Elige otra persona."
+ ],
+ "The model you chose can't use voice personas. Choose a newer model.": [
+  "Modelul ales nu poate folosi persona de voce. Alege un model mai nou.",
+  "Вибрана модель не працює з голосовими персонами. Виберіть новішу модель.",
+  "El modelo que elegiste no puede usar personas de voz. Elige un modelo más nuevo."
+ ],
+ "That persona has no source song, so Suno can't use it. Choose another persona.": [
+  "Acel persona nu are o melodie sursă, așa că Suno nu îl poate folosi. Alege alt persona.",
+  "У цієї персони немає пісні-джерела, тож Suno не може її використати. Виберіть іншу персону.",
+  "Esa persona no tiene canción de origen, así que Suno no puede usarla. Elige otra persona."
  ],
  "Suno didn't say whether the remaster started. Refresh the library before trying again.": [
   "Suno nu a spus dacă remasterizarea a început. Reîmprospătează biblioteca înainte să încerci din nou.",
@@ -829,6 +874,11 @@
   "Suno надіслав відповідь, яку програма не розуміє.",
   "Suno envió una respuesta que la app no entiende."
  ],
+ "Suno didn't say which song it made. Refresh the library to check.": [
+  "Suno nu a spus ce melodie a făcut. Reîmprospătează biblioteca ca să verifici.",
+  "Suno не сказав, яку пісню створив. Оновіть бібліотеку, щоб перевірити.",
+  "Suno no dijo qué canción creó. Actualiza la biblioteca para comprobarlo."
+ ],
  "Suno didn't say whether the playlist was made. Refresh playlists to check.": [
   "Suno nu a spus dacă lista a fost creată. Reîmprospătează listele ca să verifici.",
   "Suno не повідомив, чи створено плейлист. Оновіть плейлисти, щоб перевірити.",
@@ -863,6 +913,66 @@
   "Suno nu a trimis înapoi niciun vers.",
   "Suno не повернув тексту.",
   "Suno no devolvió ninguna letra."
+ ],
+ "voice": [
+  "voce",
+  "голос",
+  "voz"
+ ],
+ "public": [
+  "public",
+  "публічна",
+  "pública"
+ ],
+ "private": [
+  "privat",
+  "приватна",
+  "privada"
+ ],
+ "loved": [
+  "îndrăgit",
+  "улюблена",
+  "favorita"
+ ],
+ "in the trash": [
+  "în coșul de gunoi",
+  "у кошику",
+  "en la papelera"
+ ],
+ "Suno didn't accept that picture.": [
+  "Suno nu a acceptat imaginea.",
+  "Suno не прийняв це зображення.",
+  "Suno no aceptó esa imagen."
+ ],
+ "Suno didn't make a picture. Try another description.": [
+  "Suno nu a făcut o imagine. Încearcă altă descriere.",
+  "Suno не створив зображення. Спробуйте інший опис.",
+  "Suno no creó una imagen. Prueba otra descripción."
+ ],
+ "Suno didn't say whether the album was made. Refresh playlists to check.": [
+  "Suno nu a spus dacă albumul a fost făcut. Reîmprospătează listele de redare ca să verifici.",
+  "Suno не сказав, чи створено альбом. Оновіть плейлисти, щоб перевірити.",
+  "Suno no dijo si se creó el álbum. Actualiza las listas para comprobarlo."
+ ],
+ "Suno didn't say whether the persona was made. Check your personas.": [
+  "Suno nu a spus dacă persona a fost făcut. Verifică-ți persona.",
+  "Suno не сказав, чи створено персону. Перевірте свої персони.",
+  "Suno no dijo si se creó la persona. Revisa tus personas."
+ ],
+ "Suno didn't start the mashup.": [
+  "Suno nu a pornit combinarea.",
+  "Suno не почав змішування.",
+  "Suno no empezó la mezcla."
+ ],
+ "Suno couldn't mash those lyrics up.": [
+  "Suno nu a putut combina acele versuri.",
+  "Suno не зміг змішати ці тексти.",
+  "Suno no pudo mezclar esas letras."
+ ],
+ "Suno's song file didn't decode.": [
+  "Fișierul melodiei de la Suno nu s-a decodat.",
+  "Файл пісні від Suno не розкодувався.",
+  "El archivo de la canción de Suno no se decodificó."
  ],
  "Suno doesn't allow uploads from this account right now.": [
   "Suno nu permite acum încărcări de pe acest cont.",
@@ -923,11 +1033,6 @@
   "Nu s-a putut trece la {0}, așa că melodia se redă pe ieșirea implicită Windows.",
   "Не вдалося перемкнутися на {0}, тому пісня грає через типовий вихід Windows.",
   "No se pudo cambiar a {0}, así que la canción suena en la salida predeterminada de Windows."
- ],
- "Playback stopped because of an error.": [
-  "Redarea s-a oprit din cauza unei erori.",
-  "Відтворення зупинилося через помилку.",
-  "La reproducción se detuvo por un error."
  ],
  "GitHub answered {0} when checking for updates.": [
   "GitHub a răspuns {0} la căutarea actualizărilor.",
@@ -994,15 +1099,25 @@
   "Цей файл більший за 500 МБ — завеликий для надсилання.",
   "Ese archivo pesa más de 500 MB, demasiado para subirlo."
  ],
- "Windows couldn't turn this file into M4A for uploading. Try an MP3, WAV or M4A file.": [
-  "Windows nu a putut transforma fișierul în M4A pentru încărcare. Încearcă un fișier MP3, WAV sau M4A.",
-  "Windows не зміг перетворити цей файл на M4A для надсилання. Спробуйте файл MP3, WAV або M4A.",
-  "Windows no pudo convertir este archivo a M4A para subirlo. Prueba con un MP3, WAV o M4A."
+ "Choose a JPG, PNG or WebP picture.": [
+  "Alege o imagine JPG, PNG sau WebP.",
+  "Виберіть зображення JPG, PNG або WebP.",
+  "Elige una imagen JPG, PNG o WebP."
+ ],
+ "That picture is too big for Suno.": [
+  "Imaginea e prea mare pentru Suno.",
+  "Це зображення завелике для Suno.",
+  "Esa imagen es demasiado grande para Suno."
  ],
  "The upload didn't go through. Check your internet connection and try again.": [
   "Încărcarea nu a reușit. Verifică-ți conexiunea la internet și încearcă din nou.",
   "Надіслати не вдалося. Перевірте підключення до інтернету й спробуйте ще раз.",
   "La subida no se completó. Revisa tu conexión a internet y vuelve a intentarlo."
+ ],
+ "Windows couldn't turn this file into M4A for uploading. Try an MP3, WAV or M4A file.": [
+  "Windows nu a putut transforma fișierul în M4A pentru încărcare. Încearcă un fișier MP3, WAV sau M4A.",
+  "Windows не зміг перетворити цей файл на M4A для надсилання. Спробуйте файл MP3, WAV або M4A.",
+  "Windows no pudo convertir este archivo a M4A para subirlo. Prueba con un MP3, WAV o M4A."
  ],
  "Suno couldn't process the upload.": [
   "Suno nu a putut procesa încărcarea.",
@@ -1189,6 +1304,26 @@
   "У «Кавері» «Переписати текст зараз» змінює поле «Текст» так, як сказано в полі «Як змінити», а «Повернути оригінальні слова» скасовує зміну. «Кавер» і «Продовжити» мають «Посилити стиль» та «Ідеї стилю» для поля «Стиль». Можна запустити до п’яти одночасно, як дозволяє Suno; кнопка чекає, лише поки п’ять ще запускаються.",
   "En Versión, Reescribir la letra ahora cambia el cuadro Letra como dice el cuadro Cómo cambiar, y Volver a la letra original lo deshace. Versión y Extender tienen Mejorar estilo e Ideas de estilo para el cuadro Estilo. Puedes iniciar hasta cinco a la vez, como permite Suno; el botón solo espera mientras cinco se siguen iniciando."
  ],
+ "More you can do": [
+  "Mai poți face",
+  "Що ще можна зробити",
+  "Más cosas que puedes hacer"
+ ],
+ "Song menu: Not interested asks Suno to suggest fewer songs like it. Cover picture uses a picture from your computer, one Suno draws from a description, or Suno's own again. Delete forever (Shift+Delete) removes a song in the trash for good; Delete on a song in the trash restores it. Make from it has Make a video and Make a persona. Related songs has Its stems, Credits and remix count, and the creator's playlists, which you can like or save. Sharing can show or hide the list of remixes on the song's page.\nLibrary menu: Personas (yours, loved or followed: their songs, source song, rename, public or private, love, trash), Custom models (train one from a playlist of 6 to 100 of your songs, rename, archive) and Lyrics mashup. On the Playlists tab the Applications key adds Cover picture and Make an album from it.\nSongs play in Tin Pan itself, which starts them much sooner, and the next song in the list is fetched ahead; Suno's own player takes over when that fails. Settings can turn that off.": [
+  "Meniul Melodie: Nu mă interesează îi cere lui Suno să sugereze mai puține melodii ca ea. Imagine de copertă folosește o imagine de pe calculator, una desenată de Suno după o descriere, sau din nou coperta lui Suno. Șterge definitiv (Shift+Delete) elimină pentru totdeauna o melodie din coș; Delete pe o melodie din coș o restaurează. Creează din el are Fă un videoclip și Fă un persona. Cântece înrudite are Stem-urile ei, Credite și număr de remixuri, și listele de redare ale autorului, pe care le poți aprecia sau salva. Partajare poate arăta sau ascunde lista de remixuri de pe pagina melodiei.\nMeniul Bibliotecă: Persona (ale tale, îndrăgite sau urmărite: melodiile lor, melodia sursă, redenumire, public sau privat, îndrăgire, coș), Modele personalizate (antrenează unul dintr-o listă de redare cu 6 până la 100 de melodii de-ale tale, redenumește, arhivează) și Combinare de versuri. În fila Liste de redare, tasta Aplicații adaugă Copertă și Fă un album din ea.\nMelodiile se redau chiar în Tin Pan, ceea ce le pornește mult mai repede, iar următoarea melodie din listă se aduce dinainte; playerul Suno preia când asta nu merge. Setările pot opri asta.",
+  "Меню «Пісня»: «Не цікаво» просить Suno радити менше схожих пісень. «Малюнок обкладинки» бере зображення з комп'ютера, малюнок, який Suno намалює за описом, або знову обкладинку від Suno. «Видалити назавжди» (Shift+Delete) остаточно видаляє пісню з кошика; Delete на пісні в кошику відновлює її. У «Створити з неї» є «Зробити відео» і «Зробити персону». У «Пов’язаних піснях» є «Її стеми», «Джерела й кількість реміксів» і плейлисти автора, які можна вподобати чи зберегти. «Поширення» може показати або сховати список реміксів на сторінці пісні.\nМеню «Бібліотека»: «Персони» (ваші, улюблені чи ті, за якими стежите: їхні пісні, пісня-джерело, перейменування, публічна чи приватна, улюблене, кошик), «Власні моделі» (навчити на плейлисті з 6–100 ваших пісень, перейменувати, архівувати) і «Змішати тексти». На вкладці «Плейлисти» клавіша контекстного меню додає «Малюнок обкладинки» і «Зробити альбом з нього».\nПісні грають у самому Tin Pan, тож починаються набагато швидше, а наступна пісня зі списку завантажується наперед; коли це не вдається, грає плеєр Suno. У налаштуваннях це можна вимкнути.",
+  "Menú Canción: No me interesa le pide a Suno que sugiera menos canciones como esa. Imagen de portada usa una imagen de tu computadora, una que Suno dibuja según una descripción, o de nuevo la de Suno. Eliminar para siempre (Shift+Delete) borra para siempre una canción de la papelera; Delete en una canción de la papelera la restaura. Crear a partir de ella tiene Crear un video y Crear una persona. Canciones relacionadas tiene Sus stems, Créditos y número de remixes, y las listas del creador, que puedes marcar con me gusta o guardar. Compartir puede mostrar u ocultar la lista de remixes en la página de la canción.\nMenú Biblioteca: Personas (tuyas, favoritas o seguidas: sus canciones, canción de origen, renombrar, pública o privada, favorita, papelera), Modelos personalizados (entrenar uno con una lista de 6 a 100 de tus canciones, renombrar, archivar) y Mezcla de letras. En la pestaña Listas, la tecla de aplicaciones añade Portada y Hacer un álbum con ella.\nLas canciones se reproducen en el propio Tin Pan, así que empiezan mucho antes, y la siguiente canción de la lista se trae por adelantado; el reproductor de Suno toma el relevo si falla. Configuración puede desactivarlo."
+ ],
+ "Changing a song": [
+  "Schimbarea unei melodii",
+  "Зміна пісні",
+  "Cambiar una canción"
+ ],
+ "Song menu, Make from it: Change speed (keeping the pitch or not, like a tape), Reverse, Crop (keep only a part, or take a part out) and Fade in or out. Each opens a small form like Remaster and makes a new song; the original stays as it is. You hear when the new one is ready.": [
+  "Meniul Melodie, Creează din el: Schimbă viteza (păstrând tonalitatea sau nu, ca o casetă), Inversează, Taie (păstrează doar o parte sau scoate o parte) și Estompare la început sau la final. Fiecare deschide un formular mic, ca Remasterizează, și face o melodie nouă; originalul rămâne cum e. Auzi când cea nouă e gata.",
+  "Меню «Пісня», «Створити з неї»: «Змінити швидкість» (зберігаючи висоту тону чи ні, як на касеті), «Задом наперед», «Обрізати» (залишити тільки частину або вирізати частину) і «Наростання чи затухання». Кожна команда відкриває невелику форму, як «Ремастер», і створює нову пісню; оригінал лишається як є. Ви почуєте, коли нова буде готова.",
+  "Menú Canción, Crear a partir de ella: Cambiar velocidad (manteniendo el tono o no, como una cinta), Invertir, Recortar (conservar solo una parte o quitar una parte) y Fundido de entrada o salida. Cada uno abre un formulario pequeño, como Remasterizar, y crea una canción nueva; la original queda como está. Oirás cuando la nueva esté lista."
+ ],
  "Speech": [
   "Vorbire",
   "Мовлення",
@@ -1219,10 +1354,10 @@
   "Надсилання",
   "Subidas"
  ],
- "Library menu, Upload a song (Alt+U on the Library page), sends an audio file from this computer to your Suno account, where it becomes a song you can play, extend, cover and remaster. MP3, WAV, M4A, FLAC, AAC and WMA work; anything that isn't M4A is converted to M4A first. You confirm you have the rights to it and accept Suno's upload terms. Suno checks each upload, which can take a minute or two, and may refuse copyrighted music. The length limits are your plan's.": [
-  "Meniul Bibliotecă, Încarcă o melodie (Alt+C în pagina Bibliotecă), trimite un fișier audio de pe acest calculator în contul tău Suno, unde devine o melodie pe care o poți asculta, extinde, face cover și remasteriza. Merg MP3, WAV, M4A, FLAC, AAC și WMA; tot ce nu e M4A e întâi convertit în M4A. Confirmi că ai drepturile și accepți condițiile Suno pentru încărcări. Suno verifică fiecare încărcare, ceea ce poate dura un minut sau două, și poate refuza muzica protejată de drepturi de autor. Limitele de durată sunt cele ale planului tău.",
-  "Меню «Бібліотека», «Надіслати пісню» (Alt+Н на сторінці «Бібліотека») надсилає аудіофайл із цього комп'ютера у ваш обліковий запис Suno, де він стає піснею, яку можна слухати, продовжувати, робити кавери й ремастери. Підходять MP3, WAV, M4A, FLAC, AAC і WMA; усе, що не M4A, спершу перетворюється на M4A. Ви підтверджуєте, що маєте права, і приймаєте умови Suno щодо надсилання. Suno перевіряє кожен файл, що може тривати хвилину-дві, і може відхилити музику, захищену авторським правом. Обмеження тривалості залежать від вашого плану.",
-  "Menú Biblioteca, Subir una canción (Alt+U en la página Biblioteca), envía un archivo de audio de esta computadora a tu cuenta de Suno, donde se convierte en una canción que puedes escuchar, extender, versionar y remasterizar. Sirven MP3, WAV, M4A, FLAC, AAC y WMA; lo que no es M4A se convierte primero a M4A. Confirmas que tienes los derechos y aceptas los términos de Suno para subidas. Suno revisa cada subida, lo que puede tardar uno o dos minutos, y puede rechazar música protegida por derechos de autor. Los límites de duración son los de tu plan."
+ "Library menu, Upload a song (Alt+U on the Library page), sends an audio file from this computer to your Suno account, where it becomes a song you can play, extend, cover and remaster. MP3, M4A, WAV, FLAC, OGG and AAC go as they are; WMA and other files Windows can play are converted to M4A first. You can add its lyrics. You confirm you have the rights to it and accept Suno's upload terms. Suno checks each upload, which can take a minute or two, and may refuse copyrighted music. The length limits are your plan's.": [
+  "Meniul Bibliotecă, Încarcă o melodie (Alt+C în pagina Bibliotecă), trimite un fișier audio de pe acest calculator în contul tău Suno, unde devine o melodie pe care o poți asculta, extinde, face cover și remasteriza. MP3, M4A, WAV, FLAC, OGG și AAC se trimit așa cum sunt; WMA și alte fișiere pe care Windows le poate reda sunt întâi convertite în M4A. Poți adăuga versurile. Confirmi că ai drepturile și accepți condițiile Suno pentru încărcări. Suno verifică fiecare încărcare, ceea ce poate dura un minut sau două, și poate refuza muzica protejată de drepturi de autor. Limitele de durată sunt cele ale planului tău.",
+  "Меню «Бібліотека», «Надіслати пісню» (Alt+Н на сторінці «Бібліотека») надсилає аудіофайл із цього комп'ютера у ваш обліковий запис Suno, де він стає піснею, яку можна слухати, продовжувати, робити кавери й ремастери. MP3, M4A, WAV, FLAC, OGG і AAC надсилаються як є; WMA та інші файли, які може відтворити Windows, спершу перетворюються на M4A. Можна додати текст. Ви підтверджуєте, що маєте права, і приймаєте умови Suno щодо надсилання. Suno перевіряє кожен файл, що може тривати хвилину-дві, і може відхилити музику, захищену авторським правом. Обмеження тривалості залежать від вашого плану.",
+  "Menú Biblioteca, Subir una canción (Alt+U en la página Biblioteca), envía un archivo de audio de esta computadora a tu cuenta de Suno, donde se convierte en una canción que puedes escuchar, extender, versionar y remasterizar. MP3, M4A, WAV, FLAC, OGG y AAC se envían tal cual; WMA y otros archivos que Windows puede reproducir se convierten primero a M4A. Puedes añadir la letra. Confirmas que tienes los derechos y aceptas los términos de Suno para subidas. Suno revisa cada subida, lo que puede tardar uno o dos minutos, y puede rechazar música protegida por derechos de autor. Los límites de duración son los de tu plan."
  ],
  "Clean-up": [
   "Curățare",
@@ -1573,6 +1708,181 @@
   "Se remasterizează {0}.",
   "Роблю ремастер «{0}».",
   "Remasterizando {0}."
+ ],
+ "_Speed in percent: 100 is as it is, 50 is half speed, 200 is double": [
+  "_Viteza în procente: 100 e neschimbată, 50 e jumătate, 200 e dublu",
+  "_Швидкість у відсотках: 100 — без змін, 50 — удвічі повільніше, 200 — удвічі швидше",
+  "_Velocidad en porcentaje: 100 es igual, 50 es la mitad, 200 es el doble"
+ ],
+ "_Keep the pitch (otherwise it gets higher when faster, like a tape)": [
+  "Păstrează t_onalitatea (altfel devine mai înaltă când e mai rapidă, ca o casetă)",
+  "_Зберегти висоту тону (інакше швидше звучить вище, як на касеті)",
+  "_Mantener el tono (si no, se vuelve más agudo al acelerar, como una cinta)"
+ ],
+ "Makes a new song from {0} at another speed. Leave the title empty for one that says the speed.": [
+  "Face o melodie nouă din {0} la altă viteză. Lasă titlul gol pentru unul care spune viteza.",
+  "Створює нову пісню з {0} з іншою швидкістю. Залиште назву порожньою, і вона скаже швидкість.",
+  "Crea una canción nueva a partir de {0} a otra velocidad. Deja el título vacío para uno que diga la velocidad."
+ ],
+ "Change the speed of {0}": [
+  "Schimbă viteza pentru {0}",
+  "Змінити швидкість {0}",
+  "Cambiar la velocidad de {0}"
+ ],
+ "Change speed": [
+  "Schimbă viteza",
+  "Змінити швидкість",
+  "Cambiar velocidad"
+ ],
+ "Choose a speed other than 100.": [
+  "Alege o viteză diferită de 100.",
+  "Виберіть швидкість, відмінну від 100.",
+  "Elige una velocidad distinta de 100."
+ ],
+ "Changing the speed of {0}.": [
+  "Se schimbă viteza pentru {0}.",
+  "Змінюю швидкість {0}.",
+  "Cambiando la velocidad de {0}."
+ ],
+ "Reversed": [
+  "Inversată",
+  "Задом наперед",
+  "Invertida"
+ ],
+ "Reverse {0}": [
+  "Inversează {0}",
+  "Задом наперед: {0}",
+  "Invertir {0}"
+ ],
+ "Makes a new song from {0} played backwards.": [
+  "Face o melodie nouă din {0} redată de la coadă la cap.",
+  "Створює нову пісню з {0}, що звучить задом наперед.",
+  "Crea una canción nueva a partir de {0} reproducida al revés."
+ ],
+ "Reverse": [
+  "Inversează",
+  "Задом наперед",
+  "Invertir"
+ ],
+ "Reversing {0}.": [
+  "Se inversează {0}.",
+  "Перевертаю {0}.",
+  "Invirtiendo {0}."
+ ],
+ "Keep only this part": [
+  "Păstrează doar această parte",
+  "Залишити тільки цю частину",
+  "Conservar solo esta parte"
+ ],
+ "Take this part out": [
+  "Scoate această parte",
+  "Вирізати цю частину",
+  "Quitar esta parte"
+ ],
+ "_From (seconds, or minutes:seconds)": [
+  "_De la (secunde, sau minute:secunde)",
+  "_Від (секунди або хвилини:секунди)",
+  "_Desde (segundos, o minutos:segundos)"
+ ],
+ "_To (seconds, or minutes:seconds)": [
+  "_Până la (secunde, sau minute:secunde)",
+  "_До (секунди або хвилини:секунди)",
+  "_Hasta (segundos, o minutos:segundos)"
+ ],
+ "_What to do with that part": [
+  "_Ce faci cu acea parte",
+  "_Що зробити з цією частиною",
+  "_Qué hacer con esa parte"
+ ],
+ "T_itle (empty says what was done)": [
+  "T_itlu (gol spune ce s-a făcut)",
+  "Н_азва (порожня каже, що зроблено)",
+  "Tít_ulo (vacío dice lo que se hizo)"
+ ],
+ "Makes a new song from {0} ({1}): keep only the part between From and To, or take that part out.": [
+  "Face o melodie nouă din {0} ({1}): păstrează doar partea dintre De la și Până la, sau scoate acea parte.",
+  "Створює нову пісню з {0} ({1}): залишає тільки частину між Від і До або вирізає її.",
+  "Crea una canción nueva a partir de {0} ({1}): conserva solo la parte entre Desde y Hasta, o quita esa parte."
+ ],
+ "Crop {0}": [
+  "Taie {0}",
+  "Обрізати {0}",
+  "Recortar {0}"
+ ],
+ "Crop": [
+  "Taie",
+  "Обрізати",
+  "Recortar"
+ ],
+ "To must be later than From.": [
+  "Până la trebuie să fie după De la.",
+  "До має бути пізніше, ніж Від.",
+  "Hasta debe ser después de Desde."
+ ],
+ "Section removed": [
+  "Parte scoasă",
+  "Частину вирізано",
+  "Sección quitada"
+ ],
+ "Cropped": [
+  "Tăiată",
+  "Обрізано",
+  "Recortada"
+ ],
+ "Cropping {0}.": [
+  "Se taie {0}.",
+  "Обрізаю {0}.",
+  "Recortando {0}."
+ ],
+ "Fade _in over this many seconds (empty for none)": [
+  "Estompare la _început pe atâtea secunde (gol pentru deloc)",
+  "Наростання на _початку, стільки секунд (порожньо — без нього)",
+  "Fundido de _entrada en estos segundos (vacío para ninguno)"
+ ],
+ "Fade _out over this many seconds (empty for none)": [
+  "Estompare la _sfârșit pe atâtea secunde (gol pentru deloc)",
+  "Затухання в _кінці, стільки секунд (порожньо — без нього)",
+  "Fundido de _salida en estos segundos (vacío para ninguno)"
+ ],
+ "_Title (empty says what was done)": [
+  "_Titlu (gol spune ce s-a făcut)",
+  "_Назва (порожня каже, що зроблено)",
+  "_Título (vacío dice lo que se hizo)"
+ ],
+ "Makes a new song from {0} that fades in at the start, out at the end, or both.": [
+  "Face o melodie nouă din {0} care crește treptat la început, scade la sfârșit, sau ambele.",
+  "Створює нову пісню з {0}, що плавно наростає на початку, затихає в кінці або і те, і те.",
+  "Crea una canción nueva a partir de {0} que entra con fundido al inicio, sale con fundido al final, o ambas."
+ ],
+ "Fade {0}": [
+  "Estompare: {0}",
+  "Наростання й затухання: {0}",
+  "Fundido: {0}"
+ ],
+ "Fade": [
+  "Estompare",
+  "Наростання й затухання",
+  "Fundido"
+ ],
+ "Give a fade in, a fade out, or both.": [
+  "Dă o estompare la început, la sfârșit, sau ambele.",
+  "Вкажіть наростання, затухання або обидва.",
+  "Indica un fundido de entrada, de salida o ambos."
+ ],
+ "Fade in": [
+  "Estompare la început",
+  "Наростання",
+  "Fundido de entrada"
+ ],
+ "Fade out": [
+  "Estompare la sfârșit",
+  "Затухання",
+  "Fundido de salida"
+ ],
+ "Fading {0}.": [
+  "Se aplică estomparea pe {0}.",
+  "Додаю наростання чи затухання до {0}.",
+  "Aplicando el fundido a {0}."
  ],
  "Splitting into stems: {0}.": [
   "Se împarte în stem-uri: {0}.",
@@ -2144,6 +2454,591 @@
   "Не вдається використати папку завантажень. Перевірте її в Налаштуваннях.",
   "No se puede usar la carpeta de descargas. Revísala en Configuración."
  ],
+ "Suggest songs like this a_gain": [
+  "Sugerea_ză din nou melodii ca ea",
+  "Знову _радити схожі",
+  "Sugerir canciones como esta otra _vez"
+ ],
+ "Not interes_ted: fewer like this": [
+  "Nu mă intere_sează: mai puține ca ea",
+  "Не _цікаво: менше схожих",
+  "No me in_teresa: menos como esta"
+ ],
+ "Hide the list of re_mixes": [
+  "Ascunde lista de _remixuri",
+  "Сховати список _реміксів",
+  "Ocultar la lista de _remixes"
+ ],
+ "Show the list of re_mixes": [
+  "Arată lista de _remixuri",
+  "Показати список _реміксів",
+  "Mostrar la lista de _remixes"
+ ],
+ "Restore from tr_ash": [
+  "Resta_urează din coș",
+  "Поверн_ути з кошика",
+  "Restaurar de la papelera (_borrar)"
+ ],
+ "Move to tr_ash": [
+  "M_ută în coș",
+  "_У кошик",
+  "_Borrar (a la papelera)"
+ ],
+ "Suno will suggest fewer songs like {0}.": [
+  "Suno va sugera mai puține melodii ca {0}.",
+  "Suno радитиме менше пісень, схожих на {0}.",
+  "Suno sugerirá menos canciones como {0}."
+ ],
+ "Suno may suggest songs like {0} again.": [
+  "Suno poate sugera din nou melodii ca {0}.",
+  "Suno знову може радити пісні, схожі на {0}.",
+  "Suno puede volver a sugerir canciones como {0}."
+ ],
+ "The song's page now lists its remixes.": [
+  "Pagina melodiei își arată acum remixurile.",
+  "Сторінка пісні тепер показує її ремікси.",
+  "La página de la canción ahora muestra sus remixes."
+ ],
+ "The song's page no longer lists its remixes.": [
+  "Pagina melodiei nu își mai arată remixurile.",
+  "Сторінка пісні більше не показує її ремікси.",
+  "La página de la canción ya no muestra sus remixes."
+ ],
+ "Remixes and covers: {0} or more.": [
+  "Remixuri și coveruri: {0} sau mai multe.",
+  "Реміксів і каверів: {0} або більше.",
+  "Remixes y versiones: {0} o más."
+ ],
+ "Suno didn't say how many remixes it has.": [
+  "Suno nu a spus câte remixuri are.",
+  "Suno не сказав, скільки в неї реміксів.",
+  "Suno no dijo cuántos remixes tiene."
+ ],
+ "It credits no other songs.": [
+  "Nu menționează alte melodii.",
+  "Вона не згадує інших пісень.",
+  "No acredita otras canciones."
+ ],
+ "deleted": [
+  "ștearsă",
+  "видалена",
+  "eliminada"
+ ],
+ "Credits for {0}. Enter plays a credited song.": [
+  "Credite pentru {0}. Enter redă o melodie menționată.",
+  "Джерела {0}. Enter відтворює згадану пісню.",
+  "Créditos de {0}. Enter reproduce una canción acreditada."
+ ],
+ "No stems have been made from {0} yet. Stems, under Make from it, makes them.": [
+  "Încă nu s-au făcut stem-uri din {0}. Stem-uri, din Creează din el, le face.",
+  "Зі {0} ще не зроблено стемів. Їх робить «Стеми» у «Створити з неї».",
+  "Aún no se han hecho stems de {0}. Stems, en Crear a partir de ella, los crea."
+ ],
+ "Stems of {0}": [
+  "Stem-urile pentru {0}",
+  "Стеми {0}",
+  "Stems de {0}"
+ ],
+ "Restored {0} from the trash.": [
+  "{0} a fost restaurat din coșul de gunoi.",
+  "{0} відновлено з кошика.",
+  "{0} se restauró de la papelera."
+ ],
+ "Only songs in the trash can be deleted for good. Move it to the trash first.": [
+  "Doar melodiile din coșul de gunoi pot fi șterse definitiv. Mut-o întâi în coș.",
+  "Назавжди можна видалити лише пісні з кошика. Спершу перемістіть її в кошик.",
+  "Solo se pueden eliminar para siempre las canciones de la papelera. Muévela primero a la papelera."
+ ],
+ "Delete \"{0}\" for good? This can't be undone.": [
+  "Ștergi definitiv „{0}”? Nu se poate anula.",
+  "Видалити «{0}» назавжди? Це не можна скасувати.",
+  "¿Eliminar «{0}» para siempre? No se puede deshacer."
+ ],
+ "Delete forever": [
+  "Șterge definitiv",
+  "Видалити назавжди",
+  "Eliminar para siempre"
+ ],
+ "Deleted {0} for good.": [
+  "{0} a fost șters definitiv.",
+  "{0} видалено назавжди.",
+  "{0} se eliminó para siempre."
+ ],
+ "A picture from this computer": [
+  "O imagine de pe acest calculator",
+  "Зображення з цього комп'ютера",
+  "Una imagen de esta computadora"
+ ],
+ "A picture Suno draws from your description": [
+  "O imagine desenată de Suno după descrierea ta",
+  "Малюнок, який Suno намалює за вашим описом",
+  "Una imagen que Suno dibuja según tu descripción"
+ ],
+ "Suno's own cover again": [
+  "Din nou coperta lui Suno",
+  "Знову обкладинка від Suno",
+  "De nuevo la portada de Suno"
+ ],
+ "_New cover": [
+  "Copertă _nouă",
+  "_Нова обкладинка",
+  "_Nueva portada"
+ ],
+ "_Description, for a picture Suno draws": [
+  "_Descriere, pentru o imagine desenată de Suno",
+  "_Опис малюнка, який намалює Suno",
+  "_Descripción, para una imagen que dibuja Suno"
+ ],
+ "Cover picture of {0}": [
+  "Imaginea de copertă pentru {0}",
+  "Обкладинка {0}",
+  "Portada de {0}"
+ ],
+ "Changes the picture Suno shows for this song.": [
+  "Schimbă imaginea pe care Suno o arată pentru această melodie.",
+  "Змінює зображення, яке Suno показує для цієї пісні.",
+  "Cambia la imagen que Suno muestra para esta canción."
+ ],
+ "Change": [
+  "Schimbă",
+  "Змінити",
+  "Cambiar"
+ ],
+ "Sending the picture.": [
+  "Se trimite imaginea.",
+  "Надсилаю зображення.",
+  "Enviando la imagen."
+ ],
+ "Describe the picture first.": [
+  "Descrie întâi imaginea.",
+  "Спершу опишіть зображення.",
+  "Describe primero la imagen."
+ ],
+ "Suno is drawing the picture.": [
+  "Suno desenează imaginea.",
+  "Suno малює зображення.",
+  "Suno está dibujando la imagen."
+ ],
+ "{0} has Suno's own cover again.": [
+  "{0} are din nou coperta lui Suno.",
+  "{0} знову має обкладинку від Suno.",
+  "{0} vuelve a tener la portada de Suno."
+ ],
+ "{0} has its new cover.": [
+  "{0} are coperta nouă.",
+  "{0} має нову обкладинку.",
+  "{0} tiene su nueva portada."
+ ],
+ "Making the video for {0}. You'll hear when it's ready.": [
+  "Se face videoclipul pentru {0}. Vei auzi când e gata.",
+  "Роблю відео для {0}. Ви почуєте, коли воно буде готове.",
+  "Creando el video de {0}. Oirás cuando esté listo."
+ ],
+ "Suno couldn't make the video for {0}.": [
+  "Suno nu a putut face videoclipul pentru {0}.",
+  "Suno не зміг зробити відео для {0}.",
+  "Suno no pudo crear el video de {0}."
+ ],
+ "The video for {0} is ready. Download video saves it.": [
+  "Videoclipul pentru {0} e gata. Descarcă video îl salvează.",
+  "Відео для {0} готове. «Завантажити відео» збереже його.",
+  "El video de {0} está listo. Descargar video lo guarda."
+ ],
+ "The video for {0} is taking long. Check again later with Download video.": [
+  "Videoclipul pentru {0} durează mult. Verifică mai târziu cu Descarcă video.",
+  "Відео для {0} робиться довго. Перевірте пізніше через «Завантажити відео».",
+  "El video de {0} está tardando. Vuelve a comprobarlo luego con Descargar video."
+ ],
+ "_Name": [
+  "_Nume",
+  "_Назва",
+  "_Nombre"
+ ],
+ "_Description (the voice and style, for example)": [
+  "_Descriere (vocea și stilul, de exemplu)",
+  "_Опис (голос і стиль, наприклад)",
+  "_Descripción (la voz y el estilo, por ejemplo)"
+ ],
+ "_Public: others can use it too": [
+  "_Public: îl pot folosi și alții",
+  "_Публічна: інші теж можуть нею користуватися",
+  "_Pública: otros también pueden usarla"
+ ],
+ "Make a persona from {0}": [
+  "Fă un persona din {0}",
+  "Зробити персону з {0}",
+  "Crear una persona a partir de {0}"
+ ],
+ "A persona keeps this song's voice and style, so new songs, covers and extends can sound like it. Choose it in the Persona box when you make one.": [
+  "Un persona păstrează vocea și stilul acestei melodii, ca melodiile noi, coverurile și extinderile să sune la fel. Alege-l în caseta Persona când faci una.",
+  "Персона зберігає голос і стиль цієї пісні, щоб нові пісні, кавери й продовження звучали так само. Виберіть її в полі «Персона», коли щось створюєте.",
+  "Una persona conserva la voz y el estilo de esta canción, para que las canciones nuevas, versiones y extensiones suenen igual. Elígela en el cuadro Persona al crear una."
+ ],
+ "Make persona": [
+  "Fă persona",
+  "Зробити персону",
+  "Crear persona"
+ ],
+ "Give the persona a name.": [
+  "Dă-i un nume persona-ului.",
+  "Дайте персоні назву.",
+  "Ponle un nombre a la persona."
+ ],
+ "Made the persona {0}.": [
+  "S-a făcut persona {0}.",
+  "Створено персону {0}.",
+  "Se creó la persona {0}."
+ ],
+ "My personas": [
+  "Persona mele",
+  "Мої персони",
+  "Mis personas"
+ ],
+ "Personas I love": [
+  "Persona îndrăgite",
+  "Улюблені персони",
+  "Personas favoritas"
+ ],
+ "Personas I follow": [
+  "Persona pe care le urmăresc",
+  "Персони, за якими я стежу",
+  "Personas que sigo"
+ ],
+ "Personas. Enter opens a list.": [
+  "Persona. Enter deschide o listă.",
+  "Персони. Enter відкриває список.",
+  "Personas. Enter abre una lista."
+ ],
+ "You have no personas yet. Make a persona, under Make from it, makes one from a song.": [
+  "Încă nu ai persona. Fă un persona, din Creează din el, face unul dintr-o melodie.",
+  "У вас ще немає персон. «Зробити персону» у «Створити з неї» робить її з пісні.",
+  "Aún no tienes personas. Crear una persona, en Crear a partir de ella, crea una a partir de una canción."
+ ],
+ "None yet.": [
+  "Niciunul încă.",
+  "Поки немає.",
+  "Ninguna todavía."
+ ],
+ "{0}. Enter for what you can do with one.": [
+  "{0}. Enter pentru ce poți face cu unul.",
+  "{0}. Enter — що з ним можна зробити.",
+  "{0}. Enter para ver qué puedes hacer con uno."
+ ],
+ "Songs made with it": [
+  "Melodii făcute cu el",
+  "Пісні, зроблені з нею",
+  "Canciones hechas con ella"
+ ],
+ "No songs made with {0} yet.": [
+  "Încă nu sunt melodii făcute cu {0}.",
+  "Ще немає пісень, зроблених з {0}.",
+  "Aún no hay canciones hechas con {0}."
+ ],
+ "Songs made with {0}": [
+  "Melodii făcute cu {0}",
+  "Пісні, зроблені з {0}",
+  "Canciones hechas con {0}"
+ ],
+ "Its source song": [
+  "Melodia sursă",
+  "Пісня-джерело",
+  "Su canción de origen"
+ ],
+ "Source song of {0}": [
+  "Melodia sursă pentru {0}",
+  "Пісня-джерело {0}",
+  "Canción de origen de {0}"
+ ],
+ "Stop loving it": [
+  "Nu-l mai îndrăgi",
+  "Прибрати з улюблених",
+  "Quitar de favoritas"
+ ],
+ "Love it": [
+  "Îndrăgește-l",
+  "Додати до улюблених",
+  "Marcar como favorita"
+ ],
+ "You love {0}.": [
+  "Îndrăgești {0}.",
+  "{0} у ваших улюблених.",
+  "{0} está en tus favoritas."
+ ],
+ "You no longer love {0}.": [
+  "Nu mai îndrăgești {0}.",
+  "{0} більше не у ваших улюблених.",
+  "{0} ya no está en tus favoritas."
+ ],
+ "Rename and describe...": [
+  "Redenumește și descrie...",
+  "Перейменувати й описати...",
+  "Renombrar y describir..."
+ ],
+ "Make it private": [
+  "Fă-l privat",
+  "Зробити приватною",
+  "Hacerla privada"
+ ],
+ "Make it public": [
+  "Fă-l public",
+  "Зробити публічною",
+  "Hacerla pública"
+ ],
+ "{0} is private now.": [
+  "{0} e privat acum.",
+  "{0} тепер приватна.",
+  "{0} ahora es privada."
+ ],
+ "{0} is public now.": [
+  "{0} e public acum.",
+  "{0} тепер публічна.",
+  "{0} ahora es pública."
+ ],
+ "Restore from the trash": [
+  "Restaurează din coșul de gunoi",
+  "Відновити з кошика",
+  "Restaurar de la papelera"
+ ],
+ "Move to the trash": [
+  "Mută în coșul de gunoi",
+  "Перемістити в кошик",
+  "Mover a la papelera"
+ ],
+ "Move the persona \"{0}\" to the trash?": [
+  "Muți persona „{0}” în coșul de gunoi?",
+  "Перемістити персону «{0}» у кошик?",
+  "¿Mover la persona «{0}» a la papelera?"
+ ],
+ "Move to trash": [
+  "Mută în coș",
+  "Перемістити в кошик",
+  "Mover a la papelera"
+ ],
+ "Moved {0} to trash.": [
+  "Am mutat {0} în coș.",
+  "«{0}» переміщено в кошик.",
+  "{0} se movió a la papelera."
+ ],
+ "Rename and describe {0}": [
+  "Redenumește și descrie {0}",
+  "Перейменувати й описати {0}",
+  "Renombrar y describir {0}"
+ ],
+ "Save": [
+  "Salvează",
+  "Зберегти",
+  "Guardar"
+ ],
+ "{0} has no public playlists.": [
+  "{0} nu are liste de redare publice.",
+  "У {0} немає публічних плейлистів.",
+  "{0} no tiene listas públicas."
+ ],
+ "Playlists of {0}. Enter for what you can do with one.": [
+  "Listele de redare ale lui {0}. Enter pentru ce poți face cu una.",
+  "Плейлисти {0}. Enter — що з ним можна зробити.",
+  "Listas de {0}. Enter para ver qué puedes hacer con una."
+ ],
+ "Its songs": [
+  "Melodiile ei",
+  "Його пісні",
+  "Sus canciones"
+ ],
+ "{0} is empty.": [
+  "{0} e goală.",
+  "«{0}» порожній.",
+  "{0} está vacía."
+ ],
+ "Like it": [
+  "Apreciaz-o",
+  "Вподобати",
+  "Me gusta"
+ ],
+ "Liked {0}.": [
+  "Ai apreciat {0}.",
+  "Ви вподобали {0}.",
+  "Te gusta {0}."
+ ],
+ "Remove your like": [
+  "Retrage aprecierea",
+  "Прибрати вподобання",
+  "Quitar tu me gusta"
+ ],
+ "Removed your like from {0}.": [
+  "Ai retras aprecierea pentru {0}.",
+  "Вподобання з {0} прибрано.",
+  "Se quitó tu me gusta de {0}."
+ ],
+ "Save it to your library": [
+  "Salveaz-o în biblioteca ta",
+  "Зберегти у вашій бібліотеці",
+  "Guardarla en tu biblioteca"
+ ],
+ "Saved {0} to your library.": [
+  "{0} a fost salvată în biblioteca ta.",
+  "{0} збережено у вашій бібліотеці.",
+  "{0} se guardó en tu biblioteca."
+ ],
+ "Remove it from your library": [
+  "Scoate-o din biblioteca ta",
+  "Прибрати з вашої бібліотеки",
+  "Quitarla de tu biblioteca"
+ ],
+ "Removed {0} from your library.": [
+  "{0} a fost scoasă din biblioteca ta.",
+  "{0} прибрано з вашої бібліотеки.",
+  "{0} se quitó de tu biblioteca."
+ ],
+ "Train a new custom model from a playlist...": [
+  "Antrenează un model personalizat nou dintr-o listă de redare...",
+  "Навчити нову власну модель на плейлисті...",
+  "Entrenar un modelo personalizado nuevo con una lista..."
+ ],
+ "{0}, still training": [
+  "{0}, încă se antrenează",
+  "{0}, ще навчається",
+  "{0}, aún entrenándose"
+ ],
+ "Custom models. Enter for what you can do with one.": [
+  "Modele personalizate. Enter pentru ce poți face cu unul.",
+  "Власні моделі. Enter — що з нею можна зробити.",
+  "Modelos personalizados. Enter para ver qué puedes hacer con uno."
+ ],
+ "Suno is still training it; it shows up in the model list when it's ready.": [
+  "Suno încă îl antrenează; apare în lista de modele când e gata.",
+  "Suno ще навчає її; вона з'явиться в списку моделей, коли буде готова.",
+  "Suno aún lo está entrenando; aparece en la lista de modelos cuando esté listo."
+ ],
+ "Rename...": [
+  "Redenumește...",
+  "Перейменувати...",
+  "Renombrar..."
+ ],
+ "_Name, up to 16 characters": [
+  "_Nume, până la 16 caractere",
+  "_Назва, до 16 символів",
+  "_Nombre, hasta 16 caracteres"
+ ],
+ "Rename {0}": [
+  "Redenumește {0}",
+  "Перейменувати «{0}»",
+  "Cambiar el nombre de {0}"
+ ],
+ "Archive it": [
+  "Arhivează-l",
+  "Архівувати",
+  "Archivarlo"
+ ],
+ "Archive the custom model \"{0}\"? It leaves your model list.": [
+  "Arhivezi modelul personalizat „{0}”? Iese din lista ta de modele.",
+  "Архівувати власну модель «{0}»? Вона зникне з вашого списку моделей.",
+  "¿Archivar el modelo personalizado «{0}»? Saldrá de tu lista de modelos."
+ ],
+ "Archive": [
+  "Arhivează",
+  "Архівувати",
+  "Archivar"
+ ],
+ "Archived {0}.": [
+  "{0} a fost arhivat.",
+  "{0} архівовано.",
+  "{0} se archivó."
+ ],
+ "Put 6 to 100 of your songs in a playlist first; the model learns from them.": [
+  "Pune întâi între 6 și 100 dintre melodiile tale într-o listă de redare; modelul învață din ele.",
+  "Спершу додайте від 6 до 100 своїх пісень у плейлист; модель навчиться на них.",
+  "Pon primero entre 6 y 100 de tus canciones en una lista; el modelo aprende de ellas."
+ ],
+ "_Playlist with the songs to learn from": [
+  "_Lista de redare cu melodiile de învățat",
+  "_Плейлист із піснями для навчання",
+  "_Lista con las canciones de las que aprender"
+ ],
+ "_Base model": [
+  "Model de _bază",
+  "_Базова модель",
+  "Modelo _base"
+ ],
+ "Train a custom model": [
+  "Antrenează un model personalizat",
+  "Навчити власну модель",
+  "Entrenar un modelo personalizado"
+ ],
+ "Suno learns your sound from the finished songs you made in a playlist (6 to 100 of them), and the new model joins your model list when it's trained. Your plan has to include custom models.": [
+  "Suno îți învață sunetul din melodiile tale terminate dintr-o listă de redare (între 6 și 100), iar modelul nou apare în lista ta de modele după antrenare. Planul tău trebuie să includă modele personalizate.",
+  "Suno вивчає ваше звучання з ваших готових пісень у плейлисті (від 6 до 100), і нова модель з'явиться у вашому списку моделей після навчання. Ваш план має включати власні моделі.",
+  "Suno aprende tu sonido de tus canciones terminadas de una lista (entre 6 y 100), y el modelo nuevo se suma a tu lista de modelos cuando termina de entrenarse. Tu plan debe incluir modelos personalizados."
+ ],
+ "Train": [
+  "Antrenează",
+  "Навчити",
+  "Entrenar"
+ ],
+ "Give the model a name.": [
+  "Dă-i un nume modelului.",
+  "Дайте моделі назву.",
+  "Ponle un nombre al modelo."
+ ],
+ "Suno is training {0} on {1} songs. It joins your model list when it's ready.": [
+  "Suno antrenează {0} pe {1} melodii. Apare în lista ta de modele când e gata.",
+  "Suno навчає {0} на {1} піснях. Вона з'явиться у вашому списку моделей, коли буде готова.",
+  "Suno está entrenando {0} con {1} canciones. Se sumará a tu lista de modelos cuando esté listo."
+ ],
+ "_First lyrics": [
+  "_Primele versuri",
+  "_Перший текст",
+  "_Primera letra"
+ ],
+ "_Second lyrics": [
+  "_Celelalte versuri",
+  "_Другий текст",
+  "_Segunda letra"
+ ],
+ "_Mashup (copy it from here)": [
+  "Re_zultatul (copiază-l de aici)",
+  "_Результат (скопіюйте звідси)",
+  "_Mezcla (cópiala de aquí)"
+ ],
+ "Lyrics mashup": [
+  "Combinare de versuri",
+  "Змішування текстів",
+  "Mezcla de letras"
+ ],
+ "Suno writes one set of lyrics from two. Paste or type both, then Mash up; the result appears in the Mashup box.": [
+  "Suno scrie un singur text din două. Lipește sau scrie-le pe amândouă, apoi Combină; rezultatul apare în caseta Rezultatul.",
+  "Suno пише один текст із двох. Вставте або введіть обидва, потім «Змішати»; результат з'явиться в полі «Результат».",
+  "Suno escribe una letra a partir de dos. Pega o escribe ambas y luego Mezclar; el resultado aparece en el cuadro Mezcla."
+ ],
+ "Mash up": [
+  "Combină",
+  "Змішати",
+  "Mezclar"
+ ],
+ "Put lyrics in both boxes first.": [
+  "Pune întâi versuri în ambele casete.",
+  "Спершу введіть тексти в обидва поля.",
+  "Pon primero letra en ambos cuadros."
+ ],
+ "Mashing up the lyrics.": [
+  "Se combină versurile.",
+  "Змішую тексти.",
+  "Mezclando las letras."
+ ],
+ "The mashup is in the Mashup box.": [
+  "Rezultatul e în caseta Rezultatul.",
+  "Результат — у полі «Результат».",
+  "La mezcla está en el cuadro Mezcla."
+ ],
+ "{0} remix or cover.|{0} remixes and covers.": [
+  "{0} remix sau cover.|{0} remixuri și coveruri.|{0} de remixuri și coveruri.",
+  "{0} ремікс чи кавер.|{0} ремікси й кавери.|{0} реміксів і каверів.",
+  "{0} remix o versión.|{0} remixes y versiones."
+ ],
+ "That playlist has {0} finished song of yours; the model needs at least 6.|That playlist has {0} finished songs of yours; the model needs at least 6.": [
+  "Lista are {0} melodie terminată de-a ta; modelul are nevoie de cel puțin 6.|Lista are {0} melodii terminate de-ale tale; modelul are nevoie de cel puțin 6.|Lista are {0} de melodii terminate de-ale tale; modelul are nevoie de cel puțin 6.",
+  "У плейлисті {0} ваша готова пісня; моделі потрібно щонайменше 6.|У плейлисті {0} ваші готові пісні; моделі потрібно щонайменше 6.|У плейлисті {0} ваших готових пісень; моделі потрібно щонайменше 6.",
+  "Esa lista tiene {0} canción tuya terminada; el modelo necesita al menos 6.|Esa lista tiene {0} canciones tuyas terminadas; el modelo necesita al menos 6."
+ ],
  "Details: {0}": [
   "Detalii: {0}",
   "Подробиці: {0}",
@@ -2184,16 +3079,6 @@
   "Перемістити «{0}» у кошик Suno?",
   "¿Mover «{0}» a tu papelera de Suno?"
  ],
- "Move to trash": [
-  "Mută în coș",
-  "Перемістити в кошик",
-  "Mover a la papelera"
- ],
- "Moved {0} to trash.": [
-  "Am mutat {0} în coș.",
-  "«{0}» переміщено в кошик.",
-  "{0} se movió a la papelera."
- ],
  "_Lyrics": [
   "_Versuri",
   "_Текст",
@@ -2208,11 +3093,6 @@
   "Schimbă ce arată Suno pentru melodie. Sunetul rămâne același.",
   "Змінює те, що Suno показує для цієї пісні. Звук лишається тим самим.",
   "Cambia lo que Suno muestra de esta canción. El audio sigue igual."
- ],
- "Save": [
-  "Salvează",
-  "Зберегти",
-  "Guardar"
  ],
  "Saved.": [
   "Salvat.",
@@ -2263,11 +3143,6 @@
   "Neplăcerea pentru {0} a fost anulată.",
   "«Не подобається» для {0} скасовано.",
   "Quitaste «No me gusta» de {0}."
- ],
- "Liked {0}.": [
-  "Ai apreciat {0}.",
-  "Ви вподобали {0}.",
-  "Te gusta {0}."
  ],
  "Disliked {0}.": [
   "Nu-ți place {0}.",
@@ -2384,15 +3259,20 @@
   "Ця пісня триває {0}. Suno приймає з цього облікового запису файли до {1}.",
   "Esa canción dura {0}. Suno acepta subidas de hasta {1} en esta cuenta."
  ],
+ "_Lyrics (optional)": [
+  "_Versuri (opțional)",
+  "_Текст (необов'язково)",
+  "_Letra (opcional)"
+ ],
  "I _own this audio or have the rights to upload it, and I accept Suno's terms for uploads (suno.com/terms)": [
   "Dețin acest audio sau am _drepturile să-l încarc și accept condițiile Suno pentru încărcări (suno.com/terms)",
   "Я власник цього аудіо або _маю права його надіслати й приймаю умови Suno щодо надсилання (suno.com/terms)",
   "Soy dueño de este audio o tengo los _derechos para subirlo, y acepto los términos de Suno para subidas (suno.com/terms)"
  ],
- "Uploads {0} ({1}) to your Suno account, where it becomes a song you can play, extend, cover and remaster. Files that aren't M4A are converted to M4A first. Suno checks each upload and may refuse music it finds is copyrighted.": [
-  "Încarcă {0} ({1}) în contul tău Suno, unde devine o melodie pe care o poți asculta, extinde, face cover și remasteriza. Fișierele care nu sunt M4A sunt întâi convertite în M4A. Suno verifică fiecare încărcare și poate refuza muzica pe care o găsește protejată de drepturi de autor.",
-  "Надсилає {0} ({1}) у ваш обліковий запис Suno, де файл стає піснею, яку можна слухати, продовжувати, робити кавери й ремастери. Файли не в M4A спершу перетворюються на M4A. Suno перевіряє кожен файл і може відхилити музику, захищену авторським правом.",
-  "Sube {0} ({1}) a tu cuenta de Suno, donde se convierte en una canción que puedes escuchar, extender, versionar y remasterizar. Los archivos que no son M4A se convierten primero a M4A. Suno revisa cada subida y puede rechazar música protegida por derechos de autor."
+ "Uploads {0} ({1}) to your Suno account, where it becomes a song you can play, extend, cover and remaster. MP3, M4A, WAV, FLAC, OGG and AAC go as they are; other files are converted to M4A first. Suno checks each upload and may refuse music it finds is copyrighted.": [
+  "Încarcă {0} ({1}) în contul tău Suno, unde devine o melodie pe care o poți asculta, extinde, face cover și remasteriza. MP3, M4A, WAV, FLAC, OGG și AAC se trimit așa cum sunt; celelalte fișiere sunt întâi convertite în M4A. Suno verifică fiecare încărcare și poate refuza muzica pe care o găsește protejată de drepturi de autor.",
+  "Надсилає {0} ({1}) у ваш обліковий запис Suno, де файл стає піснею, яку можна слухати, продовжувати, робити кавери й ремастери. MP3, M4A, WAV, FLAC, OGG і AAC надсилаються як є; інші файли спершу перетворюються на M4A. Suno перевіряє кожен файл і може відхилити музику, захищену авторським правом.",
+  "Sube {0} ({1}) a tu cuenta de Suno, donde se convierte en una canción que puedes escuchar, extender, versionar y remasterizar. MP3, M4A, WAV, FLAC, OGG y AAC se envían tal cual; los demás archivos se convierten primero a M4A. Suno revisa cada subida y puede rechazar música protegida por derechos de autor."
  ],
  "Upload a song": [
   "Încarcă o melodie",
@@ -2619,6 +3499,36 @@
   "Стем_и",
   "_Stems"
  ],
+ "Change s_peed...": [
+  "Schimbă _viteza...",
+  "Змінити _швидкість...",
+  "Cambiar _velocidad..."
+ ],
+ "Re_verse...": [
+  "Inve_rsează...",
+  "_Задом наперед...",
+  "_Invertir..."
+ ],
+ "Cr_op...": [
+  "_Taie...",
+  "_Обрізати...",
+  "_Recortar..."
+ ],
+ "_Fade in or out...": [
+  "Estompare la început sau la _final...",
+  "_Наростання чи затухання...",
+  "_Fundido de entrada o salida..."
+ ],
+ "Make a vi_deo": [
+  "Fă un vi_deoclip",
+  "Зробити _відео",
+  "Crear un vi_deo"
+ ],
+ "Make a pe_rsona...": [
+  "Fă un _persona...",
+  "Зробити _персону...",
+  "Crear una _persona..."
+ ],
  "Similar so_ngs...": [
   "_Melodii asemănătoare...",
   "С_хожі пісні...",
@@ -2638,6 +3548,21 @@
   "Cântecul _original...",
   "_Оригінальна пісня...",
   "Canción _original..."
+ ],
+ "Its _stems...": [
+  "_Stem-urile ei...",
+  "Її _стеми...",
+  "Sus _stems..."
+ ],
+ "Cre_dits and remix count...": [
+  "Cre_dite și număr de remixuri...",
+  "_Джерела й кількість реміксів...",
+  "Cré_ditos y número de remixes..."
+ ],
+ "Creator's play_lists...": [
+  "Listele de redare ale _autorului...",
+  "_Плейлисти автора...",
+  "_Listas del creador..."
  ],
  "S_how comments": [
   "Arată c_omentariile",
@@ -2664,15 +3589,20 @@
   "Змінити _назву й текст...",
   "Editar título _y letra..."
  ],
+ "Co_ver picture...": [
+  "Imagine de c_opertă...",
+  "Ма_люнок обкладинки...",
+  "Imagen de _portada..."
+ ],
  "Add to playli_st...": [
   "_Adaugă la o listă...",
   "Дод_ати до плейлиста...",
   "Añadir a _una lista..."
  ],
- "Move to tr_ash": [
-  "M_ută în coș",
-  "_У кошик",
-  "_Borrar (a la papelera)"
+ "Delete fo_rever...": [
+  "Șterge de_finitiv...",
+  "Видалити назав_жди...",
+  "Eliminar para _siempre..."
  ],
  "_New song...": [
   "Melodie _nouă...",
@@ -2703,6 +3633,21 @@
   "Încarcă o _melodie...",
   "_Надіслати пісню...",
   "S_ubir una canción..."
+ ],
+ "_Personas...": [
+  "_Persona...",
+  "П_ерсони...",
+  "_Personas..."
+ ],
+ "Custom mo_dels...": [
+  "Modele pers_onalizate...",
+  "Власні _моделі...",
+  "_Modelos personalizados..."
+ ],
+ "Lyrics mas_hup...": [
+  "Combinare de _versuri...",
+  "_Змішати тексти...",
+  "Me_zcla de letras..."
  ],
  "E_xit": [
   "_Ieșire",
@@ -3259,16 +4204,6 @@
   "Плейлистів немає.",
   "No hay listas."
  ],
- "{0} is empty.": [
-  "{0} e goală.",
-  "«{0}» порожній.",
-  "{0} está vacía."
- ],
- "_Name": [
-  "_Nume",
-  "_Назва",
-  "_Nombre"
- ],
  "Make playlist": [
   "Fă lista",
   "Створити плейлист",
@@ -3279,15 +4214,60 @@
   "Створено плейлист «{0}».",
   "Se creó la lista {0}."
  ],
+ "Album": [
+  "Album",
+  "Альбом",
+  "Álbum"
+ ],
+ "EP": [
+  "EP",
+  "EP",
+  "EP"
+ ],
  "_Description": [
   "_Descriere",
   "_Опис",
   "_Descripción"
  ],
- "Rename {0}": [
-  "Redenumește {0}",
-  "Перейменувати «{0}»",
-  "Cambiar el nombre de {0}"
+ "_Kind": [
+  "_Tip",
+  "_Вид",
+  "_Tipo"
+ ],
+ "_Publish it now (otherwise it stays a draft on Suno)": [
+  "_Publică-l acum (altfel rămâne ciornă pe Suno)",
+  "Опу_блікувати зараз (інакше лишиться чернеткою на Suno)",
+  "_Publicarlo ahora (si no, queda como borrador en Suno)"
+ ],
+ "Make an album from {0}": [
+  "Fă un album din {0}",
+  "Зробити альбом з {0}",
+  "Hacer un álbum con {0}"
+ ],
+ "Makes an album on Suno with this playlist's songs. Your plan has to allow albums.": [
+  "Face un album pe Suno cu melodiile acestei liste de redare. Planul tău trebuie să permită albume.",
+  "Створює на Suno альбом із піснями цього плейлиста. Ваш план має дозволяти альбоми.",
+  "Crea un álbum en Suno con las canciones de esta lista. Tu plan debe permitir álbumes."
+ ],
+ "Make album": [
+  "Fă albumul",
+  "Зробити альбом",
+  "Crear álbum"
+ ],
+ "Made {0} as a draft, but Suno didn't publish it.": [
+  "{0} a fost făcut ca ciornă, dar Suno nu l-a publicat.",
+  "{0} створено як чернетку, але Suno його не опублікував.",
+  "{0} se creó como borrador, pero Suno no lo publicó."
+ ],
+ "Made and published the album {0}.": [
+  "Albumul {0} a fost făcut și publicat.",
+  "Альбом {0} створено й опубліковано.",
+  "Se creó y publicó el álbum {0}."
+ ],
+ "Made the album {0} as a draft.": [
+  "Albumul {0} a fost făcut ca ciornă.",
+  "Альбом {0} створено як чернетку.",
+  "Se creó el álbum {0} como borrador."
  ],
  "Move the playlist \"{0}\" to the trash? The songs in it stay in your library.": [
   "Muți lista „{0}” în coș? Melodiile din ea rămân în bibliotecă.",
@@ -3934,6 +4914,16 @@
   "_Новий плейлист...",
   "_Nueva lista..."
  ],
+ "Cover _picture...": [
+  "_Copertă...",
+  "_Малюнок обкладинки...",
+  "_Portada..."
+ ],
+ "Make an _album from it...": [
+  "Fă un _album din ea...",
+  "Зробити _альбом з нього...",
+  "_Hacer un álbum con ella..."
+ ],
  "_Songs in this playlist": [
   "Mel_odiile din listă",
   "Пісні _цього плейлиста",
@@ -4023,6 +5013,11 @@
   "Ieșire pentru comutare rapidă, cu Ctrl+Shift+F12",
   "Вихід для швидкого перемикання, Ctrl+Shift+F12",
   "Salida de cambio rápido, para Ctrl+Mayús+F12"
+ ],
+ "Play songs in Tin Pan itself, which starts them sooner (the Suno player takes over when that fails)": [
+  "Redă melodiile chiar în Tin Pan, ca să pornească mai repede (playerul Suno preia când nu merge)",
+  "Відтворювати пісні в самому Tin Pan, щоб вони починалися швидше (коли це не вдається, грає плеєр Suno)",
+  "Reproducir las canciones en el propio Tin Pan, para que empiecen antes (el reproductor de Suno toma el relevo si falla)"
  ],
  "Check for _new versions when Tin Pan starts": [
   "Caută _versiuni noi la pornirea Tin Pan",

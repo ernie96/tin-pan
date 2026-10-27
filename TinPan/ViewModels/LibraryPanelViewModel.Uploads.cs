@@ -45,10 +45,11 @@ namespace TinPan.ViewModels
 
             var name = Path.GetFileNameWithoutExtension(path);
             var title = new TextField(T("_Title"), name, maxLength: 100);
+            var lyrics = new TextField(T("_Lyrics (optional)"), "", multiline: true);
             var rights = new CheckField(T("I _own this audio or have the rights to upload it, and I accept Suno's terms for uploads (suno.com/terms)"), false);
-            var intro = T("Uploads {0} ({1}) to your Suno account, where it becomes a song you can play, extend, cover and remaster. Files that aren't M4A are converted to M4A first. Suno checks each upload and may refuse music it finds is copyrighted.",
+            var intro = T("Uploads {0} ({1}) to your Suno account, where it becomes a song you can play, extend, cover and remaster. MP3, M4A, WAV, FLAC, OGG and AAC go as they are; other files are converted to M4A first. Suno checks each upload and may refuse music it finds is copyrighted.",
                 Path.GetFileName(path), SunoClip.FormatTime(length.Value));
-            if (!_dialogs.ShowForm(T("Upload a song"), intro, T("Upload"), new FormField[] { title, rights })) return;
+            if (!_dialogs.ShowForm(T("Upload a song"), intro, T("Upload"), new FormField[] { title, lyrics, rights })) return;
             if (!rights.Value)
             {
                 Announcer.Announce(T("Nothing was uploaded. Suno needs you to confirm the rights first."), always: true);
@@ -63,7 +64,7 @@ namespace TinPan.ViewModels
             });
             await RunAsync(async () =>
             {
-                var clipId = await _uploads.UploadAsync(path, songTitle, progress);
+                var clipId = await _uploads.UploadAsync(path, songTitle, lyrics.Value, progress);
                 var clips = await _api.GetClipsAsync(new[] { clipId });
                 Upsert(clips);
                 _watcher.Watch(clips);

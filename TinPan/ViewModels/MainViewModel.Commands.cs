@@ -76,6 +76,9 @@ namespace TinPan.ViewModels
             : entry.Command == LibraryVM.ToggleRemixCommand ? LibraryPanelViewModel.RemixLabel(song)
             : entry.Command == LibraryVM.ToggleLikeCommand ? LibraryPanelViewModel.LikeLabel(song)
             : entry.Command == LibraryVM.ToggleDislikeCommand ? LibraryPanelViewModel.DislikeLabel(song)
+            : entry.Command == LibraryVM.NotInterestedCommand ? LibraryVM.NotInterestedLabel(song)
+            : entry.Command == LibraryVM.ToggleShowRemixesCommand ? LibraryPanelViewModel.ShowRemixesLabel(song)
+            : entry.Command == LibraryVM.TrashCommand ? LibraryPanelViewModel.TrashLabel(song)
             : null;
 
         public IReadOnlyList<CommandEntry> Commands => _commands ??= BuildCommands();
@@ -109,6 +112,7 @@ namespace TinPan.ViewModels
                 new("Song", T("_Lyrics"), "Ctrl+L", lib.LyricsCommand),
                 new("Song", T("Li_ke"), "Ctrl+Shift+U", lib.ToggleLikeCommand),
                 new("Song", T("D_islike"), "Ctrl+Shift+N", lib.ToggleDislikeCommand),
+                new("Song", T("Not interes_ted: fewer like this"), "", lib.NotInterestedCommand),
                 new("Song", T("_Download..."), "Ctrl+D", lib.DownloadCommand, Submenu: "Download", SeparatorBefore: true),
                 new("Song", T("Download MP_3"), "Ctrl+Shift+D", lib.DownloadMp3Command, Submenu: "Download"),
                 new("Song", T("Download _WAV"), "Ctrl+Shift+W", lib.DownloadWavCommand, HeaderPath: nameof(LibraryPanelViewModel.WavMenuText), Submenu: "Download"),
@@ -119,19 +123,31 @@ namespace TinPan.ViewModels
                 new("Song", T("Re_master..."), "Ctrl+Shift+M", lib.RemasterCommand, HeaderPath: nameof(LibraryPanelViewModel.RemasterMenuText), Submenu: "Make"),
                 new("Song", T("_Get whole song"), "Ctrl+J", lib.WholeSongCommand, Submenu: "Make"),
                 new("Song", T("S_tems"), "Ctrl+Shift+S", lib.StemsCommand, Submenu: "Make"),
+                new("Song", T("Change s_peed..."), "", lib.ChangeSpeedCommand, Submenu: "Make", SeparatorBefore: true),
+                new("Song", T("Re_verse..."), "", lib.ReverseCommand, Submenu: "Make"),
+                new("Song", T("Cr_op..."), "", lib.CropCommand, Submenu: "Make"),
+                new("Song", T("_Fade in or out..."), "", lib.FadeCommand, Submenu: "Make"),
+                new("Song", T("Make a vi_deo"), "", lib.MakeVideoCommand, Submenu: "Make", SeparatorBefore: true),
+                new("Song", T("Make a pe_rsona..."), "", lib.MakePersonaCommand, Submenu: "Make"),
                 new("Song", T("Similar so_ngs..."), "Ctrl+M", lib.SimilarCommand, Submenu: "Related"),
                 new("Song", T("_Creator's songs..."), "Ctrl+U", lib.CreatorCommand, Submenu: "Related"),
                 new("Song", T("Covers and _remixes of it..."), "Ctrl+Shift+O", lib.RemixesCommand, Submenu: "Related"),
                 new("Song", T("_Original song..."), "Ctrl+O", lib.OriginalCommand, Submenu: "Related"),
+                new("Song", T("Its _stems..."), "", lib.ExistingStemsCommand, Submenu: "Related"),
+                new("Song", T("Cre_dits and remix count..."), "", lib.CreditsCommand, Submenu: "Related"),
+                new("Song", T("Creator's play_lists..."), "", lib.CreatorPlaylistsCommand, Submenu: "Related"),
                 new("Song", T("S_how comments"), "Ctrl+K", lib.CommentsCommand, Submenu: "Comments"),
                 new("Song", T("_Write a comment..."), "Ctrl+Shift+K", lib.WriteCommentCommand, Submenu: "Comments"),
                 new("Song", T("Copy l_ink"), "Ctrl+C", lib.CopyLinkCommand, Submenu: "Share"),
                 new("Song", T("Copy Suno share lin_k"), "Ctrl+Shift+L", lib.ShareLinkCommand, Submenu: "Share"),
                 new("Song", T("Make p_ublic"), "Ctrl+Shift+P", lib.ToggleVisibilityCommand, Submenu: "Share"),
                 new("Song", T("Stop remi_xes"), "Ctrl+Shift+X", lib.ToggleRemixCommand, Submenu: "Share"),
+                new("Song", T("Show the list of re_mixes"), "", lib.ToggleShowRemixesCommand, Submenu: "Share"),
                 new("Song", T("Edit title and l_yrics..."), "Ctrl+T", lib.EditCommand, SeparatorBefore: true),
+                new("Song", T("Co_ver picture..."), "", lib.CoverPictureCommand),
                 new("Song", T("Add to playli_st..."), "Ctrl+P", lib.AddToPlaylistCommand),
                 new("Song", T("Move to tr_ash"), "Delete", lib.TrashCommand),
+                new("Song", T("Delete fo_rever..."), "Shift+Delete", lib.DeleteForeverCommand),
 
                 new("Library", T("_New song..."), "Ctrl+N", OpenCreateCommand),
                 new("Library", T("_Refresh"), "F5", RefreshCommand, SeparatorBefore: true),
@@ -139,6 +155,9 @@ namespace TinPan.ViewModels
                 new("Library", T("_Filters..."), "", lib.FiltersCommand),
                 new("Library", T("Download _all..."), "", lib.DownloadAllCommand, SeparatorBefore: true),
                 new("Library", T("_Upload a song..."), "", lib.UploadCommand),
+                new("Library", T("_Personas..."), "", lib.PersonasCommand, SeparatorBefore: true),
+                new("Library", T("Custom mo_dels..."), "", lib.CustomModelsCommand),
+                new("Library", T("Lyrics mas_hup..."), "", lib.LyricsMashupCommand),
                 new("Library", T("E_xit"), "Alt+F4", ExitCommand, SeparatorBefore: true),
 
                 new("View", T("_Library"), "Ctrl+1", ShowTabCommand, "0"),

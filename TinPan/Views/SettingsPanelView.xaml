@@ -46,6 +46,7 @@
                 <Label Content="{l:T '_Quick switch output, for Ctrl+Shift+F12'}" Target="{Binding ElementName=secondOutput}" Padding="0,10,0,5"/>
                 <ComboBox x:Name="secondOutput" ItemsSource="{Binding SecondOutputChoices}" SelectedItem="{Binding SecondOutput}"
                           HorizontalAlignment="Left" MinWidth="300" AutomationProperties.Name="{l:T 'Quick switch output, for Ctrl+Shift+F12'}"/>
+                <CheckBox Content="{l:T 'Play songs in Tin Pan itself, which starts them sooner (the Suno player takes over when that fails)'}" IsChecked="{Binding PlayDirectly}" Margin="0,10,0,0"/>
             </StackPanel>
         </GroupBox>
 

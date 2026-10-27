@@ -11,6 +11,9 @@ namespace TinPan.Services
 
         /// <summary>Pause, resume, or start the list's selected song when nothing is playing.</summary>
         void PlayPause();
+
+        /// <summary>The song that plays after the current one, so it can be fetched ahead; null when unknown.</summary>
+        string? UpNextId => null;
     }
 
     public sealed record TrackEndedEventArgs(string ClipId, IPlaybackQueue? Owner);

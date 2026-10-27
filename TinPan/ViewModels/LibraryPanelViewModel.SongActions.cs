@@ -103,6 +103,11 @@ namespace TinPan.ViewModels
         {
             clip ??= SelectedClip;
             if (clip == null) return;
+            if (clip.IsTrashed == true)
+            {
+                await RestoreAsync(clip);
+                return;
+            }
             if (!_dialogs.Confirm(T("Move \"{0}\" to your Suno trash?", clip.DisplayTitle), T("Move to trash"))) return;
 
             if (await RunAsync(() => _api.TrashAsync(clip.Id)))

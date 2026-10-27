@@ -21,14 +21,15 @@ namespace TinPan.Services
         /// Uploads an audio file to the signed-in Suno account and makes a song from it.
         /// Returns the new song's clip id. Throws SunoApiException with a speakable message.
         /// </summary>
-        Task<string> UploadAsync(string path, string title, IProgress<UploadStage>? stage, CancellationToken ct = default);
+        Task<string> UploadAsync(string path, string title, string? lyrics, IProgress<UploadStage>? stage, CancellationToken ct = default);
+
+        /// <summary>Sends a picture (JPG, PNG or WebP) to Suno for a cover; returns the upload's id once Suno approves it.</summary>
+        Task<string> UploadPictureAsync(string path, CancellationToken ct = default);
     }
 
     /// <summary>
-    /// Uploads a song, following Nsomnia/chadvis-projectm-qt's SunoAudioUploadService for the
-    /// transport and Suno's web app for the steps chadvis doesn't cover (see SunoApiService.Uploads).
-    /// chadvis captured only M4A uploads, so anything else is first encoded to AAC M4A with Windows'
-    /// own Media Foundation encoder.
+    /// Uploads a song the way sunox does (see SunoApiService.Uploads). MP3, M4A, WAV, FLAC, OGG and AAC go as
+    /// they are; anything else Windows can read (WMA, say) is first encoded to AAC M4A with its own encoder.
     /// </summary>
     public sealed class UploadService : IUploadService
     {
@@ -67,7 +68,7 @@ namespace TinPan.Services
             }
         }
 
-        public async Task<string> UploadAsync(string path, string title, IProgress<UploadStage>? stage, CancellationToken ct = default)
+        public async Task<string> UploadAsync(string path, string title, string? lyrics, IProgress<UploadStage>? stage, CancellationToken ct = default)
         {
             var info = new FileInfo(path);
             if (!info.Exists || info.Length == 0) throw new SunoApiException(T("That file is empty or missing."));
@@ -77,19 +78,21 @@ namespace TinPan.Services
             var work = Path.Combine(Path.GetTempPath(), "TinPanUpload", Guid.NewGuid().ToString("N"));
             try
             {
-                var m4a = await AsM4aAsync(path, work, ct);
-                var fileName = Path.GetFileNameWithoutExtension(path) + ".m4a";
+                var file = await AsUploadableAsync(path, work, ct);
+                var extension = Path.GetExtension(file).TrimStart('.').ToLowerInvariant();
+                var fileName = Path.GetFileNameWithoutExtension(path) + "." + extension;
 
                 stage?.Report(UploadStage.Sending);
-                var uploadId = await SendWithRetryAsync(m4a, fileName, ct);
+                var uploadId = await SendWithRetryAsync(file, fileName, extension, ct);
                 await _api.FinishAudioUploadAsync(uploadId, fileName, ct);
 
                 stage?.Report(UploadStage.Processing);
-                await WaitForProcessingAsync(uploadId, ct);
+                var processed = await WaitForProcessingAsync(uploadId, ct);
 
                 stage?.Report(UploadStage.Creating);
                 var clipId = await _api.CreateClipFromUploadAsync(uploadId, ct);
-                await _api.NameUploadedSongAsync(clipId, title, ct);
+                var name = string.IsNullOrWhiteSpace(title) ? processed.Title ?? Path.GetFileNameWithoutExtension(path) : title;
+                await _api.NameUploadedSongAsync(clipId, name, lyrics, processed.ImageUrl, ct);
                 Log.Info($"Uploaded {fileName} as clip {clipId}");
                 return clipId;
             }
@@ -100,10 +103,28 @@ namespace TinPan.Services
             }
         }
 
-        /// <summary>An M4A goes as it is; anything else Windows can read is encoded to AAC M4A first.</summary>
-        internal static async Task<string> AsM4aAsync(string path, string work, CancellationToken ct)
+        public async Task<string> UploadPictureAsync(string path, CancellationToken ct = default)
         {
-            if (Path.GetExtension(path).Equals(".m4a", StringComparison.OrdinalIgnoreCase)) return path;
+            var extension = Path.GetExtension(path).TrimStart('.').ToLowerInvariant();
+            if (!SunoApiService.ImageExtensions.Contains(extension))
+                throw new SunoApiException(T("Choose a JPG, PNG or WebP picture."));
+            if (new FileInfo(path).Length > 64L * 1024 * 1024)
+                throw new SunoApiException(T("That picture is too big for Suno."));
+            var ticket = await _api.StartImageUploadAsync(extension == "jpeg" ? "jpg" : extension, ct);
+            var (ok, _, status) = await PostToStorageAsync(ticket, path, Path.GetFileName(path), ct);
+            if (!ok)
+            {
+                Log.Warn($"Picture storage POST failed ({status})");
+                throw new SunoApiException(T("The upload didn't go through. Check your internet connection and try again."));
+            }
+            await _api.FinishImageUploadAsync(ticket.Id, ct);
+            return ticket.Id;
+        }
+
+        /// <summary>A type Suno takes goes as it is; anything else Windows can read is encoded to AAC M4A first.</summary>
+        internal static async Task<string> AsUploadableAsync(string path, string work, CancellationToken ct)
+        {
+            if (SunoApiService.UploadExtensions.Contains(Path.GetExtension(path).TrimStart('.').ToLowerInvariant())) return path;
             Directory.CreateDirectory(work);
             var target = Path.Combine(work, "upload.m4a");
             try
@@ -128,11 +149,11 @@ namespace TinPan.Services
         /// Gets a ticket and POSTs the file to it. A dropped connection or a storage-side error gets one
         /// more try with a fresh ticket, since a signed ticket can't be replayed (chadvis T0035).
         /// </summary>
-        private async Task<string> SendWithRetryAsync(string file, string fileName, CancellationToken ct)
+        private async Task<string> SendWithRetryAsync(string file, string fileName, string extension, CancellationToken ct)
         {
             for (var attempt = 1; ; attempt++)
             {
-                var ticket = await _api.StartAudioUploadAsync(ct);
+                var ticket = await _api.StartAudioUploadAsync(extension, ct);
                 var (ok, transient, status) = await PostToStorageAsync(ticket, file, fileName, ct);
                 if (ok) return ticket.Id;
                 Log.Warn($"Upload storage POST failed ({status}), attempt {attempt}");
@@ -154,7 +175,9 @@ namespace TinPan.Services
             }
             await using var stream = File.OpenRead(file);
             var filePart = new StreamContent(stream);
-            filePart.Headers.ContentType = MediaTypeHeaderValue.TryParse(ticket.Fields["Content-Type"], out var type) ? type : new MediaTypeHeaderValue("audio/mp4");
+            filePart.Headers.ContentType = ticket.Fields.TryGetValue("Content-Type", out var given) && MediaTypeHeaderValue.TryParse(given, out var type)
+                ? type
+                : new MediaTypeHeaderValue("application/octet-stream");
             filePart.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data") { Name = Quote("file"), FileName = Quote(fileName) };
             form.Add(filePart);
 
@@ -180,13 +203,13 @@ namespace TinPan.Services
         private static string Quote(string value) => "\"" + value.Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
 
         /// <summary>Asks every 4 seconds, for up to 5 minutes, until Suno says complete or error (as its web app does).</summary>
-        private async Task WaitForProcessingAsync(string uploadId, CancellationToken ct)
+        private async Task<AudioUploadState> WaitForProcessingAsync(string uploadId, CancellationToken ct)
         {
             var until = DateTime.UtcNow + ProcessingLimit;
             while (true)
             {
                 var state = await _api.GetAudioUploadAsync(uploadId, ct);
-                if (state.Status == "complete") return;
+                if (state.Status == "complete") return state;
                 if (state.Status == "error")
                     throw new SunoApiException(string.IsNullOrWhiteSpace(state.ErrorMessage)
                         ? T("Suno couldn't process the upload.")

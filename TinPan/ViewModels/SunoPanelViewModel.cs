@@ -448,6 +448,7 @@ namespace TinPan.ViewModels
         void IPlaybackQueue.PlayPause() => PlayPauseTrending();
 
         Task IPlaybackQueue.NextAsync() => StepTrendingAsync(+1, T("End of list."));
+        string? IPlaybackQueue.UpNextId => SongQueues.After(Trending, _currentTrending);
 
         Task IPlaybackQueue.PreviousAsync() => StepTrendingAsync(-1, T("First song."));
 

@@ -18,6 +18,7 @@ namespace TinPan.ViewModels
         private readonly IAuthService _auth;
         private readonly IAudioService _audio;
         private readonly IDialogService _dialogs;
+        private readonly IUploadService _uploads;
         private SunoClip? _current;
 
         // The songs of the playlist the current song was started from: looking at another playlist meanwhile
@@ -31,10 +32,11 @@ namespace TinPan.ViewModels
         [ObservableProperty] private Playlist? selectedPlaylist;
         [ObservableProperty] private SunoClip? selectedSong;
 
-        public PlaylistsViewModel(ISunoApiService api, IAuthService auth, IAudioService audio, IDialogService dialogs, IAnnouncer announcer)
+        public PlaylistsViewModel(ISunoApiService api, IAuthService auth, IAudioService audio, IDialogService dialogs, IUploadService uploads, IAnnouncer announcer)
             : base(announcer)
         {
             _api = api;
+            _uploads = uploads;
             _auth = auth;
             _audio = audio;
             _dialogs = dialogs;
@@ -112,6 +114,44 @@ namespace TinPan.ViewModels
         }
 
         [RelayCommand]
+        private async Task CoverPictureAsync()
+        {
+            var p = SelectedPlaylist;
+            if (p == null) return;
+            var path = _dialogs.PickPicture();
+            if (path == null) return;
+            Announcer.Announce(T("Sending the picture."));
+            if (await RunAsync(async () => await _api.SetPlaylistCoverAsync(p.Id, await _uploads.UploadPictureAsync(path))))
+                Announcer.Announce(T("{0} has its new cover.", p.DisplayName));
+        }
+
+        private static (string Key, string Label)[] AlbumKinds => new[] { ("lp", T("Album")), ("ep", T("EP")) };
+
+        /// <summary>An album from the playlist's songs: made as a draft, then published if you choose.</summary>
+        [RelayCommand]
+        private async Task MakeAlbumAsync()
+        {
+            var p = SelectedPlaylist;
+            if (p == null) return;
+            var name = new TextField(T("_Name"), p.Name, maxLength: 80);
+            var description = new TextField(T("_Description"), p.Description, multiline: true);
+            var kind = new ChoiceField(T("_Kind"), AlbumKinds.Select(k => (object)k.Label).ToList(), AlbumKinds[0].Label);
+            var publish = new CheckField(T("_Publish it now (otherwise it stays a draft on Suno)"), false);
+            if (!_dialogs.ShowForm(T("Make an album from {0}", p.DisplayName), T("Makes an album on Suno with this playlist's songs. Your plan has to allow albums."),
+                    T("Make album"), new FormField[] { name, description, kind, publish }) || name.Value.Length == 0) return;
+            var type = AlbumKinds.First(k => k.Label == (string?)kind.Selected).Key;
+            string? id = null;
+            if (!await RunAsync(async () => id = await _api.CreateAlbumAsync(name.Value, description.Value, type, p.Id))) return;
+            if (publish.Value && !await RunAsync(() => _api.PublishAlbumAsync(id!)))
+            {
+                Announcer.Announce(T("Made {0} as a draft, but Suno didn't publish it.", name.Value), interrupt: false);
+                return;
+            }
+            Announcer.Announce(publish.Value ? T("Made and published the album {0}.", name.Value) : T("Made the album {0} as a draft.", name.Value));
+            await LoadAsync(background: true);
+        }
+
+        [RelayCommand]
         private async Task RenameAsync()
         {
             var p = SelectedPlaylist;
@@ -185,6 +225,8 @@ namespace TinPan.ViewModels
         {
             if (!await StepAsync(+1)) Announcer.Announce(T("End of playlist."));
         }
+
+        public string? UpNextId => SongQueues.After(_queue, _current);
 
         public async Task PreviousAsync()
         {

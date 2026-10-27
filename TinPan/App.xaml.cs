@@ -64,7 +64,8 @@ namespace TinPan
             services.AddSingleton<IConfigService, ConfigService>();
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<ISunoApiService, SunoApiService>();
-            services.AddSingleton<IAudioService, SunoWebPlayer>();
+            services.AddSingleton<SunoWebPlayer>();
+            services.AddSingleton<IAudioService, HybridPlayer>();
             services.AddSingleton<ICaptchaSolver, CaptchaSolver>();
             services.AddSingleton<IAnnouncer, ScreenReaderService>();
             services.AddSingleton<IDialogService, DialogService>();

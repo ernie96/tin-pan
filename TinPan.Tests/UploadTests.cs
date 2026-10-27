@@ -39,16 +39,19 @@ namespace TinPan.Tests
             Assert.Throws<SunoApiException>(() => SunoApiService.ParseUploadTicket(Ticket.Replace("\"policy\":\"P\",", "")));
 
         [Fact]
-        public async Task Other_files_are_encoded_to_m4a_and_m4a_goes_as_it_is()
+        public async Task Types_suno_takes_go_as_they_are_and_others_become_m4a()
         {
             var dir = TempDir();
             try
             {
                 var wav = Path.Combine(dir, "song.wav");
                 WriteTestWav(wav, 2);
-                var m4a = await UploadService.AsM4aAsync(wav, Path.Combine(dir, "work"), CancellationToken.None);
+                Assert.Equal(wav, await UploadService.AsUploadableAsync(wav, Path.Combine(dir, "work"), CancellationToken.None));
+                var other = Path.Combine(dir, "song.wave");
+                File.Copy(wav, other);
+                var m4a = await UploadService.AsUploadableAsync(other, Path.Combine(dir, "work2"), CancellationToken.None);
+                Assert.EndsWith(".m4a", m4a);
                 Assert.Equal("ftyp", System.Text.Encoding.ASCII.GetString(File.ReadAllBytes(m4a), 4, 4));
-                Assert.Equal(m4a, await UploadService.AsM4aAsync(m4a, Path.Combine(dir, "work2"), CancellationToken.None));
             }
             finally
             {
@@ -69,20 +72,40 @@ namespace TinPan.Tests
                 var service = new UploadService(api, storage) { PollEvery = TimeSpan.FromMilliseconds(10) };
                 var stages = new List<UploadStage>();
 
-                var clipId = await service.UploadAsync(wav, "My Song", new SyncProgress(stages));
+                var clipId = await service.UploadAsync(wav, "My Song", "La la", new SyncProgress(stages));
 
                 Assert.Equal("clip9", clipId);
                 Assert.Equal(new[] { UploadStage.Preparing, UploadStage.Sending, UploadStage.Processing, UploadStage.Creating }, stages);
                 var fake = (FakeApi)(object)api;
                 Assert.Equal(2, fake.Tickets);                          // a fresh ticket after the 503
-                Assert.Equal(("up2", "My Song.m4a"), fake.Finished);    // finished with the second ticket's id
+                Assert.Equal("wav", fake.Extension);                    // sent as it is
+                Assert.Equal(("up2", "My Song.wav"), fake.Finished);    // finished with the second ticket's id
                 Assert.True(fake.Polls >= 2);                            // waited for "complete"
-                Assert.Equal(("clip9", "My Song"), fake.Named);
+                Assert.Equal(("clip9", "My Song", "La la", "https://cdn/img.jpg"), fake.Named);
                 // The signed fields go before the file, and the file goes as the ticket's Content-Type.
                 var body = storage.LastBody!;
                 Assert.True(body.IndexOf("name=\"policy\"", StringComparison.Ordinal) < body.IndexOf("name=\"file\"", StringComparison.Ordinal));
                 Assert.Contains("Content-Type: audio/mp4", body);
                 Assert.False(Directory.Exists(Path.Combine(Path.GetTempPath(), "TinPanUpload")) && Directory.GetDirectories(Path.Combine(Path.GetTempPath(), "TinPanUpload")).Length > 0);
+            }
+            finally
+            {
+                Directory.Delete(dir, recursive: true);
+            }
+        }
+
+        [Fact]
+        public async Task A_blank_title_takes_the_one_suno_read_from_the_file()
+        {
+            var dir = TempDir();
+            try
+            {
+                var wav = Path.Combine(dir, "a.wav");
+                WriteTestWav(wav, 1);
+                var api = FakeApi.Create();
+                var service = new UploadService(api, new FakeStorage(HttpStatusCode.NoContent)) { PollEvery = TimeSpan.FromMilliseconds(10) };
+                await service.UploadAsync(wav, " ", null, null);
+                Assert.Equal(("clip9", "Tagged Title", null, "https://cdn/img.jpg"), ((FakeApi)(object)api).Named);
             }
             finally
             {
@@ -100,7 +123,7 @@ namespace TinPan.Tests
                 WriteTestWav(wav, 1);
                 var api = FakeApi.Create(failProcessing: true);
                 var service = new UploadService(api, new FakeStorage(HttpStatusCode.NoContent)) { PollEvery = TimeSpan.FromMilliseconds(10) };
-                var ex = await Assert.ThrowsAsync<SunoApiException>(() => service.UploadAsync(wav, "a", null));
+                var ex = await Assert.ThrowsAsync<SunoApiException>(() => service.UploadAsync(wav, "a", null, null));
                 Assert.Contains("copyrighted", ex.Message);
             }
             finally
@@ -155,7 +178,8 @@ namespace TinPan.Tests
         {
             public int Tickets, Polls;
             public (string, string)? Finished;
-            public (string, string)? Named;
+            public (string, string, string?, string?)? Named;
+            public string? Extension;
             private bool _failProcessing;
 
             public static ISunoApiService Create(bool failProcessing = false)
@@ -171,6 +195,7 @@ namespace TinPan.Tests
                 {
                     case nameof(ISunoApiService.StartAudioUploadAsync):
                         Tickets++;
+                        Extension = (string)args![0]!;
                         return Task.FromResult(SunoApiService.ParseUploadTicket(Ticket.Replace("\"up1\"", $"\"up{Tickets}\"")));
                     case nameof(ISunoApiService.FinishAudioUploadAsync):
                         Finished = ((string)args![0]!, (string)args[1]!);
@@ -178,11 +203,11 @@ namespace TinPan.Tests
                     case nameof(ISunoApiService.GetAudioUploadAsync):
                         Polls++;
                         if (_failProcessing) return Task.FromResult(new AudioUploadState("error", null, "This sounds copyrighted."));
-                        return Task.FromResult(new AudioUploadState(Polls < 2 ? "processing" : "complete", null, null));
+                        return Task.FromResult(new AudioUploadState(Polls < 2 ? "processing" : "complete", "Tagged Title", null, "https://cdn/img.jpg"));
                     case nameof(ISunoApiService.CreateClipFromUploadAsync):
                         return Task.FromResult("clip9");
                     case nameof(ISunoApiService.NameUploadedSongAsync):
-                        Named = ((string)args![0]!, (string)args[1]!);
+                        Named = ((string)args![0]!, (string)args[1]!, (string?)args[2], (string?)args[3]);
                         return Task.CompletedTask;
                     default:
                         throw new InvalidOperationException("Unexpected call: " + method.Name);

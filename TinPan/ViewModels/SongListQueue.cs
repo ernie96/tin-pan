@@ -72,6 +72,8 @@ namespace TinPan.ViewModels
             if (!await StepAsync(+1)) _announcer.Announce(T("End of list."));
         }
 
+        public string? UpNextId => SongQueues.After(_songs.ToList(), _current);
+
         public async Task PreviousAsync()
         {
             if (!await StepAsync(-1)) _announcer.Announce(T("First song."));

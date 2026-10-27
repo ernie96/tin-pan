@@ -144,6 +144,29 @@ namespace TinPan.Models
         [JsonPropertyName("max_lengths")]
         public MaxLengths? MaxLengths { get; set; }
 
+        /// <summary>A custom model's own id (rename and archive use it); Suno's models have none.</summary>
+        [JsonPropertyName("id")]
+        public string? Id { get; set; }
+
+        [JsonPropertyName("badges")]
+        public List<string>? Badges { get; set; }
+
+        /// <summary>One of your own custom models, as sunox tells them apart: a chirp-custom key, a custom or training badge, an id.</summary>
+        [JsonIgnore]
+        public bool IsCustom => ExternalKey.StartsWith("chirp-custom", StringComparison.Ordinal) && !string.IsNullOrEmpty(Id)
+            && Badges?.Any(b => b is "custom" or "training") == true;
+
+        /// <summary>Tasks the model does ("all", "vox", "cover"...), as Suno's web helpers read them.</summary>
+        [JsonPropertyName("capabilities")]
+        public List<string>? Capabilities { get; set; }
+
+        /// <summary>
+        /// Whether it can make songs with a voice persona (task "vox"), as sunox checks: "all" or "vox" among its
+        /// capabilities. Null when Suno lists none, so nothing is assumed.
+        /// </summary>
+        [JsonIgnore]
+        public bool? TakesVoicePersonas => Capabilities is { Count: > 0 } c ? c.Contains("all") || c.Contains("vox") : null;
+
         public override string ToString() => string.IsNullOrEmpty(Name) ? ExternalKey : Name;
     }
 

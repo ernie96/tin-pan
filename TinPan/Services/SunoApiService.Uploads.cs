@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
@@ -12,26 +13,30 @@ namespace TinPan.Services
     public sealed record AudioUploadTicket(string Id, Uri Url, IReadOnlyDictionary<string, string> Fields);
 
     /// <summary>An upload's processing state: "complete", "error", or still working.</summary>
-    public sealed record AudioUploadState(string Status, string? Title, string? ErrorMessage);
+    public sealed record AudioUploadState(string Status, string? Title, string? ErrorMessage, string? ImageUrl = null);
 
-    // Uploading audio. The transport (initialize, storage POST, upload-finish) follows
-    // Nsomnia/chadvis-projectm-qt (ENDPOINT-INVENTORY 5.6, SunoAudioUploadService). The steps after it
-    // (processing status, initialize-clip, set_metadata with is_audio_upload_tos_accepted) aren't in
-    // chadvis or the local frontend yet, so they come from Suno's web app.
+    // Uploading audio, as sunox (Nsomnia/sunox-chadvis-suno-frontend-projectm-qt-research, src/workflow/upload.rs)
+    // does it: create with {extension, is_stem_mix, upload_type} for mp3/m4a/wav/flac/ogg/aac as they are, the
+    // storage POST, upload-finish, poll the status, initialize-clip with {user_reviewed_tags: true}, then
+    // set_metadata with the title, lyrics, the cover Suno made and is_audio_upload_tos_accepted.
     public partial class SunoApiService
     {
         /// <summary>The only storage host an upload may go to (chadvis inventory, captured hosts).</summary>
         public const string UploadStorageHost = "suno-uploads.s3.amazonaws.com";
 
-        private static readonly string[] RequiredUploadFields = { "AWSAccessKeyId", "Content-Type", "key", "policy", "signature" };
+        // Content-Type is there for audio, but sunox treats it as optional (image tickets).
+        private static readonly string[] RequiredUploadFields = { "AWSAccessKeyId", "key", "policy", "signature" };
 
-        public async Task<AudioUploadTicket> StartAudioUploadAsync(CancellationToken ct = default)
+        /// <summary>The audio types Suno's web uploader takes as they are; anything else is converted to M4A first.</summary>
+        public static readonly string[] UploadExtensions = { "mp3", "m4a", "wav", "flac", "ogg", "aac" };
+
+        public async Task<AudioUploadTicket> StartAudioUploadAsync(string extension, CancellationToken ct = default)
         {
             string json;
             try
             {
-                // chadvis captured only M4A, so every upload is sent as M4A (UploadService converts the rest).
-                json = await SendAsync(HttpMethod.Post, "/api/uploads/audio/", new { extension = "m4a", upload_type = "file_upload" }, ct);
+                json = await SendAsync(HttpMethod.Post, "/api/uploads/audio/",
+                    new { extension, is_stem_mix = false, upload_type = "file_upload" }, ct);
             }
             catch (SunoApiException ex) when (ex.StatusCode == 423)
             {
@@ -84,21 +89,31 @@ namespace TinPan.Services
         public async Task<AudioUploadState> GetAudioUploadAsync(string uploadId, CancellationToken ct = default)
         {
             var json = await SendAsync(HttpMethod.Get, $"/api/uploads/audio/{Uri.EscapeDataString(uploadId)}/", null, ct);
-            return new AudioUploadState(SunoJson.TryReadString(json, "status") ?? "", SunoJson.TryReadString(json, "title"), SunoJson.TryReadString(json, "error_message"));
+            return new AudioUploadState(SunoJson.TryReadString(json, "status") ?? "", SunoJson.TryReadString(json, "title"),
+                SunoJson.TryReadString(json, "error_message"), SunoJson.TryReadString(json, "image_url"));
         }
 
         /// <summary>Turns a processed upload into a song in the library. Returns its clip id.</summary>
         public async Task<string> CreateClipFromUploadAsync(string uploadId, CancellationToken ct = default)
         {
-            var json = await SendAsync(HttpMethod.Post, $"/api/uploads/audio/{Uri.EscapeDataString(uploadId)}/initialize-clip/", new { }, ct);
-            return SunoJson.TryReadString(json, "clip_id") is { Length: > 0 } clipId
+            var json = await SendAsync(HttpMethod.Post, $"/api/uploads/audio/{Uri.EscapeDataString(uploadId)}/initialize-clip/",
+                new { user_reviewed_tags = true }, ct);
+            // clip_id, or the id of the clip the reply carries.
+            var clipId = SunoJson.TryReadString(json, "clip_id");
+            if (string.IsNullOrEmpty(clipId)) clipId = SunoJson.FindClipsById(json).FirstOrDefault()?.Id;
+            return !string.IsNullOrEmpty(clipId)
                 ? clipId
                 : throw new SunoApiException(T("Suno processed the upload but didn't make a song from it. Refresh the library to check."));
         }
 
         /// <summary>Names the uploaded song and records that the user accepted Suno's upload terms.</summary>
-        public async Task NameUploadedSongAsync(string clipId, string title, CancellationToken ct = default) =>
-            await SendAsync(HttpMethod.Post, $"/api/gen/{Uri.EscapeDataString(clipId)}/set_metadata/",
-                new { title, is_audio_upload_tos_accepted = true }, ct);
+        /// <summary>Title, optional lyrics and the cover Suno made for the upload, with the upload terms accepted.</summary>
+        public async Task NameUploadedSongAsync(string clipId, string title, string? lyrics = null, string? imageUrl = null, CancellationToken ct = default)
+        {
+            var body = new Dictionary<string, object> { ["title"] = title, ["is_audio_upload_tos_accepted"] = true };
+            if (!string.IsNullOrWhiteSpace(lyrics)) body["lyrics"] = lyrics;
+            if (!string.IsNullOrWhiteSpace(imageUrl)) body["image_url"] = imageUrl;
+            await SendAsync(HttpMethod.Post, $"/api/gen/{Uri.EscapeDataString(clipId)}/set_metadata/", body, ct);
+        }
     }
 }

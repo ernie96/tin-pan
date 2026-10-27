@@ -84,6 +84,9 @@ namespace TinPan.Models
         public string DownloadDir { get; set; } = "";
         public float DefaultVolume { get; set; } = 0.8f;
 
+        /// <summary>Play songs in Tin Pan itself (fast); Suno's own hidden player is the fallback, and the only player when off.</summary>
+        public bool PlayDirectly { get; set; } = true;
+
         /// <summary>The output songs play on, by its Windows name; empty is the Windows default.</summary>
         public string OutputDevice { get; set; } = "";
 

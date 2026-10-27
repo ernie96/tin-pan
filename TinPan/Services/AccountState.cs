@@ -26,7 +26,16 @@ namespace TinPan.Services
 
         public string CreditsText => Billing == null ? T("Credits not loaded yet.") : BillingText.Credits(Billing);
 
-        public string SubscriptionText => Billing == null ? T("Plan not loaded yet.") : BillingText.Subscription(Billing);
+        public string SubscriptionText => Billing == null ? T("Plan not loaded yet.")
+            : BillingText.Subscription(Billing) + StylePersonalization switch
+            {
+                true => " " + T("Style ideas and boosts are shaped to your taste."),
+                false => " " + T("Style ideas and boosts aren't shaped to your taste."),
+                null => ""
+            };
+
+        /// <summary>Suno's "personalize styles" setting, read with the plan; null when it didn't say.</summary>
+        public bool? StylePersonalization { get; private set; }
 
         public IReadOnlyList<SunoModel> Models =>
             Billing?.Models.Where(m => m.CanUse && !string.IsNullOrEmpty(m.ExternalKey)).ToList() ?? new List<SunoModel>();
@@ -56,8 +65,13 @@ namespace TinPan.Services
 
         public SunoModel? FindModel(string? key) => Models.FirstOrDefault(m => m.ExternalKey == key);
 
+        /// <summary>The account's own trained custom models.</summary>
+        public IReadOnlyList<SunoModel> CustomModels => Billing?.Models.Where(m => m.IsCustom).ToList() ?? new List<SunoModel>();
+
         public async Task<BillingInfo> RefreshAsync()
         {
+            try { StylePersonalization = await _api.GetStylePersonalizationAsync(); }
+            catch (SunoApiException ex) when (ex is not SunoSignInRequiredException) { Log.Warn($"Personalization setting didn't load: {ex.Message}"); }
             Billing = await _api.GetBillingInfoAsync();
             return Billing;
         }

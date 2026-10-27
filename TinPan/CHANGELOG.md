@@ -1,5 +1,26 @@
 # Tin Pan changelog
 
+## 1.11.0 (2026-10-27)
+
+### New
+
+- Songs start much sooner: Tin Pan plays them itself, fetching the song's file the way the free downloads do, and fetches the next song in the list while the current one plays. Suno's own player takes over for any song that won't play that way. Settings can turn this off.
+- Song menu: Not interested (fewer suggestions like it), Cover picture (your own picture, one Suno draws from a description, or Suno's own), Delete forever (Shift+Delete, for songs in the trash), and Delete on a song in the trash now restores it.
+- Make from it: Make a video, and Make a persona from a song.
+- Related songs: Its stems, Credits and remix count, and the creator's playlists, which you can play, like or save.
+- Sharing: show or hide the list of remixes on the song's page.
+- Library menu: Personas (yours, loved or followed, with their songs, source song, love, rename, public or private, trash), Custom models (train from a playlist, rename, archive) and Lyrics mashup.
+- Playlists tab: Cover picture, and Make an album from it, as a draft or published.
+- Timed lyrics for songs that had none stored: Tin Pan asks Suno to time the song's lyrics.
+- Shift+F2 says whether Suno shapes your style ideas to your taste.
+
+- Change a song into a new one from the Song menu, Make from it: Change speed (keeping the pitch or letting it rise and fall like a tape), Reverse, Crop (keep only a part, or take a part out) and Fade in or out. The original stays as it is, and you hear when the new song is ready.
+- Uploading sends MP3, M4A, WAV, FLAC, OGG and AAC files as they are, instead of converting them all to M4A first. Only WMA and other formats are converted. You can add the lyrics in the upload form, an empty title uses the one in the file, and the cover picture Suno makes for the upload is kept.
+
+### Fixed
+
+- Personas: songs now use the whole source song of the persona, as Suno's site sends it. A persona in the trash or hidden, or one without its source song, is refused with a message saying so, instead of making a song that ignores it. A voice persona on a model too old for voice personas is used as an ordinary persona when it can be.
+
 ## 1.10.2 (2026-10-26)
 
 ### Fixed

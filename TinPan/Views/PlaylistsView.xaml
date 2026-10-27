@@ -38,6 +38,8 @@
                     <MenuItem Header="{l:T '_Open'}" InputGestureText="Enter" Command="{Binding OpenCommand}"/>
                     <MenuItem Header="{l:T '_New playlist...'}" Command="{Binding NewCommand}"/>
                     <MenuItem Header="{l:T 'Rena_me...'}" Command="{Binding RenameCommand}"/>
+                    <MenuItem Header="{l:T 'Cover _picture...'}" Command="{Binding CoverPictureCommand}"/>
+                    <MenuItem Header="{l:T 'Make an _album from it...'}" Command="{Binding MakeAlbumCommand}"/>
                     <MenuItem Header="{l:T '_Delete'}" InputGestureText="Delete" Command="{Binding DeleteCommand}"/>
                     <MenuItem Header="{l:T '_Refresh'}" InputGestureText="F5" Command="{Binding RefreshCommand}"/>
                 </ContextMenu>

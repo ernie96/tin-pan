@@ -21,6 +21,7 @@ namespace TinPan.Models
             AudioUrl = newer.AudioUrl;
             VideoUrl = newer.VideoUrl;
             ImageUrl = newer.ImageUrl;
+            IsTrashed = newer.IsTrashed;
             Status = newer.Status;
             ModelName = newer.ModelName;
             CreatedAt = newer.CreatedAt;
@@ -53,6 +54,10 @@ namespace TinPan.Models
 
         [JsonPropertyName("image_url")]
         public string? ImageUrl { get; set; }
+
+        /// <summary>In the Suno trash (the Library shows these with the trash filter).</summary>
+        [JsonPropertyName("is_trashed")]
+        public bool? IsTrashed { get; set; }
 
         /// <summary>submitted, queued, streaming, complete or error.</summary>
         [JsonPropertyName("status")]
@@ -249,6 +254,10 @@ namespace TinPan.Models
         /// <summary>Whether other people may cover or remix this song.</summary>
         [JsonPropertyName("can_remix")]
         public bool? CanRemix { get; set; }
+
+        /// <summary>Whether the song's page lists its remixes.</summary>
+        [JsonPropertyName("show_remix")]
+        public bool? ShowRemix { get; set; }
 
         [JsonPropertyName("duration")]
         public double? Duration { get; set; }

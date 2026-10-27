@@ -29,7 +29,10 @@ namespace TinPan.Services
                 stats.ValueKind == JsonValueKind.Object ? ReadNumber(stats, "followers_count", "num_followers") : ReadNumber(p, "followers_count", "num_followers"),
                 stats.ValueKind == JsonValueKind.Object ? ReadNumber(stats, "following_count", "num_following") : ReadNumber(p, "following_count", "num_following"),
                 stats.ValueKind == JsonValueKind.Object ? ReadLong(stats, "play_count__sum") : 0,
-                songs);
+                songs,
+                FirstArray(p, "playlists", "user_playlists") is { } lists
+                    ? lists.EnumerateArray().Where(l => l.ValueKind == JsonValueKind.Object).Select(ReadPlaylist).Where(l => l.Id.Length > 0).ToList()
+                    : null);
         }
 
         /// <summary>

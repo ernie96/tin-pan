@@ -273,6 +273,98 @@ namespace TinPan.ViewModels
                 });
         }
 
+        // ── Editing into a new song: speed, reverse, crop, fade ─────────────
+
+        private static string Titled(SunoClip clip, string suffix) =>
+            string.IsNullOrWhiteSpace(clip.Title) ? suffix : $"{clip.Title.Trim()} ({suffix})";
+
+        [RelayCommand]
+        private void ChangeSpeed(SunoClip? clip)
+        {
+            clip ??= SelectedClip;
+            if (clip == null || !Finished(clip)) return;
+            var percent = new NumberField(T("_Speed in percent: 100 is as it is, 50 is half speed, 200 is double"), 100, 25, 400, allowEmpty: false);
+            var keepPitch = new CheckField(T("_Keep the pitch (otherwise it gets higher when faster, like a tape)"), true);
+            var title = new TextField(T("_Title"), "", maxLength: 100);
+            var intro = T("Makes a new song from {0} at another speed. Leave the title empty for one that says the speed.", clip.DisplayTitle);
+            _dialogs.ShowToolForm(T("Change the speed of {0}", clip.DisplayTitle), intro, T("Change speed"), new FormField[] { percent, keepPitch, title }, () =>
+            {
+                var multiplier = Math.Round(percent.Value!.Value / 100, 4);
+                if (multiplier == 1)
+                {
+                    Announcer.Announce(T("Choose a speed other than 100."));
+                    return Task.CompletedTask;
+                }
+                var name = title.Value.Length > 0 ? title.Value : Titled(clip, string.Format(Culture, "{0:0.##}x", multiplier));
+                return StartJobAsync(clip, T("Changing the speed of {0}."), async c => new[] { await _api.ChangeSpeedAsync(c.Id, multiplier, keepPitch.Value, name) });
+            });
+        }
+
+        [RelayCommand]
+        private void Reverse(SunoClip? clip)
+        {
+            clip ??= SelectedClip;
+            if (clip == null || !Finished(clip)) return;
+            var title = new TextField(T("_Title"), Titled(clip, T("Reversed")), maxLength: 100);
+            _dialogs.ShowToolForm(T("Reverse {0}", clip.DisplayTitle), T("Makes a new song from {0} played backwards.", clip.DisplayTitle), T("Reverse"),
+                new FormField[] { title }, () =>
+                {
+                    var name = title.Value.Length > 0 ? title.Value : Titled(clip, T("Reversed"));
+                    return StartJobAsync(clip, T("Reversing {0}."), async c => new[] { await _api.ReverseAsync(c.Id, name) });
+                });
+        }
+
+        private static (bool Remove, string Label)[] CropKinds => new[] { (false, T("Keep only this part")), (true, T("Take this part out")) };
+
+        [RelayCommand]
+        private void Crop(SunoClip? clip)
+        {
+            clip ??= SelectedClip;
+            if (clip == null || !Finished(clip)) return;
+            var length = clip.Duration ?? 0;
+            var max = length > 0 ? length : 3600;
+            var from = new NumberField(T("_From (seconds, or minutes:seconds)"), 0, 0, max, allowEmpty: false, isTime: true);
+            var to = new NumberField(T("_To (seconds, or minutes:seconds)"), length > 0 ? Math.Floor(length) : null, 0, max, allowEmpty: false, isTime: true);
+            var kind = new ChoiceField(T("_What to do with that part"), CropKinds.Select(k => (object)k.Label).ToList(), CropKinds[0].Label);
+            var title = new TextField(T("T_itle (empty says what was done)"), "", maxLength: 100);
+            var intro = T("Makes a new song from {0} ({1}): keep only the part between From and To, or take that part out.",
+                clip.DisplayTitle, SunoClip.FormatTime(TimeSpan.FromSeconds(length)));
+            _dialogs.ShowToolForm(T("Crop {0}", clip.DisplayTitle), intro, T("Crop"), new FormField[] { from, to, kind, title }, () =>
+            {
+                if (to.Value <= from.Value)
+                {
+                    Announcer.Announce(T("To must be later than From."));
+                    return Task.CompletedTask;
+                }
+                var remove = CropKinds.First(k => k.Label == (string?)kind.Selected).Remove;
+                var name = title.Value.Length > 0 ? title.Value : Titled(clip, remove ? T("Section removed") : T("Cropped"));
+                return StartJobAsync(clip, T("Cropping {0}."), async c => new[] { await _api.CropAsync(c.Id, from.Value!.Value, to.Value!.Value, remove, name) });
+            });
+        }
+
+        [RelayCommand]
+        private void Fade(SunoClip? clip)
+        {
+            clip ??= SelectedClip;
+            if (clip == null || !Finished(clip)) return;
+            var fadeIn = new NumberField(T("Fade _in over this many seconds (empty for none)"), null, 0, 60);
+            var fadeOut = new NumberField(T("Fade _out over this many seconds (empty for none)"), 5, 0, 60);
+            var title = new TextField(T("_Title (empty says what was done)"), "", maxLength: 100);
+            var intro = T("Makes a new song from {0} that fades in at the start, out at the end, or both.", clip.DisplayTitle);
+            _dialogs.ShowToolForm(T("Fade {0}", clip.DisplayTitle), intro, T("Fade"), new FormField[] { fadeIn, fadeOut, title }, () =>
+            {
+                double? inS = fadeIn.Value is > 0 ? fadeIn.Value : null, outS = fadeOut.Value is > 0 ? fadeOut.Value : null;
+                if (inS == null && outS == null)
+                {
+                    Announcer.Announce(T("Give a fade in, a fade out, or both."));
+                    return Task.CompletedTask;
+                }
+                var suffix = inS != null && outS != null ? T("Fade") : inS != null ? T("Fade in") : T("Fade out");
+                var name = title.Value.Length > 0 ? title.Value : Titled(clip, suffix);
+                return StartJobAsync(clip, T("Fading {0}."), async c => new[] { await _api.FadeAsync(c.Id, inS, outS, name) });
+            });
+        }
+
         [RelayCommand]
         private Task StemsAsync(SunoClip? clip) => StartJobAsync(clip ?? SelectedClip, T("Splitting into stems: {0}."),
             c => _api.GenerateStemsAsync(c.Id));

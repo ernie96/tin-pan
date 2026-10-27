@@ -6,7 +6,7 @@ namespace TinPan.Models
 {
     /// <summary>A Suno creator's page: GET /api/profiles/{handle}, one page of their public songs.</summary>
     public sealed record CreatorPage(string Handle, string DisplayName, string Description, int TotalSongs, int Followers,
-        int Following, long Plays, IReadOnlyList<SunoClip> Songs)
+        int Following, long Plays, IReadOnlyList<SunoClip> Songs, IReadOnlyList<Playlist>? Playlists = null)
     {
         public string Name => string.IsNullOrWhiteSpace(DisplayName) ? "@" + Handle : $"{DisplayName} (@{Handle})";
 

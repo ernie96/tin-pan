@@ -122,6 +122,18 @@ namespace TinPan.Services
 
         Task<IReadOnlyList<SunoClip>> GenerateStemsAsync(string clipId, CancellationToken ct = default);
 
+        /// <summary>A new song at another speed; keepPitch keeps the key, otherwise it changes like a tape.</summary>
+        Task<SunoClip> ChangeSpeedAsync(string clipId, double multiplier, bool keepPitch, string title, CancellationToken ct = default);
+
+        /// <summary>A new song played backwards.</summary>
+        Task<SunoClip> ReverseAsync(string clipId, string title, CancellationToken ct = default);
+
+        /// <summary>A new song keeping only start..end, or with start..end taken out. Comes back unfinished.</summary>
+        Task<SunoClip> CropAsync(string clipId, double start, double end, bool removeSection, string title, CancellationToken ct = default);
+
+        /// <summary>A new song fading in and/or out over the given seconds. Comes back unfinished.</summary>
+        Task<SunoClip> FadeAsync(string clipId, double? fadeIn, double? fadeOut, string title, CancellationToken ct = default);
+
         /// <summary>Writes lyrics from a topic. Waits until Suno has finished them.</summary>
         Task<LyricsResult> GenerateLyricsAsync(string topic, CancellationToken ct = default);
 
@@ -157,6 +169,52 @@ namespace TinPan.Services
         /// Uses unencrypted progressive CDN file if available, or Suno's Mango DRM unwrap/decrypt pipeline.
         /// </summary>
         Task DownloadClipDirectAsync(SunoClip clip, string destinationPath, CancellationToken ct = default);
+
+        // Songs
+        Task SetNotInterestedAsync(string clipId, bool notInterested, CancellationToken ct = default);
+        Task SetShowRemixesAsync(string clipId, bool show, CancellationToken ct = default);
+        Task<SongCredits> GetCreditsAsync(string clipId, CancellationToken ct = default);
+        Task<IReadOnlyList<SunoClip>> GetExistingStemsAsync(string clipId, CancellationToken ct = default);
+        Task<AlignedLyrics?> AlignLyricsAsync(string clipId, string lyrics, CancellationToken ct = default);
+        Task RestoreFromTrashAsync(string clipId, CancellationToken ct = default);
+        Task DeleteForeverAsync(IReadOnlyList<string> clipIds, CancellationToken ct = default);
+
+        // Pictures and video
+        Task<AudioUploadTicket> StartImageUploadAsync(string extension, CancellationToken ct = default);
+        Task FinishImageUploadAsync(string uploadId, CancellationToken ct = default);
+        Task SetSongCoverAsync(string clipId, string? uploadedImageId, string? imageUrl, CancellationToken ct = default);
+        Task<string> MakePictureAsync(string prompt, CancellationToken ct = default);
+        Task SetPlaylistCoverAsync(string playlistId, string uploadedImageId, CancellationToken ct = default);
+        Task StartVideoAsync(string clipId, CancellationToken ct = default);
+        Task<(string Status, string? VideoUrl)> GetVideoStatusAsync(string clipId, CancellationToken ct = default);
+
+        // Playlists and albums
+        Task SetPlaylistLikedAsync(string playlistId, bool liked, CancellationToken ct = default);
+        Task SetPlaylistSavedAsync(string playlistId, bool saved, CancellationToken ct = default);
+        Task<string> CreateAlbumAsync(string name, string description, string albumType, string? fromPlaylistId, CancellationToken ct = default);
+        Task PublishAlbumAsync(string albumId, CancellationToken ct = default);
+
+        // Personas
+        Task<IReadOnlyList<PersonaDetails>> GetPersonaListAsync(PersonaList list, CancellationToken ct = default);
+        Task<string> CreatePersonaAsync(string rootClipId, string name, string description, bool isPublic, CancellationToken ct = default);
+        Task EditPersonaAsync(string personaId, string name, string description, bool isPublic, CancellationToken ct = default);
+        Task<bool> TogglePersonaLoveAsync(string personaId, CancellationToken ct = default);
+        Task TrashPersonaAsync(string personaId, bool undo, CancellationToken ct = default);
+        Task<IReadOnlyList<SunoClip>> GetPersonaSongsAsync(string personaId, CancellationToken ct = default);
+
+        // Custom models
+        Task<IReadOnlyList<CustomModelBase>> GetCustomModelBasesAsync(CancellationToken ct = default);
+        Task<IReadOnlyList<PendingCustomModel>> GetPendingCustomModelsAsync(CancellationToken ct = default);
+        Task CreateCustomModelAsync(IReadOnlyList<string> clipIds, string name, string? baseModel, CancellationToken ct = default);
+        Task RenameCustomModelAsync(string modelId, string name, CancellationToken ct = default);
+        Task ArchiveCustomModelAsync(string modelId, CancellationToken ct = default);
+
+        // Lyrics mashup and personalization
+        Task<string> MashupLyricsAsync(string first, string second, CancellationToken ct = default);
+        Task<bool?> GetStylePersonalizationAsync(CancellationToken ct = default);
+
+        /// <summary>The song's file, decrypted, for playing it in Tin Pan; uses none of the account's downloads.</summary>
+        Task<byte[]> GetSongAudioAsync(string clipId, CancellationToken ct = default);
 
         // ── Playlists (routes from Suno's web code and chadvis ENDPOINT-INVENTORY.md) ──
 
@@ -223,10 +281,10 @@ namespace TinPan.Services
         /// <summary>Lyric co-writing: Suno changes the lyrics the way the instruction asks. Returns the new lyrics.</summary>
         Task<string> CowriteLyricsAsync(string lyrics, string instruction, string? title, string? style, CancellationToken ct = default);
         // Uploading audio (SunoApiService.Uploads.cs). The storage POST itself is UploadService's.
-        Task<AudioUploadTicket> StartAudioUploadAsync(CancellationToken ct = default);
+        Task<AudioUploadTicket> StartAudioUploadAsync(string extension, CancellationToken ct = default);
         Task FinishAudioUploadAsync(string uploadId, string fileName, CancellationToken ct = default);
         Task<AudioUploadState> GetAudioUploadAsync(string uploadId, CancellationToken ct = default);
         Task<string> CreateClipFromUploadAsync(string uploadId, CancellationToken ct = default);
-        Task NameUploadedSongAsync(string clipId, string title, CancellationToken ct = default);
+        Task NameUploadedSongAsync(string clipId, string title, string? lyrics = null, string? imageUrl = null, CancellationToken ct = default);
     }
 }

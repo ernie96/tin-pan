@@ -28,6 +28,7 @@ namespace TinPan.ViewModels
         [ObservableProperty] private bool saveTimedLyrics;
         [ObservableProperty] private bool saveDetails;
         [ObservableProperty] private bool saveCover;
+        [ObservableProperty] private bool playDirectly;
         [ObservableProperty] private bool checkUpdatesAtStartup;
         [ObservableProperty] private bool readLyricsLive;
         [ObservableProperty] private IReadOnlyList<string> outputChoices = Array.Empty<string>();
@@ -121,6 +122,7 @@ namespace TinPan.ViewModels
             saveTimedLyrics = downloads.SaveTimedLyrics;
             saveDetails = downloads.SaveDetails;
             saveCover = downloads.SaveCover;
+            playDirectly = downloads.PlayDirectly;
             checkUpdatesAtStartup = config.Current.Update.CheckAtStartup;
             _auth.AuthStateChanged += (_, _) => UpdateSignInText();
         }
@@ -167,6 +169,7 @@ namespace TinPan.ViewModels
         partial void OnSaveTimedLyricsChanged(bool value) { _config.Current.Audio.SaveTimedLyrics = value; _config.SaveSoon(); }
         partial void OnSaveDetailsChanged(bool value) { _config.Current.Audio.SaveDetails = value; _config.SaveSoon(); }
         partial void OnSaveCoverChanged(bool value) { _config.Current.Audio.SaveCover = value; _config.SaveSoon(); }
+        partial void OnPlayDirectlyChanged(bool value) { _config.Current.Audio.PlayDirectly = value; _config.SaveSoon(); }
         partial void OnReadLyricsLiveChanged(bool value) => _liveLyrics.Enabled = value;
 
         /// <summary>Lists the outputs Windows has now, keeping a saved one that isn't plugged in.</summary>

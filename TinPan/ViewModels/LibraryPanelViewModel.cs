@@ -398,6 +398,7 @@ namespace TinPan.ViewModels
 
         Task IPlaybackQueue.PreviousAsync() => PreviousAsync();
         Task IPlaybackQueue.NextAsync() => NextAsync();
+        string? IPlaybackQueue.UpNextId => SongQueues.After(Songs, _current);
         void IPlaybackQueue.PlayPause() => PlayPause();
 
         [RelayCommand(AllowConcurrentExecutions = true)]

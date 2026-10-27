@@ -51,13 +51,37 @@ Ctrl+2. The left list is your playlists: Enter opens one, Delete moves it to the
 
 ## Playing and downloads
 
-Since September 2026 Suno encrypts song audio, and only Suno's own player can play it. The app plays songs with that player, signed in as you, in a browser page it keeps out of sight. Focus never moves there, so NVDA stays in the app. Playing is unlimited and uses none of your downloads.
+Since September 2026 Suno encrypts song audio. Tin Pan asks Suno for the song's key, the same way the free downloads do, and plays the file itself with Windows' own audio. That starts a song far sooner than loading Suno's song page, and the next song in the list is fetched while the current one plays, so it starts at once. If a song won't play that way (Suno refuses the key, or Windows can't decode the file), Suno's own player plays it instead, signed in as you, in a browser page the app keeps out of sight; Settings, "Play songs in Tin Pan itself", turns the faster way off. Focus never moves to that page, so NVDA stays in the app. Playing is unlimited and uses none of your downloads. Songs played in Tin Pan itself may not add to Suno's play counts.
+
+## More in the Song and Library menus
+
+- Not interested: Suno suggests fewer songs like it (press again to undo, in the same run).
+- Cover picture: a picture from your computer (JPG, PNG or WebP), one Suno draws from your description, or Suno's own again.
+- Delete forever (Shift+Delete): removes a song that's in the trash for good, after asking. Delete on a song in the trash (Filters, Songs in the trash) restores it.
+- Make from it, Make a video: Suno makes the song's video, and you hear when Download video can save it. Make a persona: a persona from the song, for new songs, covers and extends.
+- Related songs: Its stems (the stems already made from it), Credits and remix count (the songs it credits, and how many remixes and covers it has), Creator's playlists (play, like or save them).
+- Sharing: show or hide the list of remixes on the song's page.
+- Library menu, Personas: yours, the ones you love, and the ones you follow. For each: its songs, its source song, love it, and for your own, rename and describe, public or private, trash or restore.
+- Library menu, Custom models: train one from a playlist of 6 to 100 of your finished songs (your plan has to include custom models), rename or archive the ones you have.
+- Library menu, Lyrics mashup: Suno writes one set of lyrics from two.
+- Playlists tab, Applications key: Cover picture, and Make an album from it (an album or EP, kept as a draft or published).
+- Shift+F2 also says whether Suno shapes style ideas and boosts to your taste.
+- Timed lyrics: when Suno has none stored for a song that has lyrics, Tin Pan asks Suno to time them.
 
 Downloads use each song's own file: the unencrypted one Suno lists in `media_urls` when there is one (it costs no download, and is often an M4A), otherwise `audio_url` as before. WAV uses Suno's WAV conversion. Settings can also save lyrics, timed lyrics (LRC), song details and cover art next to each download. If that fails for a song, the app asks whether to use Suno's own download instead. Suno counts those against your plan's downloads unless you have downloaded that song before. Since 2026-09-09 that includes Suno Studio downloads. Shift+F2 reads how many you have left.
 
 WAV downloads need a Pro or Premier plan. Free plans get a few covers and remasters: the Song menu shows how many are left, and Shift+F2 reads them out. On the free plan they're shown as unavailable. Until the plan has loaded they say "(needs Pro or Premier)".
 
 Extend, Cover, Remaster and Edit open a short form: Tab between fields, Enter on OK, Escape to cancel. If something is wrong, the form says what and puts you back on that field.
+
+The Song menu's Make from it submenu can also change a song into a new one, leaving the original alone:
+
+- Change speed: a percentage (100 is as it is), keeping the pitch or letting it rise and fall like a tape.
+- Reverse: the song played backwards.
+- Crop: keep only the part between two times, or take that part out.
+- Fade in or out: over the seconds you choose, at the start, the end or both.
+
+With a persona, Tin Pan checks it first: a persona in the trash or hidden, or one without its source song, is refused with a clear message instead of making a song that ignores it. A voice persona on a model too old for voice personas is used as an ordinary persona when it has a source song.
 
 ## Creating
 
@@ -120,7 +144,7 @@ Help, **Report a problem** (Ctrl+Shift+B) and **Suggest a feature** (Ctrl+Shift+
 
 ## Uploading songs
 
-Library menu, Upload a song (or the Upload button on the Library page, Alt+U) sends an audio file from your computer to your Suno account. There it becomes a song like any other: play it, extend it, cover it, remaster it. Choose the file, give it a title, and confirm you own it or have the rights to upload it and accept Suno's upload terms; Tin Pan never ticks that for you. MP3, WAV, M4A, FLAC, AAC and WMA all work: anything that isn't M4A is converted to M4A first with Windows' own encoder, because M4A is the upload Suno's web app was captured making. Suno checks every upload, which takes a minute or two, and may refuse music it finds is copyrighted. The shortest and longest upload come from your plan, and Tin Pan checks them before sending.
+Library menu, Upload a song (or the Upload button on the Library page, Alt+U) sends an audio file from your computer to your Suno account. There it becomes a song like any other: play it, extend it, cover it, remaster it. Choose the file, give it a title (leave it empty to use the one in the file), add its lyrics if you like, and confirm you own it or have the rights to upload it and accept Suno's upload terms; Tin Pan never ticks that for you. MP3, M4A, WAV, FLAC, OGG and AAC are sent as they are; WMA and other files Windows can play are converted to M4A first with Windows' own encoder. The cover picture Suno makes for the upload is kept. Suno checks every upload, which takes a minute or two, and may refuse music it finds is copyrighted. The shortest and longest upload come from your plan, and Tin Pan checks them before sending.
 
 ## Clean-up (sunscreen)
 

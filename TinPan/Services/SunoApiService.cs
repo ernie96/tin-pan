@@ -21,7 +21,8 @@ namespace TinPan.Services
     {
 
         private static readonly JsonSerializerOptions JsonOpts = LenientJson.Options(new() { PropertyNameCaseInsensitive = true });
-        private static readonly TimeSpan PollInterval = TimeSpan.FromSeconds(2);
+        internal TimeSpan PollIntervalForTests { get; init; } = TimeSpan.FromSeconds(2);
+        private TimeSpan PollInterval => PollIntervalForTests;
 
         private readonly HttpClient _http;
         private readonly IAuthService _auth;
@@ -37,8 +38,14 @@ namespace TinPan.Services
 
         // ── Account ─────────────────────────────────────────────────────────
 
-        public async Task<BillingInfo> GetBillingInfoAsync(CancellationToken ct = default) =>
-            Deserialize<BillingInfo>(await SendAsync(HttpMethod.Get, "/api/billing/info/", null, ct)) ?? new BillingInfo();
+        public async Task<BillingInfo> GetBillingInfoAsync(CancellationToken ct = default)
+        {
+            var info = Deserialize<BillingInfo>(await SendAsync(HttpMethod.Get, "/api/billing/info/", null, ct)) ?? new BillingInfo();
+            _models = info.Models; // what each model can do, for voice personas
+            return info;
+        }
+
+        private IReadOnlyList<SunoModel> _models = Array.Empty<SunoModel>();
 
         /// <summary>
         /// GET /api/notification/v3?include_hooks=true, what Suno's site reads since 2026-10-24 (chadvis); its
@@ -195,38 +202,79 @@ namespace TinPan.Services
             return clips;
         }
 
+        /// <summary>What a persona needs from get-persona: its source song and whether it's a voice persona.</summary>
+        public sealed record PersonaInfo(string? RootClipId, bool IsVoice, bool IsTrashed, bool IsHidden, double? RootDuration);
+
+        private const string EmptyClipId = "00000000-0000-0000-0000-000000000000";
+
+        /// <summary>Reads get-persona the way sunox does: an empty or all-zero root is no source song; "vox" in any case,
+        /// or is_vox_persona, is a voice persona; the root's length comes from the persona's own clip when it is the root.</summary>
+        public static PersonaInfo ReadPersona(string json)
+        {
+            using var doc = JsonDocument.Parse(json);
+            var r = doc.RootElement;
+            var root = SunoJson.TryReadString(json, "root_clip_id")?.Trim();
+            if (string.IsNullOrEmpty(root) || root == EmptyClipId) root = null;
+            var voice = string.Equals(SunoJson.TryReadString(json, "persona_type"), "vox", StringComparison.OrdinalIgnoreCase)
+                || SunoJson.ReadBool(json, "is_vox_persona") == true;
+            double? duration = null;
+            if (root != null && r.ValueKind == JsonValueKind.Object && r.TryGetProperty("clip", out var clip) && clip.ValueKind == JsonValueKind.Object
+                && clip.TryGetProperty("id", out var id) && id.ValueKind == JsonValueKind.String && id.GetString() == root
+                && clip.TryGetProperty("metadata", out var meta) && meta.ValueKind == JsonValueKind.Object
+                && meta.TryGetProperty("duration", out var d) && d.ValueKind == JsonValueKind.Number && d.GetDouble() is >= 0 and var seconds
+                && double.IsFinite(seconds))
+                duration = seconds;
+            return new PersonaInfo(root, voice, SunoJson.ReadBool(json, "is_trashed") == true, SunoJson.ReadBool(json, "is_hidden") == true, duration);
+        }
+
         /// <summary>
         /// A persona only takes effect with its task and its source song, as Suno's Create page sends them: it reads
-        /// the persona (GET /api/persona/get-persona/{id}/) for root_clip_id and persona_type, then sends task
-        /// "artist_consistency" ("vox" for a voice persona) with artist_clip_id; a cover or extend becomes
-        /// "artist_cover"/"vox_cover" or "artist_extend"/"vox_extend" (Suno's own task list). persona_id alone is
-        /// ignored, and the song comes out as if no persona had been chosen.
+        /// the persona (GET /api/persona/get-persona/{id}/), then sends task "artist_consistency" ("vox" for a voice
+        /// persona) with artist_clip_id and the source song's range, artist_start_s 0 to artist_end_s its length; a
+        /// cover or extend becomes "artist_cover"/"vox_cover" or "artist_extend"/"vox_extend" (Suno's own task list).
+        /// persona_id alone is ignored, and the song comes out as if no persona had been chosen. The checks (trashed or
+        /// hidden, no source song, voice personas on older models) follow sunox's src/commands/create/submit.rs.
         /// </summary>
         private async Task ApplyPersonaAsync(GenerateRequest request, CancellationToken ct)
         {
-            string? root = null, type = null;
+            PersonaInfo persona;
             try
             {
-                var json = await SendAsync(HttpMethod.Get, $"/api/persona/get-persona/{Uri.EscapeDataString(request.PersonaId!)}/", null, ct);
-                root = SunoJson.TryReadString(json, "root_clip_id");
-                type = SunoJson.TryReadString(json, "persona_type");
+                persona = ReadPersona(await SendAsync(HttpMethod.Get, $"/api/persona/get-persona/{Uri.EscapeDataString(request.PersonaId!)}/", null, ct));
             }
-            catch (SunoApiException ex) when (ex is not SunoSignInRequiredException)
+            catch (Exception ex) when (ex is JsonException || ex is SunoApiException and not SunoSignInRequiredException)
             {
                 Log.Warn($"Persona {request.PersonaId} details didn't load ({ex.Message}); sending it without its source song");
+                return;
             }
-            PersonaTask(request, root, type);
-            Log.Info($"Persona {request.PersonaId}: task {request.Task}, source song {(request.ArtistClipId ?? "none")}");
+            if (persona is { RootClipId: { } root, RootDuration: null })
+            {
+                try { persona = persona with { RootDuration = (await GetClipsAsync(new[] { root }, ct)).FirstOrDefault(c => c.Id == root)?.Duration }; }
+                catch (SunoApiException ex) when (ex is not SunoSignInRequiredException) { Log.Warn($"Persona source song length didn't load: {ex.Message}"); }
+            }
+            PersonaTask(request, persona, _models.FirstOrDefault(m => m.ExternalKey == request.Model)?.TakesVoicePersonas);
+            Log.Info($"Persona {request.PersonaId}: task {request.Task}, source song {(request.ArtistClipId ?? "none")} 0 to {request.ArtistEnd?.ToString() ?? "?"} s");
         }
 
-        /// <summary>Sets the persona's task and source song on a request (see ApplyPersonaAsync).</summary>
-        public static void PersonaTask(GenerateRequest request, string? rootClipId, string? personaType)
+        /// <summary>Sets the persona's task, source song and range on a request (see ApplyPersonaAsync).</summary>
+        /// <param name="modelTakesVoice">Whether the chosen model does voice personas; null when Suno didn't say.</param>
+        public static void PersonaTask(GenerateRequest request, PersonaInfo persona, bool? modelTakesVoice = null)
         {
-            var voice = personaType == "vox";
-            request.ArtistClipId ??= string.IsNullOrWhiteSpace(rootClipId) ? null : rootClipId;
-            // An ordinary persona without its source song can't be used as one (Suno's page refuses it too);
-            // the request goes as before rather than half-filled. A voice persona may have none.
-            if (!voice && request.ArtistClipId == null) return;
+            if (persona.IsTrashed || persona.IsHidden)
+                throw new SunoApiException(T("That persona is in the trash or hidden, so Suno can't use it. Choose another persona."));
+            var voice = persona.IsVoice;
+            if (voice && modelTakesVoice == false)
+            {
+                // An older model can't do voice personas; one with a source song still works as an ordinary persona.
+                if (persona.RootClipId == null)
+                    throw new SunoApiException(T("The model you chose can't use voice personas. Choose a newer model."));
+                voice = false;
+            }
+            if (!voice && persona.RootClipId == null)
+                throw new SunoApiException(T("That persona has no source song, so Suno can't use it. Choose another persona."));
+            request.ArtistClipId = persona.RootClipId;
+            request.ArtistStart = 0;
+            request.ArtistEnd = persona.RootClipId == null ? null : persona.RootDuration;
             request.Task = request.Task switch
             {
                 "cover" => voice ? "vox_cover" : "artist_cover",
@@ -307,8 +355,25 @@ namespace TinPan.Services
             throw new SunoApiException(T("Suno took too long writing the lyrics. Try again."));
         }
 
-        public async Task<AlignedLyrics?> GetAlignedLyricsAsync(string clipId, CancellationToken ct = default) =>
-            Deserialize<AlignedLyrics>(await SendAsync(HttpMethod.Get, $"/api/gen/{Uri.EscapeDataString(clipId)}/aligned_lyrics/v2/", null, ct));
+        /// <summary>
+        /// The song's timed words: Suno's stored ones (v2), or, when it has none but the song has lyrics, a fresh
+        /// timing of those lyrics with the newer route (v3, as sunox's aligned_lyrics does).
+        /// </summary>
+        public async Task<AlignedLyrics?> GetAlignedLyricsAsync(string clipId, CancellationToken ct = default)
+        {
+            AlignedLyrics? stored = null;
+            try { stored = Deserialize<AlignedLyrics>(await SendAsync(HttpMethod.Get, $"/api/gen/{Uri.EscapeDataString(clipId)}/aligned_lyrics/v2/", null, ct)); }
+            catch (SunoApiException ex) when (ex.StatusCode == 404) { }
+            if (stored?.Words.Count > 0) return stored;
+            var lyrics = (await GetClipsAsync(new[] { clipId }, ct)).FirstOrDefault(c => c.Id == clipId)?.Metadata?.Prompt?.Trim();
+            if (string.IsNullOrEmpty(lyrics)) return stored;
+            try { return await AlignLyricsAsync(clipId, lyrics, ct) ?? stored; }
+            catch (SunoApiException ex) when (ex is not SunoSignInRequiredException)
+            {
+                Log.Warn($"Timing the lyrics of {clipId} (v3) didn't work: {ex.Message}");
+                return stored;
+            }
+        }
 
         // ── Files ───────────────────────────────────────────────────────────
 
