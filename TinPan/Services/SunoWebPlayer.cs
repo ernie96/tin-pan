@@ -390,7 +390,6 @@ namespace TinPan.Services
             }
         }
 
-        /// <summary>Runs a statement against the page's audio element, if there is one.</summary>
         /// <summary>What the page showed when the song didn't start, for the log: address, audio element, Play buttons.</summary>
         private async Task<string> PageStateAsync()
         {
@@ -411,6 +410,7 @@ namespace TinPan.Services
             }
         }
 
+        /// <summary>Runs a statement against the page's audio element, if there is one.</summary>
         private void Run(string statement)
         {
             if (CurrentClipId == null || _view?.CoreWebView2 == null) return;

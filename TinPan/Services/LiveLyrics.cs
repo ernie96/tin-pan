@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using TinPan.Models;
@@ -24,6 +25,7 @@ namespace TinPan.Services
         private LyricsCursor? _cursor;
         private string? _loadedFor;
         private int _version;
+        private CancellationTokenSource? _loading;
         private double _lastReported = -1;
 
         public LiveLyrics(IAudioService audio, ISunoApiService api, IAnnouncer announcer, IConfigService config)
@@ -65,11 +67,17 @@ namespace TinPan.Services
 
             Clear();
             var version = ++_version;
+            // Timing a song's lyrics can take a minute; moving on to another song stops waiting for it.
+            var loading = _loading = new CancellationTokenSource();
             IReadOnlyList<LyricLine> lines;
             try
             {
-                var aligned = await _api.GetAlignedLyricsAsync(clipId);
+                var aligned = await _api.GetAlignedLyricsAsync(clipId, loading.Token);
                 lines = LyricLine.From(aligned?.Words ?? new());
+            }
+            catch (OperationCanceledException) when (loading.IsCancellationRequested)
+            {
+                return null;
             }
             catch (SunoApiException ex)
             {
@@ -87,6 +95,8 @@ namespace TinPan.Services
         private void Clear()
         {
             _version++;
+            _loading?.Cancel();
+            _loading = null;
             _timer.Stop();
             _cursor = null;
             _loadedFor = null;

@@ -30,6 +30,7 @@ namespace TinPan.Services
         private string? _title;
         private IPlaybackQueue? _owner;
         private int _version;
+        private int _account; // goes up on signing out, so fetches from before don't land
         private float _volume;
         private string _output;
 
@@ -105,6 +106,7 @@ namespace TinPan.Services
                 catch (Exception ex)
                 {
                     Log.Warn($"Couldn't move the song to {value}: {ex.Message}");
+                    if (!_direct.IsLoaded) Clear();
                     OutputFailed?.Invoke(this, T("{0} isn't connected.", AudioOutputs.Spoken(value)));
                 }
             }
@@ -164,7 +166,11 @@ namespace TinPan.Services
 
         public Task ForgetSignInAsync()
         {
+            // The account's songs stop and leave memory with its sign-in, fetches still under way included.
+            Stop();
             _kept.Clear();
+            _fetching.Clear();
+            _account++;
             return _web.ForgetSignInAsync();
         }
 
@@ -205,17 +211,19 @@ namespace TinPan.Services
 
         private async Task<byte[]> FetchNewAsync(string clipId)
         {
+            var account = _account;
             try
             {
                 using var limit = new CancellationTokenSource(FetchLimit);
                 var song = await _api.GetSongAudioAsync(clipId, limit.Token);
+                if (account != _account) throw new OperationCanceledException("Signed out while fetching");
                 _kept.AddFirst((clipId, song));
                 while (_kept.Count > Kept) _kept.RemoveLast();
                 return song;
             }
             finally
             {
-                _fetching.Remove(clipId);
+                if (account == _account) _fetching.Remove(clipId);
             }
         }
 

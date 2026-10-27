@@ -1,5 +1,15 @@
 # Tin Pan changelog
 
+## 1.11.1 (2026-10-27)
+
+### Fixed
+
+- Choosing an audio output that isn't connected, while a song plays, no longer leaves Tin Pan thinking a song is playing when nothing is. The song keeps playing where it was.
+- Signing out now stops a song Tin Pan is playing itself and forgets the songs it fetched ahead.
+- Cancelling a free download no longer says the download failed.
+- Reading lyrics as they're sung: moving on to another song stops waiting for the last song's lyrics to be timed.
+- Trending: after refreshing it, the next song still plays when the current one ends.
+
 ## 1.11.0 (2026-10-27)
 
 ### New

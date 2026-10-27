@@ -416,6 +416,8 @@ namespace TinPan.ViewModels
                 Trending.Clear();
                 foreach (var clip in clips) Trending.Add(clip);
                 SelectedTrending = Trending.FirstOrDefault();
+                // A song playing from the old list carries on through the new one when it's still there.
+                if (_currentTrending != null) _currentTrending = Trending.FirstOrDefault(c => c.Id == _currentTrending.Id) ?? _currentTrending;
                 Announcer.Announce(clips.Count == 0 ? T("Nothing trending came back.") : Plural(clips.Count, "{0} trending song.", "{0} trending songs."));
             });
         }

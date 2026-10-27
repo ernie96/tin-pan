@@ -135,6 +135,14 @@ namespace TinPan.Tests
         }
 
         [Fact]
+        public async Task Cancelling_a_song_fetch_cancels_instead_of_failing_as_refused()
+        {
+            using var cancelled = new CancellationTokenSource();
+            cancelled.Cancel();
+            await Assert.ThrowsAnyAsync<System.OperationCanceledException>(() => Api(new Fake()).GetSongAudioAsync("c1", cancelled.Token));
+        }
+
+        [Fact]
         public void Custom_models_are_told_apart_from_Sunos_own()
         {
             Assert.True(new Models.SunoModel { ExternalKey = "chirp-custom-abc", Id = "m1", Badges = new() { "custom" } }.IsCustom);
@@ -152,6 +160,7 @@ namespace TinPan.Tests
 
             protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct)
             {
+                ct.ThrowIfCancellationRequested();
                 var text = request.Content == null ? "{}" : await request.Content.ReadAsStringAsync(ct);
                 var path = request.RequestUri!.PathAndQuery;
                 Sent.Add((request.Method.Method, request.RequestUri.AbsolutePath, JsonDocument.Parse(text.Length == 0 ? "{}" : text).RootElement.Clone()));

@@ -93,16 +93,29 @@ namespace TinPan.Services
             _stopping = false;
         }
 
-        /// <summary>Moves a song that's playing to another output, from where it was.</summary>
+        /// <summary>
+        /// Moves a song that's playing to another output, from where it was. Throws if that output can't be
+        /// opened; the song then carries on where it was.
+        /// </summary>
         public void MoveTo(string output)
         {
             if (_out == null || _channel == null) return;
+            var next = Open(output);
             var paused = IsPaused;
             _out.PlaybackStopped -= OnStopped;
-            _out.Stop();
+            try { _out.Stop(); } catch (Exception ex) when (ex is InvalidOperationException or System.Runtime.InteropServices.COMException) { }
             _out.Dispose();
-            _out = Open(output);
-            _out.Init(_channel);
+            _out = next;
+            try
+            {
+                _out.Init(_channel);
+            }
+            catch
+            {
+                // Nothing left to play on: stop cleanly rather than seem to be playing.
+                Stop();
+                throw;
+            }
             _out.PlaybackStopped += OnStopped;
             if (!paused) _out.Play();
         }

@@ -569,7 +569,7 @@ namespace TinPan.Services
                     {
                         resp = await _http.SendAsync(req, ct);
                     }
-                    catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+                    catch (Exception ex) when ((ex is HttpRequestException or TaskCanceledException) && !ct.IsCancellationRequested)
                     {
                         continue;
                     }
