@@ -1239,10 +1239,10 @@
   "Ctrl+N або «Нова пісня» на сторінці «Бібліотека» відкриває це вікно; воно лишається відкритим поруч із бібліотекою, доки ви його не закриєте (Escape або «Закрити»). F6 переходить до головного вікна й назад, а клавіші відтворення працюють тут, тож можна послухати створене й зробити ще одну.\nМодель, стиль, стилі для виключення, голос, інструментал, режим Max, дивність, вплив стилю й персона (виберіть свою або введіть ID) стосуються обох способів створення пісні.\n«Опишіть пісню» дає Suno написати слова. «Ваш текст» використовує вашу назву й текст. «Написати текст» створює текст за темою, а «Використати цей текст» копіює його.\n«Посилення стилю» переписує поле «Стиль» у повніший опис.\n«Змінити мій текст»: скажіть, що змінити, потім «Переписати мій текст зараз». Результат з'являється в «Згенерованому тексті»; «Використати цей текст» копіює його.\nНові пісні з'являються вгорі бібліотеки. Ви почуєте, коли вони будуть готові.\nЯкщо Suno просить капчу, програма проходить її сама. Якщо Suno хоче клацання, з'являється вікно перевірки Suno з прапорцем.",
   "Ctrl+N o Canción nueva en la página Biblioteca abre esta ventana, que se queda abierta junto a la Biblioteca hasta que la cierras (Escape o Cerrar). F6 lleva a la ventana principal y de vuelta, y las teclas de reproducción funcionan aquí, para escuchar lo que hiciste y hacer otra.\nEl modelo, el estilo, los estilos a excluir, la voz, el modo instrumental, el modo Max, la rareza, la influencia del estilo y la persona (elige una tuya o escribe un ID) sirven para las dos formas de crear una canción.\nDescribe una canción deja que Suno escriba la letra. Tu propia letra usa tu título y tu letra. Escribir letra crea una letra a partir de un tema, y Usar esta letra la copia.\nMejorar estilo reescribe el cuadro Estilo con una descripción más completa.\nCambiar mi letra: di qué cambiar y luego Reescribir mi letra ahora. El resultado va a Letra generada; Usar esta letra la copia.\nLas canciones nuevas aparecen arriba en tu biblioteca. Oirás cuando estén listas.\nSi Suno pide un captcha, la app lo pasa sola. Si Suno quiere un clic, aparece una ventana de verificación de Suno con la casilla."
  ],
- "Style ideas lists styles Suno suggests; Enter puts one in the Style box. Lyrics drafts lists your drafts from Suno's lyrics editor; Enter puts one in the Lyrics box, asking first if it has words in it.": [
-  "Idei de stil arată stilurile sugerate de Suno; Enter pune unul în caseta Stil. Ciorne de versuri arată ciornele din editorul de versuri Suno; Enter pune una în caseta Versuri, întrebând mai întâi dacă aceasta are deja text.",
-  "Ідеї стилю показують стилі, які пропонує Suno; Enter вставляє один у поле «Стиль». Чернетки тексту показують ваші чернетки з редактора тексту Suno; Enter вставляє одну в поле «Текст», спершу запитавши, якщо в ньому вже щось є.",
-  "Ideas de estilo muestra los estilos que sugiere Suno; Intro pone uno en el cuadro Estilo. Borradores de letras muestra sus borradores del editor de letras de Suno; Intro pone uno en el cuadro Letra, preguntando antes si ya tiene texto."
+ "Style ideas lists styles Suno suggests; Enter puts one in the Style box. Lyrics drafts lists your drafts from Suno's lyrics editor. Its first line saves the Lyrics box as a new draft; Enter on a draft puts it in the Lyrics box (asking first if it has words in it), saves the Lyrics box into it, renames it or deletes it.": [
+  "Idei de stil arată stilurile sugerate de Suno; Enter pune unul în caseta Stil. Ciorne de versuri arată ciornele din editorul de versuri Suno. Primul rând salvează caseta Versuri ca ciornă nouă; Enter pe o ciornă o pune în caseta Versuri (întrebând mai întâi dacă aceasta are deja text), salvează caseta Versuri în ea, o redenumește sau o șterge.",
+  "Ідеї стилю показують стилі, які пропонує Suno; Enter вставляє один у поле «Стиль». Чернетки тексту показують ваші чернетки з редактора тексту Suno. Перший рядок зберігає поле «Текст» як нову чернетку; Enter на чернетці вставляє її в поле «Текст» (спершу запитавши, якщо в ньому вже щось є), зберігає в неї поле «Текст», перейменовує або видаляє її.",
+  "Ideas de estilo muestra los estilos que sugiere Suno; Intro pone uno en el cuadro Estilo. Borradores de letras muestra sus borradores del editor de letras de Suno. La primera línea guarda el cuadro Letra como borrador nuevo; Intro en un borrador lo pone en el cuadro Letra (preguntando antes si ya tiene texto), guarda en él el cuadro Letra, lo renombra o lo elimina."
  ],
  "Trending tab": [
   "Fila În tendințe",
@@ -5253,5 +5253,165 @@
   "engleză",
   "англійська",
   "inglés"
+ ],
+ "Delete draft": [
+  "Șterge ciorna",
+  "Видалити чернетку",
+  "Eliminar borrador"
+ ],
+ "Delete the draft {0} from Suno? This can't be undone.": [
+  "Ștergi ciorna {0} de pe Suno? Nu se poate anula.",
+  "Видалити чернетку {0} із Suno? Це не можна скасувати.",
+  "¿Eliminar el borrador {0} de Suno? No se puede deshacer."
+ ],
+ "Delete...": [
+  "Șterge...",
+  "Видалити...",
+  "Eliminar..."
+ ],
+ "Deleted the draft {0}.": [
+  "Ciorna {0} a fost ștearsă.",
+  "Чернетку {0} видалено.",
+  "Se eliminó el borrador {0}."
+ ],
+ "Lyrics drafts. You have none on Suno yet.": [
+  "Ciorne de versuri. Încă nu ai niciuna pe Suno.",
+  "Чернетки тексту. На Suno їх ще немає.",
+  "Borradores de letras. Aún no tienes ninguno en Suno."
+ ],
+ "Lyrics drafts. {0} draft; Enter on one for what to do with it.|Lyrics drafts. {0} drafts; Enter on one for what to do with it.": [
+  "Ciorne de versuri. {0} ciornă; Enter pe una arată ce poți face cu ea.|Ciorne de versuri. {0} ciorne; Enter pe una arată ce poți face cu ea.|Ciorne de versuri. {0} de ciorne; Enter pe una arată ce poți face cu ea.",
+  "Чернетки тексту. {0} чернетка; Enter на ній покаже, що з нею зробити.|Чернетки тексту. {0} чернетки; Enter на одній покаже, що з нею зробити.|Чернетки тексту. {0} чернеток; Enter на одній покаже, що з нею зробити.",
+  "Borradores de letras. {0} borrador; Intro en uno muestra qué hacer con él.|Borradores de letras. {0} borradores; Intro en uno muestra qué hacer con él."
+ ],
+ "Make song": [
+  "Fă melodia",
+  "Створити пісню",
+  "Crear canción"
+ ],
+ "Makes a new song that takes after {0}: its sound and feel, with your own lyrics and style.": [
+  "Face o melodie nouă care seamănă cu {0}: sunetul și atmosfera ei, cu versurile și stilul tău.",
+  "Створює нову пісню, схожу на {0}: її звучання й настрій, з вашим текстом і стилем.",
+  "Crea una canción nueva que se parece a {0}: su sonido y su ambiente, con tu propia letra y estilo."
+ ],
+ "Making a song inspired by {0}.": [
+  "Se face o melodie inspirată de {0}.",
+  "Створюється пісня за мотивами {0}.",
+  "Creando una canción inspirada en {0}."
+ ],
+ "None of the models on your plan can make {0}.": [
+  "Niciun model din planul tău nu poate face {0}.",
+  "Жодна модель вашого плану не вміє робити {0}.",
+  "Ningún modelo de tu plan puede hacer {0}."
+ ],
+ "Put it in the Lyrics box": [
+  "Pune-o în caseta Versuri",
+  "Вставити в поле Текст",
+  "Ponerlo en el cuadro Letra"
+ ],
+ "Rename": [
+  "Redenumește",
+  "Перейменувати",
+  "Renombrar"
+ ],
+ "Renamed to {0}.": [
+  "Redenumită {0}.",
+  "Перейменовано на {0}.",
+  "Renombrado a {0}."
+ ],
+ "Replace the words in the draft {0} with the Lyrics box?": [
+  "Înlocuiești versurile din ciorna {0} cu cele din caseta Versuri?",
+  "Замінити слова в чернетці {0} вмістом поля Текст?",
+  "¿Reemplazar la letra del borrador {0} por el cuadro Letra?"
+ ],
+ "Save as a new draft": [
+  "Salvează ca ciornă nouă",
+  "Зберегти як нову чернетку",
+  "Guardar como borrador nuevo"
+ ],
+ "Save the Lyrics box as a new draft...": [
+  "Salvează caseta Versuri ca ciornă nouă...",
+  "Зберегти поле Текст як нову чернетку...",
+  "Guardar el cuadro Letra como borrador nuevo..."
+ ],
+ "Save the Lyrics box into it": [
+  "Salvează caseta Versuri în ea",
+  "Зберегти в неї поле Текст",
+  "Guardar en él el cuadro Letra"
+ ],
+ "Saved as the draft {0}.": [
+  "Salvat ca ciorna {0}.",
+  "Збережено як чернетку {0}.",
+  "Guardado como el borrador {0}."
+ ],
+ "Saved into {0}.": [
+  "Salvat în {0}.",
+  "Збережено в {0}.",
+  "Guardado en {0}."
+ ],
+ "Saves the Lyrics box to Suno as a lyrics draft.": [
+  "Salvează caseta Versuri pe Suno ca ciornă de versuri.",
+  "Зберігає поле Текст на Suno як чернетку тексту.",
+  "Guarda el cuadro Letra en Suno como borrador de letra."
+ ],
+ "Suno didn't make the draft.": [
+  "Suno nu a creat ciorna.",
+  "Suno не створив чернетку.",
+  "Suno no creó el borrador."
+ ],
+ "Suno gave no reason.": [
+  "Suno nu a spus de ce.",
+  "Suno не назвав причини.",
+  "Suno no dio el motivo."
+ ],
+ "Suno's content rules turned it down.": [
+  "Regulile de conținut Suno au respins-o.",
+  "Правила вмісту Suno її відхилили.",
+  "Las normas de contenido de Suno la rechazaron."
+ ],
+ "The Lyrics box is empty, so there's nothing to save.": [
+  "Caseta Versuri e goală, nu e nimic de salvat.",
+  "Поле Текст порожнє, нічого зберігати.",
+  "El cuadro Letra está vacío, no hay nada que guardar."
+ ],
+ "Use as _inspiration...": [
+  "Folosește ca _inspirație...",
+  "Взяти за на_тхнення...",
+  "Usar d_e inspiración..."
+ ],
+ "Use {0} as inspiration": [
+  "Folosește {0} ca inspirație",
+  "Взяти {0} за натхнення",
+  "Usar {0} de inspiración"
+ ],
+ "_Draft name": [
+  "Numele _ciornei",
+  "_Назва чернетки",
+  "_Nombre del borrador"
+ ],
+ "extensions": [
+  "extinderi",
+  "продовження",
+  "extensiones"
+ ],
+ "songs inspired by another": [
+  "melodii inspirate de alta",
+  "пісні за мотивами іншої",
+  "canciones inspiradas en otra"
+ ],
+ "{0} can't make a cover with a persona. Choose No persona, or another model.": [
+  "{0} nu poate face un cover cu un persona. Alege Fără persona sau alt model.",
+  "{0} не робить кавер із персоною. Виберіть Без персони або іншу модель.",
+  "{0} no puede hacer un cover con una persona. Elige Sin persona u otro modelo."
+ ],
+ "{0} doesn't take weirdness or influence numbers. Leave them empty, or choose another model.": [
+  "{0} nu acceptă valori de ciudățenie sau influență. Lasă-le goale sau alege alt model.",
+  "{0} не приймає значень дивності чи впливу. Залиште їх порожніми або виберіть іншу модель.",
+  "{0} no admite valores de rareza ni de influencia. Déjalos vacíos o elige otro modelo."
+ ],
+ "Use as inspiration (Song menu, Make from it) makes a new song that takes after the selected one, with your own lyrics and style; its form works like Cover's. Each of these forms only offers the models your plan can use for it.": [
+  "Folosește ca inspirație (meniul Melodie, Fă din ea) face o melodie nouă care seamănă cu cea selectată, cu versurile și stilul tău; formularul ei funcționează ca cel de Cover. Fiecare dintre aceste formulare oferă doar modelele pe care planul tău le poate folosi pentru el.",
+  "«Взяти за натхнення» (меню «Пісня», «Створити з неї») створює нову пісню, схожу на вибрану, з вашим текстом і стилем; її форма працює як форма кавера. Кожна з цих форм пропонує лише моделі, які ваш план може для неї використати.",
+  "Usar de inspiración (menú Canción, Crear a partir de ella) crea una canción nueva que se parece a la seleccionada, con tu propia letra y estilo; su formulario funciona como el de Cover. Cada uno de estos formularios solo ofrece los modelos que tu plan puede usar para él."
  ]
 }

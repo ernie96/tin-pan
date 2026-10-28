@@ -54,8 +54,10 @@ namespace TinPan.Models
     /// <summary>A lyrics draft from Suno's lyrics editor (GET /api/lyrics-projects).</summary>
     public sealed record LyricsDraft(string Id, string Title, DateTimeOffset? Updated)
     {
+        public string Name => string.IsNullOrWhiteSpace(Title) ? T("Untitled") : Title.Trim();
+
         public override string ToString() =>
-            (string.IsNullOrWhiteSpace(Title) ? T("Untitled") : Title)
+            Name
             + (Updated == null ? "" : ", " + T("changed {0}", Updated.Value.ToLocalTime().ToString("g", Culture)));
     }
 }

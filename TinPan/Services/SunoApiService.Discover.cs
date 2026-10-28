@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using TinPan.Models;
+using static TinPan.Localization.Loc;
 
 namespace TinPan.Services
 {
@@ -123,6 +124,32 @@ namespace TinPan.Services
         }
 
         public async Task<string?> GetLyricsDraftTextAsync(string draftId, CancellationToken ct = default) =>
-            SunoJson.ReadLyricsDraftText(await SendAsync(HttpMethod.Get, $"/api/lyrics-projects/{Uri.EscapeDataString(draftId)}", null, ct));
+            SunoJson.ReadLyricsDraftText(await SendAsync(HttpMethod.Get, DraftPath(draftId), null, ct));
+
+        // Create, rename, flush and delete as the sunox reference records Suno's web client: titles are cut to 200
+        // characters (Unicode code points), create and rename return the draft, flush takes the whole lyrics.
+
+        private static string DraftPath(string draftId) => $"/api/lyrics-projects/{Uri.EscapeDataString(draftId)}";
+
+        public static string DraftTitle(string title) =>
+            string.Concat(title.Trim().EnumerateRunes().Take(200).Select(r => r.ToString()));
+
+        public async Task<LyricsDraft> CreateLyricsDraftAsync(string title, CancellationToken ct = default)
+        {
+            var name = DraftTitle(title);
+            var json = await SendAsync(HttpMethod.Post, "/api/lyrics-projects", new { title = name }, ct);
+            var id = SunoJson.TryReadString(json, "id");
+            if (string.IsNullOrEmpty(id)) throw new SunoApiException(T("Suno didn't make the draft."));
+            return new LyricsDraft(id, SunoJson.TryReadString(json, "title") ?? name, DateTimeOffset.Now);
+        }
+
+        public async Task RenameLyricsDraftAsync(string draftId, string title, CancellationToken ct = default) =>
+            await SendAsync(HttpMethod.Patch, DraftPath(draftId), new { title = DraftTitle(title) }, ct);
+
+        public async Task SaveLyricsDraftAsync(string draftId, string lyrics, CancellationToken ct = default) =>
+            await SendAsync(HttpMethod.Post, DraftPath(draftId) + "/flush", new { lyrics }, ct);
+
+        public async Task DeleteLyricsDraftAsync(string draftId, CancellationToken ct = default) =>
+            await SendAsync(HttpMethod.Delete, DraftPath(draftId), null, ct);
     }
 }

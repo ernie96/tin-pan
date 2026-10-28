@@ -61,6 +61,16 @@ namespace TinPan.Models
         [JsonPropertyName("continue_clip_id")] public string? ContinueClipId { get; set; }
         [JsonPropertyName("continued_aligned_prompt")] public string? ContinuedAlignedPrompt { get; set; }
         [JsonPropertyName("continue_at")] public double? ContinueAt { get; set; }
+
+        /// <summary>"inspiration" with task playlist_condition: Use as inspiration, built on PlaylistClipIds.</summary>
+        [JsonPropertyName("playlist_id")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? PlaylistId { get; set; }
+
+        [JsonPropertyName("playlist_clip_ids")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public List<string>? PlaylistClipIds { get; set; }
+
         [JsonPropertyName("transaction_uuid")] public string TransactionId { get; set; } = Guid.NewGuid().ToString();
     }
 
@@ -73,6 +83,11 @@ namespace TinPan.Models
         [JsonPropertyName("user_tier")] public string UserTier { get; set; } = "";
         [JsonPropertyName("create_session_token")] public string CreateSessionToken { get; set; } = Guid.NewGuid().ToString();
         [JsonPropertyName("disable_volume_normalization")] public bool DisableVolumeNormalization { get; set; }
+
+        /// <summary>True when the song is made from another one (cover, extend), as Suno's web client and sunox send it.</summary>
+        [JsonPropertyName("is_remix")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public bool? IsRemix { get; set; }
 
         [JsonPropertyName("control_sliders")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

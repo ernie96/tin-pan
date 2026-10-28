@@ -24,6 +24,32 @@ namespace TinPan.ViewModels
         private ChoiceField ModelChoice(string label = "_Model") =>
             new(label, _account.Models, _account.FindModel(_config.Current.LastModel) ?? _account.DefaultModel);
 
+        /// <summary>
+        /// A Model field with only the models Suno says can do this task with these sources, as its web client offers
+        /// them; null (said aloud) when none can. Picking one Suno can't use was a way to get "song failed".
+        /// </summary>
+        /// <param name="what">An already translated name for what is being made, for example "covers".</param>
+        private ChoiceField? ModelChoiceFor(string task, string what, params string[] conditions)
+        {
+            var fits = _account.Models.Where(m => m.Supports(task, conditions)).ToList();
+            if (fits.Count == 0)
+            {
+                Announcer.Announce(T("None of the models on your plan can make {0}.", what));
+                return null;
+            }
+            var last = _config.Current.LastModel;
+            return new ChoiceField(T("_Model"), fits,
+                fits.FirstOrDefault(m => m.ExternalKey == last) ?? fits.FirstOrDefault(m => m.IsDefault) ?? fits[0]);
+        }
+
+        /// <summary>Says so and returns false when numbers were given for sliders the model doesn't take.</summary>
+        private bool SlidersFit(SunoModel model, ControlSliders? sliders)
+        {
+            if (sliders == null || model.TakesSliders != false) return true;
+            Announcer.Announce(T("{0} doesn't take weirdness or influence numbers. Leave them empty, or choose another model.", model));
+            return false;
+        }
+
         /// <summary>Suno only extends, covers, remasters or splits a song once it's finished.</summary>
         private bool Finished(SunoClip clip)
         {
@@ -44,6 +70,9 @@ namespace TinPan.ViewModels
         {
             clip ??= SelectedClip;
             if (clip == null || !Finished(clip) || !ModelsLoaded()) return;
+            // Uploaded audio is extended with its own task, as sunox sends it.
+            var task = clip.Metadata?.Type == "upload" ? "upload_extend" : "extend";
+            if (ModelChoiceFor(task, T("extensions"), "extend") is not { } model) return;
             var length = clip.Duration ?? 0;
             var from = new NumberField(T("Extend f_rom (seconds, or minutes:seconds)"), length > 0 ? Math.Floor(length) : null, 0,
                 length > 0 ? length : 3600, allowEmpty: false, isTime: true);
@@ -53,7 +82,6 @@ namespace TinPan.ViewModels
             var boost = new ButtonField(T("Style _boost"), () => BoostStyleAsync(style, lyrics, null));
             var ideas = new ButtonField(T("Style i_deas..."), () => StyleIdeasAsync(style));
             var exclude = new TextField(T("_Exclude styles"), "");
-            var model = ModelChoice();
             var weirdness = new NumberField(T("_Weirdness, 0 to 100 (empty lets Suno choose)"), null, 0, 100);
             var styleInfluence = new NumberField(T("Style in_fluence, 0 to 100 (empty lets Suno choose)"), null, 0, 100);
             var persona = await PersonaChoiceAsync();
@@ -72,11 +100,13 @@ namespace TinPan.ViewModels
                         NegativeTags = exclude.Value,
                         ContinueClipId = clip.Id,
                         ContinueAt = from.Value,
-                        Task = "extend",
+                        Task = task,
                         PersonaId = SelectedPersonaId(persona)
                     };
                     request.Metadata.ControlSliders = ControlSliders.FromPercent(weirdness.Value, styleInfluence.Value, null);
+                    if (!SlidersFit(chosen, request.Metadata.ControlSliders)) return Task.CompletedTask;
                     request.Metadata.IsMaxMode = maxMode.Value;
+                    request.Metadata.IsRemix = true;
                     return StartJobAsync(clip, T("Extending {0}."), c => _api.GenerateAsync(request));
                 });
         }
@@ -174,6 +204,7 @@ namespace TinPan.ViewModels
         {
             clip ??= SelectedClip;
             if (clip == null || !Finished(clip) || !ModelsLoaded()) return;
+            if (ModelChoiceFor("cover", T("covers"), "cover") is not { } model) return;
             var original = await LyricsTextAsync(clip);
             var wasInstrumental = clip.Metadata?.MakeInstrumental == true || original.Length == 0;
 
@@ -195,7 +226,6 @@ namespace TinPan.ViewModels
             var influence = new NumberField(T("_Audio influence: how closely to follow the original, 0 to 100 (empty lets Suno choose)"), null, 0, 100);
             var weirdness = new NumberField(T("_Weirdness, 0 to 100 (empty lets Suno choose)"), null, 0, 100);
             var styleInfluence = new NumberField(T("Style in_fluence, 0 to 100 (empty lets Suno choose)"), null, 0, 100);
-            var model = ModelChoice();
             var persona = await PersonaChoiceAsync();
             var maxMode = new CheckField(T("Ma_x mode"), false);
             var intro = T("Makes a new version of {0} in another style, keeping its melody. The lyrics start as the original words.", clip.DisplayTitle);
@@ -210,7 +240,12 @@ namespace TinPan.ViewModels
                     }
 
                     var chosen = (SunoModel?)model.Selected ?? _account.DefaultModel!;
-                    var request = new GenerateRequest(chosen.ExternalKey, GenerateRequest.Modes.Cover)
+                    if (SelectedPersonaId(persona) != null && !chosen.Supports("cover", "persona", "cover") && !chosen.Supports("cover", "vox", "cover"))
+                    {
+                        Announcer.Announce(T("{0} can't make a cover with a persona. Choose No persona, or another model.", chosen));
+                        return Task.CompletedTask;
+                    }
+                    var request = new GenerateRequest(chosen.CoverKey, GenerateRequest.Modes.Cover)
                     {
                         Title = title.Value,
                         Prompt = instrumental.Value ? "" : lyrics.Value,
@@ -222,8 +257,58 @@ namespace TinPan.ViewModels
                         PersonaId = SelectedPersonaId(persona)
                     };
                     request.Metadata.ControlSliders = ControlSliders.FromPercent(weirdness.Value, styleInfluence.Value, influence.Value);
+                    if (!SlidersFit(chosen, request.Metadata.ControlSliders)) return Task.CompletedTask;
                     request.Metadata.IsMaxMode = maxMode.Value;
+                    request.Metadata.IsRemix = true;
                     return StartJobAsync(clip, T("Covering {0}."), c => _api.GenerateAsync(request));
+                });
+        }
+
+        /// <summary>
+        /// Use as inspiration: a brand-new song that takes after this one (task playlist_condition with
+        /// playlist_id "inspiration"; body from the sunox capture of Suno's web client).
+        /// </summary>
+        [RelayCommand]
+        private void Inspire(SunoClip? clip)
+        {
+            clip ??= SelectedClip;
+            if (clip == null || !Finished(clip) || !ModelsLoaded()) return;
+            if (ModelChoiceFor("playlist_condition", T("songs inspired by another"), "playlist") is not { } model) return;
+            var title = new TextField(T("_Title"), "", maxLength: 100);
+            var lyrics = new TextField(T("_Lyrics"), "", multiline: true);
+            var instrumental = new CheckField(T("_Instrumental (no singing)"), false);
+            var style = new TextField(T("_Style"), clip.Metadata?.Tags ?? "");
+            var boost = new ButtonField(T("Style _boost"), () => BoostStyleAsync(style, lyrics, instrumental));
+            var ideas = new ButtonField(T("Style i_deas..."), () => StyleIdeasAsync(style));
+            var exclude = new TextField(T("_Exclude styles"), "");
+            var weirdness = new NumberField(T("_Weirdness, 0 to 100 (empty lets Suno choose)"), null, 0, 100);
+            var styleInfluence = new NumberField(T("Style in_fluence, 0 to 100 (empty lets Suno choose)"), null, 0, 100);
+            var maxMode = new CheckField(T("Ma_x mode"), false);
+            var intro = T("Makes a new song that takes after {0}: its sound and feel, with your own lyrics and style.", clip.DisplayTitle);
+            _dialogs.ShowToolForm(T("Use {0} as inspiration", clip.DisplayTitle), intro, T("Make song"),
+                new FormField[] { title, lyrics, instrumental, style, boost, ideas, exclude, model, weirdness, styleInfluence, maxMode }, () =>
+                {
+                    if (!instrumental.Value && lyrics.Value.Length == 0)
+                    {
+                        Announcer.Announce(T("Add lyrics, or tick Instrumental."));
+                        return Task.CompletedTask;
+                    }
+                    var chosen = (SunoModel?)model.Selected ?? _account.DefaultModel!;
+                    var request = new GenerateRequest(chosen.ExternalKey, GenerateRequest.Modes.Custom)
+                    {
+                        Title = title.Value,
+                        Prompt = instrumental.Value ? "" : lyrics.Value,
+                        MakeInstrumental = instrumental.Value,
+                        Tags = style.Value,
+                        NegativeTags = exclude.Value,
+                        Task = "playlist_condition",
+                        PlaylistId = "inspiration",
+                        PlaylistClipIds = new List<string> { clip.Id }
+                    };
+                    request.Metadata.ControlSliders = ControlSliders.FromPercent(weirdness.Value, styleInfluence.Value, null);
+                    if (!SlidersFit(chosen, request.Metadata.ControlSliders)) return Task.CompletedTask;
+                    request.Metadata.IsMaxMode = maxMode.Value;
+                    return StartJobAsync(clip, T("Making a song inspired by {0}."), c => _api.GenerateAsync(request));
                 });
         }
 

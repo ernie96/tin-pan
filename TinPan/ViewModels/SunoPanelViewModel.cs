@@ -338,32 +338,96 @@ namespace TinPan.ViewModels
             });
         }
 
-        /// <summary>Drafts from Suno's lyrics editor; Enter puts one in the Lyrics box (asking first if it has words in it).</summary>
+        /// <summary>
+        /// Drafts from Suno's lyrics editor. The first line saves the Lyrics box as a new draft; Enter on a draft
+        /// offers putting it in the Lyrics box, saving the Lyrics box into it, renaming and deleting.
+        /// </summary>
         [RelayCommand]
         private async Task LyricsDraftsAsync()
         {
             IReadOnlyList<LyricsDraft> drafts = Array.Empty<LyricsDraft>();
             if (!await RunAsync(async () => drafts = await _api.GetLyricsDraftsAsync())) return;
-            if (drafts.Count == 0)
+            var lines = new List<string> { T("Save the Lyrics box as a new draft...") };
+            lines.AddRange(drafts.Select(d => d.ToString()));
+            var title = drafts.Count == 0
+                ? T("Lyrics drafts. You have none on Suno yet.")
+                : Plural(drafts.Count, "Lyrics drafts. {0} draft; Enter on one for what to do with it.", "Lyrics drafts. {0} drafts; Enter on one for what to do with it.");
+            _dialogs.ShowLines(title, lines, index =>
             {
-                Announcer.Announce(T("You have no lyrics drafts on Suno."));
+                if (index == 0) _ = NewLyricsDraftAsync();
+                else DraftActions(drafts[index - 1]);
+            });
+        }
+
+        private void DraftActions(LyricsDraft draft)
+        {
+            var actions = new List<(string Label, Func<Task> Run)>
+            {
+                (T("Put it in the Lyrics box"), () => OpenDraftAsync(draft)),
+                (T("Save the Lyrics box into it"), () => SaveIntoDraftAsync(draft)),
+                (T("Rename..."), () => RenameDraftAsync(draft)),
+                (T("Delete..."), () => DeleteDraftAsync(draft))
+            };
+            _dialogs.ShowLines(draft.ToString(), actions.Select(a => a.Label).ToList(), index => _ = actions[index].Run());
+        }
+
+        private async Task OpenDraftAsync(LyricsDraft draft)
+        {
+            string? text = null;
+            if (!await RunAsync(async () => text = await _api.GetLyricsDraftTextAsync(draft.Id))) return;
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                Announcer.Announce(T("That draft has no lyrics yet."));
                 return;
             }
-            _dialogs.ShowLines(T("Lyrics drafts. Enter puts one in the Lyrics box."), drafts.Select(d => d.ToString()).ToList(), async index =>
+            if (!string.IsNullOrWhiteSpace(Lyrics) && !_dialogs.Confirm(T("Replace the lyrics in the Lyrics box?"), T("Lyrics drafts"))) return;
+            Lyrics = text;
+            if (string.IsNullOrWhiteSpace(SongTitle) && !string.IsNullOrWhiteSpace(draft.Title)) SongTitle = draft.Title;
+            Announcer.Announce(T("Lyrics from {0} are in the Lyrics box.", draft.ToString()));
+        }
+
+        private bool LyricsToSave()
+        {
+            if (!string.IsNullOrWhiteSpace(Lyrics)) return true;
+            Announcer.Announce(T("The Lyrics box is empty, so there's nothing to save."));
+            return false;
+        }
+
+        private async Task NewLyricsDraftAsync()
+        {
+            if (!LyricsToSave()) return;
+            var name = new TextField(T("_Draft name"), SongTitle.Trim(), maxLength: 200);
+            if (!_dialogs.ShowForm(T("Save as a new draft"), T("Saves the Lyrics box to Suno as a lyrics draft."), T("Save"), new FormField[] { name })) return;
+            var words = Lyrics;
+            if (await RunAsync(async () =>
             {
-                var draft = drafts[index];
-                string? text = null;
-                if (!await RunAsync(async () => text = await _api.GetLyricsDraftTextAsync(draft.Id))) return;
-                if (string.IsNullOrWhiteSpace(text))
-                {
-                    Announcer.Announce(T("That draft has no lyrics yet."));
-                    return;
-                }
-                if (!string.IsNullOrWhiteSpace(Lyrics) && !_dialogs.Confirm(T("Replace the lyrics in the Lyrics box?"), T("Lyrics drafts"))) return;
-                Lyrics = text;
-                if (string.IsNullOrWhiteSpace(SongTitle) && !string.IsNullOrWhiteSpace(draft.Title)) SongTitle = draft.Title;
-                Announcer.Announce(T("Lyrics from {0} are in the Lyrics box.", draft.ToString()));
-            });
+                var draft = await _api.CreateLyricsDraftAsync(name.Value);
+                await _api.SaveLyricsDraftAsync(draft.Id, words);
+            }))
+                Announcer.Announce(T("Saved as the draft {0}.", name.Value.Length > 0 ? name.Value : T("Untitled")));
+        }
+
+        private async Task SaveIntoDraftAsync(LyricsDraft draft)
+        {
+            if (!LyricsToSave()) return;
+            if (!_dialogs.Confirm(T("Replace the words in the draft {0} with the Lyrics box?", draft.Name), T("Lyrics drafts"))) return;
+            if (await RunAsync(() => _api.SaveLyricsDraftAsync(draft.Id, Lyrics)))
+                Announcer.Announce(T("Saved into {0}.", draft.Name));
+        }
+
+        private async Task RenameDraftAsync(LyricsDraft draft)
+        {
+            var name = new TextField(T("_Name"), draft.Title, maxLength: 200);
+            if (!_dialogs.ShowForm(T("Rename {0}", draft.Name), "", T("Rename"), new FormField[] { name }) || name.Value.Length == 0) return;
+            if (await RunAsync(() => _api.RenameLyricsDraftAsync(draft.Id, name.Value)))
+                Announcer.Announce(T("Renamed to {0}.", name.Value));
+        }
+
+        private async Task DeleteDraftAsync(LyricsDraft draft)
+        {
+            if (!_dialogs.Confirm(T("Delete the draft {0} from Suno? This can't be undone.", draft.Name), T("Delete draft"))) return;
+            if (await RunAsync(() => _api.DeleteLyricsDraftAsync(draft.Id)))
+                Announcer.Announce(T("Deleted the draft {0}.", draft.Name));
         }
 
         /// <summary>Lyric co-writing: Suno changes the Lyrics the way the instruction asks; the result lands in Generated lyrics.</summary>

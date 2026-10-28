@@ -167,6 +167,54 @@ namespace TinPan.Models
         [JsonIgnore]
         public bool? TakesVoicePersonas => Capabilities is { Count: > 0 } c ? c.Contains("all") || c.Contains("vox") : null;
 
+        /// <summary>Create-form features such as "create_control_sliders" (the weirdness and influence numbers).</summary>
+        [JsonPropertyName("features")]
+        public List<string>? Features { get; set; }
+
+        /// <summary>Which sources can be combined, for example [["cover"], ["persona", "cover"]].</summary>
+        [JsonPropertyName("allowed_condition_combinations")]
+        public List<List<string>>? AllowedConditions { get; set; }
+
+        /// <summary>
+        /// Whether the model does a task ("cover", "playlist_condition") with exactly these sources, as Suno's web
+        /// helpers and sunox check it. A model that lists nothing is given the benefit of the doubt.
+        /// </summary>
+        public bool Supports(string task, params string[] conditions)
+        {
+            if (Capabilities is { Count: > 0 } c && !c.Contains("all") && !c.Contains(task)) return false;
+            if (AllowedConditions is { Count: > 0 } allowed)
+                return allowed.Any(a => a.Count == conditions.Length && conditions.All(a.Contains));
+            return LegacySupports(ExternalKey, conditions);
+        }
+
+        /// <summary>Suno's older fixed table, for replies without allowed_condition_combinations (from sunox).</summary>
+        private static bool LegacySupports(string key, string[] conditions)
+        {
+            string[] v35 = { "v3-5", "v4", "auk", "bluejay", "crow", "dodo", "eagle", "fenix", "goose", "hawk", "ibis", "chirp-custom" };
+            var auk = v35[2..];
+            var bluejay = v35[3..];
+            bool Is(string[] models) => models.Any(key.Contains);
+            bool Has(params string[] needed) => needed.All(conditions.Contains);
+            if (Has("persona", "cover") && !Is(auk)) return false;
+            if ((Has("cover") || Has("persona")) && !Is(v35)) return false;
+            if ((Has("playlist") || Has("underpaint") || Has("overpaint")) && !Is(bluejay)) return false;
+            return true;
+        }
+
+        /// <summary>Whether the form may send weirdness and influence numbers. Null when Suno lists no features.</summary>
+        [JsonIgnore]
+        public bool? TakesSliders => Badges?.Contains("custom") == true ? true
+            : Features is { Count: > 0 } f ? f.Contains("create_control_sliders") : null;
+
+        /// <summary>The key a cover is sent with: Suno's web client covers with v3.5 and v4 through their "tau" models.</summary>
+        [JsonIgnore]
+        public string CoverKey => ExternalKey switch
+        {
+            "chirp-v3-0" or "chirp-v3-5" => "chirp-v3-5-tau",
+            "chirp-v4" => "chirp-v4-tau",
+            var key => key
+        };
+
         public override string ToString() => string.IsNullOrEmpty(Name) ? ExternalKey : Name;
     }
 

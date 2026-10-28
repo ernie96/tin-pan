@@ -1,5 +1,17 @@
 # Tin Pan changelog
 
+## 1.12.0 (2026-10-28)
+
+### New
+
+- Song menu, Make from it: Use as inspiration. It makes a new song that takes after the one you chose, with your own lyrics and style.
+- Lyrics drafts (Create window): save the Lyrics box to Suno as a new draft. Enter on a draft puts it in the Lyrics box, saves the Lyrics box into it, renames it or deletes it.
+
+### Fixed
+
+- A song that fails now says why, when Suno gives a reason (for example, when Suno's content rules turned it down). Otherwise it says Suno gave no reason. The reason is also in the song's details and in the log.
+- Cover, Extend and Use as inspiration only offer the models your plan can use for them. They say so before sending if the model can't use a persona with a cover, or doesn't take the weirdness and influence numbers. Covers made with v3.5 or v4 go out on the model Suno uses for covers. Uploaded songs are extended the way Suno extends uploads.
+
 ## 1.11.1 (2026-10-27)
 
 ### Fixed

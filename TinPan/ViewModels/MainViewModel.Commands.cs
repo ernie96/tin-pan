@@ -120,6 +120,7 @@ namespace TinPan.ViewModels
                 new("Song", T("Clean up download (remove ha_ze)"), "Ctrl+Shift+H", lib.CleanUpDownloadCommand, Submenu: "Download"),
                 new("Song", T("_Extend..."), "Ctrl+E", lib.ExtendCommand, Submenu: "Make"),
                 new("Song", T("_Cover..."), "Ctrl+Shift+C", lib.CoverCommand, HeaderPath: nameof(LibraryPanelViewModel.CoverMenuText), Submenu: "Make"),
+                new("Song", T("Use as _inspiration..."), "", lib.InspireCommand, Submenu: "Make"),
                 new("Song", T("Re_master..."), "Ctrl+Shift+M", lib.RemasterCommand, HeaderPath: nameof(LibraryPanelViewModel.RemasterMenuText), Submenu: "Make"),
                 new("Song", T("_Get whole song"), "Ctrl+J", lib.WholeSongCommand, Submenu: "Make"),
                 new("Song", T("S_tems"), "Ctrl+Shift+S", lib.StemsCommand, Submenu: "Make"),

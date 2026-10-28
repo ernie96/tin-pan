@@ -270,6 +270,17 @@ namespace TinPan.Services
 
         /// <summary>The words of one lyrics draft, or null when it has none.</summary>
         Task<string?> GetLyricsDraftTextAsync(string draftId, CancellationToken ct = default);
+
+        /// <summary>Starts a new, empty lyrics draft and returns it.</summary>
+        Task<LyricsDraft> CreateLyricsDraftAsync(string title, CancellationToken ct = default);
+
+        Task RenameLyricsDraftAsync(string draftId, string title, CancellationToken ct = default);
+
+        /// <summary>Saves these words as the draft's lyrics, replacing what it had.</summary>
+        Task SaveLyricsDraftAsync(string draftId, string lyrics, CancellationToken ct = default);
+
+        Task DeleteLyricsDraftAsync(string draftId, CancellationToken ct = default);
+
         Task<IReadOnlyList<SongComment>> GetCommentsAsync(string clipId, CancellationToken ct = default);
         Task PostCommentAsync(string clipId, string text, CancellationToken ct = default);
 

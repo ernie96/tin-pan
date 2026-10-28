@@ -216,10 +216,18 @@ namespace TinPan.ViewModels
         private void AnnounceFinished(IReadOnlyList<SunoClip> clips)
         {
             var ready = clips.Where(c => !c.HasFailed).Select(c => c.DisplayTitle).Distinct().ToList();
-            var failed = clips.Count(c => c.HasFailed);
+            var failed = clips.Where(c => c.HasFailed).ToList();
             var parts = new List<string>();
             if (ready.Count > 0) parts.Add(T("Ready: {0}.", string.Join(", ", ready)));
-            if (failed > 0) parts.Add(Plural(failed, "{0} song failed.", "{0} songs failed."));
+            foreach (var c in failed)
+                Log.Warn($"Song {c.Id} failed: task {c.Metadata?.Task ?? "none"}, model {c.ModelName ?? "?"}, "
+                    + $"error_type {c.Metadata?.ErrorType ?? "none"}, error_message {c.Metadata?.ErrorMessage ?? "none"}");
+            // Suno usually fails both songs of a pair for the same reason; say each reason once.
+            var reasons = failed.Select(c => c.FailureReason).OfType<string>().Distinct().ToList();
+            if (failed.Count > 0)
+                parts.Add(Plural(failed.Count, "{0} song failed.", "{0} songs failed.") + " " + (reasons.Count == 0
+                    ? T("Suno gave no reason.")
+                    : string.Join(" ", reasons.Select(r => r.TrimEnd('.') + "."))));
             Announcer.Announce(string.Join(" ", parts), interrupt: false);
         }
 

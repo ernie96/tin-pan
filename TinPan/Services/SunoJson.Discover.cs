@@ -152,12 +152,15 @@ namespace TinPan.Services
         }
 
         /// <summary>
-        /// The words of one lyrics draft (GET /api/lyrics-projects/{id}). Its shape wasn't captured, so this takes
-        /// a field named lyrics, content, text or body, at any depth, and failing that the longest such text.
+        /// The words of one lyrics draft (GET /api/lyrics-projects/{id}): the project's own "lyrics" field, as the
+        /// sunox reference records it. Failing that, the longest lyrics, content, text or body at any depth.
         /// </summary>
         public static string? ReadLyricsDraftText(string json)
         {
             using var doc = Parse(json);
+            if (doc.RootElement.ValueKind == JsonValueKind.Object && FirstString(doc.RootElement, "lyrics") is { } own
+                && !string.IsNullOrWhiteSpace(own))
+                return own.Trim();
             string? best = null;
             void Look(JsonElement e, int depth)
             {

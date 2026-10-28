@@ -148,6 +148,15 @@ namespace TinPan.Models
 
         public bool HasFailed => Status == "error";
 
+        /// <summary>Why Suno says a song failed, in a sentence; null when it gave no reason.</summary>
+        public string? FailureReason => Metadata switch
+        {
+            { ErrorMessage: { } m } when !string.IsNullOrWhiteSpace(m) => m.Trim(),
+            { ErrorType: "moderation_error" } => T("Suno's content rules turned it down."),
+            { ErrorType: { } t } when !string.IsNullOrWhiteSpace(t) => t.Trim().Replace('_', ' '),
+            _ => null
+        };
+
         /// <summary>Suno's player can start a song once it is streaming; audio_url itself is no longer playable.</summary>
         public bool CanPlay => IsReady;
 
@@ -194,7 +203,7 @@ namespace TinPan.Models
                 var lines = new List<string> { DisplayTitle };
                 if (Duration is > 0) lines.Add(T("Length: {0}", FormatTime(TimeSpan.FromSeconds(Duration.Value))));
                 lines.Add(T("Status: {0}", StatusName));
-                if (!string.IsNullOrWhiteSpace(Metadata?.ErrorMessage)) lines.Add(T("Error: {0}", Metadata!.ErrorMessage));
+                if (FailureReason is { } reason) lines.Add(T("Error: {0}", reason));
                 if (!string.IsNullOrWhiteSpace(Metadata?.Tags)) lines.Add(T("Style: {0}", Metadata!.Tags));
                 if (Metadata?.MakeInstrumental == true) lines.Add(T("Instrumental"));
                 if (!string.IsNullOrWhiteSpace(Metadata?.GptDescriptionPrompt)) lines.Add(T("Description: {0}", Metadata!.GptDescriptionPrompt));
@@ -290,6 +299,10 @@ namespace TinPan.Models
 
         [JsonPropertyName("error_message")]
         public string? ErrorMessage { get; set; }
+
+        /// <summary>Suno's kind of failure, for example "moderation_error".</summary>
+        [JsonPropertyName("error_type")]
+        public string? ErrorType { get; set; }
 
         /// <summary>What Suno did to make it: "cover", "extend", "artist_consistency" (a persona) and so on.</summary>
         [JsonPropertyName("task")]

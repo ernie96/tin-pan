@@ -6,7 +6,7 @@ By Ernesto Melendez. Unofficial: it uses the same private API as the Suno websit
 
 ## Keys
 
-Alt or F10 opens the menu bar, which has every command with its keys. It stays hidden otherwise, so Tab and the screen reader never run into it. The Song menu acts on the song selected in the tab you're on (Library, a playlist, or Trending). It's grouped into submenus: Download, Make from it (extend, cover, remaster, whole song, stems), Related songs, Comments and Sharing (links, public or private, remixes). Its keys (Ctrl+I, Alt+Enter, Ctrl+L, Ctrl+C, Ctrl+D, Ctrl+E) work in the Library, a playlist's songs and Trending. On Trending, Space pauses or resumes and F9 carries on down the list. The Help menu's Speech submenu sets how much Tin Pan says. Ctrl+F1 lists the same commands; Enter runs one.
+Alt or F10 opens the menu bar, which has every command with its keys. It stays hidden otherwise, so Tab and the screen reader never run into it. The Song menu acts on the song selected in the tab you're on (Library, a playlist, or Trending). It's grouped into submenus: Download, Make from it (extend, cover, use as inspiration, remaster, whole song, stems), Related songs, Comments and Sharing (links, public or private, remixes). Its keys (Ctrl+I, Alt+Enter, Ctrl+L, Ctrl+C, Ctrl+D, Ctrl+E) work in the Library, a playlist's songs and Trending. On Trending, Space pauses or resumes and F9 carries on down the list. The Help menu's Speech submenu sets how much Tin Pan says. Ctrl+F1 lists the same commands; Enter runs one.
 
 Tab only stops where it matters: on the Library, the search box, the song list and the volume; on Playlists, the two lists. The page buttons still work with their Alt letters. Switching pages with Ctrl+1 to Ctrl+5 puts you on the page's list or first field.
 
@@ -58,6 +58,7 @@ Since September 2026 Suno encrypts song audio. Tin Pan asks Suno for the song's 
 - Not interested: Suno suggests fewer songs like it (press again to undo, in the same run).
 - Cover picture: a picture from your computer (JPG, PNG or WebP), one Suno draws from your description, or Suno's own again.
 - Delete forever (Shift+Delete): removes a song that's in the trash for good, after asking. Delete on a song in the trash (Filters, Songs in the trash) restores it.
+- Make from it, Use as inspiration: a new song that takes after the selected one, with your own lyrics and style. Its form works like Cover's.
 - Make from it, Make a video: Suno makes the song's video, and you hear when Download video can save it. Make a persona: a persona from the song, for new songs, covers and extends.
 - Related songs: Its stems (the stems already made from it), Credits and remix count (the songs it credits, and how many remixes and covers it has), Creator's playlists (play, like or save them).
 - Sharing: show or hide the list of remixes on the song's page.
@@ -80,6 +81,8 @@ The Song menu's Make from it submenu can also change a song into a new one, leav
 - Reverse: the song played backwards.
 - Crop: keep only the part between two times, or take that part out.
 - Fade in or out: over the seconds you choose, at the start, the end or both.
+
+Cover, Extend and Use as inspiration only offer the models your plan can use for them. Before sending, they tell you if the model can't make a cover with a persona, or doesn't take the weirdness and influence numbers. When a song fails, Tin Pan says why if Suno gives a reason (also in the song's details, Ctrl+I), and otherwise that Suno gave no reason.
 
 With a persona, Tin Pan checks it first: a persona in the trash or hidden, or one without its source song, is refused with a clear message instead of making a song that ignores it. A voice persona on a model too old for voice personas is used as an ordinary persona when it has a source song.
 
@@ -134,7 +137,7 @@ The Discover menu finds songs beyond your own:
 
 The Song menu's Related songs submenu (also in the Applications key menu) has **Similar songs**, **Creator's songs**, **Covers and remixes of it** and **Original song**, which finds what a cover, extension or whole song was made from. Songs open in their own list: Enter plays one, Escape closes it, and each says who made it.
 
-In the Create window, **Style ideas** lists styles Suno suggests for you, and **Lyrics drafts** lists your drafts from Suno's lyrics editor; Enter puts one in the Style or Lyrics box. On the Account tab, notifications you haven't seen say "New", and **Mark all as read** marks them read on Suno too.
+In the Create window, **Style ideas** lists styles Suno suggests for you, and **Lyrics drafts** lists your drafts from Suno's lyrics editor. Enter puts a style idea in the Style box. In Lyrics drafts, the first line saves the Lyrics box as a new draft, and Enter on a draft puts it in the Lyrics box, saves the Lyrics box into it, renames it or deletes it. On the Account tab, notifications you haven't seen say "New", and **Mark all as read** marks them read on Suno too.
 
 The following feed's ranking settings and the shape of a lyrics draft aren't known for certain, so if either stops working, Tin Pan says so and logs Suno's reply.
 
