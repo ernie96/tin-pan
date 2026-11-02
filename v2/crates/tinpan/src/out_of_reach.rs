@@ -23,7 +23,48 @@ pub fn set(frame: &Frame, hidden: bool) {
             let _ = SetWindowPos(hwnd, None, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED);
         }
     }
-    #[cfg(not(windows))]
+    // GTK: no focus, and skipped by the taskbar and the window switcher (Alt+Tab).
+    #[cfg(target_os = "linux")]
+    {
+        use std::ffi::{c_int, c_void};
+        #[link(name = "gtk-3")]
+        unsafe extern "C" {
+            fn gtk_window_set_accept_focus(window: *mut c_void, setting: c_int);
+            fn gtk_window_set_focus_on_map(window: *mut c_void, setting: c_int);
+            fn gtk_window_set_skip_taskbar_hint(window: *mut c_void, setting: c_int);
+            fn gtk_window_set_skip_pager_hint(window: *mut c_void, setting: c_int);
+        }
+        let window = frame.get_handle();
+        if !window.is_null() {
+            let (skip, focus) = (c_int::from(hidden), c_int::from(!hidden));
+            // SAFETY: a wxFrame's handle on GTK is its GtkWindow, alive as long as the frame.
+            unsafe {
+                gtk_window_set_accept_focus(window, focus);
+                gtk_window_set_focus_on_map(window, focus);
+                gtk_window_set_skip_taskbar_hint(window, skip);
+                gtk_window_set_skip_pager_hint(window, skip);
+            }
+        }
+    }
+    // AppKit: out of the Window menu and of Cmd+` cycling (wx makes a tool window a utility panel already).
+    #[cfg(target_os = "macos")]
+    {
+        use objc::runtime::{BOOL, NO, Object, YES};
+        use objc::{class, msg_send, sel, sel_impl};
+        let handle = frame.get_handle().cast::<Object>();
+        if !handle.is_null() {
+            // SAFETY: a wxFrame's handle on macOS is its content NSView (or its NSWindow); AppKit calls, main thread.
+            unsafe {
+                let is_window: BOOL = msg_send![handle, isKindOfClass: class!(NSWindow)];
+                let window: *mut Object = if is_window != NO { handle } else { msg_send![handle, window] };
+                if !window.is_null() {
+                    let flag: BOOL = if hidden { YES } else { NO };
+                    let _: () = msg_send![window, setExcludedFromWindowsMenu: flag];
+                }
+            }
+        }
+    }
+    #[cfg(not(any(windows, target_os = "linux", target_os = "macos")))]
     let _ = (frame, hidden);
 }
 

@@ -14,6 +14,18 @@ use wxdragon::widgets::{WebView, WebViewBackend};
 /// name clash; this order is the one sign-in worked with in Tin Pan 1.
 pub(crate) const COOKIE_SITES: [&str; 3] = ["https://suno.com", "https://auth.suno.com", "https://clerk.suno.com"];
 
+/// What the sign-in page calls itself on macOS and Linux. Google turns away sign-ins from pages embedded in apps,
+/// which it mostly tells by a WebKit name without "Version/… Safari/…", so the page says it's Safari, or GNOME
+/// Web on Linux, which are WebKit too, so the page still gets what this engine can do. Windows' Edge WebView2
+/// already names itself as Edge, which Google accepts.
+const BROWSER_NAME: Option<&str> = if cfg!(target_os = "macos") {
+    Some("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15")
+} else if cfg!(target_os = "linux") {
+    Some("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Safari/605.1.15")
+} else {
+    None
+};
+
 /// Suno's pages need Edge's WebView2 runtime on Windows; without it wxWidgets would use Internet Explorer,
 /// which can't show them.
 pub fn web_pages_available() -> bool {
@@ -59,6 +71,9 @@ impl SignInWindow {
     pub fn open(parent: &Frame, forget_suno: bool, try_cookies: impl Fn(String) + 'static, closed: impl Fn() + 'static) -> Self {
         let frame = Frame::builder().with_parent(parent).with_title(&t("Sign in to Suno")).with_size(Size::new(900, 750)).build();
         let view = WebView::builder(&frame).build();
+        if let Some(name) = BROWSER_NAME {
+            view.set_user_agent(name);
+        }
         let sizer = BoxSizer::builder(Orientation::Vertical).build();
         sizer.add(&view, 1, SizerFlag::Expand, 0);
         frame.set_sizer(sizer, true);
