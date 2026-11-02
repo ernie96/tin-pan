@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Tin Pan
+Comment=An accessible, unofficial Suno client
+Exec=tinpan
+Icon=tinpan
+Categories=AudioVideo;Audio;Player;
+Terminal=false

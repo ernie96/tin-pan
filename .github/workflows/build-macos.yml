@@ -37,6 +37,18 @@ jobs:
         working-directory: v2
         run: cargo test --release -p tinpan-core -p tinpan
 
+      # The clean-up tool, pinned to the version and file Tin Pan checks (cleanup.rs).
+      - name: Fetch sunscreen
+        working-directory: v2
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download v0.7.1 --repo abradburne/sunscreen --pattern 'sunscreen-v0.7.1-aarch64-apple-darwin.tar.gz' --dir "$RUNNER_TEMP"
+          echo "722cce2a0104e345d808e407fc7fa36e3e26fe2c74fb1bda097d4a1a539dd3fa  $RUNNER_TEMP/sunscreen-v0.7.1-aarch64-apple-darwin.tar.gz" | shasum -a 256 -c
+          tar xzf "$RUNNER_TEMP/sunscreen-v0.7.1-aarch64-apple-darwin.tar.gz" -C "$RUNNER_TEMP"
+          mkdir -p target/release
+          cp "$RUNNER_TEMP/sunscreen-v0.7.1-aarch64-apple-darwin/sunscreen" target/release/sunscreen
+
       - name: Build and package
         working-directory: v2
         run: |

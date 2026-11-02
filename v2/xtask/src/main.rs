@@ -37,7 +37,13 @@ fn macos() -> Result<(), Box<dyn Error>> {
         extra: "\t<key>LSMinimumSystemVersion</key>\n\t<string>13.0</string>\n",
         ..MacApp::default()
     };
-    let bundle = app.bundle(&release, &binary, &[], &[])?;
+    // sunscreen, for clean-up, goes next to Tin Pan when the build fetched it (the workflow does, and checks it).
+    let sunscreen = release.join("sunscreen");
+    let helpers: Vec<&Path> = if sunscreen.exists() { vec![sunscreen.as_path()] } else { Vec::new() };
+    if helpers.is_empty() {
+        println!("No sunscreen in target/release, so this Tin Pan.app can't clean up songs.");
+    }
+    let bundle = app.bundle(&release, &binary, &helpers, &[])?;
     // Signed with a Developer ID when one is set up (MACOS_SIGN_IDENTITY); otherwise the bundle keeps its ad hoc
     // signature, and macOS asks people to allow Tin Pan in System Settings the first time.
     match DeveloperId::from_env() {

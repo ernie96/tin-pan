@@ -33,13 +33,16 @@ hound = "3.5"
 
 [features]
 default = ["background-speech"]
-# Speaks through the screen reader (NVDA, JAWS, Narrator) when Tin Pan isn't the window in front.
+# Speaks through the screen reader (NVDA, JAWS, Narrator; VoiceOver on macOS; Orca on Linux) when Tin Pan
+# isn't in front.
 # Building it on Windows needs Visual Studio's "C++ ATL for latest build tools" component;
 # --no-default-features builds without it.
 background-speech = ["dep:prismer"]
 
-[target.'cfg(windows)'.dependencies]
+[target.'cfg(any(windows, target_os = "macos", target_os = "linux"))'.dependencies]
 prismer = { version = "0.1.4", features = ["static"], optional = true }
+
+[target.'cfg(windows)'.dependencies]
 # Which window is in front (speech), the cookies (sign-in), and bringing Tin Pan forward after an update.
 windows = { version = "0.62.2", features = ["Win32_Foundation", "Win32_Media_MediaFoundation", "Win32_System_Com", "Win32_System_Com_StructuredStorage", "Win32_System_Threading", "Win32_UI_WindowsAndMessaging"] }
 # Reads Suno's sign-in cookies from the sign-in page's browser (WebView2), as Tin Pan 1 does.
@@ -60,3 +63,5 @@ serde_json.workspace = true
 
 [build-dependencies]
 embed-manifest = "1.4"
+# Links what prism's Orca backend uses on Linux, which its static build leaves to the final link.
+pkg-config = "0.3"

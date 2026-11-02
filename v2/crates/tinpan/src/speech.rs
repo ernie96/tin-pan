@@ -40,7 +40,7 @@ pub fn init(parent: &impl WxWidget) {
     label.show(false);
     live_region::set_live_region(&label);
     LABEL.set(Some(label));
-    #[cfg(all(windows, feature = "background-speech"))]
+    #[cfg(all(any(windows, target_os = "macos", target_os = "linux"), feature = "background-speech"))]
     background::init();
 }
 
@@ -56,7 +56,7 @@ pub fn say_quietly(text: &str) {
 
 /// What speech goes through, for About: the screen reader prism found, as Tin Pan 1 names it.
 pub fn output_name() -> String {
-    #[cfg(all(windows, feature = "background-speech"))]
+    #[cfg(all(any(windows, target_os = "macos", target_os = "linux"), feature = "background-speech"))]
     if let Some(name) = background::name() {
         let lower = name.to_lowercase();
         return if lower.contains("sapi") || lower.contains("onecore") { t("Windows speech") } else { name };
@@ -91,7 +91,7 @@ fn announce(text: &str, priority: Priority, speak_it: bool) {
 }
 
 fn speak(text: &str, priority: Priority) {
-    #[cfg(all(windows, feature = "background-speech"))]
+    #[cfg(all(any(windows, target_os = "macos", target_os = "linux"), feature = "background-speech"))]
     if !background::tin_pan_in_front() {
         background::speak(text, priority == Priority::High);
         return;
@@ -101,7 +101,7 @@ fn speak(text: &str, priority: Priority) {
     }
 }
 
-#[cfg(all(windows, feature = "background-speech"))]
+#[cfg(all(any(windows, target_os = "macos", target_os = "linux"), feature = "background-speech"))]
 mod background {
     use prismer::{Backend, Prism};
 
@@ -130,7 +130,54 @@ mod background {
         });
     }
 
+    /// Whether one of Tin Pan's windows is the active one; Orca reads its announcements then.
+    #[cfg(target_os = "linux")]
+    pub fn tin_pan_in_front() -> bool {
+        use std::ffi::{c_int, c_void};
+        #[repr(C)]
+        struct GList {
+            data: *mut c_void,
+            next: *mut GList,
+            prev: *mut GList,
+        }
+        #[link(name = "gtk-3")]
+        unsafe extern "C" {
+            fn gtk_window_list_toplevels() -> *mut GList;
+            fn gtk_window_is_active(window: *mut c_void) -> c_int;
+        }
+        #[link(name = "glib-2.0")]
+        unsafe extern "C" {
+            fn g_list_free(list: *mut GList);
+        }
+        // SAFETY: GTK's own list of this process's top-level windows, read and freed on the main thread.
+        unsafe {
+            let list = gtk_window_list_toplevels();
+            let mut item = list;
+            let mut active = false;
+            while !item.is_null() {
+                active |= gtk_window_is_active((*item).data) != 0;
+                item = (*item).next;
+            }
+            g_list_free(list);
+            active
+        }
+    }
+
+    /// Whether Tin Pan is the app in front; VoiceOver reads its announcements then.
+    #[cfg(target_os = "macos")]
+    pub fn tin_pan_in_front() -> bool {
+        use objc::runtime::{BOOL, NO, Object};
+        use objc::{class, msg_send, sel, sel_impl};
+        // SAFETY: NSApplication's own getters, on the main thread, where speech always runs.
+        unsafe {
+            let app: *mut Object = msg_send![class!(NSApplication), sharedApplication];
+            let active: BOOL = msg_send![app, isActive];
+            active != NO
+        }
+    }
+
     /// Whether the window in front belongs to Tin Pan (the main window or one of its dialogs).
+    #[cfg(windows)]
     pub fn tin_pan_in_front() -> bool {
         use windows::Win32::System::Threading::GetCurrentProcessId;
         use windows::Win32::UI::WindowsAndMessaging::{GetForegroundWindow, GetWindowThreadProcessId};

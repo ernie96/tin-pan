@@ -1,0 +1,66 @@
+name: Build 2.x for Linux
+
+# Tests and builds Tin Pan 2 on Ubuntu 24.04 and packages it as TinPan.AppImage, whenever main or the
+# macos branch changes. The AppImage is kept as the run's artifact to download and try with Orca.
+on:
+  push:
+    branches: [main, macos]
+    paths: ['v2/**', '.github/workflows/build-linux.yml']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      # wxWidgets' GTK port and its web view, ALSA for sound, the keyring, and glibmm for speech to Orca.
+      - name: Build tools and libraries
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q build-essential cmake ninja-build pkg-config clang libclang-dev \
+            libgtk-3-dev libwebkit2gtk-4.1-dev libasound2-dev libsecret-1-dev libdbus-1-dev libglibmm-2.68-dev libfuse2
+
+      - name: Cache the Rust build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            v2/target
+          key: v2-Linux-${{ hashFiles('v2/Cargo.lock') }}-${{ github.sha }}
+          restore-keys: |
+            v2-Linux-
+
+      - name: Test
+        working-directory: v2
+        run: cargo test --release -p tinpan-core -p tinpan
+
+      # The clean-up tool and the packager, each pinned to the file checked here.
+      - name: Fetch sunscreen and appimagetool
+        working-directory: v2
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download v0.7.1 --repo abradburne/sunscreen --pattern 'sunscreen-v0.7.1-x86_64-unknown-linux-gnu.tar.gz' --dir "$RUNNER_TEMP"
+          echo "b638b4b8f4347d7ce3186365acfc15b3ef28c3c046ce6ca36f4f9dc75553551d  $RUNNER_TEMP/sunscreen-v0.7.1-x86_64-unknown-linux-gnu.tar.gz" | sha256sum -c
+          tar xzf "$RUNNER_TEMP/sunscreen-v0.7.1-x86_64-unknown-linux-gnu.tar.gz" -C "$RUNNER_TEMP"
+          mkdir -p target/release
+          cp "$RUNNER_TEMP/sunscreen-v0.7.1-x86_64-unknown-linux-gnu/sunscreen" target/release/sunscreen
+          gh release download 1.9.1 --repo AppImage/appimagetool --pattern 'appimagetool-x86_64.AppImage' --dir "$RUNNER_TEMP"
+          echo "ed4ce84f0d9caff66f50bcca6ff6f35aae54ce8135408b3fa33abfc3cb384eb0  $RUNNER_TEMP/appimagetool-x86_64.AppImage" | sha256sum -c
+          chmod +x "$RUNNER_TEMP/appimagetool-x86_64.AppImage"
+
+      - name: Build and package
+        working-directory: v2
+        run: |
+          cargo build --release -p tinpan
+          APPIMAGETOOL="$RUNNER_TEMP/appimagetool-x86_64.AppImage" sh packaging/linux/make-appimage.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: TinPan-Linux
+          path: v2/target/release/TinPan.AppImage
+          retention-days: 30

@@ -15,6 +15,15 @@ pub const VERSION: &str = "0.7.1";
 /// SHA-256 of sunscreen-v0.7.1-x86_64-pc-windows-msvc.zip's sunscreen.exe, from its GitHub release.
 pub const PINNED_SHA256: &str = "BFEF0C7CDD22EF3C0BDCC669A3F9E58E6BCCE130573BF028C92E7E2EE406B6E3";
 
+/// SHA-256 of the sunscreen that comes next to Tin Pan elsewhere: in Tin Pan.app on macOS (from
+/// sunscreen-v0.7.1-aarch64-apple-darwin.tar.gz), in the AppImage on Linux (from the x86_64-unknown-linux-gnu one).
+#[cfg(not(windows))]
+const PINNED_SHA256_BESIDE: &str = if cfg!(target_os = "macos") {
+    "6F3B180A1005F4BEB5A675ED8BD2A107DBCC601129E03B78E9A0D5FE90A1FEE6"
+} else {
+    "24EC1FFA40B53C1E8D233B1A030665EB8297765364815B74235F81452B966535"
+};
+
 const TITLE: &str = "song";
 const LIMIT: Duration = Duration::from_secs(15 * 60);
 
@@ -79,20 +88,22 @@ pub fn unpack(native_dir: &Path) -> Result<PathBuf> {
         }
         Ok(path)
     }
+    // Elsewhere it comes next to Tin Pan (inside Tin Pan.app, or the AppImage), checked against its pinned hash too.
     #[cfg(not(windows))]
     {
+        use sha2::{Digest, Sha256};
         let _ = native_dir;
-        Err(Error::api(t("This copy of Tin Pan has no clean-up tool built in.")))
+        let path = std::env::current_exe().ok().and_then(|exe| exe.parent().map(|dir| dir.join("sunscreen")));
+        match path {
+            Some(path) if std::fs::read(&path).is_ok_and(|bytes| hex::encode_upper(Sha256::digest(&bytes)) == PINNED_SHA256_BESIDE) => Ok(path),
+            _ => Err(Error::api(t("This copy of Tin Pan has no clean-up tool built in."))),
+        }
     }
 }
 
 /// Cleans up a download. `decode` turns a file sunscreen can't read (M4A) into a WAV at the path it's given.
 /// Removes the download afterwards unless the options keep it. Returns the cleaned file's path.
 pub fn clean(audio: &Path, options: &CleanupConfig, native_dir: &Path, decode: impl FnOnce(&Path, &Path) -> std::result::Result<(), String>) -> Result<PathBuf> {
-    // The sunscreen built in is its Windows build; other systems would need theirs.
-    if !cfg!(windows) {
-        return Err(Error::api(t("Clean-up with sunscreen works on Windows only for now.")));
-    }
     let name = audio.file_stem().map(|s| s.to_string_lossy().to_string()).unwrap_or_default();
     if !audio.exists() {
         return Err(Error::api(tf("Couldn't find the downloaded file for {0}.", &[&name])));
