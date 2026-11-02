@@ -1,0 +1,86 @@
+name: Release 2.x
+
+# Push a tag like v2.0.0 (matching version in v2/Cargo.toml, with a "## 2.0.0" entry in v2/CHANGELOG.md) to
+# test, build, sign and publish Tin Pan 2. Its Windows build is published as TinPan.exe with a TinPan.exe.sig
+# made with the same key and scheme as Tin Pan 1's, so Tin Pan 1 offers it as an update and installs it, and
+# 2.x keeps updating the same way. A version with a "-" (2.0.0-alpha.1) becomes a pre-release, which neither
+# version offers as an update, since GitHub's latest release never is one.
+on:
+  push:
+    tags: ['v2.*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Check the tag matches the version
+        run: |
+          $version = (Select-String -Path v2/Cargo.toml -Pattern '^version = "([^"]+)"').Matches[0].Groups[1].Value
+          if ("v$version" -ne "${{ github.ref_name }}") { throw "Tag ${{ github.ref_name }} does not match version $version in v2/Cargo.toml." }
+          "VERSION=$version" | Out-File $env:GITHUB_ENV -Append
+
+      - name: Cache the Rust build (wxWidgets takes a while the first time)
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            v2/target
+          key: v2-${{ runner.os }}-${{ hashFiles('v2/Cargo.lock') }}
+
+      - name: Test and build
+        working-directory: v2
+        run: |
+          . ./env.ps1
+          cargo test --release
+          if ($LASTEXITCODE -ne 0) { throw 'Tests failed.' }
+          cargo build --release -p tinpan
+          if ($LASTEXITCODE -ne 0) { throw 'The build failed.' }
+
+      - name: Sign it, and check the signature against the key built into the app
+        env:
+          UPDATE_SIGNING_KEY: ${{ secrets.UPDATE_SIGNING_KEY }}
+        run: |
+          if (-not $env:UPDATE_SIGNING_KEY) { throw 'The UPDATE_SIGNING_KEY secret is missing; an unsigned release could not be installed by the updater.' }
+          New-Item -ItemType Directory -Force release | Out-Null
+          # Tin Pan 1 replaces TinPan.exe, so 2.x is published under that name.
+          Copy-Item v2/target/release/tinpan.exe release/TinPan.exe
+          dotnet run --project build/Signer -c Release -- sign release/TinPan.exe
+          $publicKey = (Select-String -Path v2/crates/tinpan-core/src/update.rs -Pattern 'PUBLIC_KEY: &str = "([^"]+)"').Matches[0].Groups[1].Value
+          dotnet run --project build/Signer -c Release -- verify $publicKey release/TinPan.exe
+          if ($LASTEXITCODE -ne 0) { throw 'The signature does not match the public key in update.rs.' }
+          $oneKey = (Select-String -Path TinPan/Services/UpdateService.cs -Pattern 'PublicKey = "([^"]+)"').Matches[0].Groups[1].Value
+          if ($oneKey -ne $publicKey) { throw 'Tin Pan 1 and 2 must share the update key, or 1.x could not install 2.x.' }
+          Get-FileHash release/TinPan.exe -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  TinPan.exe" } | Out-File release/SHA256SUMS.txt -Encoding ascii
+
+      - name: Release notes from the changelog
+        run: |
+          $changelog = Get-Content v2/CHANGELOG.md -Raw
+          $pattern = '(?ms)^## ' + [regex]::Escape($env:VERSION) + '\b[^\n]*$(.*?)(?=^## |\z)'
+          $match = [regex]::Match($changelog, $pattern)
+          if (-not $match.Success) { throw "v2/CHANGELOG.md has no '## $env:VERSION' section." }
+          # Both updaters skip this first paragraph and read only the changelog.
+          $intro = "Download **TinPan.exe** below and run it. It is one file and needs nothing installed. If you already have Tin Pan 1.2.0 or later, it offers this update by itself.`n`n"
+          ($intro + $match.Groups[1].Value.Trim()) | Out-File release-notes.md -Encoding utf8
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $pre = if ($env:VERSION.Contains('-')) { '--prerelease' } else { '' }
+          gh release create "${{ github.ref_name }}" --title "Tin Pan $env:VERSION" --notes-file release-notes.md $pre `
+            release/TinPan.exe release/TinPan.exe.sig release/SHA256SUMS.txt

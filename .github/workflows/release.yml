@@ -5,7 +5,8 @@ name: Release
 # offer it as an update.
 on:
   push:
-    tags: ['v*']
+    # 1.x only; 2.x tags are release-v2.yml's.
+    tags: ['v1.*']
 
 permissions:
   contents: write

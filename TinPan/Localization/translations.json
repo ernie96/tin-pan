@@ -289,6 +289,11 @@
   "Пісня без назви",
   "Canción sin título"
  ],
+ "Suno's content rules turned it down.": [
+  "Regulile de conținut Suno au respins-o.",
+  "Правила вмісту Suno її відхилили.",
+  "Las normas de contenido de Suno la rechazaron."
+ ],
  "liked": [
   "apreciată",
   "вподобана",
@@ -874,6 +879,11 @@
   "Suno надіслав відповідь, яку програма не розуміє.",
   "Suno envió una respuesta que la app no entiende."
  ],
+ "Suno didn't make the draft.": [
+  "Suno nu a creat ciorna.",
+  "Suno не створив чернетку.",
+  "Suno no creó el borrador."
+ ],
  "Suno didn't say which song it made. Refresh the library to check.": [
   "Suno nu a spus ce melodie a făcut. Reîmprospătează biblioteca ca să verifici.",
   "Suno не сказав, яку пісню створив. Оновіть бібліотеку, щоб перевірити.",
@@ -1304,6 +1314,11 @@
   "У «Кавері» «Переписати текст зараз» змінює поле «Текст» так, як сказано в полі «Як змінити», а «Повернути оригінальні слова» скасовує зміну. «Кавер» і «Продовжити» мають «Посилити стиль» та «Ідеї стилю» для поля «Стиль». Можна запустити до п’яти одночасно, як дозволяє Suno; кнопка чекає, лише поки п’ять ще запускаються.",
   "En Versión, Reescribir la letra ahora cambia el cuadro Letra como dice el cuadro Cómo cambiar, y Volver a la letra original lo deshace. Versión y Extender tienen Mejorar estilo e Ideas de estilo para el cuadro Estilo. Puedes iniciar hasta cinco a la vez, como permite Suno; el botón solo espera mientras cinco se siguen iniciando."
  ],
+ "Use as inspiration (Song menu, Make from it) makes a new song that takes after the selected one, with your own lyrics and style; its form works like Cover's. Each of these forms only offers the models your plan can use for it.": [
+  "Folosește ca inspirație (meniul Melodie, Fă din ea) face o melodie nouă care seamănă cu cea selectată, cu versurile și stilul tău; formularul ei funcționează ca cel de Cover. Fiecare dintre aceste formulare oferă doar modelele pe care planul tău le poate folosi pentru el.",
+  "«Взяти за натхнення» (меню «Пісня», «Створити з неї») створює нову пісню, схожу на вибрану, з вашим текстом і стилем; її форма працює як форма кавера. Кожна з цих форм пропонує лише моделі, які ваш план може для неї використати.",
+  "Usar de inspiración (menú Canción, Crear a partir de ella) crea una canción nueva que se parece a la seleccionada, con tu propia letra y estilo; su formulario funciona como el de Cover. Cada uno de estos formularios solo ofrece los modelos que tu plan puede usar para él."
+ ],
  "More you can do": [
   "Mai poți face",
   "Що ще можна зробити",
@@ -1389,6 +1404,21 @@
   "«Довідка», «Перевірити оновлення» шукає нову версію зараз. Коли вона виходить, Tin Pan розповідає, що нового, і запитує; «Так» завантажує її, перевіряє підпис, закриває Tin Pan, замінює TinPan.exe новим і знову відкриває. Якщо під час запуску відповісти «Ні», цю версію більше не буде запропоновано самостійно.",
   "Ayuda, Buscar actualizaciones busca ahora una versión nueva. Cuando sale una, Tin Pan dice qué hay de nuevo y pregunta; Sí la descarga, comprueba su firma, cierra Tin Pan, pone el nuevo TinPan.exe en su lugar y lo vuelve a abrir. Si dices No al iniciar, esa versión no se vuelve a ofrecer sola."
  ],
+ "None of the models on your plan can make {0}.": [
+  "Niciun model din planul tău nu poate face {0}.",
+  "Жодна модель вашого плану не вміє робити {0}.",
+  "Ningún modelo de tu plan puede hacer {0}."
+ ],
+ "_Model": [
+  "_Model",
+  "_Модель",
+  "_Modelo"
+ ],
+ "{0} doesn't take weirdness or influence numbers. Leave them empty, or choose another model.": [
+  "{0} nu acceptă valori de ciudățenie sau influență. Lasă-le goale sau alege alt model.",
+  "{0} не приймає значень дивності чи впливу. Залиште їх порожніми або виберіть іншу модель.",
+  "{0} no admite valores de rareza ni de influencia. Déjalos vacíos o elige otro modelo."
+ ],
  "That song failed to generate.": [
   "Melodia nu s-a putut genera.",
   "Пісню не вдалося згенерувати.",
@@ -1403,6 +1433,11 @@
   "Modelele nu s-au încărcat încă. Apasă F5 în fereastra Creare (Ctrl+N), apoi încearcă din nou.",
   "Моделі ще не завантажилися. Натисніть F5 у вікні «Створення» (Ctrl+N), потім спробуйте знову.",
   "Los modelos aún no se han cargado. Pulsa F5 en la ventana Crear (Ctrl+N) y vuelve a intentarlo."
+ ],
+ "extensions": [
+  "extinderi",
+  "продовження",
+  "extensiones"
  ],
  "Extend f_rom (seconds, or minutes:seconds)": [
   "Extinde _de la (secunde sau minute:secunde)",
@@ -1594,10 +1629,45 @@
   "Додайте текст або позначте «Інструментал».",
   "Agrega una letra o marca Instrumental."
  ],
+ "{0} can't make a cover with a persona. Choose No persona, or another model.": [
+  "{0} nu poate face un cover cu un persona. Alege Fără persona sau alt model.",
+  "{0} не робить кавер із персоною. Виберіть Без персони або іншу модель.",
+  "{0} no puede hacer un cover con una persona. Elige Sin persona u otro modelo."
+ ],
  "Covering {0}.": [
   "Se face coverul pentru {0}.",
   "Створюю кавер на «{0}».",
   "Creando el cover de {0}."
+ ],
+ "songs inspired by another": [
+  "melodii inspirate de alta",
+  "пісні за мотивами іншої",
+  "canciones inspiradas en otra"
+ ],
+ "_Lyrics": [
+  "_Versuri",
+  "_Текст",
+  "_Letra"
+ ],
+ "Makes a new song that takes after {0}: its sound and feel, with your own lyrics and style.": [
+  "Face o melodie nouă care seamănă cu {0}: sunetul și atmosfera ei, cu versurile și stilul tău.",
+  "Створює нову пісню, схожу на {0}: її звучання й настрій, з вашим текстом і стилем.",
+  "Crea una canción nueva que se parece a {0}: su sonido y su ambiente, con tu propia letra y estilo."
+ ],
+ "Use {0} as inspiration": [
+  "Folosește {0} ca inspirație",
+  "Взяти {0} за натхнення",
+  "Usar {0} de inspiración"
+ ],
+ "Make song": [
+  "Fă melodia",
+  "Створити пісню",
+  "Crear canción"
+ ],
+ "Making a song inspired by {0}.": [
+  "Se face o melodie inspirată de {0}.",
+  "Створюється пісня за мотивами {0}.",
+  "Creando una canción inspirada en {0}."
  ],
  "Subtle": [
   "Subtilă",
@@ -3079,11 +3149,6 @@
   "Перемістити «{0}» у кошик Suno?",
   "¿Mover «{0}» a tu papelera de Suno?"
  ],
- "_Lyrics": [
-  "_Versuri",
-  "_Текст",
-  "_Letra"
- ],
  "Edit {0}": [
   "Editează {0}",
   "Змінити «{0}»",
@@ -3488,6 +3553,11 @@
   "Exti_nde...",
   "П_родовжити...",
   "Ex_tender..."
+ ],
+ "Use as _inspiration...": [
+  "Folosește ca _inspirație...",
+  "Взяти за на_тхнення...",
+  "Usar d_e inspiración..."
  ],
  "_Get whole song": [
   "Melodia întrea_gă",
@@ -4004,6 +4074,11 @@
   "Готово: {0}.",
   "Listas: {0}."
  ],
+ "Suno gave no reason.": [
+  "Suno nu a spus de ce.",
+  "Suno не назвав причини.",
+  "Suno no dio el motivo."
+ ],
  "Ctrl+N opens Create; F6 then moves between it and the main window.": [
   "Ctrl+N deschide Creare; apoi F6 trece între ea și fereastra principală.",
   "Ctrl+N відкриває «Створення»; потім F6 перемикає між ним і головним вікном.",
@@ -4494,15 +4569,30 @@
   "Текст готовий.",
   "La letra está lista."
  ],
- "You have no lyrics drafts on Suno.": [
-  "Nu aveți ciorne de versuri pe Suno.",
-  "У вас немає чернеток тексту в Suno.",
-  "No tiene borradores de letras en Suno."
+ "Save the Lyrics box as a new draft...": [
+  "Salvează caseta Versuri ca ciornă nouă...",
+  "Зберегти поле Текст як нову чернетку...",
+  "Guardar el cuadro Letra como borrador nuevo..."
  ],
- "Lyrics drafts. Enter puts one in the Lyrics box.": [
-  "Ciorne de versuri. Enter pune una în caseta Versuri.",
-  "Чернетки тексту. Enter вставляє одну в поле «Текст».",
-  "Borradores de letras. Intro pone uno en el cuadro Letra."
+ "Lyrics drafts. You have none on Suno yet.": [
+  "Ciorne de versuri. Încă nu ai niciuna pe Suno.",
+  "Чернетки тексту. На Suno їх ще немає.",
+  "Borradores de letras. Aún no tienes ninguno en Suno."
+ ],
+ "Put it in the Lyrics box": [
+  "Pune-o în caseta Versuri",
+  "Вставити в поле Текст",
+  "Ponerlo en el cuadro Letra"
+ ],
+ "Save the Lyrics box into it": [
+  "Salvează caseta Versuri în ea",
+  "Зберегти в неї поле Текст",
+  "Guardar en él el cuadro Letra"
+ ],
+ "Delete...": [
+  "Șterge...",
+  "Видалити...",
+  "Eliminar..."
  ],
  "That draft has no lyrics yet.": [
   "Ciorna aceasta nu are încă versuri.",
@@ -4523,6 +4613,66 @@
   "Versurile din {0} sunt în caseta Versuri.",
   "Текст із {0} тепер у полі «Текст».",
   "La letra de {0} está en el cuadro Letra."
+ ],
+ "The Lyrics box is empty, so there's nothing to save.": [
+  "Caseta Versuri e goală, nu e nimic de salvat.",
+  "Поле Текст порожнє, нічого зберігати.",
+  "El cuadro Letra está vacío, no hay nada que guardar."
+ ],
+ "_Draft name": [
+  "Numele _ciornei",
+  "_Назва чернетки",
+  "_Nombre del borrador"
+ ],
+ "Save as a new draft": [
+  "Salvează ca ciornă nouă",
+  "Зберегти як нову чернетку",
+  "Guardar como borrador nuevo"
+ ],
+ "Saves the Lyrics box to Suno as a lyrics draft.": [
+  "Salvează caseta Versuri pe Suno ca ciornă de versuri.",
+  "Зберігає поле Текст на Suno як чернетку тексту.",
+  "Guarda el cuadro Letra en Suno como borrador de letra."
+ ],
+ "Saved as the draft {0}.": [
+  "Salvat ca ciorna {0}.",
+  "Збережено як чернетку {0}.",
+  "Guardado como el borrador {0}."
+ ],
+ "Replace the words in the draft {0} with the Lyrics box?": [
+  "Înlocuiești versurile din ciorna {0} cu cele din caseta Versuri?",
+  "Замінити слова в чернетці {0} вмістом поля Текст?",
+  "¿Reemplazar la letra del borrador {0} por el cuadro Letra?"
+ ],
+ "Saved into {0}.": [
+  "Salvat în {0}.",
+  "Збережено в {0}.",
+  "Guardado en {0}."
+ ],
+ "Rename": [
+  "Redenumește",
+  "Перейменувати",
+  "Renombrar"
+ ],
+ "Renamed to {0}.": [
+  "Redenumită {0}.",
+  "Перейменовано на {0}.",
+  "Renombrado a {0}."
+ ],
+ "Delete the draft {0} from Suno? This can't be undone.": [
+  "Ștergi ciorna {0} de pe Suno? Nu se poate anula.",
+  "Видалити чернетку {0} із Suno? Це не можна скасувати.",
+  "¿Eliminar el borrador {0} de Suno? No se puede deshacer."
+ ],
+ "Delete draft": [
+  "Șterge ciorna",
+  "Видалити чернетку",
+  "Eliminar borrador"
+ ],
+ "Deleted the draft {0}.": [
+  "Ciorna {0} a fost ștearsă.",
+  "Чернетку {0} видалено.",
+  "Se eliminó el borrador {0}."
  ],
  "Put lyrics in the Lyrics box first. Write lyrics makes some from a topic.": [
   "Întâi pune versuri în caseta Versuri. Generează versuri le face dintr-o temă.",
@@ -4553,6 +4703,11 @@
   "{0} notificare.|{0} notificări.|{0} de notificări.",
   "{0} сповіщення.|{0} сповіщення.|{0} сповіщень.",
   "{0} notificación.|{0} notificaciones."
+ ],
+ "Lyrics drafts. {0} draft; Enter on one for what to do with it.|Lyrics drafts. {0} drafts; Enter on one for what to do with it.": [
+  "Ciorne de versuri. {0} ciornă; Enter pe una arată ce poți face cu ea.|Ciorne de versuri. {0} ciorne; Enter pe una arată ce poți face cu ea.|Ciorne de versuri. {0} de ciorne; Enter pe una arată ce poți face cu ea.",
+  "Чернетки тексту. {0} чернетка; Enter на ній покаже, що з нею зробити.|Чернетки тексту. {0} чернетки; Enter на одній покаже, що з нею зробити.|Чернетки тексту. {0} чернеток; Enter на одній покаже, що з нею зробити.",
+  "Borradores de letras. {0} borrador; Intro en uno muestra qué hacer con él.|Borradores de letras. {0} borradores; Intro en uno muestra qué hacer con él."
  ],
  "{0} trending song.|{0} trending songs.": [
   "{0} melodie în tendințe.|{0} melodii în tendințe.|{0} de melodii în tendințe.",
@@ -4678,11 +4833,6 @@
   "Setări pentru ambele feluri de a crea o melodie",
   "Налаштування для обох способів створення пісні",
   "Ajustes para las dos formas de crear una canción"
- ],
- "_Model": [
-  "_Model",
-  "_Модель",
-  "_Modelo"
  ],
  "Model": [
   "Model",
@@ -5254,164 +5404,244 @@
   "англійська",
   "inglés"
  ],
- "Delete draft": [
-  "Șterge ciorna",
-  "Видалити чернетку",
-  "Eliminar borrador"
+ "About this cr_eator": [
+  "Despre acest cr_eator",
+  "Про _цього автора",
+  "Sobre este c_reador"
  ],
- "Delete the draft {0} from Suno? This can't be undone.": [
-  "Ștergi ciorna {0} de pe Suno? Nu se poate anula.",
-  "Видалити чернетку {0} із Suno? Це не можна скасувати.",
-  "¿Eliminar el borrador {0} de Suno? No se puede deshacer."
+ "New pla_ylist...": [
+  "_Listă nouă...",
+  "Новий плейли_ст...",
+  "Nueva _lista..."
  ],
- "Delete...": [
-  "Șterge...",
-  "Видалити...",
-  "Eliminar..."
+ "Rena_me playlist...": [
+  "R_edenumește lista...",
+  "Пе_рейменувати плейлист...",
+  "Cambiar n_ombre de la lista..."
  ],
- "Deleted the draft {0}.": [
-  "Ciorna {0} a fost ștearsă.",
-  "Чернетку {0} видалено.",
-  "Se eliminó el borrador {0}."
+ "Dele_te playlist...": [
+  "Șter_ge lista...",
+  "Вида_лити плейлист...",
+  "_Eliminar lista..."
  ],
- "Lyrics drafts. You have none on Suno yet.": [
-  "Ciorne de versuri. Încă nu ai niciuna pe Suno.",
-  "Чернетки тексту. На Suno їх ще немає.",
-  "Borradores de letras. Aún no tienes ninguno en Suno."
+ "_Discover": [
+  "_Descoperă",
+  "Від_криття",
+  "_Descubrir"
  ],
- "Lyrics drafts. {0} draft; Enter on one for what to do with it.|Lyrics drafts. {0} drafts; Enter on one for what to do with it.": [
-  "Ciorne de versuri. {0} ciornă; Enter pe una arată ce poți face cu ea.|Ciorne de versuri. {0} ciorne; Enter pe una arată ce poți face cu ea.|Ciorne de versuri. {0} de ciorne; Enter pe una arată ce poți face cu ea.",
-  "Чернетки тексту. {0} чернетка; Enter на ній покаже, що з нею зробити.|Чернетки тексту. {0} чернетки; Enter на одній покаже, що з нею зробити.|Чернетки тексту. {0} чернеток; Enter на одній покаже, що з нею зробити.",
-  "Borradores de letras. {0} borrador; Intro en uno muestra qué hacer con él.|Borradores de letras. {0} borradores; Intro en uno muestra qué hacer con él."
+ "Lists": [
+  "Liste",
+  "Списки",
+  "Listas"
  ],
- "Make song": [
-  "Fă melodia",
-  "Створити пісню",
-  "Crear canción"
+ "Models haven't loaded yet.": [
+  "Modelele nu s-au încărcat încă.",
+  "Моделі ще не завантажилися.",
+  "Los modelos aún no se han cargado."
  ],
- "Makes a new song that takes after {0}: its sound and feel, with your own lyrics and style.": [
-  "Face o melodie nouă care seamănă cu {0}: sunetul și atmosfera ei, cu versurile și stilul tău.",
-  "Створює нову пісню, схожу на {0}: її звучання й настрій, з вашим текстом і стилем.",
-  "Crea una canción nueva que se parece a {0}: su sonido y su ambiente, con tu propia letra y estilo."
+ "Refreshing.": [
+  "Se reîmprospătează.",
+  "Оновлення.",
+  "Actualizando."
  ],
- "Making a song inspired by {0}.": [
-  "Se face o melodie inspirată de {0}.",
-  "Створюється пісня за мотивами {0}.",
-  "Creando una canción inspirada en {0}."
+ "No other window is open.": [
+  "Nu e deschisă nicio altă fereastră.",
+  "Інших вікон не відкрито.",
+  "No hay otra ventana abierta."
  ],
- "None of the models on your plan can make {0}.": [
-  "Niciun model din planul tău nu poate face {0}.",
-  "Жодна модель вашого плану не вміє робити {0}.",
-  "Ningún modelo de tu plan puede hacer {0}."
+ "_Weirdness": [
+  "_Ciudățenie",
+  "_Дивність",
+  "_Rareza"
  ],
- "Put it in the Lyrics box": [
-  "Pune-o în caseta Versuri",
-  "Вставити в поле Текст",
-  "Ponerlo en el cuadro Letra"
+ "Style in_fluence": [
+  "Influența st_ilului",
+  "_Вплив стилю",
+  "_Influencia del estilo"
  ],
- "Rename": [
-  "Redenumește",
-  "Перейменувати",
-  "Renombrar"
+ "Explore": [
+  "Explorează",
+  "Огляд",
+  "Explorar"
  ],
- "Renamed to {0}.": [
-  "Redenumită {0}.",
-  "Перейменовано на {0}.",
-  "Renombrado a {0}."
+ "Closed {0}.": [
+  "Am închis {0}.",
+  "Закрито: {0}.",
+  "Se cerró {0}."
  ],
- "Replace the words in the draft {0} with the Lyrics box?": [
-  "Înlocuiești versurile din ciorna {0} cu cele din caseta Versuri?",
-  "Замінити слова в чернетці {0} вмістом поля Текст?",
-  "¿Reemplazar la letra del borrador {0} por el cuadro Letra?"
+ "Fade _in over this many seconds (0 for none)": [
+  "Estompare la _început pe atâtea secunde (0 pentru deloc)",
+  "Наростання на _початку, стільки секунд (0 — без нього)",
+  "Fundido de _entrada en estos segundos (0 para ninguno)"
  ],
- "Save as a new draft": [
-  "Salvează ca ciornă nouă",
-  "Зберегти як нову чернетку",
-  "Guardar como borrador nuevo"
+ "Fade _out over this many seconds (0 for none)": [
+  "Estompare la _sfârșit pe atâtea secunde (0 pentru deloc)",
+  "Затухання в _кінці, стільки секунд (0 — без нього)",
+  "Fundido de _salida en estos segundos (0 para ninguno)"
  ],
- "Save the Lyrics box as a new draft...": [
-  "Salvează caseta Versuri ca ciornă nouă...",
-  "Зберегти поле Текст як нову чернетку...",
-  "Guardar el cuadro Letra como borrador nuevo..."
+ "Let Suno choose the weirdness": [
+  "Lasă Suno să aleagă ciudățenia",
+  "Нехай Suno вибере дивність",
+  "Que Suno elija la rareza"
  ],
- "Save the Lyrics box into it": [
-  "Salvează caseta Versuri în ea",
-  "Зберегти в неї поле Текст",
-  "Guardar en él el cuadro Letra"
+ "Let Suno choose the style influence": [
+  "Lasă Suno să aleagă influența stilului",
+  "Нехай Suno вибере вплив стилю",
+  "Que Suno elija la influencia del estilo"
  ],
- "Saved as the draft {0}.": [
-  "Salvat ca ciorna {0}.",
-  "Збережено як чернетку {0}.",
-  "Guardado como el borrador {0}."
+ "Discover. Lists on the left: Trending, From people you follow, Explore and its shelves, Contests, and the lists you open from a song. Enter opens one; in its songs Enter plays, Space pauses, Left and Right seek. Delete in the lists closes a list you opened. F5 refreshes.": [
+  "Descoperă. Listele din stânga: În tendințe, De la oamenii pe care îi urmăriți, Explorează cu rafturile lui, Concursuri și listele deschise de la o melodie. Enter deschide una; în melodiile ei Enter redă, Spațiu pune pauză, Stânga și dreapta derulează. Delete în liste închide o listă deschisă de tine. F5 reîmprospătează.",
+  "Відкриття. Списки ліворуч: «У тренді», «Від тих, за ким ви стежите», Огляд із його полицями, Конкурси та списки, відкриті з пісні. Enter відкриває список; у його піснях Enter відтворює, Пробіл ставить на паузу, стрілки вліво і вправо перемотують. Delete у списках закриває відкритий вами список. F5 оновлює.",
+  "Descubrir. Listas a la izquierda: Tendencias, De las personas que sigue, Explorar y sus estantes, Concursos y las listas abiertas desde una canción. Intro abre una; en sus canciones Intro reproduce, Espacio pausa, Izquierda y Derecha avanzan o retroceden. Suprimir en las listas cierra una lista que abriste. F5 actualiza."
  ],
- "Saved into {0}.": [
-  "Salvat în {0}.",
-  "Збережено в {0}.",
-  "Guardado en {0}."
+ "Alt or F10: the menu bar. Every command is in it, with its keys. The Song menu acts on the song selected in the tab you're on.\nTab stops on the search box, the lists, the songs and the volume; the buttons on each page work with their Alt letters.\nF1: short help for where you are. Ctrl+F1: all commands in a list; Enter runs one. Its first item is this guide.\nCtrl+R: repeat the last message. Ctrl+Shift+R: message history, newest first.\nEscape: step back one level: from songs to the lists, from the lists to the tab headers.\nF2: credits left. Shift+F2: your plan, when it renews, credits and downloads left.\nF3: what's playing and how far in.\nF5: refresh what's shown.\nCtrl+1 Library, Ctrl+2 Discover, Ctrl+4 Account, Ctrl+5 Settings.\nCtrl+N: create a song, in a window that stays open. F6: to that window and back.\nCtrl+F: search your songs.": [
+  "Alt sau F10: bara de meniuri. Fiecare comandă e acolo, cu tastele ei. Meniul Melodie lucrează cu melodia selectată în fila în care ești.\nTab se oprește în caseta de căutare, în liste, în melodii și la volum; butoanele de pe fiecare pagină merg cu literele lor Alt.\nF1: ajutor scurt pentru locul în care ești. Ctrl+F1: toate comenzile într-o listă; Enter rulează una. Primul element e acest ghid.\nCtrl+R: repetă ultimul mesaj. Ctrl+Shift+R: istoricul mesajelor, cele mai noi primele.\nEscape: un pas înapoi: din melodii la liste, din liste la titlurile filelor.\nF2: credite rămase. Shift+F2: planul tău, când se reînnoiește, creditele și descărcările rămase.\nF3: ce se redă și cât a trecut.\nF5: reîmprospătează ce se vede.\nCtrl+1 Bibliotecă, Ctrl+2 Descoperă, Ctrl+4 Cont, Ctrl+5 Setări.\nCtrl+N: fă o melodie, într-o fereastră care rămâne deschisă. F6: la acea fereastră și înapoi.\nCtrl+F: caută în melodiile tale.",
+  "Alt або F10: рядок меню. У ньому всі команди з їхніми клавішами. Меню «Пісня» діє на пісню, вибрану у вкладці, де ви є.\nTab зупиняється на полі пошуку, списках, піснях і гучності; кнопки на кожній сторінці працюють зі своїми літерами Alt.\nF1: коротка довідка для місця, де ви є. Ctrl+F1: усі команди списком; Enter виконує одну. Перший пункт — цей посібник.\nCtrl+R: повторити останнє повідомлення. Ctrl+Shift+R: історія повідомлень, новіші першими.\nEscape: крок назад: від пісень до списків, від списків до заголовків вкладок.\nF2: залишок кредитів. Shift+F2: ваш план, коли він поновлюється, залишок кредитів і завантажень.\nF3: що грає і скільки минуло.\nF5: оновити те, що показано.\nCtrl+1 Бібліотека, Ctrl+2 Відкриття, Ctrl+4 Обліковий запис, Ctrl+5 Налаштування.\nCtrl+N: створити пісню у вікні, що лишається відкритим. F6: до цього вікна й назад.\nCtrl+F: пошук у ваших піснях.",
+  "Alt o F10: la barra de menús. Ahí está cada comando, con sus teclas. El menú Canción actúa sobre la canción elegida en la pestaña en la que estás.\nTab se detiene en el cuadro de búsqueda, las listas, las canciones y el volumen; los botones de cada página funcionan con sus letras Alt.\nF1: ayuda breve para donde estás. Ctrl+F1: todos los comandos en una lista; Intro ejecuta uno. Su primer elemento es esta guía.\nCtrl+R: repetir el último mensaje. Ctrl+Mayús+R: historial de mensajes, los más nuevos primero.\nEscape: un paso atrás: de las canciones a las listas, de las listas a los títulos de las pestañas.\nF2: créditos restantes. Mayús+F2: tu plan, cuándo se renueva, créditos y descargas restantes.\nF3: qué suena y cuánto lleva.\nF5: actualizar lo que se muestra.\nCtrl+1 Biblioteca, Ctrl+2 Descubrir, Ctrl+4 Cuenta, Ctrl+5 Configuración.\nCtrl+N: crear una canción, en una ventana que sigue abierta. F6: a esa ventana y de vuelta.\nCtrl+F: buscar en tus canciones."
  ],
- "Saves the Lyrics box to Suno as a lyrics draft.": [
-  "Salvează caseta Versuri pe Suno ca ciornă de versuri.",
-  "Зберігає поле Текст на Suno як чернетку тексту.",
-  "Guarda el cuadro Letra en Suno como borrador de letra."
+ "Tabs and lists": [
+  "File și liste",
+  "Вкладки і списки",
+  "Pestañas y listas"
  ],
- "Suno didn't make the draft.": [
-  "Suno nu a creat ciorna.",
-  "Suno не створив чернетку.",
-  "Suno no creó el borrador."
+ "The Library and Discover tabs each have their lists on the left and the chosen list's songs on the right. The Library's lists are your songs and each of your playlists; Discover's are Trending, From people you follow, Explore and each of its shelves, and Contests. A list loads a moment after you arrow onto it; Enter loads it now and says how many songs it has. A song carries on through the list it started from, whichever tab is shown.\nSimilar songs, a creator's songs, covers and remixes and the original song open as lists in the Discover tab; Delete in the lists closes one. In a playlist's songs, Delete removes a song and Ctrl+Up and Ctrl+Down move it; Delete on a playlist in the lists moves it to the trash (asks first). Ctrl+P adds the selected song to a playlist.": [
+  "Filele Bibliotecă și Descoperă au fiecare listele în stânga și melodiile listei alese în dreapta. Listele Bibliotecii sunt melodiile tale și fiecare listă de redare; ale lui Descoperă sunt În tendințe, De la oamenii pe care îi urmăriți, Explorează cu fiecare raft al lui și Concursuri. O listă se încarcă la o clipă după ce ajungi pe ea cu săgețile; Enter o încarcă imediat și spune câte melodii are. O melodie continuă prin lista din care a pornit, oricare filă s-ar vedea.\nMelodiile asemănătoare, melodiile unui creator, preluările și remixurile și melodia originală se deschid ca liste în fila Descoperă; Delete în liste închide una. În melodiile unei liste de redare, Delete scoate o melodie, iar Ctrl+Sus și Ctrl+Jos o mută; Delete pe o listă de redare din liste o mută la coș (întreabă întâi). Ctrl+P adaugă melodia aleasă într-o listă de redare.",
+  "Вкладки Бібліотека і Відкриття мають ліворуч свої списки, а праворуч — пісні вибраного списку. Списки Бібліотеки — це ваші пісні й кожен ваш плейлист; списки Відкриття — «У тренді», «Від тих, за ким ви стежите», Огляд і кожна його полиця та Конкурси. Список завантажується за мить після того, як ви стрілками стали на нього; Enter завантажує його одразу й каже, скільки в ньому пісень. Пісня продовжується тим списком, з якого почалася, хоч яку вкладку показано.\nСхожі пісні, пісні автора, кавери й ремікси та оригінальна пісня відкриваються як списки у вкладці Відкриття; Delete у списках закриває такий список. У піснях плейлиста Delete прибирає пісню, а Ctrl+Вгору і Ctrl+Вниз переміщують її; Delete на плейлисті в списках переміщує його до кошика (спершу питає). Ctrl+P додає вибрану пісню до плейлиста.",
+  "Las pestañas Biblioteca y Descubrir tienen sus listas a la izquierda y las canciones de la lista elegida a la derecha. Las listas de la Biblioteca son tus canciones y cada una de tus listas de reproducción; las de Descubrir son Tendencias, De las personas que sigue, Explorar y cada uno de sus estantes, y Concursos. Una lista se carga un momento después de llegar a ella con las flechas; Intro la carga ya y dice cuántas canciones tiene. Una canción sigue por la lista en la que empezó, sea cual sea la pestaña que se muestre.\nLas canciones parecidas, las de un creador, las versiones y remixes y la canción original se abren como listas en la pestaña Descubrir; Suprimir en las listas cierra una. En las canciones de una lista de reproducción, Suprimir quita una canción y Ctrl+Arriba y Ctrl+Abajo la mueven; Suprimir sobre una lista de reproducción la manda a la papelera (pregunta antes). Ctrl+P añade la canción elegida a una lista de reproducción."
  ],
- "Suno gave no reason.": [
-  "Suno nu a spus de ce.",
-  "Suno не назвав причини.",
-  "Suno no dio el motivo."
+ "F8 or the Play/Pause media key: play or pause; with nothing playing it starts the selected song.\nShift+F8 or the Stop media key: stop.\nF7 and F9, or the Previous and Next media keys: previous and next song.\nShift+F7 and Shift+F9: back and forward 10 seconds. Left and Right in a song list: 5 seconds.\nCtrl+F7 and Ctrl+F9: back and forward 10 percent of the song.\nCtrl+F8: back to the start of the song.\nCtrl+Shift+F8: resume the last song where you left off, even after closing Tin Pan.\nF11 and F12: volume down and up.\nSongs play in Tin Pan itself, and the next song in the list is fetched ahead, so it starts at once.": [
+  "F8 sau tasta media Redare/Pauză: redare sau pauză; când nu se redă nimic, pornește melodia selectată.\nShift+F8 sau tasta media Oprire: oprire.\nF7 și F9, sau tastele media Anterior și Următor: melodia anterioară și următoare.\nShift+F7 și Shift+F9: înapoi și înainte 10 secunde. Stânga și dreapta într-o listă de melodii: 5 secunde.\nCtrl+F7 și Ctrl+F9: înapoi și înainte 10 la sută din melodie.\nCtrl+F8: înapoi la începutul melodiei.\nCtrl+Shift+F8: reia ultima melodie de unde ai rămas, chiar și după ce ai închis Tin Pan.\nF11 și F12: volum mai mic și mai mare.\nMelodiile se redau chiar în Tin Pan, iar următoarea melodie din listă e adusă dinainte, ca să pornească imediat.",
+  "F8 або мультимедійна клавіша Відтворення/Пауза: відтворення або пауза; коли нічого не грає, запускає вибрану пісню.\nShift+F8 або мультимедійна клавіша Стоп: зупинка.\nF7 і F9 або мультимедійні клавіші Попередня й Наступна: попередня й наступна пісня.\nShift+F7 і Shift+F9: назад і вперед на 10 секунд. Стрілки вліво і вправо у списку пісень: на 5 секунд.\nCtrl+F7 і Ctrl+F9: назад і вперед на 10 відсотків пісні.\nCtrl+F8: на початок пісні.\nCtrl+Shift+F8: продовжити останню пісню з того місця, де ви зупинилися, навіть після закриття Tin Pan.\nF11 і F12: тихіше й гучніше.\nПісні грають у самому Tin Pan, а наступна пісня списку завантажується заздалегідь, тож починається одразу.",
+  "F8 o la tecla multimedia Reproducir/Pausa: reproducir o pausar; si no suena nada, empieza la canción elegida.\nMayús+F8 o la tecla multimedia Detener: detener.\nF7 y F9, o las teclas multimedia Anterior y Siguiente: canción anterior y siguiente.\nMayús+F7 y Mayús+F9: atrás y adelante 10 segundos. Izquierda y Derecha en una lista de canciones: 5 segundos.\nCtrl+F7 y Ctrl+F9: atrás y adelante un 10 por ciento de la canción.\nCtrl+F8: volver al principio de la canción.\nCtrl+Mayús+F8: seguir con la última canción donde la dejaste, incluso después de cerrar Tin Pan.\nF11 y F12: bajar y subir el volumen.\nLas canciones suenan en el propio Tin Pan, y la siguiente de la lista se trae antes, así que empieza enseguida."
  ],
- "Suno's content rules turned it down.": [
-  "Regulile de conținut Suno au respins-o.",
-  "Правила вмісту Suno її відхилили.",
-  "Las normas de contenido de Suno la rechazaron."
+ "Song menu, Make from it. Each opens a form that stays open until you close it (Escape or Close); its button starts it, and you can change something and start another. The playback keys work in the form, so you can listen while you fine-tune.\nExtend continues a song from a time you choose; Get whole song joins the parts afterwards. Cover keeps the melody in a new style; its lyrics start as the original words, Rewrite the lyrics now changes them the way the How to change box says, and Back to the original words undoes it. Remaster makes a cleaner version with a newer model. Use as inspiration makes a new song that takes after the selected one. Each form only offers the models your plan can use for it.\nWeirdness, style influence and audio influence are sliders, each followed by Let Suno choose, ticked until you move the slider.": [
+  "Meniul Melodie, Fă din ea. Fiecare deschide un formular care rămâne deschis până îl închizi (Escape sau Închide); butonul lui pornește lucrul și poți schimba ceva și porni altul. Tastele de redare merg în formular, ca să asculți în timp ce reglezi.\nExtinde continuă o melodie de la un moment ales de tine; Obține melodia întreagă unește apoi părțile. Preluarea păstrează melodia într-un stil nou; versurile ei pornesc de la cuvintele originale, Rescrie versurile acum le schimbă cum spune caseta Cum să schimbi, iar Înapoi la cuvintele originale anulează. Remasterizarea face o versiune mai curată cu un model mai nou. Folosește ca inspirație face o melodie nouă care seamănă cu cea aleasă. Fiecare formular oferă doar modelele pe care planul tău le poate folosi pentru el.\nCiudățenia, influența stilului și influența audio sunt glisoare, fiecare urmat de Lasă Suno să aleagă, bifat până miști glisorul.",
+  "Меню «Пісня», «Зробити з неї». Кожна команда відкриває форму, що лишається відкритою, доки ви її не закриєте (Escape або «Закрити»); її кнопка запускає роботу, і ви можете щось змінити й запустити ще раз. Клавіші відтворення працюють у формі, тож можна слухати, поки налаштовуєте.\nПродовження продовжує пісню з вибраного моменту; «Отримати всю пісню» потім об'єднує частини. Кавер зберігає мелодію в новому стилі; його текст спершу — оригінальні слова, «Переписати текст зараз» змінює його так, як каже поле «Як змінити», а «Повернути оригінальні слова» скасовує це. Ремастер робить чистішу версію новішою моделлю. «Використати як натхнення» створює нову пісню, схожу на вибрану. Кожна форма пропонує лише моделі, які ваш план може для неї використати.\nДивність, вплив стилю й вплив аудіо — повзунки, за кожним іде «Нехай Suno вибере», позначене, доки ви не зрушите повзунок.",
+  "Menú Canción, Hacer a partir de ella. Cada uno abre un formulario que sigue abierto hasta que lo cierras (Escape o Cerrar); su botón lo empieza, y puedes cambiar algo y empezar otro. Las teclas de reproducción funcionan en el formulario, así que puedes escuchar mientras ajustas.\nExtender continúa una canción desde el momento que elijas; Obtener la canción completa une luego las partes. Versión conserva la melodía en un estilo nuevo; su letra empieza siendo la original, Reescribir la letra ahora la cambia como dice el cuadro Cómo cambiar, y Volver a la letra original lo deshace. Remasterizar hace una versión más limpia con un modelo más nuevo. Usar como inspiración hace una canción nueva que se parece a la elegida. Cada formulario solo ofrece los modelos que tu plan puede usar para él.\nLa rareza, la influencia del estilo y la del audio son deslizadores, cada uno seguido de Que Suno elija, marcado hasta que mueves el deslizador."
  ],
- "The Lyrics box is empty, so there's nothing to save.": [
-  "Caseta Versuri e goală, nu e nimic de salvat.",
-  "Поле Текст порожнє, нічого зберігати.",
-  "El cuadro Letra está vacío, no hay nada que guardar."
+ "Library menu, Upload a song (Alt+U on the Library page), sends an audio file from this computer to your Suno account, where it becomes a song you can play, extend, cover and remaster. MP3, M4A, WAV, FLAC, OGG and AAC files can be uploaded, and you can add its lyrics. You confirm you have the rights to it and accept Suno's upload terms. Suno checks each upload, which can take a minute or two, and may refuse copyrighted music. The length limits are your plan's.": [
+  "Meniul Bibliotecă, Încarcă o melodie (Alt+U pe pagina Bibliotecă), trimite un fișier audio de pe acest calculator în contul tău Suno, unde devine o melodie pe care o poți reda, extinde, prelua și remasteriza. Se pot încărca fișiere MP3, M4A, WAV, FLAC, OGG și AAC, iar tu poți adăuga versurile. Confirmi că ai drepturile asupra lui și accepți termenii Suno pentru încărcări. Suno verifică fiecare încărcare, ceea ce poate dura un minut sau două, și poate refuza muzica protejată de drepturi de autor. Limitele de lungime sunt cele ale planului tău.",
+  "Меню «Бібліотека», «Надіслати пісню» (Alt+U на сторінці Бібліотека), надсилає аудіофайл із цього комп'ютера до вашого облікового запису Suno, де він стає піснею, яку можна відтворювати, продовжувати, робити кавер і ремастер. Можна надсилати файли MP3, M4A, WAV, FLAC, OGG і AAC, а також додати текст. Ви підтверджуєте, що маєте на нього права, і приймаєте умови Suno для надсилань. Suno перевіряє кожне надсилання, що може тривати хвилину-дві, і може відмовити музиці, захищеній авторським правом. Обмеження тривалості — ті, що у вашому плані.",
+  "Menú Biblioteca, Subir una canción (Alt+U en la página Biblioteca), envía un archivo de audio de este equipo a tu cuenta de Suno, donde se vuelve una canción que puedes reproducir, extender, versionar y remasterizar. Se pueden subir archivos MP3, M4A, WAV, FLAC, OGG y AAC, y puedes añadir su letra. Confirmas que tienes los derechos y aceptas los términos de Suno para subidas. Suno revisa cada subida, lo que puede tardar un minuto o dos, y puede rechazar música protegida por derechos de autor. Los límites de duración son los de tu plan."
  ],
- "Use as _inspiration...": [
-  "Folosește ca _inspirație...",
-  "Взяти за на_тхнення...",
-  "Usar d_e inspiración..."
+ "Tin Pan is already running.": [
+  "Tin Pan rulează deja.",
+  "Tin Pan уже запущено.",
+  "Tin Pan ya está abierto."
  ],
- "Use {0} as inspiration": [
-  "Folosește {0} ca inspirație",
-  "Взяти {0} за натхнення",
-  "Usar {0} de inspiración"
+ "{0} can't be used right now, so songs play on the Windows default output.": [
+  "{0} nu poate fi folosit acum, așa că melodiile se aud pe ieșirea implicită Windows.",
+  "{0} зараз не можна використати, тож пісні грають на типовому виході Windows.",
+  "{0} no se puede usar ahora, así que las canciones suenan en la salida predeterminada de Windows."
  ],
- "_Draft name": [
-  "Numele _ciornei",
-  "_Назва чернетки",
-  "_Nombre del borrador"
+ "Already signed in. Sign out first to use another account.": [
+  "Ești deja conectat. Deconectează-te mai întâi ca să folosești alt cont.",
+  "Ви вже ввійшли. Щоб скористатися іншим обліковим записом, спершу вийдіть.",
+  "Ya iniciaste sesión. Primero cierra la sesión para usar otra cuenta."
  ],
- "extensions": [
-  "extinderi",
-  "продовження",
-  "extensiones"
+ "Choose a song first.": [
+  "Alege mai întâi o melodie.",
+  "Спершу виберіть пісню.",
+  "Primero elige una canción."
  ],
- "songs inspired by another": [
-  "melodii inspirate de alta",
-  "пісні за мотивами іншої",
-  "canciones inspiradas en otra"
+ "{0} doesn't take weirdness or influence numbers. Tick Let Suno choose for each, or choose another model.": [
+  "{0} nu acceptă valori de ciudățenie sau influență. Bifează Lasă Suno să aleagă la fiecare sau alege alt model.",
+  "{0} не приймає значень дивності чи впливу. Позначте «Нехай Suno вибере» для кожного або виберіть іншу модель.",
+  "{0} no admite valores de rareza ni de influencia. Marca Que Suno elija en cada uno o elige otro modelo."
  ],
- "{0} can't make a cover with a persona. Choose No persona, or another model.": [
-  "{0} nu poate face un cover cu un persona. Alege Fără persona sau alt model.",
-  "{0} не робить кавер із персоною. Виберіть Без персони або іншу модель.",
-  "{0} no puede hacer un cover con una persona. Elige Sin persona u otro modelo."
+ "Extend from": [
+  "Extinde de la",
+  "Продовжити з моменту",
+  "Extender desde"
  ],
- "{0} doesn't take weirdness or influence numbers. Leave them empty, or choose another model.": [
-  "{0} nu acceptă valori de ciudățenie sau influență. Lasă-le goale sau alege alt model.",
-  "{0} не приймає значень дивності чи впливу. Залиште їх порожніми або виберіть іншу модель.",
-  "{0} no admite valores de rareza ni de influencia. Déjalos vacíos o elige otro modelo."
+ "Remasters need a Pro or Premier plan.": [
+  "Remasterizările cer un plan Pro sau Premier.",
+  "Для ремастерів потрібен план Pro або Premier.",
+  "Las remasterizaciones necesitan un plan Pro o Premier."
  ],
- "Use as inspiration (Song menu, Make from it) makes a new song that takes after the selected one, with your own lyrics and style; its form works like Cover's. Each of these forms only offers the models your plan can use for it.": [
-  "Folosește ca inspirație (meniul Melodie, Fă din ea) face o melodie nouă care seamănă cu cea selectată, cu versurile și stilul tău; formularul ei funcționează ca cel de Cover. Fiecare dintre aceste formulare oferă doar modelele pe care planul tău le poate folosi pentru el.",
-  "«Взяти за натхнення» (меню «Пісня», «Створити з неї») створює нову пісню, схожу на вибрану, з вашим текстом і стилем; її форма працює як форма кавера. Кожна з цих форм пропонує лише моделі, які ваш план може для неї використати.",
-  "Usar de inspiración (menú Canción, Crear a partir de ella) crea una canción nueva que se parece a la seleccionada, con tu propia letra y estilo; su formulario funciona como el de Cover. Cada uno de estos formularios solo ofrece los modelos que tu plan puede usar para él."
+ "_Audio influence: how closely to follow the original": [
+  "Influența _audio: cât de aproape să rămână de original",
+  "Вплив _аудіо: наскільки близько до оригіналу",
+  "Influencia del _audio: qué tanto seguir el original"
+ ],
+ "_Freedom (Suno uses 0)": [
+  "_Libertate (Suno folosește 0)",
+  "Сво_бода (у Suno 0)",
+  "_Libertad (Suno usa 0)"
+ ],
+ "T_one (Suno uses 50)": [
+  "T_on (Suno folosește 50)",
+  "Т_ембр (у Suno 50)",
+  "T_ono (Suno usa 50)"
+ ],
+ "_Clarity (Suno uses 50)": [
+  "_Claritate (Suno folosește 50)",
+  "_Чіткість (у Suno 50)",
+  "_Claridad (Suno usa 50)"
+ ],
+ "Stre_ngth (Suno uses 50)": [
+  "Fo_rță (Suno folosește 50)",
+  "_Потужність (у Suno 50)",
+  "_Fuerza (Suno usa 50)"
+ ],
+ "Stereo _width (Suno uses 50)": [
+  "Lățime st_ereo (Suno folosește 50)",
+  "_Ширина стерео (у Suno 50)",
+  "_Amplitud estéreo (Suno usa 50)"
+ ],
+ "Let Suno choose the audio influence": [
+  "Lasă Suno să aleagă influența audio",
+  "Нехай Suno вибере вплив аудіо",
+  "Que Suno elija la influencia del audio"
+ ],
+ "That song isn't on Suno anymore.": [
+  "Melodia aceea nu mai e pe Suno.",
+  "Цієї пісні вже немає на Suno.",
+  "Esa canción ya no está en Suno."
+ ],
+ "L_ists": [
+  "_Liste",
+  "_Списки",
+  "_Listas"
+ ],
+ "Widening amount in tenths (10 matches the rest of the track, 5 is half)": [
+  "Cât se lărgește, în zecimi (10 se potrivește cu restul piesei, 5 e jumătate)",
+  "Міра розширення в десятих (10 — як решта треку, 5 — половина)",
+  "Cuánto ampliar, en décimas (10 iguala al resto de la pista, 5 es la mitad)"
+ ],
+ "Choose a playlist first.": [
+  "Alege mai întâi o listă.",
+  "Спершу виберіть плейлист.",
+  "Primero elige una lista."
+ ],
+ "Open a creator's songs first: Creator's songs, in the Song menu, or Find a creator.": [
+  "Deschide întâi melodiile unui creator: Melodiile creatorului, în meniul Melodie, sau Găsește un creator.",
+  "Спершу відкрийте пісні автора: «Пісні автора» в меню «Пісня» або «Знайти автора».",
+  "Primero abre las canciones de un creador: Canciones del creador, en el menú Canción, o Buscar un creador."
+ ],
+ "your screen reader": [
+  "cititorul de ecran",
+  "ваш екранний диктор",
+  "tu lector de pantalla"
+ ],
+ "Tin Pan can't read that file as audio.": [
+  "Tin Pan nu poate citi fișierul acela ca sunet.",
+  "Tin Pan не може прочитати цей файл як аудіо.",
+  "Tin Pan no puede leer ese archivo como audio."
+ ],
+ "Clean-up with sunscreen works on Windows only for now.": [
+  "Curățarea cu sunscreen merge deocamdată doar pe Windows.",
+  "Очищення через sunscreen поки що працює лише у Windows.",
+  "La limpieza con sunscreen funciona solo en Windows por ahora."
+ ],
+ "New: {0}": [
+  "Nou: {0}",
+  "Нове: {0}",
+  "Nuevo: {0}"
+ ],
+ "Choose an MP3, M4A, WAV, FLAC, OGG or AAC file.": [
+  "Alege un fișier MP3, M4A, WAV, FLAC, OGG sau AAC.",
+  "Виберіть файл MP3, M4A, WAV, FLAC, OGG або AAC.",
+  "Elige un archivo MP3, M4A, WAV, FLAC, OGG o AAC."
  ]
 }

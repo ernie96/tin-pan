@@ -2,7 +2,8 @@
 Merges the translation batches into TinPan/Localization/translations.json and checks them:
 every English text in the code has Romanian, Ukrainian and Spanish; placeholders match; plural
 forms have the right count; and access keys (the letter after "_") are unique on each page,
-menu and form, in every language.
+menu and form, in every language. Tin Pan 2 (v2/, Rust) reads the same file, so its texts and
+menus are checked and kept too.
 
     python -I build/translations/check.py [batch.py ...]
 
@@ -42,7 +43,126 @@ def keys_in_code():
             continue
         keys += [m.group(1).replace("\\'", "'").replace('&amp;', '&').replace('&quot;', '"') for m in xaml.finditer(open(path, encoding='utf-8').read())]
     keys += ["Tin Pan, like all my apps, is dedicated to Jenni and Diana.", "Tin Pan was created by Ernesto Melendez (github.com/ernie96/tin-pan).", "Automatic (Windows language)", "Romanian", "Ukrainian", "Spanish", "English"]
+    # Tin Pan 2's texts last, so Tin Pan 1's keep their order in the file.
+    keys += v2_keys()
     return [k for k in dict.fromkeys(keys) if re.search('[A-Za-z]{2}', k)]
+
+
+V2 = os.path.join(ROOT, 'v2', 'crates')
+RUST_TEXT = r'"((?:[^"\\]|\\.)*)"'
+
+
+def rust_unescape(s):
+    return s.replace('\\"', '"').replace('\\n', '\n').replace('\\\\', '\\')
+
+
+def v2_sources():
+    for path in glob.glob(os.path.join(V2, '**', '*.rs'), recursive=True):
+        text = open(path, encoding='utf-8').read()
+        # Tests check English on purpose; their texts aren't the app's.
+        yield path, re.split(r'#\[cfg\((?:all\()?test', text)[0]
+
+
+def v2_keys():
+    """Tin Pan 2's texts: t(), tf() and plural() calls, its command table, and texts its code picks before t()."""
+    keys = []
+    calls = re.compile(r'\b(?:t|tf|wx_label)\(\s*&?' + RUST_TEXT)
+    plural = re.compile(r'\bplural\([^,]+,\s*' + RUST_TEXT + r',\s*' + RUST_TEXT)
+    table = re.compile(r'\bentry\(G::\w+,\s*' + RUST_TEXT)
+    picked = re.compile(r'(?:=> |submenu = Some\()' + RUST_TEXT + r'[,)]')
+    # Form fields and their buttons and pickers, translated where the form shows them.
+    fields = re.compile(r'(?:\bField::(?:check|heading|choice|number)\(|\blabel: |\bbutton: |\bpicker_title: |\bfiles: Some\(\()' + RUST_TEXT)
+    # Texts kept in tables and translated where they're shown: ("False", "Hide songs I disliked") and the like.
+    pairs = re.compile(r'\((?:"[^"]*"|[A-Z_]+),\s*' + RUST_TEXT + r'\)')
+    for path, text in v2_sources():
+        keys += [rust_unescape(m.group(1)) for m in calls.finditer(text)]
+        keys += [rust_unescape(m.group(1)) + '|' + rust_unescape(m.group(2)) for m in plural.finditer(text)]
+        keys += [rust_unescape(m.group(1)) for m in table.finditer(text)]
+        if path.endswith(('commands.rs', 'filters.rs')):
+            keys += [rust_unescape(m.group(1)) for m in picked.finditer(text)]
+        if path.endswith(('filters.rs', 'settings.rs', 'main.rs', 'downloads.rs', 'views.rs', 'discover.rs', 'editing.rs', 'uploads.rs', 'help.rs', 'personas.rs')):
+            keys += [rust_unescape(m.group(1)) for m in fields.finditer(text)]
+        if path.endswith('filters.rs'):
+            keys += [rust_unescape(m.group(1)) for m in pairs.finditer(text)]
+        if path.endswith('create_window.rs'):
+            keys += [rust_unescape(m.group(2)) for m in CREATE_FIELD.finditer(text)]
+            keys += [rust_unescape(m.group(1)) for m in CREATE_PAIR.finditer(text)]
+        if path.endswith(('making.rs', 'editing.rs', 'personas.rs')):
+            keys += [rust_unescape(m.group(1)) for m in TOOL_FIELD.finditer(text)]
+            keys += [rust_unescape(m.group(2)) for m in TOOL_SLIDER_BOX.finditer(text)]
+            keys += [rust_unescape(m.group(1)) for m in WORD_PAIRS.finditer(text)]
+        if path.endswith('help.rs'):
+            # The full key guide: every text in full_guide(), each translated where it's shown.
+            guide = text.split('pub fn full_guide', 1)[1].split(r'.join("\n\n")', 1)[0]
+            keys += [rust_unescape(m.group(1)) for m in re.finditer(RUST_TEXT, guide) if m.group(1) not in ('\\n',)]
+            keys += [rust_unescape(m.group(1)) for m in re.finditer(r'\bconst (?:ATTRIBUTION|DEDICATION): &str = ' + RUST_TEXT, text)]
+        if path.endswith('settings_page.rs'):
+            keys += [rust_unescape(m.group(1)) for r in (SETTINGS_FIELD, SETTINGS_BUTTON, SETTINGS_ACTION) for m in r.finditer(text)]
+            for m in WORD_PAIRS.finditer(text):
+                keys.append(rust_unescape(m.group(2) or m.group(1)))
+            keys += [rust_unescape(m.group(2)) for m in CREATE_SLIDER_BOX.finditer(text)]
+    # Words for the screen reader's ears only: Suno's own values and the like are left out.
+    return [k for k in keys if re.search('[a-z]', k) and not re.fullmatch(r'[a-z_]+', k)]
+
+
+# The Create window's headings, labels and buttons: heading(&panel, &s, "...") and the like.
+CREATE_FIELD = re.compile(r'\b(heading|text_box|choice|check|button|slider)\(&panel, &s, ' + RUST_TEXT)
+# Its paired buttons, ("Style _boost", App::boost_style), and each slider's "Let Suno choose" box.
+# The forms that stay open (making.rs): form.text("_Title", ...) and the like, and each slider's second text.
+TOOL_FIELD = re.compile(r'\bform\.(?:text|time|choice|check|slider|plain_slider|ranged_slider|button)\(\s*' + RUST_TEXT)
+TOOL_SLIDER_BOX = re.compile(r'\bform\.slider\(\s*' + RUST_TEXT + r',\s*' + RUST_TEXT)
+# The Settings tab (settings_page.rs): b.check("...") and the like, its row buttons and its account buttons.
+SETTINGS_FIELD = re.compile(r'\bb\.(?:group|label|check|choice|slider)\(\s*' + RUST_TEXT)
+SETTINGS_BUTTON = re.compile(r'\bb\.button\(&\w+,\s*' + RUST_TEXT)
+SETTINGS_ACTION = re.compile(r'\(' + RUST_TEXT + r',\s*Action::')
+# Tables of (key, words) pairs whose words are shown: SPEECH_LEVELS, STRENGTHS, PROFILES, LANGUAGES' English names.
+WORD_PAIRS = re.compile(r'\("[A-Za-z]*",\s*' + RUST_TEXT + r'(?:,\s*' + RUST_TEXT + r')?\)')
+CREATE_PAIR = re.compile(r'\(' + RUST_TEXT + r', App::')
+CREATE_SLIDER_BOX = re.compile(r'\bslider\(&panel, &s, ' + RUST_TEXT + r', ' + RUST_TEXT)
+
+
+def v2_command_groups():
+    """Tin Pan 2's menus, from its command table, the way commands.rs builds them."""
+    text = open(os.path.join(V2, 'tinpan', 'src', 'commands.rs'), encoding='utf-8').read()
+    groups = {}
+    # A table line wraps its entry in its submenu's function (sharing(...), download(...)), in any order with after_line(...).
+    submenus = {'sharing': 'S_haring', 'download': 'D_ownload', 'related': 'Related so_ngs', 'comments': '_Comments', 'make': '_Make from it'}
+    for line in text.splitlines():
+        m = re.search(r'\bentry\(G::(\w+),\s*' + RUST_TEXT, line)
+        if not m:
+            continue
+        group, label = m.group(1), rust_unescape(m.group(2))
+        sub = next((name for call, name in submenus.items() if call + '(' in line[:m.start()]), None)
+        if sub:
+            groups.setdefault(f'Tin Pan 2 menu {group}, {sub}', []).append(label)
+            parent = groups.setdefault(f'Tin Pan 2 menu {group}', [])
+            if sub not in parent:
+                parent.append(sub)
+        else:
+            groups.setdefault(f'Tin Pan 2 menu {group}', []).append(label)
+    swaps = {'Li_ke': 'Remove li_ke', 'D_islike': 'Remove d_islike', 'Move to tr_ash': 'Restore from tr_ash',
+             'Make p_ublic': 'Make p_rivate', 'Stop remi_xes': 'Allow remi_xes',
+             'Not interes_ted: fewer like this': 'Suggest songs like this a_gain'}
+    for name in [g for g in groups if g.startswith('Tin Pan 2 menu Song')]:
+        groups[name + ' (the other labels)'] = [swaps.get(l, l) for l in groups[name]]
+    create = open(os.path.join(V2, 'tinpan', 'src', 'create_window.rs'), encoding='utf-8').read()
+    groups['Tin Pan 2 Create window'] = [rust_unescape(m.group(2)) for m in CREATE_FIELD.finditer(create) if m.group(1) != 'heading']
+    groups['Tin Pan 2 Create window'] += [rust_unescape(m.group(1)) for m in CREATE_PAIR.finditer(create)]
+    # Each form in making.rs is one function; the Style buttons it adds are its too.
+    making = open(os.path.join(V2, 'tinpan', 'src', 'making.rs'), encoding='utf-8').read()
+    making += open(os.path.join(V2, 'tinpan', 'src', 'editing.rs'), encoding='utf-8').read()
+    style_buttons = [rust_unescape(m.group(1)) for m in TOOL_FIELD.finditer(making.split('fn form_style_buttons', 1)[1].split('    pub(crate) fn', 1)[0])]
+    for chunk in making.split('    pub(crate) fn ')[1:]:
+        labels = [rust_unescape(m.group(1)) for m in TOOL_FIELD.finditer(chunk)]
+        if len(labels) > 1:
+            if 'form_style_buttons(' in chunk:
+                labels += style_buttons
+            groups['Tin Pan 2 form ' + chunk.split('(', 1)[0]] = labels
+    page = open(os.path.join(V2, 'tinpan', 'src', 'settings_page.rs'), encoding='utf-8').read()
+    groups['Tin Pan 2 Settings tab'] = [rust_unescape(m.group(1)) for r in (SETTINGS_FIELD, SETTINGS_BUTTON, SETTINGS_ACTION) for m in r.finditer(page) if '_' in m.group(1)]
+    account = open(os.path.join(V2, 'tinpan', 'src', 'account_page.rs'), encoding='utf-8').read()
+    groups['Tin Pan 2 Account tab'] = [rust_unescape(m.group(1)) for m in re.finditer(r'wx_label\(' + RUST_TEXT, account)]
+    return groups
 
 
 def xaml_groups():
@@ -159,6 +279,7 @@ def main():
     groups = {}
     groups.update(xaml_groups())
     groups.update(command_groups())
+    groups.update(v2_command_groups())
     groups.update(FORMS)
     for name, labels in groups.items():
         for i, lang in enumerate(['English'] + LANGS):

@@ -1,0 +1,52 @@
+[package]
+name = "tinpan"
+description = "Tin Pan: an accessible, unofficial Suno client"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "tinpan"
+path = "src/main.rs"
+
+[dependencies]
+tinpan-core = { path = "../tinpan-core" }
+# wxDragon from crates.io, the version fedra (by the fork's author) builds with.
+wxdragon = { version = "0.9.24", default-features = false, features = ["webview"] }
+log.workspace = true
+# The screen-reader pieces fedra is built on: a list that doesn't repeat itself when it refreshes,
+# and announcements through a live region.
+quiet-list = "0.1.0"
+live-region = "0.3.3"
+accesskit = "0.25.1"
+sys-locale = "0.3"
+dirs = "6"
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
+# Plays the songs. Suno's are Opus in M4A: Symphonia reads the file and libopus (built from source)
+# decodes the Opus; Symphonia's own codecs do AAC and MP3.
+rodio = { version = "0.23.0", default-features = false, features = ["playback"] }
+symphonia = { version = "0.5.5", default-features = false, features = ["isomp4", "aac", "mp3", "wav", "pcm", "flac", "ogg", "vorbis"] }
+symphonia-adapter-libopus = "0.2.9"
+# Writes the WAV a song is decoded to for clean-up.
+hound = "3.5"
+
+[features]
+default = ["background-speech"]
+# Speaks through the screen reader (NVDA, JAWS, Narrator) when Tin Pan isn't the window in front.
+# Building it on Windows needs Visual Studio's "C++ ATL for latest build tools" component;
+# --no-default-features builds without it.
+background-speech = ["dep:prismer"]
+
+[target.'cfg(windows)'.dependencies]
+prismer = { version = "0.1.4", features = ["static"], optional = true }
+# Which window is in front (speech), the cookies (sign-in), and bringing Tin Pan forward after an update.
+windows = { version = "0.62.2", features = ["Win32_Foundation", "Win32_Media_MediaFoundation", "Win32_System_Com", "Win32_System_Com_StructuredStorage", "Win32_System_Threading", "Win32_UI_WindowsAndMessaging"] }
+# Reads Suno's sign-in cookies from the sign-in page's browser (WebView2), as Tin Pan 1 does.
+webview2-com = "0.39.1"
+
+[dev-dependencies]
+serde_json.workspace = true
+
+[build-dependencies]
+embed-manifest = "1.4"
