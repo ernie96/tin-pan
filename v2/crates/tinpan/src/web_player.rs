@@ -99,7 +99,7 @@ impl WebPlayer {
             .with_title("Suno player")
             .with_size(Size::new(900, 700))
             .with_position(Point::new(-20_000, -20_000))
-            .with_style(FrameStyle::Caption | FrameStyle::NoTaskbar)
+            .with_style(FrameStyle::Caption | FrameStyle::NoTaskbar | FrameStyle::ToolWindow)
             .build();
         let view = WebView::builder(&frame).build();
         let sizer = BoxSizer::builder(Orientation::Vertical).build();
@@ -113,6 +113,8 @@ impl WebPlayer {
             event.skip(false);
             main.close(true);
         });
+        crate::out_of_reach::set(&frame, true);
+        crate::out_of_reach::give_focus_back(&frame, main);
         frame.show(true);
         parent.raise();
         Self { frame, view, parent: *parent, clip_id: None, started: false, retried: false, since: Instant::now(), position: 0.0, duration: 0.0, paused: false, output: String::new(), output_failed_for: None }

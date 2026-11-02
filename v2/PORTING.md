@@ -43,6 +43,7 @@ Built from Tin Pan 1's code itself (every `[RelayCommand]`, every Suno call in `
 - [x] Escape steps back one level: from songs to the lists, from the lists to the tab headers.
 - [x] F6 and Shift+F6 between all of Tin Pan's open windows: the main one, Create and the forms that stay open; F1 in a form says so; closing a form goes back to the main window.
 - [x] Title: "Tin Pan - your name" once signed in ("Tin Pan - signed in" when Suno gives no name).
+- [x] Suno's own pages are out of reach (1.8.1): the hidden player is never in Alt+Tab or the taskbar and can't take the focus (out_of_reach.rs), and gives it back if Windows hands it over anyway; the captcha window is the same until a box needs pressing. Windows only for the Alt+Tab part; on Linux the player is a tool window.
 - [x] One instance at a time (instance.rs): a second start brings the open Tin Pan forward (wxWidgets' single-instance checker, and its IPC to ask), or says it's running if asking fails. 1.x doesn't have this; Suno links aren't handled yet.
 - [x] Alt+F4 always closes Tin Pan, wherever focus is (1.9.1). In the main window it's the Exit command's accelerator, so it works from any control there. If Windows puts the focus on the hidden Suno player window, Alt+F4 there closes Tin Pan, not just the player. In Create, in forms that stay open and in the sign-in window, Alt+F4 closes that window, as in 1.x. Checked in the code, not by hand.
 

@@ -19,6 +19,7 @@ mod logging;
 mod making;
 mod net;
 mod personas;
+mod out_of_reach;
 mod outputs;
 mod pages;
 mod player;

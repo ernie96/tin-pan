@@ -57,6 +57,8 @@ pub fn solve(parent: &Frame, provider: i32, done: impl FnOnce(Result<(String, i3
     let sizer = BoxSizer::builder(Orientation::Vertical).build();
     sizer.add(&view, 1, SizerFlag::Expand, 0);
     frame.set_sizer(sizer, true);
+    // Out of Alt+Tab and the focus until a box needs pressing.
+    crate::out_of_reach::set(&frame, true);
     frame.show(true);
     // The window took focus to be shown; give it back to the window you were in.
     crate::tool_form::back_to_active(parent);
@@ -152,6 +154,7 @@ impl Check {
             return self.finish(Err(t("Suno's captcha wasn't passed, so no song was made. You can try again, or make this one on suno.com.")));
         }
         self.visible = true;
+        crate::out_of_reach::set(&self.frame, false);
         self.frame.center_on_screen();
         self.frame.raise();
         self.view.set_focus();

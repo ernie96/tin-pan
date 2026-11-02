@@ -1,5 +1,12 @@
 # Tin Pan 2 changes
 
+## Unreleased
+
+### Fixed
+
+- Tin Pan's hidden Suno player could show up in Alt+Tab as "Suno player". It's out of Alt+Tab now and can't take
+  the focus, and so is the Suno check window until it needs you to press its check box.
+
 ## 2.0.0
 
 Tin Pan 2 is Tin Pan rebuilt from the ground up, so it can come to macOS and Linux too. This release is for
