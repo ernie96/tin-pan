@@ -122,7 +122,8 @@ pub fn clean(audio: &Path, options: &CleanupConfig, native_dir: &Path, decode: i
             let wav = work.join("input.wav");
             decode(audio, &wav).map_err(|e| {
                 log::warn!("Couldn't decode .{extension} for clean-up: {e}");
-                Error::api(tf("Windows couldn't read this {0} file to clean it up.", &[&extension.to_uppercase()]))
+                let kind = extension.to_uppercase();
+                Error::api(if cfg!(windows) { tf("Windows couldn't read this {0} file to clean it up.", &[&kind]) } else { tf("Tin Pan couldn't read this {0} file to clean it up.", &[&kind]) })
             })?;
             wav
         };

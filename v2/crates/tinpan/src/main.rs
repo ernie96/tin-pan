@@ -189,7 +189,6 @@ fn main() {
         speech::set_level(&config.current.speech_level);
 
         search_box.on_text_enter(move |_| with_app(App::search));
-        // Escape in the search box clears the search.
         // Escape clears the search, if there is one, as in Tin Pan 1; otherwise it steps back as anywhere. The
         // key hook, as the page's dialog handling takes Escape before the box's own key-down.
         search_box.on_char_hook(move |event| {
@@ -296,7 +295,7 @@ fn main() {
         };
         app.settings_show_outputs();
         if output_unusable {
-            speech::say_error(&tf("{0} can't be used right now, so songs play on the Windows default output.", &[&app.main_output()]));
+            speech::say_error(&outputs::fell_back(&app.main_output()));
         }
         app.start();
         app.after_startup_updates();
@@ -614,7 +613,7 @@ impl App {
             Response::SignInFailed { error: e, .. } | Response::Failed(e) => {
                 log::warn!("{e}");
                 self.loading_more = false;
-                self.wanted = None;
+                // A song on its way to play has its own answer (SongFailed); a failure elsewhere doesn't stop it.
                 // A song that ended was waiting for this page: it's over, rather than asking again every moment.
                 if self.waiting_for_next.take() == Some(true) {
                     self.playing = None;
@@ -638,7 +637,9 @@ impl App {
             Response::SayError(text) => speech::say_error(&text),
             Response::ResumeSong(clip) => self.play(*clip),
             Response::UpdateDownloaded(result) => self.update_downloaded(result),
-            Response::Library { page, more } => self.show_page(page, more),
+            // A page asked for before signing out is dropped.
+            Response::Library { page, more } if self.signed_in => self.show_page(page, more),
+            Response::Library { .. } => {}
             Response::Song { clip, data, ahead } => self.song_arrived(*clip, data, ahead),
             Response::SongFailed { clip, error } => self.song_failed(*clip, error),
             Response::AheadFailed { clip_id } => {
@@ -689,10 +690,10 @@ impl App {
             }
             Response::PlaylistTrashed { playlist_id, name } => {
                 let section = &mut self.sections[LIBRARY];
-                if section.view().key == ViewKey::Playlist(playlist_id.clone()) {
-                    section.shown = 0;
-                }
+                // The view shown stays the same one, wherever it moved; the deleted one's place goes to your songs.
+                let shown = section.view().key.clone();
                 section.views.retain(|v| v.key != ViewKey::Playlist(playlist_id.clone()));
+                section.shown = section.views.iter().position(|v| v.key == shown).unwrap_or(0);
                 section.show_titles();
                 section.refresh(Select::Start);
                 speech::say(&tf("Moved {0} to trash.", &[&name]));
@@ -720,11 +721,14 @@ impl App {
             Response::LyricsDrafts(drafts) => self.lyrics_drafts_loaded(drafts),
             Response::DraftText { draft, text } => self.draft_text_loaded(draft, text),
             Response::RemovedFromPlaylist { playlist_id, clip_id } => self.removed_from_playlist(&playlist_id, &clip_id),
-            Response::MovedInPlaylist { playlist_id, from, to } => self.moved_in_playlist(&playlist_id, from, to),
-            Response::CookiesRotated(cookies) => {
+            // Moved here already, when the key was pressed.
+            Response::MovedInPlaylist => {}
+            // Saved only while signed in: a rotation that arrives just after signing out mustn't sign you back in.
+            Response::CookiesRotated(cookies) if self.signed_in => {
                 secrets::save_sign_in(&mut self.config.current.user, Some(&cookies));
                 self.save_settings();
             }
+            Response::CookiesRotated(_) => {}
         }
     }
 
@@ -821,6 +825,17 @@ impl App {
         }
         self.billing = None;
         self.personalization = None;
+        // The account's personas, the songs being followed and the rest of what was its own go too.
+        self.personas.clear();
+        self.watching.clear();
+        self.checking_watched = false;
+        self.not_interested.clear();
+        self.live_for = None;
+        self.live_cursor = None;
+        self.next_cursor = None;
+        self.has_more = false;
+        self.loading_more = false;
+        self.fill_create_choices();
         self.refresh_rows(Select::Start);
         self.net.send(Command::SignOut);
         secrets::save_sign_in(&mut self.config.current.user, None);
@@ -839,6 +854,9 @@ impl App {
         }
         // Quiet, as in Tin Pan 1: the number of songs that came back is what's said.
         let _ = quietly;
+        // A fresh first page is coming: no more pages of the old list (or the old search) until it's here.
+        self.has_more = false;
+        self.next_cursor = None;
         let query = LibraryQuery { search: self.search.clone(), library: self.config.current.library.clone(), ..LibraryQuery::default() };
         self.net.send(Command::LoadLibrary { query, more: false });
     }
@@ -1142,6 +1160,7 @@ impl App {
         }
         self.player.stop();
         self.playing = None;
+        self.web_song = None;
         self.wanted = Some(clip.id.clone());
         // Settings can have every song play through Suno's own player.
         if !self.config.current.audio.play_directly {
@@ -1348,9 +1367,9 @@ impl App {
             web_player::Event::OutputFailed { not_found } => {
                 let name = if self.on_second_output { self.second_output().unwrap_or_default() } else { self.main_output() };
                 speech::say_error(&if not_found {
-                    tf("{0} isn't connected, so the song plays on the Windows default output.", &[&name])
+                    if cfg!(windows) { tf("{0} isn't connected, so the song plays on the Windows default output.", &[&name]) } else { tf("{0} isn't connected, so the song plays on the default output.", &[&name]) }
                 } else {
-                    tf("Couldn't switch to {0}, so the song plays on the Windows default output.", &[&name])
+                    if cfg!(windows) { tf("Couldn't switch to {0}, so the song plays on the Windows default output.", &[&name]) } else { tf("Couldn't switch to {0}, so the song plays on the default output.", &[&name]) }
                 });
             }
             web_player::Event::Failed { no_button } => {

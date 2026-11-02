@@ -2521,6 +2521,7 @@ dependencies = [
  "live-region",
  "log",
  "objc",
+ "pkg-config",
  "prismer",
  "quiet-list",
  "rodio",

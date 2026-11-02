@@ -24,7 +24,9 @@ impl App {
             speech::say(&t("Sign in from Settings first."));
             return;
         }
-        let wildcard = format!("{} (*.mp3;*.wav;*.m4a;*.flac;*.ogg;*.aac;*.wma)|*.mp3;*.wav;*.m4a;*.flac;*.ogg;*.aac;*.wma", t("Audio files"));
+        // WMA is converted with Windows' own decoder, so it's offered there only.
+        let kinds = if cfg!(windows) { "*.mp3;*.wav;*.m4a;*.flac;*.ogg;*.aac;*.wma" } else { "*.mp3;*.wav;*.m4a;*.flac;*.ogg;*.aac" };
+        let wildcard = format!("{} ({kinds})|{kinds}", t("Audio files"));
         let picker = FileDialog::builder(&self.frame).with_message(&t("Choose a song to upload to Suno")).with_wildcard(&wildcard).with_style(FileDialogStyle::Open | FileDialogStyle::FileMustExist).build();
         if picker.show_modal() != ID_OK {
             return;

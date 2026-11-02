@@ -92,6 +92,10 @@ fn views_and_songs(page: &Panel, tab: usize, views: Vec<View>) -> (Section, BoxS
                 with_app(|app| app.notebook.set_focus());
                 true
             }
+            (true, Some(WXK_BACK)) if cfg!(target_os = "macos") => {
+                with_app(App::delete_view);
+                true
+            }
             (true, Some(code)) => tab_key(code),
             _ => false,
         };
@@ -135,6 +139,11 @@ fn attach_song_keys(list: &QuietList<String>) {
         let code = key.get_key_code();
         if key.control_down() {
             return match code {
+                // A Mac's Delete key is Backspace; Cmd+Delete moves to the trash there, as in the Finder.
+                Some(WXK_BACK) if cfg!(target_os = "macos") => {
+                    with_app(App::delete_key);
+                    true
+                }
                 Some(WXK_UP) => {
                     with_app(|app| app.playlist_key(-1));
                     true

@@ -9,9 +9,23 @@ use crate::{App, dialogs, player, speech};
 /// Saved for a second output that is the system default, since "" means none (Tin Pan 1's value).
 const DEFAULT_AS_SECOND: &str = "*";
 
+/// The system's own output, as Settings shows it.
+pub fn default_name() -> String {
+    if cfg!(windows) { t("Windows default output") } else { t("Default output") }
+}
+
+/// The chosen output couldn't be opened, so the system's own plays instead.
+pub fn fell_back(name: &str) -> String {
+    if cfg!(windows) {
+        tf("{0} can't be used right now, so songs play on the Windows default output.", &[&name])
+    } else {
+        tf("{0} can't be used right now, so songs play on the default output.", &[&name])
+    }
+}
+
 /// The output as said and shown: its name, or "Windows default output".
 pub fn spoken(name: &str) -> String {
-    if name.is_empty() { t("Windows default output") } else { name.to_string() }
+    if name.is_empty() { default_name() } else { name.to_string() }
 }
 
 /// The choices for an output, and which is chosen: optionally None, then the default, then every connected
@@ -61,7 +75,7 @@ impl App {
     /// Plays on `name`; says once when it can't be used and the default plays instead.
     fn use_output(&mut self, name: &str) {
         if self.player.set_device(name) {
-            speech::say_error(&tf("{0} can't be used right now, so songs play on the Windows default output.", &[&name]));
+            speech::say_error(&fell_back(name));
         }
     }
 

@@ -220,7 +220,8 @@ pub enum Response {
     PlaylistTrashed { playlist_id: String, name: String },
     AddedToPlaylist(Playlist),
     RemovedFromPlaylist { playlist_id: String, clip_id: String },
-    MovedInPlaylist { playlist_id: String, from: usize, to: usize },
+    /// Suno took a move the list had made already.
+    MovedInPlaylist,
     Following { songs: Vec<SunoClip>, announce: bool },
     Explore { shelves: Vec<ExploreShelf>, announce: bool },
     Contests { contests: Vec<Contest>, songs: Vec<SunoClip>, announce: bool },
@@ -335,7 +336,9 @@ impl Network {
 
 impl Command {
     fn is_long(&self) -> bool {
-        matches!(self, Command::Download { .. } | Command::DownloadThroughSuno { .. } | Command::Clean { .. } | Command::DownloadAll { .. } | Command::WriteLyrics { .. } | Command::Cowrite { .. } | Command::BoostStyle { .. } | Command::MakeVideo { .. } | Command::DownloadUpdate { .. } | Command::UploadSong { .. } | Command::TimedLyrics { .. } | Command::Mashup { .. } | Command::SongCover { .. } | Command::PlaylistCover { .. })
+        // Fetching a song to play (several MB), and lyrics that may need Suno to time them first (up to a minute
+        // or more), run apart too, so a like or the next page never waits behind them.
+        matches!(self, Command::FetchSong { .. } | Command::Lyrics { .. } | Command::CoverLyrics { .. } | Command::ExistingStems { .. } | Command::Creator { .. } | Command::TrainModel { .. } | Command::Download { .. } | Command::DownloadThroughSuno { .. } | Command::Clean { .. } | Command::DownloadAll { .. } | Command::WriteLyrics { .. } | Command::Cowrite { .. } | Command::BoostStyle { .. } | Command::MakeVideo { .. } | Command::DownloadUpdate { .. } | Command::UploadSong { .. } | Command::TimedLyrics { .. } | Command::Mashup { .. } | Command::SongCover { .. } | Command::PlaylistCover { .. })
     }
 }
 
@@ -553,9 +556,17 @@ fn run(api: &SunoApi, command: Command, report: &dyn Fn(Response)) -> Vec<Respon
             Ok(()) => vec![Response::RemovedFromPlaylist { playlist_id, clip_id }],
             Err(e) => vec![Response::Failed(e)],
         },
+        // The song moved in Tin Pan already; if Suno refused, the playlist as Suno has it comes back too.
         Command::MovePlaylistSong { playlist_id, clip_id, from, to } => match api.move_in_playlist(&playlist_id, &clip_id, to) {
-            Ok(()) => vec![Response::MovedInPlaylist { playlist_id, from, to }],
-            Err(e) => vec![Response::Failed(e)],
+            Ok(()) => vec![Response::MovedInPlaylist],
+            Err(e) => {
+                log::warn!("Moving {clip_id} from {from} to {to} wasn't taken: {e}");
+                let mut out = vec![Response::Failed(e)];
+                if let Ok(songs) = api.playlist_songs(&playlist_id) {
+                    out.push(Response::PlaylistSongs { playlist_id, songs, announce: false });
+                }
+                out
+            }
         },
         Command::Personas => match api.personas() {
             Ok(list) => vec![Response::Personas(list)],
@@ -927,7 +938,11 @@ fn uploadable(path: &Path, work: &Path, limits: Option<tinpan_core::billing::Upl
     let target = work.join(format!("{stem}.m4a"));
     if let Err(e) = crate::to_m4a::convert(path, &target) {
         log::warn!("Couldn't convert {extension} to M4A: {e}");
-        return Err(Error::api(t("Windows couldn't turn this file into M4A for uploading. Try an MP3, WAV or M4A file.")));
+        return Err(Error::api(if cfg!(windows) {
+            t("Windows couldn't turn this file into M4A for uploading. Try an MP3, WAV or M4A file.")
+        } else {
+            t("Tin Pan can't turn this kind of file into M4A on this system. Try an MP3, WAV or M4A file.")
+        }));
     }
     let seconds = std::fs::read(&target).ok().and_then(|d| crate::song_source::SongSource::new(d).ok()).and_then(|s| rodio::Source::total_duration(&s)).map(|d| d.as_secs_f64());
     if let (Some(seconds), Some(limits)) = (seconds, limits) {

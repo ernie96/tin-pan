@@ -49,14 +49,16 @@ impl App {
         Some((fits, at))
     }
 
-    fn persona_items(&self) -> Vec<String> {
+    /// The Persona list's lines, and the persona id behind each line after "No persona", taken when the form
+    /// opens, so personas loading again meanwhile can't swap one for another.
+    fn persona_items(&self) -> (Vec<String>, Vec<String>) {
         let mut items = vec![t("No persona")];
         items.extend(self.personas.iter().map(|p| p.name.clone()));
-        items
+        (items, self.personas.iter().map(|p| p.id.clone()).collect())
     }
 
-    fn persona_at(&self, choice: &Choice) -> Option<String> {
-        choice.get_selection().and_then(|i| (i as usize).checked_sub(1)).and_then(|i| self.personas.get(i)).map(|p| p.id.clone())
+    fn persona_at(ids: &[String], choice: &Choice) -> Option<String> {
+        choice.get_selection().and_then(|i| (i as usize).checked_sub(1)).and_then(|i| ids.get(i)).cloned()
     }
 
     /// Says so and returns false when numbers were given for sliders the model doesn't take.
@@ -114,7 +116,8 @@ impl App {
             let model = form.choice("_Model", models.iter().map(SunoModel::display_name).collect(), at);
             let (weirdness, suno_weirdness) = form.slider("_Weirdness", "Let Suno choose the weirdness", 50);
             let (influence, suno_influence) = form.slider("Style in_fluence", "Let Suno choose the style influence", 50);
-            let persona = form.choice("_Persona", app.persona_items(), 0);
+            let (persona_names, persona_ids) = app.persona_items();
+            let persona = form.choice("_Persona", persona_names, 0);
             let max_mode = form.check("Ma_x mode", false);
             let max = if length > 0.0 { length } else { 3600.0 };
             form.show(&t("Extend"), move || {
@@ -133,7 +136,7 @@ impl App {
                     request.continue_clip_id = Some(song.id.clone());
                     request.continue_at = Some(at);
                     request.task = Some(task.to_string());
-                    request.persona_id = app.persona_at(&persona);
+                    request.persona_id = Self::persona_at(&persona_ids, &persona);
                     request.weirdness = tool_form::percent(&weirdness, &suno_weirdness);
                     request.style_influence = tool_form::percent(&influence, &suno_influence);
                     request.max_mode = max_mode.get_value();
@@ -195,7 +198,8 @@ impl App {
         let (weirdness, suno_weirdness) = form.slider("_Weirdness", "Let Suno choose the weirdness", 50);
         let (influence, suno_influence) = form.slider("Style in_fluence", "Let Suno choose the style influence", 50);
         let model = form.choice("_Model", models.iter().map(SunoModel::display_name).collect(), at);
-        let persona = form.choice("_Persona", self.persona_items(), 0);
+        let (persona_names, persona_ids) = self.persona_items();
+        let persona = form.choice("_Persona", persona_names, 0);
         let max_mode = form.check("Ma_x mode", false);
         form.show(&t("Make cover"), move || {
             with_app(|app| {
@@ -206,7 +210,7 @@ impl App {
                     return;
                 }
                 let chosen = models[model.get_selection().unwrap_or(0) as usize].clone();
-                let persona_id = app.persona_at(&persona);
+                let persona_id = Self::persona_at(&persona_ids, &persona);
                 if persona_id.is_some() && !chosen.supports("cover", &["persona", "cover"]) && !chosen.supports("cover", &["vox", "cover"]) {
                     speech::say(&tf("{0} can't make a cover with a persona. Choose No persona, or another model.", &[&chosen.display_name()]));
                     return;
@@ -264,7 +268,7 @@ impl App {
             let strength = form.choice("Remaster s_trength", STRENGTHS.iter().map(|(_, l)| t(l)).collect(), 1);
             let profile = form.choice("Remaster _kind", PROFILES.iter().map(|(_, l)| t(l)).collect(), 1);
             let style = form.text("_Style (optional)", "", 1);
-            // Each starts at Suno's own value, which isn't sent; moving it sends the new one.
+            // Each starts at Suno's own value, so leaving it as it is sends what Suno would use anyway.
             let freedom = form.plain_slider("_Freedom (Suno uses 0)", 0);
             let tone = form.plain_slider("T_one (Suno uses 50)", 50);
             let clarity = form.plain_slider("_Clarity (Suno uses 50)", 50);

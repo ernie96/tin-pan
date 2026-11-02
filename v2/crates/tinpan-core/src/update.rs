@@ -312,10 +312,12 @@ pub fn sh_quote(value: &str) -> String {
 }
 
 /// ship-shape's Linux helper: wait for Tin Pan to exit, make the new AppImage runnable and move it over the old
-/// one, then start it, marked as relaunched. `;` between steps, so a failed move still starts the old one.
+/// one, then start it, marked as relaunched. `;` between steps, so a failed move still starts the old one, which
+/// then says so, from the note the failed move leaves (as the Windows helper does).
 pub fn appimage_script(pid: u32, new_appimage: &Path, current_appimage: &Path) -> String {
     let (new_q, cur_q) = (sh_quote(&new_appimage.display().to_string()), sh_quote(&current_appimage.display().to_string()));
-    format!("sleep 1; while kill -0 {pid} 2>/dev/null; do sleep 0.2; done; chmod +x {new_q}; mv -f {new_q} {cur_q}; {RELAUNCH_ENV}=1 nohup {cur_q} >/dev/null 2>&1 &")
+    let note_q = sh_quote(&failure_note().display().to_string());
+    format!("sleep 1; while kill -0 {pid} 2>/dev/null; do sleep 0.2; done; chmod +x {new_q}; mv -f {new_q} {cur_q} || echo failed > {note_q}; {RELAUNCH_ENV}=1 nohup {cur_q} >/dev/null 2>&1 &")
 }
 
 /// At startup: removes the previous exe an update left, and says once (true) if the last update couldn't be installed.
@@ -393,7 +395,8 @@ mod tests {
         assert_eq!(sh_quote("/home/o'brien/TinPan.AppImage"), r"'/home/o'\''brien/TinPan.AppImage'");
         let script = appimage_script(7, Path::new("/c/new.AppImage"), Path::new("/a/TinPan.AppImage"));
         assert!(script.starts_with("sleep 1; while kill -0 7 2>/dev/null"));
-        assert!(script.ends_with("mv -f '/c/new.AppImage' '/a/TinPan.AppImage'; TINPAN_RELAUNCHED=1 nohup '/a/TinPan.AppImage' >/dev/null 2>&1 &"));
+        assert!(script.contains("mv -f '/c/new.AppImage' '/a/TinPan.AppImage' || echo failed > "));
+        assert!(script.ends_with("; TINPAN_RELAUNCHED=1 nohup '/a/TinPan.AppImage' >/dev/null 2>&1 &"));
     }
 
     #[test]

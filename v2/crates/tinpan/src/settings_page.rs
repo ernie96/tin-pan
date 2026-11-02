@@ -151,7 +151,7 @@ pub fn build(notebook: &Notebook, config: &AppConfig) -> SettingsPage {
 
     b.group("Audio output");
     // Filled from the connected outputs once the app is up (App::settings_show_outputs).
-    let main_output = b.choice("Output device", vec![t("Windows default output")], 0);
+    let main_output = b.choice("Output device", vec![crate::outputs::default_name()], 0);
     let second_output = b.choice("_Quick switch output, for Ctrl+Shift+F12", vec![t("None")], 0);
     let play_directly = b.check("Play songs in Tin Pan itself, which starts them sooner (the Suno player takes over when that fails)", config.audio.play_directly);
 

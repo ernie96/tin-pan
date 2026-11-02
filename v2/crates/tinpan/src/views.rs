@@ -403,29 +403,25 @@ impl App {
         speech::say(&tf("Removed {0} from {1}.", &[&title, &name]));
     }
 
-    /// Ctrl+Up and Ctrl+Down in a playlist's songs.
+    /// Ctrl+Up and Ctrl+Down in a playlist's songs. The song moves here at once, so pressing again goes on from
+    /// its new place; Suno is told each move, and the playlist is read again if it refuses one.
     pub(crate) fn move_in_playlist(&mut self, delta: i64) {
         let (Some(p), Some(song)) = (self.chosen_playlist(), self.selected()) else { return };
-        let songs = &self.sections[LIBRARY].view().songs;
-        let Some(from) = songs.iter().position(|s| s.id == song.id) else { return };
+        let key = ViewKey::Playlist(p.id.clone());
+        let Some(view) = self.find_view_mut(&key) else { return };
+        let Some(from) = view.songs.iter().position(|s| s.id == song.id) else { return };
         let to = from as i64 + delta;
-        if to < 0 || to >= songs.len() as i64 {
+        if to < 0 || to >= view.songs.len() as i64 {
             speech::say(&if delta < 0 { t("Already first.") } else { t("Already last.") });
             return;
         }
-        self.net.send(Command::MovePlaylistSong { playlist_id: p.id, clip_id: song.id, from, to: to as usize });
-    }
-
-    pub(crate) fn moved_in_playlist(&mut self, playlist_id: &str, from: usize, to: usize) {
-        let Some(view) = self.find_view_mut(&ViewKey::Playlist(playlist_id.to_string())) else { return };
-        if from >= view.songs.len() || to >= view.songs.len() {
-            return;
-        }
-        let song = view.songs.remove(from);
-        view.songs.insert(to, song);
+        let to = to as usize;
+        let moving = view.songs.remove(from);
+        view.songs.insert(to, moving);
         let count = view.songs.len();
         self.sections[LIBRARY].refresh(Select::Keep);
         speech::say(&tf("{0} of {1}.", &[&(to + 1), &count]));
+        self.net.send(Command::MovePlaylistSong { playlist_id: p.id, clip_id: song.id, from, to });
     }
 }
 
