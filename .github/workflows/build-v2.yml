@@ -1,0 +1,44 @@
+name: Build 2.x
+
+# Tests and builds Tin Pan 2 whenever main changes, and keeps that build saved. A release tag's build can only
+# reuse builds saved on its own tag or on main, so this is what lets release-v2.yml skip compiling wxWidgets
+# and take a few minutes instead of about 15. It also catches a broken main before a release does.
+on:
+  push:
+    branches: [main]
+    paths: ['v2/**', '.github/workflows/build-v2.yml']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      # Each commit saves its own copy (a saved build is never overwritten), so the newest one is always there
+      # for the next release to start from.
+      - name: Cache the Rust build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            v2/target
+          key: v2-${{ runner.os }}-${{ hashFiles('v2/Cargo.lock') }}-${{ github.sha }}
+          restore-keys: |
+            v2-${{ runner.os }}-
+
+      # The same commands as the release, so the release finds exactly what it needs already built.
+      - name: Test and build
+        working-directory: v2
+        run: |
+          . ./env.ps1
+          cargo test --release
+          if ($LASTEXITCODE -ne 0) { throw 'Tests failed.' }
+          cargo build --release -p tinpan
+          if ($LASTEXITCODE -ne 0) { throw 'The build failed.' }

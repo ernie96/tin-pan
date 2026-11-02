@@ -41,8 +41,9 @@ jobs:
             ~/.cargo/git
             v2/target
           key: v2-${{ runner.os }}-${{ hashFiles('v2/Cargo.lock') }}
-          # Every version change alters Cargo.lock, so the exact key never matches a new release. The last saved
-          # build is close enough: wxWidgets stays built and only what changed is compiled again.
+          # A tag can only reuse builds saved on main, by build-v2.yml. The newest one is close enough: wxWidgets
+          # stays built and only what changed is compiled again. Push to main, and let that build finish, before
+          # pushing the tag.
           restore-keys: |
             v2-${{ runner.os }}-
 
