@@ -1,5 +1,25 @@
 # Tin Pan 2 changes
 
+## 2.0.0
+
+Tin Pan 2 is Tin Pan rebuilt from the ground up, so it can come to macOS and Linux too. This release is for
+Windows. Your settings and sign-in carry over, and everything Tin Pan 1 did is here.
+
+What's different:
+
+- The tabs are Suno's sections: Library (Ctrl+1), Discover (Ctrl+2), Account (Ctrl+4) and Settings (Ctrl+5).
+  Library and Discover each have a Lists box on the left (your songs and each playlist; Trending, Explore,
+  Contests and more) and the chosen list's songs on the right. Escape goes from the songs to the lists.
+- Playlists are in the Library's Lists box instead of their own tab.
+- Lists you open from a song (similar songs, the creator's songs, covers and remixes) open in Discover's Lists
+  box instead of their own windows. Delete there closes one.
+- Weirdness, style influence and the other percentages are sliders.
+- Only one Tin Pan runs at a time; starting it again brings the open one forward.
+- About says which screen reader speech goes through.
+
+Fixed along the way: Stop now also calls off a song that's still starting, and Alt+F4 closes Tin Pan even when
+Windows has put the focus on its hidden Suno player.
+
 ## 2.0.0-alpha.2
 
 ### Fixed
