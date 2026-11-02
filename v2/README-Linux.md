@@ -1,8 +1,10 @@
 # Tin Pan on Linux
 
 Tin Pan for Linux is an early test version, built on GitHub as an AppImage for 64-bit PCs (x86_64). Nobody
-has tried it with Orca yet, so expect rough edges, and please report what you find (Help menu, Report a
-problem).
+has tried it with Orca yet, so expect rough edges, and please report what you find: Ctrl+Shift+B reports a
+problem and Ctrl+Shift+F suggests a feature (both in the Help menu too). Reports go privately to Tin Pan's
+author and say they come from Linux, which distribution, desktop and display server (Wayland or X11), and
+what speech goes through; a problem report can include Tin Pan's log, with your user name taken out.
 
 ## What your system needs
 

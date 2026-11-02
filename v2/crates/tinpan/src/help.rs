@@ -139,7 +139,11 @@ impl App {
             Field { label: "_Email or other way to reach you (optional)", value: Value::Text { value: String::new(), multiline: false, max_len: report::MAX_CONTACT } },
         ];
         if problem {
-            fields.push(Field::check("Include Tin Pan's _log (it has no passwords, and your Windows user name is taken out)", true));
+            fields.push(if cfg!(windows) {
+                Field::check("Include Tin Pan's _log (it has no passwords, and your Windows user name is taken out)", true)
+            } else {
+                Field::check("Include Tin Pan's _log (it has no passwords, and your user name is taken out)", true)
+            });
         }
         let (title, intro) = if problem {
             (t("Report a problem"), t("Goes privately to Tin Pan's author. The log helps find the cause."))
@@ -160,9 +164,10 @@ impl App {
             kind: if problem { "bug" } else { "feature" },
             description: fields[0].text(),
             contact,
-            version: tinpan_core::version().to_string(),
+            // The system goes in the version too, so the report's title says which one it came from.
+            version: format!("{} {}", tinpan_core::version(), system_name()),
             language: tinpan_core::i18n::current().to_string(),
-            windows: format!("{} {}", std::env::consts::OS, std::env::consts::ARCH),
+            windows: system_description(),
             log,
         };
         self.net.send(Command::SendReport { report: Box::new(report) });
@@ -210,6 +215,54 @@ impl App {
 }
 
 /// The end of Tin Pan's log, with the user name taken out.
+/// "Windows", "macOS" or "Linux".
+fn system_name() -> &'static str {
+    if cfg!(windows) {
+        "Windows"
+    } else if cfg!(target_os = "macos") {
+        "macOS"
+    } else if cfg!(target_os = "linux") {
+        "Linux"
+    } else {
+        std::env::consts::OS
+    }
+}
+
+/// What a report says about the system, so a problem on one Tin Pan's author has no device for can be found:
+/// the system and its version, the processor, on Linux the desktop and display server, and the screen reader
+/// speech goes through. At most 120 characters, as the report relay keeps.
+fn system_description() -> String {
+    let mut parts = vec![format!("{} ({})", system_version(), std::env::consts::ARCH)];
+    if cfg!(target_os = "linux") {
+        let desktop = std::env::var("XDG_CURRENT_DESKTOP").unwrap_or_default();
+        let session = std::env::var("XDG_SESSION_TYPE").unwrap_or_default();
+        let shown = [desktop.as_str(), session.as_str()].iter().filter(|s| !s.is_empty()).copied().collect::<Vec<_>>().join(" on ");
+        if !shown.is_empty() {
+            parts.push(shown);
+        }
+    }
+    parts.push(format!("speech: {}", speech::output_name()));
+    parts.join(", ").chars().take(120).collect()
+}
+
+/// The system's own name for its version: "macOS 15.1", "Ubuntu 24.04.1 LTS", or just the system.
+fn system_version() -> String {
+    #[cfg(target_os = "macos")]
+    if let Ok(out) = std::process::Command::new("sw_vers").arg("-productVersion").output()
+        && let Ok(version) = String::from_utf8(out.stdout)
+        && !version.trim().is_empty()
+    {
+        return format!("macOS {}", version.trim());
+    }
+    #[cfg(target_os = "linux")]
+    if let Ok(release) = std::fs::read_to_string("/etc/os-release")
+        && let Some(name) = release.lines().find_map(|l| l.strip_prefix("PRETTY_NAME="))
+    {
+        return name.trim().trim_matches('"').to_string();
+    }
+    system_name().to_string()
+}
+
 fn read_recent_log() -> String {
     let path = logging::path();
     let old = path.with_extension("log.old");

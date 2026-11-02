@@ -2,7 +2,9 @@
 
 Tin Pan for macOS is an early test version. It's built on GitHub for Macs with Apple silicon (M1 or newer),
 running macOS 13 or later. Nobody has tried it with VoiceOver yet, so expect rough edges, and please report
-what you find (Help menu, Report a problem).
+what you find: Cmd+Shift+B reports a problem and Cmd+Shift+F suggests a feature (both in the Help menu too).
+Reports go privately to Tin Pan's author and say they come from a Mac, which macOS version, and that speech
+goes through VoiceOver; a problem report can include Tin Pan's log, with your user name taken out.
 
 ## Getting it
 
