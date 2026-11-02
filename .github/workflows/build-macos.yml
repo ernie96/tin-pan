@@ -1,0 +1,50 @@
+name: Build 2.x for macOS
+
+# Tests and builds Tin Pan 2 on macOS (Apple silicon) and packages Tin Pan.app in TinPan.dmg, as fedra does,
+# whenever main or the macos branch changes. The DMG is kept as the run's artifact to download and try.
+on:
+  push:
+    branches: [main, macos]
+    paths: ['v2/**', '.github/workflows/build-macos.yml']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    env:
+      MACOSX_DEPLOYMENT_TARGET: "13.0"
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: CMake and Ninja (wxWidgets and libopus build with them)
+        run: brew install cmake ninja
+
+      # Each commit saves its own copy, so the next run starts from the newest one.
+      - name: Cache the Rust build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            v2/target
+          key: v2-macOS-${{ hashFiles('v2/Cargo.lock') }}-${{ github.sha }}
+          restore-keys: |
+            v2-macOS-
+
+      - name: Test
+        working-directory: v2
+        run: cargo test --release -p tinpan-core -p tinpan
+
+      - name: Build and package
+        working-directory: v2
+        run: |
+          cargo build --release -p tinpan
+          cargo xtask macos
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: TinPan-macOS
+          path: v2/target/release/TinPan.dmg
+          retention-days: 30

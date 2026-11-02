@@ -359,14 +359,97 @@ pub(crate) mod browser {
     pub fn allow_device_names(_view: &WebView, _allow: bool) {}
 }
 
-#[cfg(not(any(windows, target_os = "linux")))]
+/// On macOS the sign-in page is WebKit's WKWebView (what wxWebView uses there): its website data store's cookie
+/// store is asked for its cookies, as WebView2's and WebKitGTK's are elsewhere.
+#[cfg(target_os = "macos")]
+pub(crate) mod browser {
+    use std::cell::RefCell;
+    use std::ffi::{CStr, c_char};
+
+    use block::ConcreteBlock;
+    use objc::runtime::Object;
+    use objc::{msg_send, sel, sel_impl};
+    use tinpan_core::cookies::SunoCookies;
+    use wxdragon::widgets::WebView;
+
+    /// The page can see the outputs' names without asking on macOS; nothing to grant.
+    pub fn allow_device_names(_view: &WebView, _allow: bool) {}
+
+    /// The page's WKHTTPCookieStore, once the web view is there.
+    fn cookie_store(view: &WebView) -> Option<*mut Object> {
+        let web_view = view.get_native_backend().cast::<Object>();
+        if web_view.is_null() {
+            return None;
+        }
+        // SAFETY: on macOS, wxWebView's backend is its WKWebView; these are its own getters, on the main thread.
+        let store: *mut Object = unsafe {
+            let configuration: *mut Object = msg_send![web_view, configuration];
+            let data: *mut Object = msg_send![configuration, websiteDataStore];
+            msg_send![data, httpCookieStore]
+        };
+        (!store.is_null()).then_some(store)
+    }
+
+    /// An NSString's text.
+    ///
+    /// # Safety
+    /// `string` is null or a live NSString.
+    unsafe fn text(string: *mut Object) -> String {
+        if string.is_null() {
+            return String::new();
+        }
+        // SAFETY: as the caller promises; UTF8String lives as long as the string, and it's copied at once.
+        unsafe {
+            let utf8: *const c_char = msg_send![string, UTF8String];
+            if utf8.is_null() { String::new() } else { CStr::from_ptr(utf8).to_string_lossy().into_owned() }
+        }
+    }
+
+    /// Reads Suno's cookies (every *.suno.com site, which `sites` all are) into one jar and hands it to `done`
+    /// (None if the page isn't ready). With `forget_suno`, deletes them instead and hands back an empty jar.
+    pub fn read_cookies(view: &WebView, _sites: &[&str], forget_suno: bool, done: impl FnOnce(Option<SunoCookies>) + 'static) {
+        let Some(store) = cookie_store(view) else {
+            done(None);
+            return;
+        };
+        let done = RefCell::new(Some(done));
+        let got = ConcreteBlock::new(move |cookies: *mut Object| {
+            let Some(done) = done.borrow_mut().take() else { return };
+            let mut jar = SunoCookies::default();
+            // SAFETY: WebKit hands the block an NSArray of NSHTTPCookie, on the main thread; the store outlives it.
+            unsafe {
+                let count: usize = if cookies.is_null() { 0 } else { msg_send![cookies, count] };
+                for i in 0..count {
+                    let cookie: *mut Object = msg_send![cookies, objectAtIndex: i];
+                    let domain = text(msg_send![cookie, domain]);
+                    if !domain.trim_start_matches('.').ends_with("suno.com") {
+                        continue;
+                    }
+                    if forget_suno {
+                        let nothing: *mut Object = std::ptr::null_mut();
+                        let _: () = msg_send![store, deleteCookie: cookie completionHandler: nothing];
+                    } else {
+                        jar.set(&text(msg_send![cookie, name]), &text(msg_send![cookie, value]));
+                    }
+                }
+            }
+            done(Some(if forget_suno { SunoCookies::default() } else { jar }));
+        })
+        .copy();
+        // SAFETY: getAllCookies: copies the block and calls it once, on the main thread.
+        unsafe {
+            let _: () = msg_send![store, getAllCookies: &*got];
+        }
+    }
+}
+
+#[cfg(not(any(windows, target_os = "linux", target_os = "macos")))]
 pub(crate) mod browser {
     use tinpan_core::cookies::SunoCookies;
     use wxdragon::widgets::WebView;
 
     pub fn allow_device_names(_view: &WebView, _allow: bool) {}
 
-    /// Reading a web view's cookies on macOS comes later.
     pub fn read_cookies(_view: &WebView, _sites: &[&str], _forget_suno: bool, done: impl FnOnce(Option<SunoCookies>) + 'static) {
         done(None);
     }

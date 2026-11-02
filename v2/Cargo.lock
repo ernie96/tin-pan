@@ -183,6 +183,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3ded4057c258ba199e2d26386d3af3780957ecaee6c4ef4041c6b4b8b97c0b06"
 
 [[package]]
+name = "block"
+version = "0.1.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0d8c1fef690941d3e7788d328517591fecc684c084084702d6ff1641e993699a"
+
+[[package]]
 name = "block-buffer"
 version = "0.10.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2148,6 +2154,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "shipfitter"
+version = "0.2.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "91ac0595a8daf8c8e137fd328a71fbe7a61dfc2721dc676a17060cf448731300"
+
+[[package]]
 name = "shlex"
 version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2501,12 +2513,14 @@ name = "tinpan"
 version = "2.0.1"
 dependencies = [
  "accesskit",
+ "block",
  "chrono",
  "dirs",
  "embed-manifest",
  "hound",
  "live-region",
  "log",
+ "objc",
  "prismer",
  "quiet-list",
  "rodio",
@@ -3170,6 +3184,13 @@ dependencies = [
  "rawzip",
  "reqwest",
  "sha2 0.11.1",
+]
+
+[[package]]
+name = "xtask"
+version = "2.0.1"
+dependencies = [
+ "shipfitter",
 ]
 
 [[package]]

@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["crates/tinpan-core", "crates/tinpan"]
+members = ["crates/tinpan-core", "crates/tinpan", "xtask"]
 
 [workspace.package]
 version = "2.0.1"

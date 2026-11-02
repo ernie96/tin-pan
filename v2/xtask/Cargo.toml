@@ -1,0 +1,11 @@
+[package]
+name = "xtask"
+description = "Tin Pan's packaging tasks: cargo xtask macos"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+# The app bundle, signing and DMG, as fedra packages its macOS build.
+shipfitter = "0.2.4"
