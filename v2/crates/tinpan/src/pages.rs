@@ -66,7 +66,9 @@ fn views_and_songs(page: &Panel, tab: usize, views: Vec<View>) -> (Section, BoxS
             with_app(|app| app.view_chosen(tab, index, false));
         }
     });
-    selector.on_key_down(move |event| {
+    // The key hook, not key-down: on Windows the page's dialog handling takes Enter and Escape before a plain
+    // list sees them.
+    selector.on_char_hook(move |event| {
         let WindowEventData::Keyboard(ref key) = event else { return };
         let handled = match (key.control_down(), key.get_key_code()) {
             (false, Some(WXK_RETURN | WXK_NUMPAD_ENTER)) => {

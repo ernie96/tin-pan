@@ -2498,7 +2498,7 @@ dependencies = [
 
 [[package]]
 name = "tinpan"
-version = "2.0.0"
+version = "2.0.1"
 dependencies = [
  "accesskit",
  "chrono",
@@ -2522,7 +2522,7 @@ dependencies = [
 
 [[package]]
 name = "tinpan-core"
-version = "2.0.0"
+version = "2.0.1"
 dependencies = [
  "aes",
  "aes-gcm",

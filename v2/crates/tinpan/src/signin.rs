@@ -8,11 +8,30 @@ use std::rc::Rc;
 
 use tinpan_core::i18n::t;
 use wxdragon::prelude::*;
-use wxdragon::widgets::WebView;
+use wxdragon::widgets::{WebView, WebViewBackend};
 
 /// __client lives on the Clerk domain, __session and ajs_anonymous_id on suno.com. Later sites win a
 /// name clash; this order is the one sign-in worked with in Tin Pan 1.
 pub(crate) const COOKIE_SITES: [&str; 3] = ["https://suno.com", "https://auth.suno.com", "https://clerk.suno.com"];
+
+/// Suno's pages need Edge's WebView2 runtime on Windows; without it wxWidgets would use Internet Explorer,
+/// which can't show them.
+pub fn web_pages_available() -> bool {
+    if cfg!(windows) && !WebView::is_backend_available(WebViewBackend::Edge) {
+        log::warn!("The WebView2 runtime isn't installed");
+        return false;
+    }
+    true
+}
+
+/// As web_pages_available, saying `why` (Tin Pan 1's words) when they can't work.
+pub fn web_pages_work(why: &str) -> bool {
+    let available = web_pages_available();
+    if !available {
+        crate::speech::say_error(why);
+    }
+    available
+}
 
 /// Points the page's browser at Tin Pan's own profile. Call before any web view exists.
 pub fn prepare_browser_profile() {

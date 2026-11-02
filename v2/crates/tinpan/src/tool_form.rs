@@ -168,6 +168,8 @@ impl ToolForm {
         self.panel.set_sizer(self.sizer, true);
         let ok = Button::builder(&dialog).with_label(ok_text).build();
         let close = Button::builder(&dialog).with_id(ID_CANCEL).with_label(&t("Close")).build();
+        // Enter in a field starts it, as Tin Pan 1's forms do.
+        ok.set_default();
         ok.on_click(move |_| run());
         // Closing goes back to the main window, not to whatever Windows picks.
         let parent = self.parent;

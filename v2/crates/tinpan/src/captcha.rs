@@ -43,6 +43,10 @@ struct Check {
 
 /// Gets a token for `provider` (1 hCaptcha, 2 Turnstile) and hands it to `done`, or why it couldn't.
 pub fn solve(parent: &Frame, provider: i32, done: impl FnOnce(Result<(String, i32), String>) + 'static) {
+    if !crate::signin::web_pages_available() {
+        done(Err(t("Suno's captcha needs the Microsoft Edge WebView2 Runtime. Install it from Microsoft, then try again.")));
+        return;
+    }
     speech::say_quietly(&t("Passing Suno's captcha first. This can take half a minute."));
     let provider = if provider == 2 { 2 } else { 1 };
     // Off screen and out of the taskbar until it's needed; it comes back to the middle if a box must be pressed.

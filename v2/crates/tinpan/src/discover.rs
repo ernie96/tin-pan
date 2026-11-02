@@ -13,6 +13,9 @@ use crate::net::Command;
 use crate::views::{DISCOVER, View, ViewKey};
 use crate::{App, dialogs, form, speech};
 
+/// The id given to a contest that has no song, so it can still be listed.
+pub(crate) const NO_SONG: &str = "tinpan-contest-without-song-";
+
 /// The Discover tab's lists before anything is opened from a song.
 pub fn first_views() -> Vec<View> {
     vec![
@@ -99,12 +102,19 @@ impl App {
     pub(crate) fn contests_loaded(&mut self, contests: Vec<Contest>, songs: Vec<SunoClip>, announce: bool) {
         let mut ordered = Vec::new();
         let mut labels = std::collections::HashMap::new();
-        for contest in &contests {
-            if let Some(song) = contest.base_clip_id.as_deref().and_then(|id| songs.iter().find(|s| s.id == id))
-                && !ordered.iter().any(|s: &SunoClip| s.id == song.id)
-            {
-                labels.insert(song.id.clone(), contest.spoken_text());
-                ordered.push(song.clone());
+        for (i, contest) in contests.iter().enumerate() {
+            match contest.base_clip_id.as_deref().and_then(|id| songs.iter().find(|s| s.id == id)) {
+                Some(song) if !ordered.iter().any(|s: &SunoClip| s.id == song.id) => {
+                    labels.insert(song.id.clone(), contest.spoken_text());
+                    ordered.push(song.clone());
+                }
+                Some(_) => {}
+                // A contest without a song stays in the list, as in Tin Pan 1; Enter says it has none.
+                None => {
+                    let id = format!("{NO_SONG}{i}");
+                    labels.insert(id.clone(), contest.spoken_text());
+                    ordered.push(SunoClip { id, title: Some(contest.title.clone()), ..SunoClip::default() });
+                }
             }
         }
         if let Some(view) = self.find_view_mut(&ViewKey::Contests) {

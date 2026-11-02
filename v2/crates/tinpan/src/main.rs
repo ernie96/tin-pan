@@ -134,18 +134,30 @@ thread_local! {
 
 /// Runs `f` with the app, unless it's already busy (an event raised from inside another handler).
 fn with_app(f: impl FnOnce(&mut App)) {
+    with_app_value(f);
+}
+
+/// Runs `f` on the app and gives back what it returns; None when the app is busy (a re-entrant event) or `f`
+/// failed. A failure is logged and said, and Tin Pan carries on, as Tin Pan 1 does with an unexpected error.
+fn with_app_value<R>(f: impl FnOnce(&mut App) -> R) -> Option<R> {
     APP.with(|app| {
-        if let Ok(mut app) = app.try_borrow_mut()
-            && let Some(app) = app.as_mut()
-        {
-            f(app);
+        let Ok(mut app) = app.try_borrow_mut() else { return None };
+        let app = app.as_mut()?;
+        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| f(app))) {
+            Ok(value) => Some(value),
+            Err(_) => {
+                speech::say_error(&t("Something went wrong. Details are in the log."));
+                None
+            }
         }
-    });
+    })
 }
 
 fn main() {
     SystemOptions::set_option_by_int("msw.no-manifest-check", 1);
     logging::init();
+    // What went wrong, and where, goes in the log; with_app says so and carries on.
+    std::panic::set_hook(Box::new(|info| log::error!("Unexpected error: {info}")));
     log::info!("Starting Tin Pan {}", tinpan_core::version());
     signin::prepare_browser_profile();
     let _ = wxdragon::main(|_| {
@@ -178,9 +190,12 @@ fn main() {
 
         search_box.on_text_enter(move |_| with_app(App::search));
         // Escape in the search box clears the search.
-        search_box.on_key_down(|event| {
+        // Escape clears the search, if there is one, as in Tin Pan 1; otherwise it steps back as anywhere. The
+        // key hook, as the page's dialog handling takes Escape before the box's own key-down.
+        search_box.on_char_hook(move |event| {
             if let WindowEventData::Keyboard(ref key) = event
                 && key.get_key_code() == Some(WXK_ESCAPE)
+                && with_app_value(App::has_search).unwrap_or(false)
             {
                 with_app(App::clear_search);
                 event.skip(false);
@@ -592,6 +607,10 @@ impl App {
                 log::info!("Saved sign-in is no longer valid: {message}");
                 self.offer_sign_in(true);
             }
+            Response::Failed(Error::SignInRequired(message)) if self.signed_in => {
+                log::warn!("{message}");
+                self.sign_in_ended();
+            }
             Response::SignInFailed { error: e, .. } | Response::Failed(e) => {
                 log::warn!("{e}");
                 self.loading_more = false;
@@ -749,6 +768,9 @@ impl App {
                 }
             });
         };
+        if !signin::web_pages_work(&t("Signing in needs the Microsoft Edge WebView2 Runtime. Install it from Microsoft, then try again.")) {
+            return;
+        }
         self.sign_in_window = Some(SignInWindow::open(&self.frame, forget, try_cookies, closed));
     }
 
@@ -757,6 +779,26 @@ impl App {
             speech::say(&t("Not signed in."));
             return;
         }
+        self.forget_account();
+        // The next sign-in page starts signed out of Suno, so another account can be used.
+        self.config.current.user.clear_browser_on_next_sign_in = true;
+        self.save_settings();
+        speech::say(&t("Signed out."));
+    }
+
+    /// Suno ended the sign-in while Tin Pan was running: it's forgotten, and you're asked to sign in again at
+    /// once, as in Tin Pan 1.
+    fn sign_in_ended(&mut self) {
+        if !self.signed_in {
+            return;
+        }
+        log::info!("Suno ended the sign-in");
+        self.forget_account();
+        self.offer_sign_in(true);
+    }
+
+    /// Everything that belongs to the signed-in account goes: songs, lists, plan, the saved sign-in.
+    fn forget_account(&mut self) {
         // Suno's own player forgets the sign-in at once, as in Tin Pan 1.
         self.player.forget_sign_in();
         self.playing = None;
@@ -782,13 +824,10 @@ impl App {
         self.refresh_rows(Select::Start);
         self.net.send(Command::SignOut);
         secrets::save_sign_in(&mut self.config.current.user, None);
-        // The next sign-in page starts signed out of Suno, so another account can be used.
-        self.config.current.user.clear_browser_on_next_sign_in = true;
         self.save_settings();
         self.frame.set_title("Tin Pan");
         self.show_sign_in_status(None);
         self.clear_account_page();
-        speech::say(&t("Signed out."));
     }
 
     // ── The library ─────────────────────────────────────────────────────
@@ -819,8 +858,12 @@ impl App {
         self.sections[LIBRARY].list.set_focus();
     }
 
+    fn has_search(&mut self) -> bool {
+        self.search.is_some() || !self.search_box.get_value().is_empty()
+    }
+
     fn clear_search(&mut self) {
-        if self.search.is_none() && self.search_box.get_value().is_empty() {
+        if !self.has_search() {
             return;
         }
         self.search_box.set_value("");
@@ -897,6 +940,8 @@ impl App {
     /// Runs a Song command on the selected song, if there is one.
     pub(crate) fn with_song(&mut self, f: impl FnOnce(&mut Self, SunoClip)) {
         match self.selected() {
+            // A contest without a song has nothing for the Song menu to act on.
+            Some(song) if song.id.starts_with(discover::NO_SONG) => speech::say(&tf("{0} has no song to play.", &[&song.display_title()])),
             Some(song) => f(self, song),
             None => speech::say(&t("Choose a song first.")),
         }
@@ -1087,6 +1132,10 @@ impl App {
     }
 
     fn play(&mut self, clip: SunoClip) {
+        if clip.id.starts_with(discover::NO_SONG) {
+            speech::say(&tf("{0} has no song to play.", &[&clip.display_title()]));
+            return;
+        }
         if !clip.can_play() {
             speech::say(&if clip.has_failed() { t("That song failed to generate.") } else { t("That song isn't ready yet.") });
             return;
@@ -1254,7 +1303,7 @@ impl App {
         }
         if matches!(error, Error::SignInRequired(_)) {
             self.wanted = None;
-            speech::say_error(&error.to_string());
+            self.sign_in_ended();
             return;
         }
         log::warn!("Fetching {} to play didn't work ({error}); using Suno's player", clip.id);
@@ -1263,6 +1312,10 @@ impl App {
 
     /// Plays the song through Suno's own player, off screen; it's said once it starts.
     fn play_on_web(&mut self, clip: SunoClip) {
+        if !signin::web_pages_work(&t("Playing needs the Microsoft Edge WebView2 Runtime. Install it from Microsoft, then try again.")) {
+            self.wanted = None;
+            return;
+        }
         self.wanted = Some(clip.id.clone());
         self.player.play_web(&self.frame, &clip.id);
         self.web_song = Some(clip);

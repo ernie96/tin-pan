@@ -192,6 +192,18 @@ Then every entry in Tin Pan 1's CHANGELOG (1.1.0 to 1.12.0) was checked against 
 Left as they are: the hidden Suno player isn't warmed up after sign-in (2.0 plays songs itself first, so it's rarely needed); coming back to Tin Pan with Alt+Tab returns to the window you left, which Windows does by itself for wxWidgets windows, not checked by hand.
 
 
+Then (2026-11-02) the whole of Tin Pan 1 was read again, file by file, for behaviour rather than texts. Found and fixed:
+- Enter didn't reach plain lists on Windows (wxWidgets' dialog handling takes Enter, Escape too, before a ListBox's key-down): Ctrl+F1's list and every pick list (dialogs.rs), and the Lists box (pages.rs) now use the key hook.
+- Escape in the search box only clears a search when there is one (1.x), via the key hook too.
+- Forms that stay open have their main button as the default, so Enter in a field starts it (1.x FormWindow IsDefault).
+- Contests without a song are listed; Enter or a Song command says "{0} has no song to play." (discover.rs NO_SONG).
+- Suno ending the sign-in mid-session asks to sign in again (1.x SignInExpired), through forget_account and sign_in_ended.
+- An unexpected error (a panic) is caught in with_app, logged and said, as 1.x's unhandled-exception handler did.
+- No WebView2 runtime: sign-in, captcha and Suno's player say 1.x's words instead of falling back to Internet Explorer.
+
+Left different on purpose: forms don't wait while five starts are pending (1.x's MaxAtOnce); a sixth gets Suno's own refusal.
+Not checked by hand: all of the above; none of it has been tried with NVDA yet.
+
 ## Suno calls (ISunoApiService) still to port
 
 Notifications (v3 then v2), personas, generating, the captcha check, remaster, concat, stems, speed, reverse, crop, fade, writing and cowriting lyrics, style boost and ideas, lyrics drafts, aligned lyrics v3, credits, existing stems, show remixes, pictures, video, albums, custom models, mashup, uploads.

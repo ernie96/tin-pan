@@ -35,6 +35,8 @@ pub fn show_lines(parent: &impl WxWidget, title: &str, lines: &[String]) {
     sizer.add(&label, 0, SizerFlag::All, 8);
     sizer.add(&list, 1, SizerFlag::Expand | SizerFlag::Left | SizerFlag::Right, 8);
     add_close(&dialog, &sizer);
+    // Enter in the list does nothing, as in Tin Pan 1, rather than pressing Close.
+    on_enter_in(&dialog, &list, || {});
     list.set_focus();
     dialog.show_modal();
     dialog.destroy();
@@ -52,21 +54,31 @@ pub fn pick(parent: &impl WxWidget, title: &str, lines: &[String]) -> Option<usi
     sizer.add(&label, 0, SizerFlag::All, 8);
     sizer.add(&list, 1, SizerFlag::Expand | SizerFlag::Left | SizerFlag::Right, 8);
     add_close(&dialog, &sizer);
-    list.on_key_down(move |event| {
-        if let WindowEventData::Keyboard(ref key) = event
-            && matches!(key.get_key_code(), Some(WXK_RETURN | WXK_NUMPAD_ENTER))
-        {
-            dialog.end_modal(ID_OK);
-            event.skip(false);
-        } else {
-            event.skip(true);
-        }
-    });
+    on_enter_in(&dialog, &list, move || dialog.end_modal(ID_OK));
     list.on_item_double_clicked(move |_| dialog.end_modal(ID_OK));
     list.set_focus();
     let chosen = (dialog.show_modal() == ID_OK).then(|| list.get_selection()).flatten().map(|i| i as usize);
     dialog.destroy();
     chosen
+}
+
+/// Runs `enter` when Enter is pressed in `list`. A dialog on Windows hands Enter to its buttons before the
+/// list sees it, so it's caught by the dialog's key hook, which comes first.
+fn on_enter_in(dialog: &Dialog, list: &ListBox, enter: impl Fn() + 'static) {
+    let list = *list;
+    dialog.on_char_hook(move |event| {
+        if let WindowEventData::Keyboard(ref key) = event
+            && matches!(key.get_key_code(), Some(WXK_RETURN | WXK_NUMPAD_ENTER))
+            && !key.control_down()
+            && !key.alt_down()
+            && list.has_focus()
+        {
+            enter();
+            event.skip(false);
+        } else {
+            event.skip(true);
+        }
+    });
 }
 
 fn add_close(dialog: &Dialog, sizer: &BoxSizer) {
