@@ -215,6 +215,15 @@ pub fn bring_to_front(frame: &Frame) {
 /// The timer that runs the startup check.
 pub fn startup_timer(frame: &Frame) -> Timer<Frame> {
     let timer = Timer::new(frame);
-    timer.on_tick(|_| with_app(|app| app.check_for_updates(false)));
+    timer.on_tick(|_| {
+        with_app(|app| {
+            // The offer waits until the sign-in window is closed, so it can't land on top of it (Tin Pan 1.3.0).
+            if app.sign_in_window.is_some() {
+                app.update_timer.start(5_000, true);
+            } else {
+                app.check_for_updates(false);
+            }
+        });
+    });
     timer
 }

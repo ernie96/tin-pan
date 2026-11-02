@@ -169,6 +169,7 @@ fn main() {
         let frame = Frame::builder().with_title("Tin Pan").with_size(Size::new(1000, 720)).build();
         wxdragon::app::set_top_window(&frame);
         frame.set_menu_bar(commands::menu_bar());
+        tool_form::track_active(&frame, None);
 
         let pages::Layout { notebook, sections, search_box, volume, account, settings } = pages::build(&frame, config.current.audio.default_volume, &config.current);
         speech::init(&notebook);

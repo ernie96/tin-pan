@@ -58,9 +58,8 @@ pub fn solve(parent: &Frame, provider: i32, done: impl FnOnce(Result<(String, i3
     sizer.add(&view, 1, SizerFlag::Expand, 0);
     frame.set_sizer(sizer, true);
     frame.show(true);
-    // The window took focus to be shown; give it back.
-    parent.raise();
-    parent.set_focus();
+    // The window took focus to be shown; give it back to the window you were in.
+    crate::tool_form::back_to_active(parent);
 
     let check = Rc::new(RefCell::new(Check { frame, view, parent: *parent, provider, visible: false, step: Step::Loading, since: Instant::now(), done: Some(Box::new(done)) }));
     let timer = Rc::new(Timer::new(&check.borrow().frame));
@@ -165,7 +164,7 @@ impl Check {
     fn finish(&mut self, result: Result<(String, i32), String>) -> bool {
         // Focus goes back only if the check window had it.
         if self.visible {
-            self.parent.raise();
+            crate::tool_form::back_to_active(&self.parent);
         }
         if let Some(done) = self.done.take() {
             done(result);

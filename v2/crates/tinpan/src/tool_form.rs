@@ -14,6 +14,35 @@ use crate::form::{parse_number, wx_label};
 thread_local! {
     /// The forms open now, in the order they opened, for F6.
     static OPEN: std::cell::RefCell<Vec<Dialog>> = const { std::cell::RefCell::new(Vec::new()) };
+    /// The Tin Pan window last in front: None for the main window, or Create or a form.
+    static ACTIVE: std::cell::Cell<Option<Dialog>> = const { std::cell::Cell::new(None) };
+}
+
+/// Keeps track of when this window comes to the front, so focus can go back to it (after the captcha).
+pub fn track_active(window: &impl WindowEvents, dialog: Option<Dialog>) {
+    window.on_activate(move |event| {
+        if let WindowEventData::Activate(ref data) = event
+            && data.is_active()
+        {
+            ACTIVE.set(dialog);
+        }
+        event.skip(true);
+    });
+}
+
+/// Brings back the Tin Pan window that was in front: Create or a form if it's still open, else the main one.
+pub fn back_to_active(main: &Frame) {
+    match ACTIVE.get().filter(|d| d.is_valid() && d.is_shown()) {
+        Some(dialog) => {
+            dialog.raise();
+            dialog.set_focus();
+        }
+        None => {
+            main.raise();
+            main.set_focus();
+            crate::with_app(|app| app.list().set_focus());
+        }
+    }
 }
 
 /// The forms still open, oldest first.
@@ -183,6 +212,7 @@ impl ToolForm {
             }
             event.skip(false);
         });
+        track_active(&dialog, Some(dialog));
         OPEN.with_borrow_mut(|open| open.push(dialog));
         dialog.show(true);
         if let Some(focus) = self.first.take() {

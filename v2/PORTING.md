@@ -184,6 +184,12 @@ Bugs found and fixed in the same pass:
 - When a song ended after its list was reloaded or closed without it, Tin Pan kept checking for the next one for ever.
 - Sign out left a song waiting in Suno's player and a waiting page load behind.
 
+Then every entry in Tin Pan 1's CHANGELOG (1.1.0 to 1.12.0) was checked against 2.0's code. Two were missing and are in now:
+- After Suno's captcha, focus goes back to the window you were in (Create or a form), not always the main window (1.8.0).
+- The quiet update check after startup waits while the sign-in window is open, so its offer can't land on top of it (1.3.0).
+
+Left as they are: the hidden Suno player isn't warmed up after sign-in (2.0 plays songs itself first, so it's rarely needed); coming back to Tin Pan with Alt+Tab returns to the window you left, which Windows does by itself for wxWidgets windows, not checked by hand.
+
 
 ## Suno calls (ISunoApiService) still to port
 

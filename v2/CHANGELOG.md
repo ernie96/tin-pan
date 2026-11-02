@@ -1,5 +1,12 @@
 # Tin Pan 2 changes
 
+## 2.0.0-alpha.2
+
+### Fixed
+
+- After Suno's captcha, you're back in the window you were in (Create or a form), not always the main window.
+- The update offer after startup waits while the sign-in window is open, so it can't land on top of it.
+
 ## 2.0.0-alpha.1
 
 The first test build of Tin Pan 2, rebuilt so the same app can run on Windows, macOS and Linux. It uses the

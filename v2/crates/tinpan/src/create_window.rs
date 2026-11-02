@@ -165,6 +165,7 @@ impl CreateWindow {
         outer.add(&close, 0, SizerFlag::AlignRight | SizerFlag::All, 10);
         dialog.set_sizer(outer, true);
         dialog.set_escape_id(ID_CANCEL);
+        crate::tool_form::track_active(&dialog, Some(dialog));
         // Closing only hides it, so what you typed is still there next time.
         close.on_click(move |_| dialog.show(false));
         dialog.on_close(move |event| {
