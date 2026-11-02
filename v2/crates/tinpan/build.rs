@@ -5,6 +5,12 @@ fn main() {
     println!("cargo:rerun-if-changed=build.rs");
     // prism, built static for background speech, leaves its Orca backend's libraries (glibmm and giomm, over
     // D-Bus) to the final link. Without them installed, prism builds without that backend and needs nothing.
+    // On macOS its VoiceOver and speech backends need Apple's frameworks, which its static build leaves likewise.
+    if std::env::var("TARGET").unwrap_or_default().contains("apple-darwin") && std::env::var_os("CARGO_FEATURE_BACKGROUND_SPEECH").is_some() {
+        for framework in ["AVFoundation", "AppKit", "Foundation", "IOKit"] {
+            println!("cargo:rustc-link-lib=framework={framework}");
+        }
+    }
     if std::env::var("TARGET").unwrap_or_default().contains("linux") && std::env::var_os("CARGO_FEATURE_BACKGROUND_SPEECH").is_some() {
         for library in ["giomm-2.68", "glibmm-2.68"] {
             if let Err(e) = pkg_config::Config::new().atleast_version("2.68").probe(library) {
