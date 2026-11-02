@@ -85,6 +85,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $pre = if ($env:VERSION.Contains('-')) { '--prerelease' } else { '' }
-          gh release create "${{ github.ref_name }}" --title "Tin Pan $env:VERSION" --notes-file release-notes.md $pre `
+          # An empty '' argument would be taken for a file name, so the flag is only added when it's needed.
+          $pre = @(if ($env:VERSION.Contains('-')) { '--prerelease' })
+          gh release create "${{ github.ref_name }}" --title "Tin Pan $env:VERSION" --notes-file release-notes.md @pre `
             release/TinPan.exe release/TinPan.exe.sig release/SHA256SUMS.txt
