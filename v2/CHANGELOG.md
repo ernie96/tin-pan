@@ -1,5 +1,22 @@
 # Tin Pan 2 changes
 
+## 2.0.2
+
+Tin Pan now has test builds for Mac (TinPan.dmg, Apple silicon) and Linux (TinPan.AppImage), with speech
+through VoiceOver and Orca. They haven't been tried with a screen reader yet, so please report what you find
+with Ctrl+Shift+B (Cmd+Shift+B on a Mac); reports say which system they came from. README-macOS.md and
+README-Linux.md explain how to install and use them and how the keys differ on a Mac.
+
+### Fixed
+
+- After signing out, the next start could sign you back in. It doesn't now.
+- An unrelated failure, such as a like that didn't go through, could stop the next song from playing.
+- After a search or signing out, songs from the old list could still turn up in the new one.
+- Signing out now also forgets the account's personas, followed songs, Not interested marks and live lyrics.
+- Fetching a song, lyrics, stems and a creator's songs no longer hold up likes and paging.
+- Ctrl+Up and Ctrl+Down in a playlist move the song at once, and quick presses move the right songs.
+- Deleting a playlist above the one you're in no longer jumps to another playlist.
+
 ## 2.0.1
 
 ### Fixed
