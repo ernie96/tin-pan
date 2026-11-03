@@ -79,7 +79,7 @@ jobs:
           $match = [regex]::Match($changelog, $pattern)
           if (-not $match.Success) { throw "v2/CHANGELOG.md has no '## $env:VERSION' section." }
           # Both updaters skip this first paragraph and read only the changelog.
-          $intro = "Download **TinPan.exe** below and run it. It is one file and needs nothing installed. If you already have Tin Pan 1.2.0 or later, it offers this update by itself.`n`n"
+          $intro = "Windows: download **TinPan.exe** below and run it; it needs nothing installed, and Tin Pan 1.2.0 or later offers this update by itself. Mac: **TinPan.dmg** (Apple silicon). Linux: **TinPan.AppImage**. The Mac and Linux files appear a few minutes after the Windows one.`n`n"
           ($intro + $match.Groups[1].Value.Trim()) | Out-File release-notes.md -Encoding utf8
 
       - name: Publish the release
