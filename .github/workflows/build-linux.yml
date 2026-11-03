@@ -1,7 +1,8 @@
 name: Build 2.x for Linux
 
 # Tests and builds Tin Pan 2 on Ubuntu 24.04 and packages it as TinPan.AppImage, whenever main or the
-# macos branch changes. The AppImage is kept as the run's artifact to download and try with Orca.
+# macos branch changes. The AppImage is kept as the run's artifact to download and try with Orca, and
+# for a v2 tag it is also signed and added to that tag's release.
 on:
   push:
     branches: [main, macos]
