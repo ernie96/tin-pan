@@ -1,5 +1,11 @@
 # Tin Pan 2 changes
 
+## 2.0.3
+
+- Open a song someone shared with you: Ctrl+G, or Open a Suno link in the Discover menu. Paste a suno.com link,
+  or a message with one in it. A link you've copied is already filled in. The song opens as a list in the
+  Discover tab, ready to play.
+
 ## 2.0.2
 
 Tin Pan now has test builds for Mac (TinPan.dmg, Apple silicon) and Linux (TinPan.AppImage), with speech

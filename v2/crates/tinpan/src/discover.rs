@@ -7,6 +7,7 @@ use quiet_list::Select;
 use tinpan_core::clip::SunoClip;
 use tinpan_core::discover::{Comment, Contest, ExploreShelf, creator_handle};
 use tinpan_core::i18n::{plural, t, tf};
+use tinpan_core::link::read_song_link;
 use wxdragon::prelude::*;
 
 use crate::net::Command;
@@ -176,6 +177,23 @@ impl App {
         let handle = creator_handle(&fields[0].text());
         if !handle.is_empty() {
             self.net.send(Command::Creator { handle });
+        }
+    }
+
+    /// Discover menu, Open a Suno link: a song someone shared. A link on the clipboard is already filled in.
+    pub(crate) fn open_link(&mut self) {
+        if !self.signed_in {
+            speech::say(&t("Not signed in."));
+            return;
+        }
+        let copied = Clipboard::get().get_text().filter(|text| read_song_link(text).is_some()).unwrap_or_default();
+        let mut fields = [form::Field { label: "_Link to the song", value: form::Value::Text { value: copied, multiline: false, max_len: 2000 } }];
+        if !form::show(&self.frame, &t("Open a Suno link"), &t("Paste a link to a Suno song. It opens as a list in the Discover tab."), &t("Open"), &mut fields) {
+            return;
+        }
+        match read_song_link(&fields[0].text()) {
+            Some(link) => self.net.send(Command::OpenLink { link }),
+            None => speech::say(&t("That isn't a link to a Suno song.")),
         }
     }
 

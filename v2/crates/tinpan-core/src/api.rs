@@ -6,6 +6,7 @@ use std::thread;
 use std::time::{Duration, Instant};
 
 use base64::Engine;
+use crate::link::{SongLink, read_song_link};
 use reqwest::Method;
 use reqwest::blocking::Client;
 use serde_json::{Value, json};
@@ -246,6 +247,35 @@ impl SunoApi {
             result.extend(sj::read_feed_page(&self.send(Method::GET, &format!("/api/feed/?ids={list}"), None)?)?.clips);
         }
         Ok(result)
+    }
+
+    /// The song a shared link points to; None when Suno doesn't know it or won't show it.
+    pub fn song_from_link(&self, link: &SongLink) -> Result<Option<SunoClip>> {
+        let id = match link {
+            SongLink::Id(id) => id.clone(),
+            SongLink::Short(code) => match self.short_link_target(code)? {
+                Some(id) => id,
+                None => return Ok(None),
+            },
+        };
+        match self.send(Method::GET, &format!("/api/clip/{}", escape(&id)), None) {
+            Ok(reply) => Ok(sj::find_clips_by_id(&reply)?.into_iter().next()),
+            Err(Error::Api { status: Some(403 | 404), .. }) => Ok(None),
+            Err(e) => Err(e),
+        }
+    }
+
+    /// suno.com/s/{code} redirects to /song/{id}?sh={code}, or to / when the code means nothing.
+    fn short_link_target(&self, code: &str) -> Result<Option<String>> {
+        let response = crate::clerk::no_redirects_client().get(format!("https://suno.com/s/{}", escape(code))).send().map_err(|e| {
+            log::error!("A short link failed: {e}");
+            Error::api(t("Can't reach Suno. Check your internet connection."))
+        })?;
+        let target = response.headers().get("location").and_then(|v| v.to_str().ok()).and_then(read_song_link);
+        Ok(match target {
+            Some(SongLink::Id(id)) => Some(id),
+            _ => None,
+        })
     }
 
     /// Your workspaces (GET /api/project/me), with "My Workspace" (id "default") first when Suno leaves it out.

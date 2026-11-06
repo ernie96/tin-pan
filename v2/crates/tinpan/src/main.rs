@@ -514,6 +514,7 @@ impl App {
             Action::Explore => self.open_discover(&ViewKey::Explore),
             Action::Following => self.open_discover(&ViewKey::Following),
             Action::FindCreator => self.find_creator(),
+            Action::OpenLink => self.open_link(),
             Action::Contests => self.open_discover(&ViewKey::Contests),
             Action::Repeat => speech::repeat_last(),
             Action::History => {

@@ -103,6 +103,7 @@ pub enum Action {
     Explore,
     Following,
     FindCreator,
+    OpenLink,
     Contests,
     // View
     ShowLibrary,
@@ -297,6 +298,7 @@ pub const COMMANDS: &[Entry] = &[
     entry(G::Discover, "_Explore...", "", A::Explore),
     entry(G::Discover, "From people I _follow...", "", A::Following),
     entry(G::Discover, "Find a c_reator...", "", A::FindCreator),
+    entry(G::Discover, "Open a Suno _link...", "Ctrl+G", A::OpenLink),
     entry(G::Discover, "_Contests...", "", A::Contests),
     entry(G::View, "_Library", "Ctrl+1", A::ShowLibrary),
     entry(G::View, "_Discover", "Ctrl+2", A::ShowDiscover),

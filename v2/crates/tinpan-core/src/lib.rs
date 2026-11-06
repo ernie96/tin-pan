@@ -15,6 +15,7 @@ pub mod error;
 pub mod files;
 pub mod i18n;
 pub mod json;
+pub mod link;
 pub mod lyrics;
 pub mod personas;
 pub mod playlist;

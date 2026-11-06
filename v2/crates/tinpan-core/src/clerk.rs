@@ -18,16 +18,24 @@ const CLERK_BASES: [&str; 2] = ["https://auth.suno.com", "https://clerk.suno.com
 const CLERK_QUERY: &str = "__clerk_api_version=2025-11-10&_clerk_js_version=5.117.0";
 const REFRESH_MARGIN: chrono::TimeDelta = chrono::TimeDelta::seconds(15);
 
+const USER_AGENT: &str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
+
 /// The HTTP client every Suno call shares: one connection pool, a browser's user agent, no cookie jar
 /// of its own (Tin Pan sends its cookies itself).
 pub fn http_client() -> Client {
     // ring as rustls' crypto, picked once for the whole process.
     let _ = rustls::crypto::ring::default_provider().install_default();
     Client::builder()
-        .user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36")
+        .user_agent(USER_AGENT)
         .timeout(Duration::from_secs(30))
         .build()
         .expect("the HTTP client builds")
+}
+
+/// The same, for asking where a link leads without going there.
+pub fn no_redirects_client() -> Client {
+    let _ = rustls::crypto::ring::default_provider().install_default();
+    Client::builder().user_agent(USER_AGENT).timeout(Duration::from_secs(30)).redirect(reqwest::redirect::Policy::none()).build().expect("the HTTP client builds")
 }
 
 pub struct ClerkSession {

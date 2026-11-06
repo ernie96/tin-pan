@@ -66,6 +66,7 @@ pub enum Command {
     Remixes { clip: Box<SunoClip> },
     Original { clip: Box<SunoClip> },
     Creator { handle: String },
+    OpenLink { link: tinpan_core::link::SongLink },
     Comments { clip: Box<SunoClip> },
     PostComment { clip_id: String, text: String },
     Personas,
@@ -338,7 +339,7 @@ impl Command {
     fn is_long(&self) -> bool {
         // Fetching a song to play (several MB), and lyrics that may need Suno to time them first (up to a minute
         // or more), run apart too, so a like or the next page never waits behind them.
-        matches!(self, Command::FetchSong { .. } | Command::Lyrics { .. } | Command::CoverLyrics { .. } | Command::ExistingStems { .. } | Command::Creator { .. } | Command::TrainModel { .. } | Command::Download { .. } | Command::DownloadThroughSuno { .. } | Command::Clean { .. } | Command::DownloadAll { .. } | Command::WriteLyrics { .. } | Command::Cowrite { .. } | Command::BoostStyle { .. } | Command::MakeVideo { .. } | Command::DownloadUpdate { .. } | Command::UploadSong { .. } | Command::TimedLyrics { .. } | Command::Mashup { .. } | Command::SongCover { .. } | Command::PlaylistCover { .. })
+        matches!(self, Command::FetchSong { .. } | Command::Lyrics { .. } | Command::CoverLyrics { .. } | Command::ExistingStems { .. } | Command::Creator { .. } | Command::OpenLink { .. } | Command::TrainModel { .. } | Command::Download { .. } | Command::DownloadThroughSuno { .. } | Command::Clean { .. } | Command::DownloadAll { .. } | Command::WriteLyrics { .. } | Command::Cowrite { .. } | Command::BoostStyle { .. } | Command::MakeVideo { .. } | Command::DownloadUpdate { .. } | Command::UploadSong { .. } | Command::TimedLyrics { .. } | Command::Mashup { .. } | Command::SongCover { .. } | Command::PlaylistCover { .. })
     }
 }
 
@@ -890,6 +891,11 @@ fn run(api: &SunoApi, command: Command, report: &dyn Fn(Response)) -> Vec<Respon
         Command::Creator { handle } => vec![match api.creator_songs(&handle) {
             Ok(page) if page.songs.is_empty() => Response::Say(tf("{0} has no public songs.", &[&page.name()])),
             Ok(page) => Response::ResultList { title: page.summary(), songs: page.songs.clone(), with_creator: false, creator: Some(Box::new(page)) },
+            Err(e) => Response::Failed(e),
+        }],
+        Command::OpenLink { link } => vec![match api.song_from_link(&link) {
+            Ok(None) => Response::Say(t("Suno couldn't find that song. It may be private or deleted.")),
+            Ok(Some(song)) => Response::ResultList { title: song.display_title(), songs: vec![song], with_creator: true, creator: None },
             Err(e) => Response::Failed(e),
         }],
         Command::Comments { clip } => match api.comments(&clip.id) {

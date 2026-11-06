@@ -5424,6 +5424,11 @@
   "Вида_лити плейлист...",
   "_Eliminar lista..."
  ],
+ "Open a Suno _link...": [
+  "Deschide un _link Suno...",
+  "Відкрити _посилання Suno...",
+  "Abrir un en_lace de Suno..."
+ ],
  "_Discover": [
   "_Descoperă",
   "Від_криття",
@@ -5469,6 +5474,31 @@
   "Закрито: {0}.",
   "Se cerró {0}."
  ],
+ "Open a Suno link": [
+  "Deschide un link Suno",
+  "Відкрити посилання Suno",
+  "Abrir un enlace de Suno"
+ ],
+ "Paste a link to a Suno song. It opens as a list in the Discover tab.": [
+  "Lipește linkul unei melodii Suno. Se deschide ca listă în fila Descoperă.",
+  "Вставте посилання на пісню Suno. Вона відкриється як список у вкладці Відкриття.",
+  "Pega el enlace de una canción de Suno. Se abre como una lista en la pestaña Descubrir."
+ ],
+ "Open": [
+  "Deschide",
+  "Відкрити",
+  "Abrir"
+ ],
+ "That isn't a link to a Suno song.": [
+  "Acesta nu este linkul unei melodii Suno.",
+  "Це не посилання на пісню Suno.",
+  "Eso no es un enlace a una canción de Suno."
+ ],
+ "_Link to the song": [
+  "_Linkul melodiei",
+  "_Посилання на пісню",
+  "En_lace de la canción"
+ ],
  "Fade _in over this many seconds (0 for none)": [
   "Estompare la _început pe atâtea secunde (0 pentru deloc)",
   "Наростання на _початку, стільки секунд (0 — без нього)",
@@ -5489,10 +5519,10 @@
   "Нехай Suno вибере вплив стилю",
   "Que Suno elija la influencia del estilo"
  ],
- "Discover. Lists on the left: Trending, From people you follow, Explore and its shelves, Contests, and the lists you open from a song. Enter opens one; in its songs Enter plays, Space pauses, Left and Right seek. Delete in the lists closes a list you opened. F5 refreshes.": [
-  "Descoperă. Listele din stânga: În tendințe, De la oamenii pe care îi urmăriți, Explorează cu rafturile lui, Concursuri și listele deschise de la o melodie. Enter deschide una; în melodiile ei Enter redă, Spațiu pune pauză, Stânga și dreapta derulează. Delete în liste închide o listă deschisă de tine. F5 reîmprospătează.",
-  "Відкриття. Списки ліворуч: «У тренді», «Від тих, за ким ви стежите», Огляд із його полицями, Конкурси та списки, відкриті з пісні. Enter відкриває список; у його піснях Enter відтворює, Пробіл ставить на паузу, стрілки вліво і вправо перемотують. Delete у списках закриває відкритий вами список. F5 оновлює.",
-  "Descubrir. Listas a la izquierda: Tendencias, De las personas que sigue, Explorar y sus estantes, Concursos y las listas abiertas desde una canción. Intro abre una; en sus canciones Intro reproduce, Espacio pausa, Izquierda y Derecha avanzan o retroceden. Suprimir en las listas cierra una lista que abriste. F5 actualiza."
+ "Discover. Lists on the left: Trending, From people you follow, Explore and its shelves, Contests, and the lists you open from a song. Enter opens one; in its songs Enter plays, Space pauses, Left and Right seek. Delete in the lists closes a list you opened. Ctrl+G opens a Suno link. F5 refreshes.": [
+  "Descoperă. Listele din stânga: În tendințe, De la oamenii pe care îi urmăriți, Explorează cu rafturile lui, Concursuri și listele deschise de la o melodie. Enter deschide una; în melodiile ei Enter redă, Spațiu pune pauză, Stânga și dreapta derulează. Delete în liste închide o listă deschisă de tine. Ctrl+G deschide un link Suno. F5 reîmprospătează.",
+  "Відкриття. Списки ліворуч: «У тренді», «Від тих, за ким ви стежите», Огляд із його полицями, Конкурси та списки, відкриті з пісні. Enter відкриває список; у його піснях Enter відтворює, Пробіл ставить на паузу, стрілки вліво і вправо перемотують. Delete у списках закриває відкритий вами список. Ctrl+G відкриває посилання Suno. F5 оновлює.",
+  "Descubrir. Listas a la izquierda: Tendencias, De las personas que sigue, Explorar y sus estantes, Concursos y las listas abiertas desde una canción. Intro abre una; en sus canciones Intro reproduce, Espacio pausa, Izquierda y Derecha avanzan o retroceden. Suprimir en las listas cierra una lista que abriste. Ctrl+G abre un enlace de Suno. F5 actualiza."
  ],
  "Include Tin Pan's _log (it has no passwords, and your user name is taken out)": [
   "Include _jurnalul Tin Pan (nu conține parole, iar numele de utilizator este eliminat)",
@@ -5509,10 +5539,10 @@
   "Вкладки і списки",
   "Pestañas y listas"
  ],
- "The Library and Discover tabs each have their lists on the left and the chosen list's songs on the right. The Library's lists are your songs and each of your playlists; Discover's are Trending, From people you follow, Explore and each of its shelves, and Contests. A list loads a moment after you arrow onto it; Enter loads it now and says how many songs it has. A song carries on through the list it started from, whichever tab is shown.\nSimilar songs, a creator's songs, covers and remixes and the original song open as lists in the Discover tab; Delete in the lists closes one. In a playlist's songs, Delete removes a song and Ctrl+Up and Ctrl+Down move it; Delete on a playlist in the lists moves it to the trash (asks first). Ctrl+P adds the selected song to a playlist.": [
-  "Filele Bibliotecă și Descoperă au fiecare listele în stânga și melodiile listei alese în dreapta. Listele Bibliotecii sunt melodiile tale și fiecare listă de redare; ale lui Descoperă sunt În tendințe, De la oamenii pe care îi urmăriți, Explorează cu fiecare raft al lui și Concursuri. O listă se încarcă la o clipă după ce ajungi pe ea cu săgețile; Enter o încarcă imediat și spune câte melodii are. O melodie continuă prin lista din care a pornit, oricare filă s-ar vedea.\nMelodiile asemănătoare, melodiile unui creator, preluările și remixurile și melodia originală se deschid ca liste în fila Descoperă; Delete în liste închide una. În melodiile unei liste de redare, Delete scoate o melodie, iar Ctrl+Sus și Ctrl+Jos o mută; Delete pe o listă de redare din liste o mută la coș (întreabă întâi). Ctrl+P adaugă melodia aleasă într-o listă de redare.",
-  "Вкладки Бібліотека і Відкриття мають ліворуч свої списки, а праворуч — пісні вибраного списку. Списки Бібліотеки — це ваші пісні й кожен ваш плейлист; списки Відкриття — «У тренді», «Від тих, за ким ви стежите», Огляд і кожна його полиця та Конкурси. Список завантажується за мить після того, як ви стрілками стали на нього; Enter завантажує його одразу й каже, скільки в ньому пісень. Пісня продовжується тим списком, з якого почалася, хоч яку вкладку показано.\nСхожі пісні, пісні автора, кавери й ремікси та оригінальна пісня відкриваються як списки у вкладці Відкриття; Delete у списках закриває такий список. У піснях плейлиста Delete прибирає пісню, а Ctrl+Вгору і Ctrl+Вниз переміщують її; Delete на плейлисті в списках переміщує його до кошика (спершу питає). Ctrl+P додає вибрану пісню до плейлиста.",
-  "Las pestañas Biblioteca y Descubrir tienen sus listas a la izquierda y las canciones de la lista elegida a la derecha. Las listas de la Biblioteca son tus canciones y cada una de tus listas de reproducción; las de Descubrir son Tendencias, De las personas que sigue, Explorar y cada uno de sus estantes, y Concursos. Una lista se carga un momento después de llegar a ella con las flechas; Intro la carga ya y dice cuántas canciones tiene. Una canción sigue por la lista en la que empezó, sea cual sea la pestaña que se muestre.\nLas canciones parecidas, las de un creador, las versiones y remixes y la canción original se abren como listas en la pestaña Descubrir; Suprimir en las listas cierra una. En las canciones de una lista de reproducción, Suprimir quita una canción y Ctrl+Arriba y Ctrl+Abajo la mueven; Suprimir sobre una lista de reproducción la manda a la papelera (pregunta antes). Ctrl+P añade la canción elegida a una lista de reproducción."
+ "The Library and Discover tabs each have their lists on the left and the chosen list's songs on the right. The Library's lists are your songs and each of your playlists; Discover's are Trending, From people you follow, Explore and each of its shelves, and Contests. A list loads a moment after you arrow onto it; Enter loads it now and says how many songs it has. A song carries on through the list it started from, whichever tab is shown.\nSimilar songs, a creator's songs, covers and remixes and the original song open as lists in the Discover tab; Delete in the lists closes one. Ctrl+G opens a song from a Suno link someone sent you, the same way. In a playlist's songs, Delete removes a song and Ctrl+Up and Ctrl+Down move it; Delete on a playlist in the lists moves it to the trash (asks first). Ctrl+P adds the selected song to a playlist.": [
+  "Filele Bibliotecă și Descoperă au fiecare listele în stânga și melodiile listei alese în dreapta. Listele Bibliotecii sunt melodiile tale și fiecare listă de redare; ale lui Descoperă sunt În tendințe, De la oamenii pe care îi urmăriți, Explorează cu fiecare raft al lui și Concursuri. O listă se încarcă la o clipă după ce ajungi pe ea cu săgețile; Enter o încarcă imediat și spune câte melodii are. O melodie continuă prin lista din care a pornit, oricare filă s-ar vedea.\nMelodiile asemănătoare, melodiile unui creator, preluările și remixurile și melodia originală se deschid ca liste în fila Descoperă; Delete în liste închide una. Ctrl+G deschide la fel o melodie dintr-un link Suno primit de la cineva. În melodiile unei liste de redare, Delete scoate o melodie, iar Ctrl+Sus și Ctrl+Jos o mută; Delete pe o listă de redare din liste o mută la coș (întreabă întâi). Ctrl+P adaugă melodia aleasă într-o listă de redare.",
+  "Вкладки Бібліотека і Відкриття мають ліворуч свої списки, а праворуч — пісні вибраного списку. Списки Бібліотеки — це ваші пісні й кожен ваш плейлист; списки Відкриття — «У тренді», «Від тих, за ким ви стежите», Огляд і кожна його полиця та Конкурси. Список завантажується за мить після того, як ви стрілками стали на нього; Enter завантажує його одразу й каже, скільки в ньому пісень. Пісня продовжується тим списком, з якого почалася, хоч яку вкладку показано.\nСхожі пісні, пісні автора, кавери й ремікси та оригінальна пісня відкриваються як списки у вкладці Відкриття; Delete у списках закриває такий список. Ctrl+G так само відкриває пісню з посилання Suno, яке вам надіслали. У піснях плейлиста Delete прибирає пісню, а Ctrl+Вгору і Ctrl+Вниз переміщують її; Delete на плейлисті в списках переміщує його до кошика (спершу питає). Ctrl+P додає вибрану пісню до плейлиста.",
+  "Las pestañas Biblioteca y Descubrir tienen sus listas a la izquierda y las canciones de la lista elegida a la derecha. Las listas de la Biblioteca son tus canciones y cada una de tus listas de reproducción; las de Descubrir son Tendencias, De las personas que sigue, Explorar y cada uno de sus estantes, y Concursos. Una lista se carga un momento después de llegar a ella con las flechas; Intro la carga ya y dice cuántas canciones tiene. Una canción sigue por la lista en la que empezó, sea cual sea la pestaña que se muestre.\nLas canciones parecidas, las de un creador, las versiones y remixes y la canción original se abren como listas en la pestaña Descubrir; Suprimir en las listas cierra una. Ctrl+G abre del mismo modo una canción desde un enlace de Suno que te hayan enviado. En las canciones de una lista de reproducción, Suprimir quita una canción y Ctrl+Arriba y Ctrl+Abajo la mueven; Suprimir sobre una lista de reproducción la manda a la papelera (pregunta antes). Ctrl+P añade la canción elegida a una lista de reproducción."
  ],
  "F8 or the Play/Pause media key: play or pause; with nothing playing it starts the selected song.\nShift+F8 or the Stop media key: stop.\nF7 and F9, or the Previous and Next media keys: previous and next song.\nShift+F7 and Shift+F9: back and forward 10 seconds. Left and Right in a song list: 5 seconds.\nCtrl+F7 and Ctrl+F9: back and forward 10 percent of the song.\nCtrl+F8: back to the start of the song.\nCtrl+Shift+F8: resume the last song where you left off, even after closing Tin Pan.\nF11 and F12: volume down and up.\nSongs play in Tin Pan itself, and the next song in the list is fetched ahead, so it starts at once.": [
   "F8 sau tasta media Redare/Pauză: redare sau pauză; când nu se redă nimic, pornește melodia selectată.\nShift+F8 sau tasta media Oprire: oprire.\nF7 și F9, sau tastele media Anterior și Următor: melodia anterioară și următoare.\nShift+F7 și Shift+F9: înapoi și înainte 10 secunde. Stânga și dreapta într-o listă de melodii: 5 secunde.\nCtrl+F7 și Ctrl+F9: înapoi și înainte 10 la sută din melodie.\nCtrl+F8: înapoi la începutul melodiei.\nCtrl+Shift+F8: reia ultima melodie de unde ai rămas, chiar și după ce ai închis Tin Pan.\nF11 și F12: volum mai mic și mai mare.\nMelodiile se redau chiar în Tin Pan, iar următoarea melodie din listă e adusă dinainte, ca să pornească imediat.",
@@ -5608,6 +5638,11 @@
   "Melodia aceea nu mai e pe Suno.",
   "Цієї пісні вже немає на Suno.",
   "Esa canción ya no está en Suno."
+ ],
+ "Suno couldn't find that song. It may be private or deleted.": [
+  "Suno nu a găsit melodia. Poate fi privată sau ștearsă.",
+  "Suno не знайшов цю пісню. Можливо, вона приватна або видалена.",
+  "Suno no encontró esa canción. Puede que sea privada o se haya eliminado."
  ],
  "Tin Pan can't turn this kind of file into M4A on this system. Try an MP3, WAV or M4A file.": [
   "Tin Pan nu poate transforma acest tip de fișier în M4A pe acest sistem. Încearcă un fișier MP3, WAV sau M4A.",
