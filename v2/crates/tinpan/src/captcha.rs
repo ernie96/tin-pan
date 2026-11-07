@@ -17,6 +17,8 @@ use crate::speech;
 
 const HCAPTCHA_SITE_KEY: &str = "d65453de-3f1a-4aac-9366-a0f06e52b2ce";
 const TURNSTILE_SITE_KEY: &str = "0x4AAAAAADI7xDNyj-3LcIbi";
+/// Listen for Credits' own Turnstile key (provider 3).
+const TURNSTILE_EARN_SITE_KEY: &str = "0x4AAAAAAFbwlz819p030ewM";
 
 /// What the check hands back: the token and its provider, or what to say.
 type Done = Box<dyn FnOnce(Result<(String, i32), String>)>;
@@ -41,14 +43,15 @@ struct Check {
     done: Option<Done>,
 }
 
-/// Gets a token for `provider` (1 hCaptcha, 2 Turnstile) and hands it to `done`, or why it couldn't.
+/// Gets a token for `provider` (1 hCaptcha, 2 Turnstile for making songs, 3 Turnstile for Listen for Credits)
+/// and hands it to `done`, or why it couldn't.
 pub fn solve(parent: &Frame, provider: i32, done: impl FnOnce(Result<(String, i32), String>) + 'static) {
     if !crate::signin::web_pages_available() {
         done(Err(t("Suno's captcha needs the Microsoft Edge WebView2 Runtime. Install it from Microsoft, then try again.")));
         return;
     }
     speech::say_quietly(&t("Passing Suno's captcha first. This can take half a minute."));
-    let provider = if provider == 2 { 2 } else { 1 };
+    let provider = if matches!(provider, 2 | 3) { provider } else { 1 };
     // Off screen and out of the taskbar until it's needed; it comes back to the middle if a box must be pressed.
     let frame = Frame::builder()
         .with_parent(parent)
@@ -101,7 +104,7 @@ impl Check {
         match self.step {
             Step::Loading => {
                 if self.script("document.readyState").as_deref() == Some("complete") || waited > Duration::from_secs(30) {
-                    if self.provider == 2 {
+                    if self.provider != 1 {
                         self.script(
                             "if (!window.turnstile && !document.querySelector('script[src*=\"challenges.cloudflare.com/turnstile\"]')) { const s = document.createElement('script'); s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'; document.head.appendChild(s); } 'ok'",
                         );
@@ -110,7 +113,7 @@ impl Check {
                 }
             }
             Step::WaitingForScript => {
-                let ready = if self.provider == 2 { "String(typeof turnstile !== 'undefined' && !!turnstile.render)" } else { "String(typeof hcaptcha !== 'undefined' && !!hcaptcha.render)" };
+                let ready = if self.provider != 1 { "String(typeof turnstile !== 'undefined' && !!turnstile.render)" } else { "String(typeof hcaptcha !== 'undefined' && !!hcaptcha.render)" };
                 if self.script(ready).as_deref() == Some("true") {
                     self.next(Step::Settling);
                 } else if waited > Duration::from_secs(20) {
@@ -121,7 +124,11 @@ impl Check {
             // Let the captcha script finish wiring itself up.
             Step::Settling if waited > Duration::from_secs(2) => {
                 self.script("window.__tinpanCaptcha = ''; 'ok'");
-                let solving = if self.provider == 2 { turnstile(self.visible) } else { hcaptcha(self.visible) };
+                let solving = match self.provider {
+                    1 => hcaptcha(self.visible),
+                    2 => turnstile(self.visible, TURNSTILE_SITE_KEY),
+                    _ => turnstile(self.visible, TURNSTILE_EARN_SITE_KEY),
+                };
                 self.script(&solving);
                 self.next(Step::Solving);
             }
@@ -193,13 +200,13 @@ fn hcaptcha(visible: bool) -> String {
     )
 }
 
-fn turnstile(visible: bool) -> String {
+fn turnstile(visible: bool, site_key: &str) -> String {
     let (appearance, timeout) = if visible { ("always", 175_000) } else { ("interaction-only", 15_000) };
     format!(
         "(() => {{ const div = document.createElement('div'); div.style.cssText = 'position:fixed;top:40px;left:40px;z-index:2147483647;'; document.body.appendChild(div);
         let settled = false; const finish = v => {{ if (!settled) {{ settled = true; clearTimeout(timer); window.__tinpanCaptcha = v; }} }};
         const timer = setTimeout(() => finish('ERR:Turnstile timed out'), {timeout});
-        try {{ const w = turnstile.render(div, {{ sitekey: '{TURNSTILE_SITE_KEY}', execution: 'execute', appearance: '{appearance}',
+        try {{ const w = turnstile.render(div, {{ sitekey: '{site_key}', execution: 'execute', appearance: '{appearance}',
           callback: t => finish(t), 'error-callback': c => finish('ERR:Turnstile ' + c), 'timeout-callback': () => finish('ERR:Turnstile challenge timed out') }});
           turnstile.execute(w); }} catch (e) {{ finish('ERR:' + String(e)); }} }})(); 'started'"
     )

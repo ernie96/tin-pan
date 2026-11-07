@@ -16,6 +16,7 @@ pub mod files;
 pub mod i18n;
 pub mod json;
 pub mod link;
+pub mod listen;
 pub mod lyrics;
 pub mod personas;
 pub mod playlist;
@@ -23,6 +24,7 @@ pub mod report;
 pub mod secrets;
 pub mod update;
 pub mod upload;
+pub mod voice;
 
 pub use error::{Error, Result};
 

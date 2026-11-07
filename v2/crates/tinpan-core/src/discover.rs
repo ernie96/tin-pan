@@ -54,6 +54,16 @@ pub fn clips_in(value: &Value) -> Vec<SunoClip> {
     found
 }
 
+/// POST /api/unified/search/omnisearch: the songs section's songs. The reply is a feed whose items are
+/// sections (omnisearch_songs, _users, _playlists and more), each a feed of its own, as Suno's search page reads it.
+pub fn read_omnisearch(root: &Value) -> Vec<SunoClip> {
+    let items = root.get("feed").and_then(|f| f.get("items")).and_then(Value::as_array);
+    let section = items.into_iter().flatten().find(|item| {
+        first_text(item, &["content_id", "contentId"]).is_some_and(|id| id == "omnisearch_songs" || id.starts_with("omnisearch_songs:"))
+    });
+    section.map(clips_in).unwrap_or_default()
+}
+
 /// "https://suno.com/@ana?x=1", "@ana" and "ana" are all "ana".
 pub fn creator_handle(text: &str) -> String {
     let text = text.trim();
@@ -396,6 +406,18 @@ mod tests {
     fn credits_say_who_and_how() {
         let credits = read_credits(&json!({ "source_clips": [ { "clip_id": "c", "title": "Rain", "user": { "user_handle": "ana" }, "relationship": "cover_of" }, { "is_deleted": true } ] }));
         assert_eq!(credits.iter().map(CreditedSong::spoken_text).collect::<Vec<_>>(), vec!["Rain, by @ana, cover of", "Untitled, deleted"]);
+    }
+
+    #[test]
+    fn search_keeps_only_the_songs_section() {
+        let root = json!({ "feed": { "items": [
+            { "content_id": "omnisearch_top_result", "content_item": { "items": [ { "content_type": "clip", "content_item": song("top") } ] } },
+            { "content_id": "omnisearch_songs", "content_item": { "feed_title": "Songs", "items": [ { "content_type": "clip", "content_item": song("a") }, { "content_type": "clip", "content_item": song("b") } ] } },
+            { "content_id": "omnisearch_users", "content_item": { "items": [ { "content_item": { "handle": "ana", "clips": [song("u")] } } ] } }
+        ] } });
+        let ids: Vec<String> = read_omnisearch(&root).into_iter().map(|s| s.id).collect();
+        assert_eq!(ids, vec!["a", "b"]);
+        assert!(read_omnisearch(&json!({ "feed": { "items": [] } })).is_empty());
     }
 
     #[test]

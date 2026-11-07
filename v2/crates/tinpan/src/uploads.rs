@@ -12,7 +12,7 @@ use crate::net::Command;
 use crate::{App, speech};
 
 /// A song file's length in seconds, read with Tin Pan's own decoders; None when it can't be read as audio.
-fn length_of(path: &Path) -> Option<Option<f64>> {
+pub(crate) fn length_of(path: &Path) -> Option<Option<f64>> {
     let data = std::fs::read(path).ok()?;
     let source = crate::song_source::SongSource::new(data).ok()?;
     Some(rodio::Source::total_duration(&source).map(|d| d.as_secs_f64()))

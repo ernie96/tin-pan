@@ -523,6 +523,25 @@ impl SunoApi {
         sj::find_clips(&self.send(Method::POST, "/api/unified/feed", Some(&body))?)
     }
 
+    /// Suno's own search, across everyone's public songs, as its search page asks (POST /api/unified/search/omnisearch).
+    pub fn search_suno(&self, term: &str) -> Result<Vec<SunoClip>> {
+        let term: String = term.trim().chars().take(256).collect();
+        Ok(discover::read_omnisearch(&sj::parse(&self.send(Method::POST, "/api/unified/search/omnisearch", Some(&json!({ "term": term })))?)?))
+    }
+
+    /// Songs Suno picks to follow `seed_id`, as its player's autoplay asks: POST /api/queue/start with the song
+    /// as the seed, then the "autoplay" feed.
+    pub fn autoplay(&self, seed_id: &str) -> Result<Vec<SunoClip>> {
+        let (_, device_id) = self.token(false)?;
+        let start = json!({
+            "device_id": device_id, "device_name": "Web", "container_type": "single",
+            "seed_item": { "content_id": seed_id, "content_type": "clip" }, "injected_items": [], "override": true
+        });
+        self.send(Method::POST, "/api/queue/start", Some(&start))?;
+        let feed = json!({ "feed_id": "autoplay", "cursor": null, "page_size": 30, "request_metadata": { "device_id": device_id } });
+        sj::find_clips(&self.send(Method::POST, "/api/unified/feed", Some(&feed))?)
+    }
+
     // ── Making songs ────────────────────────────────────────────────────
 
     pub fn personas(&self) -> Result<Vec<Persona>> {
@@ -1093,7 +1112,7 @@ impl SunoApi {
     }
 
     /// A file from Suno's file host (no sign-in needed there).
-    fn fetch_file(&self, url: &str) -> Result<Vec<u8>> {
+    pub(crate) fn fetch_file(&self, url: &str) -> Result<Vec<u8>> {
         let host = url.split('/').nth(2).unwrap_or("");
         let response = self.http.get(url).timeout(Duration::from_secs(60)).send().map_err(|e| {
             log::warn!("Song file from {host}: {e}");

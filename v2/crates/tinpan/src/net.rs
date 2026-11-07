@@ -67,6 +67,15 @@ pub enum Command {
     Original { clip: Box<SunoClip> },
     Creator { handle: String },
     OpenLink { link: tinpan_core::link::SongLink },
+    SearchSuno { term: String },
+    ListenStart,
+    ListenSaveProfile { profile: Box<tinpan_core::listen::Profile> },
+    ListenSend { task_id: String, answers: std::collections::BTreeMap<String, String>, listened: std::collections::BTreeMap<String, u32>, check: Option<String> },
+    ListenSkip { task_id: String, listened: std::collections::BTreeMap<String, u32> },
+    ListenRelease,
+    VoiceSinging { path: PathBuf, seconds: f64, details: Box<crate::voice::VoiceDetails>, language: String },
+    VoiceCheck { singing: Box<tinpan_core::voice::Singing>, phrase: Box<tinpan_core::voice::Phrase>, path: PathBuf, details: Box<crate::voice::VoiceDetails>, attempt: u8 },
+    Autoplay { seed_id: String },
     Comments { clip: Box<SunoClip> },
     PostComment { clip_id: String, text: String },
     Personas,
@@ -227,6 +236,11 @@ pub enum Response {
     Explore { shelves: Vec<ExploreShelf>, announce: bool },
     Contests { contests: Vec<Contest>, songs: Vec<SunoClip>, announce: bool },
     /// A list to open in the Discover tab; a creator's songs bring who they are.
+    Autoplay(Result<Vec<SunoClip>, tinpan_core::Error>),
+    ListenProfile(Option<Box<tinpan_core::listen::Profile>>),
+    ListenTask { task: Box<tinpan_core::listen::Task>, songs: Vec<Vec<u8>>, check_due: bool },
+    ListenCheck { task_id: String, answers: std::collections::BTreeMap<String, String>, listened: std::collections::BTreeMap<String, u32> },
+    VoicePhrase { singing: Box<tinpan_core::voice::Singing>, phrase: Box<tinpan_core::voice::Phrase>, details: Box<crate::voice::VoiceDetails>, attempt: u8 },
     ResultList { title: String, songs: Vec<SunoClip>, with_creator: bool, creator: Option<Box<tinpan_core::discover::CreatorPage>> },
     Credits { clip: Box<SunoClip>, sources: Vec<tinpan_core::discover::CreditedSong>, count: Option<i64>, capped: bool },
     CreatorPlaylists(Box<tinpan_core::discover::CreatorPage>),
@@ -339,8 +353,40 @@ impl Command {
     fn is_long(&self) -> bool {
         // Fetching a song to play (several MB), and lyrics that may need Suno to time them first (up to a minute
         // or more), run apart too, so a like or the next page never waits behind them.
-        matches!(self, Command::FetchSong { .. } | Command::Lyrics { .. } | Command::CoverLyrics { .. } | Command::ExistingStems { .. } | Command::Creator { .. } | Command::OpenLink { .. } | Command::TrainModel { .. } | Command::Download { .. } | Command::DownloadThroughSuno { .. } | Command::Clean { .. } | Command::DownloadAll { .. } | Command::WriteLyrics { .. } | Command::Cowrite { .. } | Command::BoostStyle { .. } | Command::MakeVideo { .. } | Command::DownloadUpdate { .. } | Command::UploadSong { .. } | Command::TimedLyrics { .. } | Command::Mashup { .. } | Command::SongCover { .. } | Command::PlaylistCover { .. })
+        matches!(self, Command::FetchSong { .. } | Command::Lyrics { .. } | Command::CoverLyrics { .. } | Command::ExistingStems { .. } | Command::Creator { .. } | Command::OpenLink { .. } | Command::SearchSuno { .. } | Command::Autoplay { .. } | Command::ListenStart | Command::ListenSaveProfile { .. } | Command::ListenSend { .. } | Command::ListenSkip { .. } | Command::VoiceSinging { .. } | Command::VoiceCheck { .. } | Command::TrainModel { .. } | Command::Download { .. } | Command::DownloadThroughSuno { .. } | Command::Clean { .. } | Command::DownloadAll { .. } | Command::WriteLyrics { .. } | Command::Cowrite { .. } | Command::BoostStyle { .. } | Command::MakeVideo { .. } | Command::DownloadUpdate { .. } | Command::UploadSong { .. } | Command::TimedLyrics { .. } | Command::Mashup { .. } | Command::SongCover { .. } | Command::PlaylistCover { .. })
     }
+}
+
+/// Listen for Credits' next step: the rater profile when Suno wants it, else a task (`ready`, or a new one)
+/// with its songs' files, or why there's none.
+fn listen_next(api: &SunoApi, ready: Option<tinpan_core::listen::Task>) -> Vec<Response> {
+    let summary = match api.listen_summary() {
+        Ok(summary) => summary,
+        Err(e) => return vec![Response::Failed(e)],
+    };
+    if summary.profile_needed {
+        return vec![Response::ListenProfile(api.listen_profile().ok().flatten().map(Box::new))];
+    }
+    let task = match ready {
+        Some(task) => task,
+        None if summary.daily_limit_reached => return vec![Response::Say(tinpan_core::i18n::t("You've rated as many songs as Suno takes today. Try again tomorrow."))],
+        None => match api.listen_task() {
+            Ok(Some(task)) => task,
+            Ok(None) => return vec![Response::Say(tinpan_core::i18n::t("Suno has no songs to rate right now. Try again later."))],
+            Err(e) => return vec![Response::Failed(e)],
+        },
+    };
+    let mut songs = Vec::new();
+    for song in &task.songs {
+        match api.listen_song(&song.url) {
+            Ok(data) => songs.push(data),
+            Err(e) => {
+                api.release_listen_tasks();
+                return vec![Response::Failed(e)];
+            }
+        }
+    }
+    vec![Response::ListenTask { task: Box::new(task), songs, check_due: summary.check_due() }]
 }
 
 /// Where Tin Pan keeps tools it unpacks (sunscreen), the same folder as Tin Pan 1.
@@ -898,6 +944,67 @@ fn run(api: &SunoApi, command: Command, report: &dyn Fn(Response)) -> Vec<Respon
             Ok(Some(song)) => Response::ResultList { title: song.display_title(), songs: vec![song], with_creator: true, creator: None },
             Err(e) => Response::Failed(e),
         }],
+        Command::SearchSuno { term } => vec![match api.search_suno(&term) {
+            Ok(songs) if songs.is_empty() => Response::Say(tf("Suno found no songs for {0}.", &[&term])),
+            Ok(songs) => Response::ResultList { title: tf("Suno search: {0}", &[&term]), songs, with_creator: true, creator: None },
+            Err(e) => Response::Failed(e),
+        }],
+        Command::Autoplay { seed_id } => vec![Response::Autoplay(api.autoplay(&seed_id))],
+        Command::ListenStart => listen_next(api, None),
+        Command::ListenSaveProfile { profile } => match api.save_listen_profile(&profile) {
+            Ok(()) => listen_next(api, None),
+            Err(e) => vec![Response::Failed(e)],
+        },
+        Command::ListenSend { task_id, answers, listened, check } => match api.send_listen_rating(&task_id, &answers, &listened, check.as_deref()) {
+            Ok(tinpan_core::listen::Sent::Taken { next }) => {
+                let mut out = vec![Response::Say(t("Rating sent."))];
+                out.extend(listen_next(api, next));
+                out
+            }
+            Ok(tinpan_core::listen::Sent::CheckNeeded) => vec![Response::ListenCheck { task_id, answers, listened }],
+            Ok(tinpan_core::listen::Sent::Gone) => {
+                let mut out = vec![Response::Say(t("That one isn't available any more. Here's another."))];
+                out.extend(listen_next(api, None));
+                out
+            }
+            Err(e) => vec![Response::Failed(e)],
+        },
+        Command::ListenSkip { task_id, listened } => match api.skip_listen_task(&task_id, &listened) {
+            Ok(()) => listen_next(api, None),
+            Err(e) => vec![Response::Failed(e)],
+        },
+        Command::ListenRelease => {
+            api.release_listen_tasks();
+            Vec::new()
+        }
+        Command::VoiceSinging { path, seconds, details, language } => {
+            let storage = tinpan_core::update::client();
+            let phrase = |singing: tinpan_core::voice::Singing| {
+                let phrase = api.voice_phrase(&language).or_else(|e| if language == "en" { Err(e) } else { api.voice_phrase("en") })?;
+                Ok(Response::VoicePhrase { singing: Box::new(singing), phrase: Box::new(phrase), details, attempt: 1 })
+            };
+            vec![api.upload_singing(&storage, &path, seconds).and_then(phrase).unwrap_or_else(Response::Failed)]
+        }
+        Command::VoiceCheck { singing, phrase, path, details, attempt } => {
+            use tinpan_core::voice::Check;
+            let again = |why: String| {
+                if attempt < 2 {
+                    vec![Response::SayError(why), Response::VoicePhrase { singing: singing.clone(), phrase: phrase.clone(), details: details.clone(), attempt: attempt + 1 }]
+                } else {
+                    vec![Response::SayError(tf("{0} Try again later with a new recording of your singing.", &[&why]))]
+                }
+            };
+            match api.check_voice(&tinpan_core::update::client(), &singing, &phrase, &path) {
+                Ok(Check::Approved(id)) => vec![match api.create_voice(&singing, &id, &details.name, &details.description, &details.styles) {
+                    Ok(_) => Response::Say(tf("Your voice {0} is ready. It's in Personas.", &[&details.name])),
+                    Err(e) => Response::Failed(e),
+                }],
+                Ok(Check::PhraseMissing) => again(t("Suno didn't hear the phrase in that recording.")),
+                Ok(Check::VoiceDiffers) => again(t("Suno found the phrase recording didn't sound like the same voice as the singing.")),
+                Ok(Check::TakingLong) => vec![Response::SayError(t("Suno is taking long to check the voice. Try again later."))],
+                Err(e) => vec![Response::Failed(e)],
+            }
+        }
         Command::Comments { clip } => match api.comments(&clip.id) {
             Ok(comments) => vec![Response::Comments { clip, comments }],
             Err(e) => vec![Response::Failed(e)],

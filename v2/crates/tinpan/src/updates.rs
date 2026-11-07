@@ -35,6 +35,11 @@ fn open_page(url: &str) {
     }
 }
 
+/// The update offer: Yes, No, and Donate, which shows how to support Tin Pan and then asks again.
+fn offer(frame: &Frame, message: &str, caption: &str) -> bool {
+    dialogs::confirm_or(frame, message, caption, "_Donate...", crate::contact::show_donate)
+}
+
 impl App {
     /// At startup: says if the last update failed, then checks quietly after a moment, if Settings allows.
     pub(crate) fn after_startup_updates(&mut self) {
@@ -91,7 +96,7 @@ impl App {
         let intro = format!("{}\n\n{whats_new}", tf("Tin Pan {0} is available. You have {1}.", &[&version, &current().short()]));
         if !can_install() {
             // A development build, or a system this version can't install on yet: the release page instead.
-            if dialogs::confirm(&self.frame, &format!("{intro}{}{reminder}", t("This copy of Tin Pan can't update itself. Open the release page?")), &t("Tin Pan update")) {
+            if offer(&self.frame, &format!("{intro}{}{reminder}", t("This copy of Tin Pan can't update itself. Open the release page?")), &t("Tin Pan update")) {
                 open_page(&update.page_url);
             } else if !manual {
                 self.skip_version(&version);
@@ -99,7 +104,7 @@ impl App {
             self.updating = false;
             return;
         }
-        if !dialogs::confirm(&self.frame, &format!("{intro}{}{reminder}", t("Download and install it now? Tin Pan closes and opens again by itself.")), &t("Tin Pan update")) {
+        if !offer(&self.frame, &format!("{intro}{}{reminder}", t("Download and install it now? Tin Pan closes and opens again by itself.")), &t("Tin Pan update")) {
             if !manual {
                 self.skip_version(&version);
             }

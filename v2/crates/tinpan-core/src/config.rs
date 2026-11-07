@@ -114,6 +114,8 @@ pub struct AudioConfig {
     /// Play songs in Tin Pan itself, which starts them sooner; Suno's own player takes over when that fails.
     /// Off, every song plays through Suno's player.
     pub play_directly: bool,
+    /// When a list ends, keep playing songs Suno picks to follow the last one.
+    pub autoplay: bool,
     pub save_lyrics: bool,
     pub save_timed_lyrics: bool,
     pub save_details: bool,
@@ -132,6 +134,7 @@ impl Default for AudioConfig {
             second_output_device: String::new(),
             read_lyrics_live: false,
             play_directly: true,
+            autoplay: false,
             save_lyrics: false,
             save_timed_lyrics: false,
             save_details: false,

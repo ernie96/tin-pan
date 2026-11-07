@@ -5,6 +5,7 @@
 mod account_page;
 mod captcha;
 mod commands;
+mod contact;
 mod create_window;
 mod dialogs;
 mod editing;
@@ -14,6 +15,7 @@ mod filters;
 mod form;
 mod help;
 mod instance;
+mod listen;
 mod live;
 mod logging;
 mod making;
@@ -22,6 +24,7 @@ mod personas;
 mod out_of_reach;
 mod outputs;
 mod pages;
+mod queue;
 mod player;
 mod settings_page;
 mod signin;
@@ -33,6 +36,7 @@ mod tool_form;
 mod updates;
 mod uploads;
 mod views;
+mod voice;
 mod web_player;
 
 use std::cell::RefCell;
@@ -84,6 +88,10 @@ struct App {
     playing: Option<SunoClip>,
     /// The view the playing song started from; F7, F9 and a song's end carry on through it.
     playing_from: ViewKey,
+    /// While songs from Up next play: the song in `playing_from` the list carries on after.
+    resume: Option<(ViewKey, String)>,
+    /// Suno's autoplay picks are on their way, after a list ended.
+    autoplay_pending: bool,
     /// Song files already here, newest first, and the ones being fetched ahead.
     kept: VecDeque<(String, Vec<u8>)>,
     fetching_ahead: HashSet<String>,
@@ -263,6 +271,8 @@ fn main() {
             wanted: None,
             playing: None,
             playing_from: ViewKey::Library,
+            resume: None,
+            autoplay_pending: false,
             kept: VecDeque::new(),
             fetching_ahead: HashSet::new(),
             signed_in: false,
@@ -357,6 +367,8 @@ impl App {
     pub(crate) fn delete_key(&mut self) {
         if matches!(self.shown().key, ViewKey::Playlist(_)) {
             self.remove_from_playlist();
+        } else if self.shown().key == ViewKey::Queue {
+            self.remove_from_queue();
         } else {
             self.trash();
         }
@@ -473,6 +485,8 @@ impl App {
             Action::SpeakErrorsOnly => self.set_speech_level("ErrorsOnly"),
             Action::ReportProblem => self.send_report(true),
             Action::SuggestFeature => self.send_report(false),
+            Action::Contact => contact::show_contact(&self.frame),
+            Action::Donate => contact::show_donate(&self.frame),
             Action::Licenses => self.licenses(),
             Action::About => self.about(),
             Action::Resume => self.resume(),
@@ -515,6 +529,13 @@ impl App {
             Action::Following => self.open_discover(&ViewKey::Following),
             Action::FindCreator => self.find_creator(),
             Action::OpenLink => self.open_link(),
+            Action::SearchSuno => self.search_suno(),
+            Action::UpNext => self.open_discover(&ViewKey::Queue),
+            Action::AddToQueue => self.add_to_queue(false),
+            Action::PlayNext => self.add_to_queue(true),
+            Action::ClearQueue => self.clear_queue(),
+            Action::ListenForCredits => self.listen_for_credits(),
+            Action::MakeVoice => self.make_voice(),
             Action::Contests => self.open_discover(&ViewKey::Contests),
             Action::Repeat => speech::repeat_last(),
             Action::History => {
@@ -703,6 +724,11 @@ impl App {
             Response::Following { songs, announce } => self.following_loaded(songs, announce),
             Response::Explore { shelves, announce } => self.explore_loaded(shelves, announce),
             Response::Contests { contests, songs, announce } => self.contests_loaded(contests, songs, announce),
+            Response::Autoplay(result) => self.autoplay_loaded(result),
+            Response::ListenProfile(known) => self.listen_profile(known.map(|p| *p)),
+            Response::ListenTask { task, songs, check_due } => self.listen_task(*task, songs, check_due),
+            Response::ListenCheck { task_id, answers, listened } => self.listen_check(task_id, answers, listened),
+            Response::VoicePhrase { singing, phrase, details, attempt } => self.voice_phrase(*singing, *phrase, *details, attempt),
             Response::ResultList { title, songs, with_creator, creator } => self.open_result(title, songs, with_creator, creator.map(|c| *c)),
             Response::Credits { clip, sources, count, capped } => self.credits_loaded(&clip, &sources, count, capped),
             Response::CreatorPlaylists(page) => self.creator_playlists_loaded(&page),
@@ -811,6 +837,8 @@ impl App {
         self.web_song = None;
         self.waiting_for_next = None;
         self.pages_for_next = 0;
+        self.resume = None;
+        self.autoplay_pending = false;
         self.kept.clear();
         self.fetching_ahead.clear();
         self.signed_in = false;
@@ -1144,8 +1172,17 @@ impl App {
 
     pub(crate) fn play_selected(&mut self) {
         if let Some(clip) = self.selected() {
-            // The view on screen becomes the one F9 and a song's end carry on through.
-            self.playing_from = self.shown().key.clone();
+            if self.shown().key == ViewKey::Queue {
+                // From Up next: the song leaves the queue, and the playing list carries on after it.
+                if self.playing.is_some() && self.resume.is_none() {
+                    self.resume = self.step_from();
+                }
+                self.unqueue(&clip.id);
+            } else {
+                // The view on screen becomes the one F9 and a song's end carry on through.
+                self.playing_from = self.shown().key.clone();
+                self.resume = None;
+            }
             self.play(clip);
         }
     }
@@ -1254,6 +1291,7 @@ impl App {
     /// Where F7 and F9 start from: the playing song in its view, or the selected song in the view on screen.
     fn step_from(&self) -> Option<(ViewKey, String)> {
         match &self.playing {
+            Some(_) if self.resume.is_some() => self.resume.clone(),
             Some(p) => Some((self.playing_from.clone(), p.id.clone())),
             None => Some((self.shown().key.clone(), self.list().selected()?)),
         }
@@ -1266,7 +1304,17 @@ impl App {
         self.step_on(direction, false);
     }
 
-    fn step_on(&mut self, direction: i32, ended: bool) {
+    pub(crate) fn step_on(&mut self, direction: i32, ended: bool) {
+        // Up next comes first; once it's empty the list carries on from where it was.
+        if direction > 0
+            && let Some(clip) = self.take_queued()
+        {
+            if self.resume.is_none() {
+                self.resume = self.step_from();
+            }
+            self.play(clip);
+            return;
+        }
         let Some((key, from)) = self.step_from() else { return };
         if direction > 0 && key == ViewKey::Library && self.next_song().is_none() && self.has_more && self.pages_for_next < 3 {
             self.pages_for_next += 1;
@@ -1280,13 +1328,14 @@ impl App {
         }
         self.pages_for_next = 0;
         if direction > 0 && ended && self.next_song().is_none() {
-            self.playing = None;
-            self.show_playing_cue();
-            speech::say_quietly(&match key {
-                ViewKey::Library => t("End of library."),
-                ViewKey::Playlist(_) => t("End of playlist."),
-                _ => t("End of list."),
-            });
+            if self.config.current.audio.autoplay
+                && let Some(seed) = &self.playing
+            {
+                self.autoplay_pending = true;
+                self.net.send(Command::Autoplay { seed_id: seed.id.clone() });
+                return;
+            }
+            self.list_ended();
             return;
         }
         let songs = self.find_view(&key).map(|v| v.songs.clone()).unwrap_or_default();
@@ -1294,6 +1343,7 @@ impl App {
             // The list was reloaded or closed without the song that ended: nothing to go on to.
             if ended {
                 self.playing = None;
+                self.resume = None;
                 self.show_playing_cue();
             }
             return;
@@ -1306,6 +1356,7 @@ impl App {
                     self.list().select(Some(&clip.id));
                 }
                 self.playing_from = key;
+                self.resume = None;
                 self.play(clip);
             }
             None => speech::say(&match (direction > 0, &key) {
@@ -1314,6 +1365,19 @@ impl App {
                 (false, _) => t("First song."),
             }),
         }
+    }
+
+    /// The playing list has no more songs: playing stops, and says so quietly.
+    pub(crate) fn list_ended(&mut self) {
+        let key = self.step_from().map(|(key, _)| key);
+        self.playing = None;
+        self.resume = None;
+        self.show_playing_cue();
+        speech::say_quietly(&match key {
+            Some(ViewKey::Library) => t("End of library."),
+            Some(ViewKey::Playlist(_)) => t("End of playlist."),
+            _ => t("End of list."),
+        });
     }
 
     /// The song couldn't be fetched to play here: Suno's own player tries, unless the sign-in is the problem.
@@ -1387,13 +1451,16 @@ impl App {
 
     fn check_song_ended(&mut self) {
         self.poll_web_player();
-        if self.playing.is_some() && self.wanted.is_none() && !self.player.is_loaded() && self.waiting_for_next.is_none() {
+        if self.playing.is_some() && self.wanted.is_none() && !self.player.is_loaded() && self.waiting_for_next.is_none() && !self.autoplay_pending {
             self.step_on(1, true);
         }
     }
 
     /// The next playable song after the playing one (or the selected one), if it's loaded.
     fn next_song(&self) -> Option<SunoClip> {
+        if let Some(queued) = self.up_next().iter().find(|s| s.can_play()) {
+            return Some(queued.clone());
+        }
         let (key, from) = self.step_from()?;
         let songs = if key == self.playing_from && self.playing.is_some() { self.queue() } else { self.find_view(&key)?.songs.as_slice() };
         let index = songs.iter().position(|s| s.id == from)?;

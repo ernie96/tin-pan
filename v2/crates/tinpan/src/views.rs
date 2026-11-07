@@ -31,6 +31,8 @@ pub enum ViewKey {
     Explore,
     Shelf(String),
     Contests,
+    /// Songs queued to play next (queue.rs).
+    Queue,
     /// A list opened from a song or a creator (Similar songs and the like), until Delete closes it.
     Result(u32),
 }
@@ -230,6 +232,15 @@ impl App {
             ViewKey::Contests => self.net.send(Command::Contests { announce }),
             // Made with its songs; there's nothing to load again.
             ViewKey::Result(_) => {}
+            ViewKey::Queue => {
+                if let Some(view) = self.find_view_mut(&ViewKey::Queue) {
+                    view.loaded = true;
+                }
+                if announce {
+                    let text = self.view_count_text(self.sections[tab].view());
+                    speech::say(&text);
+                }
+            }
         }
     }
 

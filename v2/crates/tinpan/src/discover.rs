@@ -24,6 +24,7 @@ pub fn first_views() -> Vec<View> {
         View::new(ViewKey::Following, t("From people you follow")),
         View::new(ViewKey::Explore, t("Explore")),
         View::new(ViewKey::Contests, t("Suno contests")),
+        View::new(ViewKey::Queue, t("Up next")),
     ]
 }
 
@@ -177,6 +178,23 @@ impl App {
         let handle = creator_handle(&fields[0].text());
         if !handle.is_empty() {
             self.net.send(Command::Creator { handle });
+        }
+    }
+
+    /// Discover menu, Search Suno: everyone's public songs, as Suno's own search finds them.
+    pub(crate) fn search_suno(&mut self) {
+        if !self.signed_in {
+            speech::say(&t("Not signed in."));
+            return;
+        }
+        let mut fields = [form::Field { label: "_Search for", value: form::Value::Text { value: String::new(), multiline: false, max_len: 256 } }];
+        if !form::show(&self.frame, &t("Search Suno"), &t("Finds songs from everyone on Suno, not only yours. They open as a list in the Discover tab."), &t("Search"), &mut fields) {
+            return;
+        }
+        let term = fields[0].text().trim().to_string();
+        if !term.is_empty() {
+            speech::say(&t("Searching."));
+            self.net.send(Command::SearchSuno { term });
         }
     }
 

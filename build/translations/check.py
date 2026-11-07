@@ -80,10 +80,13 @@ def v2_keys():
         keys += [rust_unescape(m.group(1)) for m in table.finditer(text)]
         if path.endswith(('commands.rs', 'filters.rs')):
             keys += [rust_unescape(m.group(1)) for m in picked.finditer(text)]
-        if path.endswith(('filters.rs', 'settings.rs', 'main.rs', 'downloads.rs', 'views.rs', 'discover.rs', 'editing.rs', 'uploads.rs', 'help.rs', 'personas.rs')):
+        if path.endswith(('filters.rs', 'settings.rs', 'main.rs', 'downloads.rs', 'views.rs', 'discover.rs', 'editing.rs', 'uploads.rs', 'help.rs', 'personas.rs', 'listen.rs', 'voice.rs')):
             keys += [rust_unescape(m.group(1)) for m in fields.finditer(text)]
         if path.endswith('filters.rs'):
             keys += [rust_unescape(m.group(1)) for m in pairs.finditer(text)]
+        if path.endswith('listen.rs'):
+            # Listen for Credits' profile choices, ("ai_hobbyist", "I make songs with AI as a hobby") and the like.
+            keys += [rust_unescape(m.group(1)) for m in re.finditer(r'\("[a-z_]+",\s*' + RUST_TEXT + r'\)', text)]
         if path.endswith('create_window.rs'):
             keys += [rust_unescape(m.group(2)) for m in CREATE_FIELD.finditer(text)]
             keys += [rust_unescape(m.group(1)) for m in CREATE_PAIR.finditer(text)]

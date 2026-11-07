@@ -70,9 +70,27 @@ pub fn read_ticket(json: &str) -> Result<Ticket> {
     Ok(Ticket { id, url, fields })
 }
 
+/// A file Suno takes: its name without the extension, the extension, and the name to send.
+fn checked_file(path: &Path) -> Result<(String, String, String)> {
+    let size = std::fs::metadata(path).map(|m| m.len()).unwrap_or(0);
+    if size == 0 {
+        return Err(Error::api(t("That file is empty or missing.")));
+    }
+    if size > MAX_BYTES {
+        return Err(Error::api(t("That file is over 500 MB, too big to upload.")));
+    }
+    let extension = path.extension().map(|e| e.to_string_lossy().to_lowercase()).unwrap_or_default();
+    if !EXTENSIONS.contains(&extension.as_str()) {
+        return Err(Error::api(t("Choose an MP3, M4A, WAV, FLAC, OGG or AAC file.")));
+    }
+    let stem = path.file_stem().map(|s| s.to_string_lossy().to_string()).unwrap_or_default();
+    let file_name = format!("{stem}.{extension}");
+    Ok((stem, extension, file_name))
+}
+
 impl SunoApi {
-    fn start_upload(&self, extension: &str) -> Result<Ticket> {
-        match self.send(Method::POST, "/api/uploads/audio/", Some(&json!({ "extension": extension, "is_stem_mix": false, "upload_type": "file_upload" }))) {
+    fn start_upload(&self, extension: &str, upload_type: &str) -> Result<Ticket> {
+        match self.send(Method::POST, "/api/uploads/audio/", Some(&json!({ "extension": extension, "is_stem_mix": false, "upload_type": upload_type }))) {
             Ok(reply) => read_ticket(&reply),
             Err(e) if e.status() == Some(423) => Err(Error::api(t("Suno doesn't allow uploads from this account right now."))),
             Err(e) => Err(e),
@@ -81,21 +99,9 @@ impl SunoApi {
 
     /// Sends a song file and makes a song of it; the new song's id. `stage` hears when Suno starts checking it.
     pub fn upload_song(&self, storage: &Client, path: &Path, title: &str, lyrics: &str, stage: &dyn Fn(Stage)) -> Result<String> {
-        let size = std::fs::metadata(path).map(|m| m.len()).unwrap_or(0);
-        if size == 0 {
-            return Err(Error::api(t("That file is empty or missing.")));
-        }
-        if size > MAX_BYTES {
-            return Err(Error::api(t("That file is over 500 MB, too big to upload.")));
-        }
-        let extension = path.extension().map(|e| e.to_string_lossy().to_lowercase()).unwrap_or_default();
-        if !EXTENSIONS.contains(&extension.as_str()) {
-            return Err(Error::api(t("Choose an MP3, M4A, WAV, FLAC, OGG or AAC file.")));
-        }
-        let stem = path.file_stem().map(|s| s.to_string_lossy().to_string()).unwrap_or_default();
-        let file_name = format!("{stem}.{extension}");
+        let (stem, extension, file_name) = checked_file(path)?;
         stage(Stage::Sending);
-        let upload_id = self.send_with_retry(storage, path, &file_name, &extension)?;
+        let upload_id = self.send_with_retry(storage, path, &file_name, &extension, "file_upload")?;
         let finish = json!({ "agreed_to_vip_upload_terms": false, "upload_filename": file_name, "upload_type": "file_upload" });
         self.send(Method::POST, &format!("/api/uploads/audio/{}/upload-finish/", crate::api::escape(&upload_id)), Some(&finish))?;
         stage(Stage::Checking);
@@ -118,10 +124,21 @@ impl SunoApi {
         Ok(clip_id)
     }
 
+    /// A recording for Suno to work with rather than a song (`upload_type` "voice_recording" for a voice
+    /// persona): sent, finished and checked, as Suno's own recorder does it; the upload's id.
+    pub(crate) fn upload_recording(&self, storage: &Client, path: &Path, upload_type: &str) -> Result<String> {
+        let (_, extension, file_name) = checked_file(path)?;
+        let upload_id = self.send_with_retry(storage, path, &file_name, &extension, upload_type)?;
+        let finish = json!({ "agreed_to_vip_upload_terms": false, "upload_filename": file_name, "upload_type": upload_type });
+        self.send(Method::POST, &format!("/api/uploads/audio/{}/upload-finish/", crate::api::escape(&upload_id)), Some(&finish))?;
+        self.wait_for_processing(&upload_id)?;
+        Ok(upload_id)
+    }
+
     /// A signed ticket can't be replayed, so a dropped connection or a storage error gets one more try with a fresh one.
-    fn send_with_retry(&self, storage: &Client, path: &Path, file_name: &str, extension: &str) -> Result<String> {
+    fn send_with_retry(&self, storage: &Client, path: &Path, file_name: &str, extension: &str, upload_type: &str) -> Result<String> {
         for attempt in 1..=2 {
-            let ticket = self.start_upload(extension)?;
+            let ticket = self.start_upload(extension, upload_type)?;
             match post_to_storage(storage, &ticket, path, file_name) {
                 Ok(()) => return Ok(ticket.id),
                 Err(transient) => {

@@ -40,6 +40,7 @@ pub struct SettingsPage {
     main_output: Choice,
     second_output: Choice,
     play_directly: CheckBox,
+    autoplay: CheckBox,
     check_updates: CheckBox,
     folder: TextCtrl,
     format: Choice,
@@ -148,6 +149,7 @@ pub fn build(notebook: &Notebook, config: &AppConfig) -> SettingsPage {
     let speech_level = b.choice("Tin Pan s_peaks", SPEECH_LEVELS.iter().map(|(_, l)| t(l)).collect(), SPEECH_LEVELS.iter().position(|(k, _)| *k == config.speech_level).unwrap_or(0));
     let playing_cue = b.choice("_When a list reaches the playing song", CUES.iter().map(|(_, l)| t(l)).collect(), CUES.iter().position(|(k, _)| *k == config.playing_cue).unwrap_or(0));
     let live_lyrics = b.check("Li_ve lyrics: read each line aloud as it is sung (Shift+F3)", config.audio.read_lyrics_live);
+    let autoplay = b.check("When a list ends, keep playing songs Suno picks", config.audio.autoplay);
 
     b.group("Audio output");
     // Filled from the connected outputs once the app is up (App::settings_show_outputs).
@@ -220,6 +222,7 @@ pub fn build(notebook: &Notebook, config: &AppConfig) -> SettingsPage {
         main_output,
         second_output,
         play_directly,
+        autoplay,
         check_updates,
         folder,
         format,
@@ -284,6 +287,7 @@ impl App {
         config.update.check_at_startup = p.check_updates.get_value();
         let audio = &mut config.audio;
         audio.play_directly = p.play_directly.get_value();
+        audio.autoplay = p.autoplay.get_value();
         audio.download_dir = p.folder.get_value().trim().to_string();
         audio.output_format = FORMATS[p.format.get_selection().unwrap_or(0) as usize].to_string();
         audio.save_lyrics = p.save_lyrics.get_value();

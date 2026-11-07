@@ -1,5 +1,21 @@
 # Tin Pan 2 changes
 
+## 2.1.0
+
+- Help, Contact the author lists Ernesto's email, Mastodon, the Telegram channel for news and updates, and
+  Tin Pan's GitHub page. Enter opens the one you choose.
+- Help, Donate lists ways to support Tin Pan (PayPal and Ko-fi). The update offer has a Donate button too.
+- The update offer's text, with what's new, can now be read line by line.
+- Search Suno (Ctrl+Shift+E, in the Discover menu) finds songs from everyone on Suno, not only yours.
+- Up next: Ctrl+Shift+A queues the selected song to play after the current one, and Play next in the Song menu
+  puts it first. Up next is a list in the Discover tab; Delete there takes a song out. When it's empty, the list
+  you were playing carries on.
+- Settings, "When a list ends, keep playing songs Suno picks": Suno's own autoplay, off unless you turn it on.
+- Account, Listen for credits: rate songs for Suno and earn credits, in a window that plays each pair and asks
+  Suno's questions about them.
+- Library, Make a voice from your singing: a private voice persona from a recording of you singing, checked
+  with a short phrase you record.
+
 ## 2.0.3
 
 - Open a song someone shared with you: Ctrl+G, or Open a Suno link in the Discover menu. Paste a suno.com link,

@@ -5404,6 +5404,21 @@
   "англійська",
   "inglés"
  ],
+ "Clear Up ne_xt": [
+  "_Golește lista Urmează",
+  "_Очистити «Далі»",
+  "Eli_minar todo de A continuación"
+ ],
+ "Add to _queue": [
+  "Adau_gă la coadă",
+  "Додати в _чергу",
+  "A_ñadir a la cola"
+ ],
+ "Play ne_xt": [
+  "Redă-o prima în _șir",
+  "_Грати наступною",
+  "Escuchar _justo después"
+ ],
  "About this cr_eator": [
   "Despre acest cr_eator",
   "Про _цього автора",
@@ -5424,20 +5439,105 @@
   "Вида_лити плейлист...",
   "_Eliminar lista..."
  ],
+ "Make a _voice from your singing...": [
+  "Fă o voce _din cântecul tău...",
+  "Створити _голос зі свого співу...",
+  "Crear una _voz con tu canto..."
+ ],
  "Open a Suno _link...": [
   "Deschide un _link Suno...",
   "Відкрити _посилання Suno...",
   "Abrir un en_lace de Suno..."
+ ],
+ "_Search Suno...": [
+  "Caută în _Suno...",
+  "_Шукати в Suno...",
+  "_Buscar en Suno..."
+ ],
+ "_Up next": [
+  "Ur_mează",
+  "_Далі",
+  "_A continuación"
  ],
  "_Discover": [
   "_Descoperă",
   "Від_криття",
   "_Descubrir"
  ],
+ "_Listen for credits...": [
+  "_Ascultă pentru credite...",
+  "С_лухати за кредити...",
+  "_Escuchar para ganar créditos..."
+ ],
+ "_Contact the author...": [
+  "Contactea_ză autorul...",
+  "Зв’язатися з _автором...",
+  "_Contactar con el autor..."
+ ],
+ "_Donate...": [
+  "_Donează...",
+  "По_жертвувати...",
+  "_Donar..."
+ ],
  "Lists": [
   "Liste",
   "Списки",
   "Listas"
+ ],
+ "Email: {0}": [
+  "Email: {0}",
+  "Електронна пошта: {0}",
+  "Correo: {0}"
+ ],
+ "Mastodon: {0}": [
+  "Mastodon: {0}",
+  "Mastodon: {0}",
+  "Mastodon: {0}"
+ ],
+ "Telegram, news and updates for Ernesto's apps: {0}": [
+  "Telegram, știri și actualizări pentru aplicațiile lui Ernesto: {0}",
+  "Telegram, новини й оновлення застосунків Ернесто: {0}",
+  "Telegram, noticias y actualizaciones de las aplicaciones de Ernesto: {0}"
+ ],
+ "GitHub, Tin Pan's code and releases: {0}": [
+  "GitHub, codul și versiunile Tin Pan: {0}",
+  "GitHub, код і випуски Tin Pan: {0}",
+  "GitHub, el código y las versiones de Tin Pan: {0}"
+ ],
+ "PayPal: {0}": [
+  "PayPal: {0}",
+  "PayPal: {0}",
+  "PayPal: {0}"
+ ],
+ "Ko-fi: {0}": [
+  "Ko-fi: {0}",
+  "Ko-fi: {0}",
+  "Ko-fi: {0}"
+ ],
+ "Couldn't open {0}.": [
+  "Nu s-a putut deschide {0}.",
+  "Не вдалося відкрити {0}.",
+  "No se pudo abrir {0}."
+ ],
+ "Contact the author": [
+  "Contactează autorul",
+  "Зв’язатися з автором",
+  "Contactar con el autor"
+ ],
+ "Tin Pan is made by Ernesto Melendez. Enter opens the selected address. For a problem with Tin Pan, Help, Report a problem sends it straight to Ernesto with the details needed.": [
+  "Tin Pan este făcut de Ernesto Melendez. Enter deschide adresa selectată. Pentru o problemă cu Tin Pan, Ajutor, Raportează o problemă o trimite direct lui Ernesto, cu detaliile necesare.",
+  "Tin Pan створив Ернесто Мелендес. Enter відкриває вибрану адресу. Якщо з Tin Pan щось не так, «Довідка», «Повідомити про проблему» надсилає це просто Ернесто з потрібними подробицями.",
+  "Tin Pan lo hace Ernesto Melendez. Intro abre la dirección seleccionada. Para un problema con Tin Pan, Ayuda, Informar de un problema se lo envía directamente a Ernesto con los detalles necesarios."
+ ],
+ "Donate": [
+  "Donează",
+  "Пожертвувати",
+  "Donar"
+ ],
+ "Tin Pan is free. If it's useful to you, a donation helps keep it going. Enter opens the selected page in your browser.": [
+  "Tin Pan este gratuit. Dacă îți este util, o donație ajută la continuarea lui. Enter deschide pagina selectată în browser.",
+  "Tin Pan безкоштовний. Якщо він вам корисний, пожертва допомагає його розвивати. Enter відкриває вибрану сторінку в браузері.",
+  "Tin Pan es gratis. Si te resulta útil, una donación ayuda a que siga adelante. Intro abre la página seleccionada en tu navegador."
  ],
  "Models haven't loaded yet.": [
   "Modelele nu s-au încărcat încă.",
@@ -5464,15 +5564,45 @@
   "_Вплив стилю",
   "_Influencia del estilo"
  ],
+ "_Yes": [
+  "D_a",
+  "_Так",
+  "_Sí"
+ ],
+ "_No": [
+  "_Nu",
+  "_Ні",
+  "_No"
+ ],
  "Explore": [
   "Explorează",
   "Огляд",
   "Explorar"
  ],
+ "Up next": [
+  "Urmează",
+  "Далі",
+  "A continuación"
+ ],
  "Closed {0}.": [
   "Am închis {0}.",
   "Закрито: {0}.",
   "Se cerró {0}."
+ ],
+ "Search Suno": [
+  "Caută în Suno",
+  "Шукати в Suno",
+  "Buscar en Suno"
+ ],
+ "Finds songs from everyone on Suno, not only yours. They open as a list in the Discover tab.": [
+  "Găsește melodii de la toți cei de pe Suno, nu doar ale tale. Se deschid ca listă în fila Descoperă.",
+  "Знаходить пісні всіх користувачів Suno, а не лише ваші. Вони відкриваються як список у вкладці Відкриття.",
+  "Encuentra canciones de todo Suno, no solo las tuyas. Se abren como una lista en la pestaña Descubrir."
+ ],
+ "Searching.": [
+  "Se caută.",
+  "Шукаю.",
+  "Buscando."
  ],
  "Open a Suno link": [
   "Deschide un link Suno",
@@ -5493,6 +5623,11 @@
   "Acesta nu este linkul unei melodii Suno.",
   "Це не посилання на пісню Suno.",
   "Eso no es un enlace a una canción de Suno."
+ ],
+ "_Search for": [
+  "_Caută",
+  "_Шукати",
+  "_Buscar"
  ],
  "_Link to the song": [
   "_Linkul melodiei",
@@ -5519,10 +5654,10 @@
   "Нехай Suno вибере вплив стилю",
   "Que Suno elija la influencia del estilo"
  ],
- "Discover. Lists on the left: Trending, From people you follow, Explore and its shelves, Contests, and the lists you open from a song. Enter opens one; in its songs Enter plays, Space pauses, Left and Right seek. Delete in the lists closes a list you opened. Ctrl+G opens a Suno link. F5 refreshes.": [
-  "Descoperă. Listele din stânga: În tendințe, De la oamenii pe care îi urmăriți, Explorează cu rafturile lui, Concursuri și listele deschise de la o melodie. Enter deschide una; în melodiile ei Enter redă, Spațiu pune pauză, Stânga și dreapta derulează. Delete în liste închide o listă deschisă de tine. Ctrl+G deschide un link Suno. F5 reîmprospătează.",
-  "Відкриття. Списки ліворуч: «У тренді», «Від тих, за ким ви стежите», Огляд із його полицями, Конкурси та списки, відкриті з пісні. Enter відкриває список; у його піснях Enter відтворює, Пробіл ставить на паузу, стрілки вліво і вправо перемотують. Delete у списках закриває відкритий вами список. Ctrl+G відкриває посилання Suno. F5 оновлює.",
-  "Descubrir. Listas a la izquierda: Tendencias, De las personas que sigue, Explorar y sus estantes, Concursos y las listas abiertas desde una canción. Intro abre una; en sus canciones Intro reproduce, Espacio pausa, Izquierda y Derecha avanzan o retroceden. Suprimir en las listas cierra una lista que abriste. Ctrl+G abre un enlace de Suno. F5 actualiza."
+ "Discover. Lists on the left: Trending, From people you follow, Explore and its shelves, Contests, and the lists you open from a song. Enter opens one; in its songs Enter plays, Space pauses, Left and Right seek. Delete in the lists closes a list you opened. Ctrl+G opens a Suno link, Ctrl+Shift+E searches all of Suno, and Up next holds songs you queued. F5 refreshes.": [
+  "Descoperă. Listele din stânga: În tendințe, De la oamenii pe care îi urmăriți, Explorează cu rafturile lui, Concursuri și listele deschise de la o melodie. Enter deschide una; în melodiile ei Enter redă, Spațiu pune pauză, Stânga și dreapta derulează. Delete în liste închide o listă deschisă de tine. Ctrl+G deschide un link Suno, Ctrl+Shift+E caută în tot Suno, iar Urmează păstrează melodiile puse la coadă. F5 reîmprospătează.",
+  "Відкриття. Списки ліворуч: «У тренді», «Від тих, за ким ви стежите», Огляд із його полицями, Конкурси та списки, відкриті з пісні. Enter відкриває список; у його піснях Enter відтворює, Пробіл ставить на паузу, стрілки вліво і вправо перемотують. Delete у списках закриває відкритий вами список. Ctrl+G відкриває посилання Suno, Ctrl+Shift+E шукає по всьому Suno, а «Далі» містить пісні, які ви додали в чергу. F5 оновлює.",
+  "Descubrir. Listas a la izquierda: Tendencias, De las personas que sigue, Explorar y sus estantes, Concursos y las listas abiertas desde una canción. Intro abre una; en sus canciones Intro reproduce, Espacio pausa, Izquierda y Derecha avanzan o retroceden. Suprimir en las listas cierra una lista que abriste. Ctrl+G abre un enlace de Suno, Ctrl+Shift+E busca en todo Suno y A continuación guarda las canciones que pusiste en cola. F5 actualiza."
  ],
  "Include Tin Pan's _log (it has no passwords, and your user name is taken out)": [
   "Include _jurnalul Tin Pan (nu conține parole, iar numele de utilizator este eliminat)",
@@ -5539,10 +5674,10 @@
   "Вкладки і списки",
   "Pestañas y listas"
  ],
- "The Library and Discover tabs each have their lists on the left and the chosen list's songs on the right. The Library's lists are your songs and each of your playlists; Discover's are Trending, From people you follow, Explore and each of its shelves, and Contests. A list loads a moment after you arrow onto it; Enter loads it now and says how many songs it has. A song carries on through the list it started from, whichever tab is shown.\nSimilar songs, a creator's songs, covers and remixes and the original song open as lists in the Discover tab; Delete in the lists closes one. Ctrl+G opens a song from a Suno link someone sent you, the same way. In a playlist's songs, Delete removes a song and Ctrl+Up and Ctrl+Down move it; Delete on a playlist in the lists moves it to the trash (asks first). Ctrl+P adds the selected song to a playlist.": [
-  "Filele Bibliotecă și Descoperă au fiecare listele în stânga și melodiile listei alese în dreapta. Listele Bibliotecii sunt melodiile tale și fiecare listă de redare; ale lui Descoperă sunt În tendințe, De la oamenii pe care îi urmăriți, Explorează cu fiecare raft al lui și Concursuri. O listă se încarcă la o clipă după ce ajungi pe ea cu săgețile; Enter o încarcă imediat și spune câte melodii are. O melodie continuă prin lista din care a pornit, oricare filă s-ar vedea.\nMelodiile asemănătoare, melodiile unui creator, preluările și remixurile și melodia originală se deschid ca liste în fila Descoperă; Delete în liste închide una. Ctrl+G deschide la fel o melodie dintr-un link Suno primit de la cineva. În melodiile unei liste de redare, Delete scoate o melodie, iar Ctrl+Sus și Ctrl+Jos o mută; Delete pe o listă de redare din liste o mută la coș (întreabă întâi). Ctrl+P adaugă melodia aleasă într-o listă de redare.",
-  "Вкладки Бібліотека і Відкриття мають ліворуч свої списки, а праворуч — пісні вибраного списку. Списки Бібліотеки — це ваші пісні й кожен ваш плейлист; списки Відкриття — «У тренді», «Від тих, за ким ви стежите», Огляд і кожна його полиця та Конкурси. Список завантажується за мить після того, як ви стрілками стали на нього; Enter завантажує його одразу й каже, скільки в ньому пісень. Пісня продовжується тим списком, з якого почалася, хоч яку вкладку показано.\nСхожі пісні, пісні автора, кавери й ремікси та оригінальна пісня відкриваються як списки у вкладці Відкриття; Delete у списках закриває такий список. Ctrl+G так само відкриває пісню з посилання Suno, яке вам надіслали. У піснях плейлиста Delete прибирає пісню, а Ctrl+Вгору і Ctrl+Вниз переміщують її; Delete на плейлисті в списках переміщує його до кошика (спершу питає). Ctrl+P додає вибрану пісню до плейлиста.",
-  "Las pestañas Biblioteca y Descubrir tienen sus listas a la izquierda y las canciones de la lista elegida a la derecha. Las listas de la Biblioteca son tus canciones y cada una de tus listas de reproducción; las de Descubrir son Tendencias, De las personas que sigue, Explorar y cada uno de sus estantes, y Concursos. Una lista se carga un momento después de llegar a ella con las flechas; Intro la carga ya y dice cuántas canciones tiene. Una canción sigue por la lista en la que empezó, sea cual sea la pestaña que se muestre.\nLas canciones parecidas, las de un creador, las versiones y remixes y la canción original se abren como listas en la pestaña Descubrir; Suprimir en las listas cierra una. Ctrl+G abre del mismo modo una canción desde un enlace de Suno que te hayan enviado. En las canciones de una lista de reproducción, Suprimir quita una canción y Ctrl+Arriba y Ctrl+Abajo la mueven; Suprimir sobre una lista de reproducción la manda a la papelera (pregunta antes). Ctrl+P añade la canción elegida a una lista de reproducción."
+ "The Library and Discover tabs each have their lists on the left and the chosen list's songs on the right. The Library's lists are your songs and each of your playlists; Discover's are Trending, From people you follow, Explore and each of its shelves, and Contests. A list loads a moment after you arrow onto it; Enter loads it now and says how many songs it has. A song carries on through the list it started from, whichever tab is shown.\nSimilar songs, a creator's songs, covers and remixes and the original song open as lists in the Discover tab; Delete in the lists closes one. Ctrl+G opens a song from a Suno link someone sent you, the same way, and Ctrl+Shift+E searches all of Suno.\nUp next, in the Discover tab, holds songs to play after the current one: Ctrl+Shift+A adds the selected song, Play next in the Song menu puts it first, and Delete there takes one out. When Up next is empty, the list you were playing carries on. With \"When a list ends, keep playing songs Suno picks\" in Settings, Suno's picks follow the last song of a list. In a playlist's songs, Delete removes a song and Ctrl+Up and Ctrl+Down move it; Delete on a playlist in the lists moves it to the trash (asks first). Ctrl+P adds the selected song to a playlist.": [
+  "Filele Bibliotecă și Descoperă au fiecare listele în stânga și melodiile listei alese în dreapta. Listele Bibliotecii sunt melodiile tale și fiecare listă de redare; ale lui Descoperă sunt În tendințe, De la oamenii pe care îi urmăriți, Explorează cu fiecare raft al lui și Concursuri. O listă se încarcă la o clipă după ce ajungi pe ea cu săgețile; Enter o încarcă imediat și spune câte melodii are. O melodie continuă prin lista din care a pornit, oricare filă s-ar vedea.\nMelodiile asemănătoare, melodiile unui creator, preluările și remixurile și melodia originală se deschid ca liste în fila Descoperă; Delete în liste închide una. Ctrl+G deschide la fel o melodie dintr-un link Suno primit de la cineva, iar Ctrl+Shift+E caută în tot Suno.\nUrmează, în fila Descoperă, păstrează melodiile de redat după cea curentă: Ctrl+Shift+A adaugă melodia selectată, Redă-o prima în șir din meniul Melodie o pune prima, iar Delete acolo scoate una. Când Urmează e gol, lista pe care o ascultai continuă. Cu „Când se termină o listă, continuă cu melodii alese de Suno” din Setări, alegerile Suno urmează după ultima melodie dintr-o listă. În melodiile unei liste de redare, Delete scoate o melodie, iar Ctrl+Sus și Ctrl+Jos o mută; Delete pe o listă de redare din liste o mută la coș (întreabă întâi). Ctrl+P adaugă melodia aleasă într-o listă de redare.",
+  "Вкладки Бібліотека і Відкриття мають ліворуч свої списки, а праворуч — пісні вибраного списку. Списки Бібліотеки — це ваші пісні й кожен ваш плейлист; списки Відкриття — «У тренді», «Від тих, за ким ви стежите», Огляд і кожна його полиця та Конкурси. Список завантажується за мить після того, як ви стрілками стали на нього; Enter завантажує його одразу й каже, скільки в ньому пісень. Пісня продовжується тим списком, з якого почалася, хоч яку вкладку показано.\nСхожі пісні, пісні автора, кавери й ремікси та оригінальна пісня відкриваються як списки у вкладці Відкриття; Delete у списках закриває такий список. Ctrl+G так само відкриває пісню з посилання Suno, яке вам надіслали, а Ctrl+Shift+E шукає по всьому Suno.\n«Далі» у вкладці Відкриття містить пісні, які заграють після поточної: Ctrl+Shift+A додає вибрану пісню, «Грати наступною» в меню «Пісня» ставить її першою, а Delete там прибирає пісню. Коли «Далі» порожнє, список, який ви слухали, грає далі. Якщо в Налаштуваннях увімкнено «Коли список закінчиться, грати пісні, які вибирає Suno», після останньої пісні списку грають пісні від Suno. У піснях плейлиста Delete прибирає пісню, а Ctrl+Вгору і Ctrl+Вниз переміщують її; Delete на плейлисті в списках переміщує його до кошика (спершу питає). Ctrl+P додає вибрану пісню до плейлиста.",
+  "Las pestañas Biblioteca y Descubrir tienen sus listas a la izquierda y las canciones de la lista elegida a la derecha. Las listas de la Biblioteca son tus canciones y cada una de tus listas de reproducción; las de Descubrir son Tendencias, De las personas que sigue, Explorar y cada uno de sus estantes, y Concursos. Una lista se carga un momento después de llegar a ella con las flechas; Intro la carga ya y dice cuántas canciones tiene. Una canción sigue por la lista en la que empezó, sea cual sea la pestaña que se muestre.\nLas canciones parecidas, las de un creador, las versiones y remixes y la canción original se abren como listas en la pestaña Descubrir; Suprimir en las listas cierra una. Ctrl+G abre del mismo modo una canción desde un enlace de Suno que te hayan enviado, y Ctrl+Shift+E busca en todo Suno.\nA continuación, en la pestaña Descubrir, guarda canciones para después de la actual: Ctrl+Shift+A añade la canción seleccionada, Escuchar justo después del menú Canción la pone primera y Suprimir allí quita una. Cuando A continuación está vacía, sigue la lista que escuchabas. Con «Al terminar una lista, seguir con canciones que elige Suno» en Ajustes, las elegidas por Suno siguen a la última canción de una lista. En las canciones de una lista de reproducción, Suprimir quita una canción y Ctrl+Arriba y Ctrl+Abajo la mueven; Suprimir sobre una lista de reproducción la manda a la papelera (pregunta antes). Ctrl+P añade la canción elegida a una lista de reproducción."
  ],
  "F8 or the Play/Pause media key: play or pause; with nothing playing it starts the selected song.\nShift+F8 or the Stop media key: stop.\nF7 and F9, or the Previous and Next media keys: previous and next song.\nShift+F7 and Shift+F9: back and forward 10 seconds. Left and Right in a song list: 5 seconds.\nCtrl+F7 and Ctrl+F9: back and forward 10 percent of the song.\nCtrl+F8: back to the start of the song.\nCtrl+Shift+F8: resume the last song where you left off, even after closing Tin Pan.\nF11 and F12: volume down and up.\nSongs play in Tin Pan itself, and the next song in the list is fetched ahead, so it starts at once.": [
   "F8 sau tasta media Redare/Pauză: redare sau pauză; când nu se redă nimic, pornește melodia selectată.\nShift+F8 sau tasta media Oprire: oprire.\nF7 și F9, sau tastele media Anterior și Următor: melodia anterioară și următoare.\nShift+F7 și Shift+F9: înapoi și înainte 10 secunde. Stânga și dreapta într-o listă de melodii: 5 secunde.\nCtrl+F7 și Ctrl+F9: înapoi și înainte 10 la sută din melodie.\nCtrl+F8: înapoi la începutul melodiei.\nCtrl+Shift+F8: reia ultima melodie de unde ai rămas, chiar și după ce ai închis Tin Pan.\nF11 și F12: volum mai mic și mai mare.\nMelodiile se redau chiar în Tin Pan, iar următoarea melodie din listă e adusă dinainte, ca să pornească imediat.",
@@ -5558,6 +5693,151 @@
   "Meniul Bibliotecă, Încarcă o melodie (Alt+U pe pagina Bibliotecă), trimite un fișier audio de pe acest calculator în contul tău Suno, unde devine o melodie pe care o poți reda, extinde, prelua și remasteriza. Se pot încărca fișiere MP3, M4A, WAV, FLAC, OGG și AAC, iar tu poți adăuga versurile. Confirmi că ai drepturile asupra lui și accepți termenii Suno pentru încărcări. Suno verifică fiecare încărcare, ceea ce poate dura un minut sau două, și poate refuza muzica protejată de drepturi de autor. Limitele de lungime sunt cele ale planului tău.",
   "Меню «Бібліотека», «Надіслати пісню» (Alt+U на сторінці Бібліотека), надсилає аудіофайл із цього комп'ютера до вашого облікового запису Suno, де він стає піснею, яку можна відтворювати, продовжувати, робити кавер і ремастер. Можна надсилати файли MP3, M4A, WAV, FLAC, OGG і AAC, а також додати текст. Ви підтверджуєте, що маєте на нього права, і приймаєте умови Suno для надсилань. Suno перевіряє кожне надсилання, що може тривати хвилину-дві, і може відмовити музиці, захищеній авторським правом. Обмеження тривалості — ті, що у вашому плані.",
   "Menú Biblioteca, Subir una canción (Alt+U en la página Biblioteca), envía un archivo de audio de este equipo a tu cuenta de Suno, donde se vuelve una canción que puedes reproducir, extender, versionar y remasterizar. Se pueden subir archivos MP3, M4A, WAV, FLAC, OGG y AAC, y puedes añadir su letra. Confirmas que tienes los derechos y aceptas los términos de Suno para subidas. Suno revisa cada subida, lo que puede tardar un minuto o dos, y puede rechazar música protegida por derechos de autor. Los límites de duración son los de tu plan."
+ ],
+ "Listen for Credits and your voice": [
+  "Ascultă pentru credite și vocea ta",
+  "Слухати за кредити і ваш голос",
+  "Escuchar para ganar créditos y tu voz"
+ ],
+ "Account, Listen for credits: Suno pays credits for rating songs. Each task has two songs and one or more questions. In its window, the Song A and Song B buttons play or pause each song; listen to each for the time it says, choose an answer for each question, then Send rating, and the next one comes. Skip this one passes on it; Close stops. The first time, Suno asks a few questions about you as a listener. Suno sometimes wants its check passed with a rating; Tin Pan does that the same way as when making songs.\nLibrary, Make a voice from your singing: a voice persona that sings in your voice. Choose a recording of you singing without music; then Suno gives a short phrase to record in your own voice, to check the voice is yours, and you choose that recording too. Tin Pan doesn't record; use any recorder. The voice is private and appears in Personas.": [
+  "Cont, Ascultă pentru credite: Suno plătește credite pentru evaluarea melodiilor. Fiecare sarcină are două melodii și una sau mai multe întrebări. În fereastra ei, butoanele Melodia A și Melodia B redau sau opresc fiecare melodie; ascultă fiecare cât spune, alege un răspuns la fiecare întrebare, apoi Trimite evaluarea, și vine următoarea. Sari peste aceasta o lasă; Închide se oprește. Prima dată, Suno pune câteva întrebări despre tine ca ascultător. Uneori Suno vrea verificarea sa trecută odată cu o evaluare; Tin Pan o face la fel ca atunci când creezi melodii.\nBibliotecă, Fă o voce din cântecul tău: o persona care cântă cu vocea ta. Alege o înregistrare cu tine cântând fără muzică; apoi Suno îți dă o frază scurtă de înregistrat cu vocea ta, ca să verifice că vocea e a ta, și alegi și acea înregistrare. Tin Pan nu înregistrează; folosește orice reportofon. Vocea e privată și apare în Persona.",
+  "Обліковий запис, «Слухати за кредити»: Suno платить кредити за оцінювання пісень. Кожне завдання має дві пісні й одне чи кілька запитань. У його вікні кнопки «Пісня A» і «Пісня B» відтворюють або ставлять на паузу кожну пісню; прослухайте кожну стільки, скільки вказано, виберіть відповідь на кожне запитання, тоді «Надіслати оцінку», і приходить наступне. «Пропустити це» пропускає завдання; «Закрити» зупиняє. Першого разу Suno ставить кілька запитань про вас як слухача. Іноді Suno хоче, щоб разом з оцінкою пройшла його перевірка; Tin Pan робить це так само, як під час створення пісень.\nБібліотека, «Створити голос зі свого співу»: персона, яка співає вашим голосом. Виберіть запис, де ви співаєте без музики; тоді Suno дає коротку фразу, яку треба записати своїм голосом, щоб перевірити, що голос ваш, і ви вибираєте й цей запис. Tin Pan не записує звук; скористайтеся будь-яким диктофоном. Голос приватний і з’являється в Персонах.",
+  "Cuenta, Escuchar para ganar créditos: Suno paga créditos por valorar canciones. Cada tarea tiene dos canciones y una o más preguntas. En su ventana, los botones Canción A y Canción B reproducen o pausan cada canción; escucha cada una el tiempo que indica, elige una respuesta para cada pregunta y luego Enviar valoración, y llega la siguiente. Omitir esta la salta; Cerrar se detiene. La primera vez, Suno hace unas preguntas sobre ti como oyente. A veces Suno quiere que su verificación pase con una valoración; Tin Pan lo hace igual que al crear canciones.\nBiblioteca, Crear una voz con tu canto: una persona que canta con tu voz. Elige una grabación tuya cantando sin música; luego Suno te da una frase corta para grabar con tu propia voz, para comprobar que la voz es tuya, y eliges también esa grabación. Tin Pan no graba; usa cualquier grabadora. La voz es privada y aparece en Personas."
+ ],
+ "Help menu, Report a problem (Ctrl+Shift+B) and Suggest a feature (Ctrl+Shift+F) send a message privately to Tin Pan's author; no account is needed. Contact the author lists Ernesto's email, Mastodon and the Telegram news channel, and Donate lists ways to support Tin Pan; Enter opens one. The update offer has a Donate button too. A problem report can include Tin Pan's log, which has no passwords; your Windows user name is taken out first.": [
+  "Meniul Ajutor, Raportează o problemă (Ctrl+Shift+B) și Sugerează o funcție (Ctrl+Shift+F) trimit un mesaj doar autorului Tin Pan; nu e nevoie de cont. Contactează autorul arată emailul lui Ernesto, Mastodon și canalul de știri de pe Telegram, iar Donează arată cum poți sprijini Tin Pan; Enter îl deschide pe cel ales. Oferta de actualizare are și ea un buton Donează. Un raport de problemă poate include jurnalul Tin Pan, care nu conține parole; numele de utilizator Windows este eliminat mai întâi.",
+  "Меню «Довідка», «Повідомити про проблему» (Ctrl+Shift+B) і «Запропонувати функцію» (Ctrl+Shift+F) надсилають повідомлення лише авторові Tin Pan; обліковий запис не потрібен. «Зв’язатися з автором» показує електронну пошту Ернесто, Mastodon і канал новин у Telegram, а «Пожертвувати» показує, як підтримати Tin Pan; Enter відкриває вибране. У пропозиції оновлення теж є кнопка «Пожертвувати». Звіт про проблему може містити журнал Tin Pan, у якому немає паролів; ім’я користувача Windows спершу видаляється.",
+  "Menú Ayuda, Informar de un problema (Ctrl+Shift+B) y Sugerir una función (Ctrl+Shift+F) envían un mensaje en privado al autor de Tin Pan; no hace falta cuenta. Contactar con el autor muestra el correo de Ernesto, Mastodon y el canal de noticias de Telegram, y Donar muestra formas de apoyar Tin Pan; Intro abre la elegida. La oferta de actualización también tiene un botón Donar. Un informe de problema puede incluir el registro de Tin Pan, que no tiene contraseñas; antes se quita su nombre de usuario de Windows."
+ ],
+ "Listen for Credits": [
+  "Ascultă pentru credite",
+  "Слухати за кредити",
+  "Escuchar para ganar créditos"
+ ],
+ "Listen to each song for at least {0} seconds, answer each question, then Send rating.": [
+  "Ascultă fiecare melodie cel puțin {0} secunde, răspunde la fiecare întrebare, apoi Trimite evaluarea.",
+  "Прослухайте кожну пісню щонайменше {0} секунд, дайте відповідь на кожне запитання, тоді «Надіслати оцінку».",
+  "Escucha cada canción al menos {0} segundos, responde cada pregunta y luego Enviar valoración."
+ ],
+ "This one earns {0} credits.": [
+  "Aceasta aduce {0} credite.",
+  "Це завдання дає {0} кредитів.",
+  "Esta da {0} créditos."
+ ],
+ "Song _{0}: play or pause": [
+  "Melodia _{0}: redă sau pauză",
+  "Пісня _{0}: грати чи пауза",
+  "Canción _{0}: reproducir o pausar"
+ ],
+ "That song didn't play.": [
+  "Melodia nu a pornit.",
+  "Пісня не заграла.",
+  "La canción no se reprodujo."
+ ],
+ "Not answered": [
+  "Fără răspuns",
+  "Без відповіді",
+  "Sin responder"
+ ],
+ "Song {0}": [
+  "Melodia {0}",
+  "Пісня {0}",
+  "Canción {0}"
+ ],
+ "Neither": [
+  "Niciuna",
+  "Жодна",
+  "Ninguna"
+ ],
+ "_Send rating": [
+  "_Trimite evaluarea",
+  "_Надіслати оцінку",
+  "_Enviar valoración"
+ ],
+ "S_kip this one": [
+  "_Sari peste aceasta",
+  "_Пропустити це",
+  "_Omitir esta"
+ ],
+ "Song {0} has been heard long enough.": [
+  "Melodia {0} a fost ascultată destul.",
+  "Пісню {0} прослухано достатньо.",
+  "La canción {0} ya se escuchó lo suficiente."
+ ],
+ "Listen to song {0} for at least {1} seconds first.": [
+  "Ascultă mai întâi melodia {0} cel puțin {1} secunde.",
+  "Спершу прослухайте пісню {0} щонайменше {1} секунд.",
+  "Primero escucha la canción {0} al menos {1} segundos."
+ ],
+ "Answer each question first.": [
+  "Răspunde mai întâi la fiecare întrebare.",
+  "Спершу дайте відповідь на кожне запитання.",
+  "Primero responde cada pregunta."
+ ],
+ "Choose one": [
+  "Alege una",
+  "Виберіть",
+  "Elige una"
+ ],
+ "Getting a song to rate.": [
+  "Se aduce o melodie de evaluat.",
+  "Отримую пісню для оцінювання.",
+  "Buscando una canción para valorar."
+ ],
+ "Before the first rating, Suno asks about you as a listener, so it can give you songs you can judge. You can change this later.": [
+  "Înainte de prima evaluare, Suno te întreabă despre tine ca ascultător, ca să-ți dea melodii pe care le poți judeca. Poți schimba asta mai târziu.",
+  "Перед першою оцінкою Suno питає про вас як слухача, щоб давати пісні, які ви можете оцінити. Це можна змінити пізніше.",
+  "Antes de la primera valoración, Suno pregunta sobre ti como oyente, para darte canciones que puedas juzgar. Puedes cambiarlo más tarde."
+ ],
+ "About you as a listener": [
+  "Despre tine ca ascultător",
+  "Про вас як слухача",
+  "Sobre ti como oyente"
+ ],
+ "Save and continue": [
+  "Salvează și continuă",
+  "Зберегти й продовжити",
+  "Guardar y continuar"
+ ],
+ "Suno needs an answer to each question, and at least one genre and one language.": [
+  "Suno are nevoie de un răspuns la fiecare întrebare și de cel puțin un gen și o limbă.",
+  "Suno потрібна відповідь на кожне запитання і хоча б один жанр і одна мова.",
+  "Suno necesita una respuesta a cada pregunta, y al menos un género y un idioma."
+ ],
+ "_Which describes you best?": [
+  "_Ce te descrie cel mai bine?",
+  "_Що вас найкраще описує?",
+  "¿_Qué te describe mejor?"
+ ],
+ "Your _musical background": [
+  "Pregătirea ta _muzicală",
+  "Ваша _музична підготовка",
+  "Tu formación _musical"
+ ],
+ "What you _listen on": [
+  "Pe ce a_sculți",
+  "На _чому ви слухаєте",
+  "Dónde _escuchas"
+ ],
+ "Genres you know well": [
+  "Genuri pe care le cunoști bine",
+  "Жанри, які ви добре знаєте",
+  "Géneros que conoces bien"
+ ],
+ "_Other genres": [
+  "_Alte genuri",
+  "_Інші жанри",
+  "_Otros géneros"
+ ],
+ "Languages you speak fluently": [
+  "Limbi pe care le vorbești fluent",
+  "Мови, якими ви вільно володієте",
+  "Idiomas que hablas con fluidez"
+ ],
+ "Other lan_guages": [
+  "Alte _limbi",
+  "Інші м_ови",
+  "Otros _idiomas"
  ],
  "Tin Pan is already running.": [
   "Tin Pan rulează deja.",
@@ -5634,6 +5914,16 @@
   "Нехай Suno вибере вплив аудіо",
   "Que Suno elija la influencia del audio"
  ],
+ "You've rated as many songs as Suno takes today. Try again tomorrow.": [
+  "Ai evaluat câte melodii acceptă Suno azi. Încearcă din nou mâine.",
+  "Ви оцінили стільки пісень, скільки Suno приймає за день. Спробуйте завтра.",
+  "Has valorado todas las canciones que Suno acepta hoy. Vuelve a intentarlo mañana."
+ ],
+ "Suno has no songs to rate right now. Try again later.": [
+  "Suno nu are acum melodii de evaluat. Încearcă mai târziu.",
+  "Зараз у Suno немає пісень для оцінювання. Спробуйте пізніше.",
+  "Suno no tiene canciones para valorar ahora. Inténtalo más tarde."
+ ],
  "That song isn't on Suno anymore.": [
   "Melodia aceea nu mai e pe Suno.",
   "Цієї пісні вже немає на Suno.",
@@ -5643,6 +5933,51 @@
   "Suno nu a găsit melodia. Poate fi privată sau ștearsă.",
   "Suno не знайшов цю пісню. Можливо, вона приватна або видалена.",
   "Suno no encontró esa canción. Puede que sea privada o se haya eliminado."
+ ],
+ "Suno found no songs for {0}.": [
+  "Suno nu a găsit melodii pentru {0}.",
+  "Suno не знайшов пісень за запитом {0}.",
+  "Suno no encontró canciones para {0}."
+ ],
+ "Suno search: {0}": [
+  "Căutare Suno: {0}",
+  "Пошук Suno: {0}",
+  "Búsqueda en Suno: {0}"
+ ],
+ "Rating sent.": [
+  "Evaluarea a fost trimisă.",
+  "Оцінку надіслано.",
+  "Valoración enviada."
+ ],
+ "That one isn't available any more. Here's another.": [
+  "Aceasta nu mai e disponibilă. Iată alta.",
+  "Це завдання вже недоступне. Ось інше.",
+  "Esa ya no está disponible. Aquí tienes otra."
+ ],
+ "{0} Try again later with a new recording of your singing.": [
+  "{0} Încearcă mai târziu cu o nouă înregistrare a cântecului tău.",
+  "{0} Спробуйте пізніше з новим записом свого співу.",
+  "{0} Inténtalo más tarde con una nueva grabación de tu canto."
+ ],
+ "Your voice {0} is ready. It's in Personas.": [
+  "Vocea ta {0} e gata. E în Persona.",
+  "Ваш голос {0} готовий. Він у Персонах.",
+  "Tu voz {0} está lista. Está en Personas."
+ ],
+ "Suno didn't hear the phrase in that recording.": [
+  "Suno nu a auzit fraza în acea înregistrare.",
+  "Suno не почув фразу в цьому записі.",
+  "Suno no oyó la frase en esa grabación."
+ ],
+ "Suno found the phrase recording didn't sound like the same voice as the singing.": [
+  "Suno a găsit că înregistrarea frazei nu sună ca aceeași voce ca a cântecului.",
+  "Suno вважає, що запис фрази звучить не тим самим голосом, що й спів.",
+  "Suno vio que la grabación de la frase no sonaba con la misma voz que el canto."
+ ],
+ "Suno is taking long to check the voice. Try again later.": [
+  "Suno verifică vocea de mult timp. Încearcă mai târziu.",
+  "Suno довго перевіряє голос. Спробуйте пізніше.",
+  "Suno tarda en comprobar la voz. Inténtalo más tarde."
  ],
  "Tin Pan can't turn this kind of file into M4A on this system. Try an MP3, WAV or M4A file.": [
   "Tin Pan nu poate transforma acest tip de fișier în M4A pe acest sistem. Încearcă un fișier MP3, WAV sau M4A.",
@@ -5669,6 +6004,41 @@
   "_Списки",
   "_Listas"
  ],
+ "{0} can't be played yet.": [
+  "{0} nu poate fi redată încă.",
+  "{0} ще не можна відтворити.",
+  "{0} aún no se puede reproducir."
+ ],
+ "{0} plays next.": [
+  "{0} se redă următoarea.",
+  "{0} гратиме наступною.",
+  "{0} suena a continuación."
+ ],
+ "Added {0} to Up next.": [
+  "{0} a fost adăugată la Urmează.",
+  "{0} додано до «Далі».",
+  "{0} añadida a A continuación."
+ ],
+ "Removed {0} from Up next.": [
+  "{0} a fost scoasă din Urmează.",
+  "{0} прибрано з «Далі».",
+  "{0} quitada de A continuación."
+ ],
+ "Up next is empty.": [
+  "Urmează e gol.",
+  "«Далі» порожнє.",
+  "A continuación está vacía."
+ ],
+ "Up next cleared.": [
+  "Urmează a fost golit.",
+  "«Далі» очищено.",
+  "A continuación vaciada."
+ ],
+ "When a list ends, keep playing songs Suno picks": [
+  "Când se termină o listă, continuă cu melodii alese de Suno",
+  "Коли список закінчиться, грати пісні, які вибирає Suno",
+  "Al terminar una lista, seguir con canciones que elige Suno"
+ ],
  "Widening amount in tenths (10 matches the rest of the track, 5 is half)": [
   "Cât se lărgește, în zecimi (10 se potrivește cu restul piesei, 5 e jumătate)",
   "Міра розширення в десятих (10 — як решта треку, 5 — половина)",
@@ -5694,6 +6064,86 @@
   "Tin Pan не може прочитати цей файл як аудіо.",
   "Tin Pan no puede leer ese archivo como audio."
  ],
+ "Makes a voice persona that sings new songs in your voice. Choose a clear recording of you singing, without music, from about 30 seconds to a few minutes. Suno then asks you to record a short phrase to check the voice is yours. The voice stays private.": [
+  "Face o persona care cântă melodii noi cu vocea ta. Alege o înregistrare clară cu tine cântând, fără muzică, de la vreo 30 de secunde la câteva minute. Apoi Suno îți cere să înregistrezi o frază scurtă, ca să verifice că vocea e a ta. Vocea rămâne privată.",
+  "Створює персону, яка співає нові пісні вашим голосом. Виберіть чіткий запис, де ви співаєте без музики, приблизно від 30 секунд до кількох хвилин. Потім Suno попросить записати коротку фразу, щоб перевірити, що голос ваш. Голос залишається приватним.",
+  "Crea una persona que canta canciones nuevas con tu voz. Elige una grabación clara tuya cantando, sin música, de unos 30 segundos a unos minutos. Luego Suno te pide grabar una frase corta para comprobar que la voz es tuya. La voz sigue siendo privada."
+ ],
+ "Make a voice from your singing": [
+  "Fă o voce din cântecul tău",
+  "Створити голос зі свого співу",
+  "Crear una voz con tu canto"
+ ],
+ "Give the voice a name.": [
+  "Dă un nume vocii.",
+  "Дайте голосу назву.",
+  "Ponle un nombre a la voz."
+ ],
+ "That recording is too short. Sing for at least 10 seconds.": [
+  "Înregistrarea e prea scurtă. Cântă cel puțin 10 secunde.",
+  "Запис закороткий. Співайте щонайменше 10 секунд.",
+  "Esa grabación es muy corta. Canta al menos 10 segundos."
+ ],
+ "Sending your singing to Suno. This can take a minute.": [
+  "Se trimite cântecul tău la Suno. Poate dura un minut.",
+  "Надсилаю ваш спів у Suno. Це може тривати хвилину.",
+  "Enviando tu canto a Suno. Puede tardar un minuto."
+ ],
+ "Suno checks the voice is yours. Record yourself saying this phrase in your own voice, in under 15 seconds, then choose the recording:\n\n{0}": [
+  "Suno verifică dacă vocea e a ta. Înregistrează-te spunând această frază cu vocea ta, în mai puțin de 15 secunde, apoi alege înregistrarea:\n\n{0}",
+  "Suno перевіряє, що голос ваш. Запишіть, як ви своїм голосом кажете цю фразу, менш ніж за 15 секунд, тоді виберіть запис:\n\n{0}",
+  "Suno comprueba que la voz es tuya. Grábate diciendo esta frase con tu propia voz, en menos de 15 segundos, y luego elige la grabación:\n\n{0}"
+ ],
+ "Check it's your voice": [
+  "Verifică dacă e vocea ta",
+  "Перевірка, що голос ваш",
+  "Comprobar que es tu voz"
+ ],
+ "Check": [
+  "Verifică",
+  "Перевірити",
+  "Comprobar"
+ ],
+ "Choose the recording of the phrase.": [
+  "Alege înregistrarea frazei.",
+  "Виберіть запис фрази.",
+  "Elige la grabación de la frase."
+ ],
+ "Sending the phrase to Suno to check.": [
+  "Se trimite fraza la Suno pentru verificare.",
+  "Надсилаю фразу в Suno для перевірки.",
+  "Enviando la frase a Suno para comprobarla."
+ ],
+ "Recording of you _singing": [
+  "Înregistrarea cu tine _cântând",
+  "Запис вашого _співу",
+  "Grabación de ti _cantando"
+ ],
+ "Choose a recording of you singing": [
+  "Alege o înregistrare cu tine cântând",
+  "Виберіть запис вашого співу",
+  "Elige una grabación de ti cantando"
+ ],
+ "_Description (optional)": [
+  "_Descriere (opțional)",
+  "_Опис (необов’язково)",
+  "_Descripción (opcional)"
+ ],
+ "S_tyles it suits (optional)": [
+  "S_tiluri potrivite (opțional)",
+  "_Стилі, яким пасує (необов’язково)",
+  "_Estilos que le van (opcional)"
+ ],
+ "Recording of you saying the _phrase": [
+  "Înregistrarea cu tine spunând _fraza",
+  "Запис, де ви кажете _фразу",
+  "Grabación de ti diciendo la _frase"
+ ],
+ "Choose the recording of the phrase": [
+  "Alege înregistrarea frazei",
+  "Виберіть запис фрази",
+  "Elige la grabación de la frase"
+ ],
  "Tin Pan couldn't read this {0} file to clean it up.": [
   "Tin Pan nu a putut citi acest fișier {0} ca să-l curețe.",
   "Tin Pan не зміг прочитати цей файл {0}, щоб його очистити.",
@@ -5704,9 +6154,279 @@
   "Нове: {0}",
   "Nuevo: {0}"
  ],
+ "Suno gave a song address this app won't use.": [
+  "Suno a dat o adresă de melodie pe care aplicația nu o folosește.",
+  "Suno дав адресу пісні, якою цей застосунок не користується.",
+  "Suno dio una dirección de canción que esta aplicación no usa."
+ ],
+ "I make songs to share with friends": [
+  "Fac melodii ca să le împart cu prietenii",
+  "Я створюю пісні, щоб ділитися з друзями",
+  "Hago canciones para compartir con amigos"
+ ],
+ "I make songs with AI as a hobby": [
+  "Fac melodii cu IA din pasiune",
+  "Я створюю пісні зі ШІ як хобі",
+  "Hago canciones con IA como afición"
+ ],
+ "An aspiring artist": [
+  "Un artist la început de drum",
+  "Початківець-виконавець",
+  "Un artista que empieza"
+ ],
+ "An established artist": [
+  "Un artist consacrat",
+  "Відомий виконавець",
+  "Un artista consolidado"
+ ],
+ "Another kind of creator": [
+  "Alt fel de creator",
+  "Інший тип автора",
+  "Otro tipo de creador"
+ ],
+ "A listener": [
+  "Un ascultător",
+  "Слухач",
+  "Un oyente"
+ ],
+ "A hobby musician": [
+  "Un muzician amator",
+  "Музикант-аматор",
+  "Un músico aficionado"
+ ],
+ "Musically trained": [
+  "Cu pregătire muzicală",
+  "Маю музичну освіту",
+  "Con formación musical"
+ ],
+ "A professional musician": [
+  "Un muzician profesionist",
+  "Професійний музикант",
+  "Un músico profesional"
+ ],
+ "Pop": [
+  "Pop",
+  "Поп",
+  "Pop"
+ ],
+ "Rock": [
+  "Rock",
+  "Рок",
+  "Rock"
+ ],
+ "Alternative and indie": [
+  "Alternativ și indie",
+  "Альтернатива та інді",
+  "Alternativo e indie"
+ ],
+ "Hip hop": [
+  "Hip hop",
+  "Хіп-хоп",
+  "Hip hop"
+ ],
+ "Electronic": [
+  "Electronică",
+  "Електронна",
+  "Electrónica"
+ ],
+ "Dance and EDM": [
+  "Dance și EDM",
+  "Денс і EDM",
+  "Dance y EDM"
+ ],
+ "Soul and funk": [
+  "Soul și funk",
+  "Соул і фанк",
+  "Soul y funk"
+ ],
+ "Country": [
+  "Country",
+  "Кантрі",
+  "Country"
+ ],
+ "Folk": [
+  "Folk",
+  "Фолк",
+  "Folk"
+ ],
+ "Jazz": [
+  "Jazz",
+  "Джаз",
+  "Jazz"
+ ],
+ "Blues": [
+  "Blues",
+  "Блюз",
+  "Blues"
+ ],
+ "Classical": [
+  "Clasică",
+  "Класична",
+  "Clásica"
+ ],
+ "Musical theater": [
+  "Teatru muzical",
+  "Мюзикл",
+  "Teatro musical"
+ ],
+ "Reggaeton": [
+  "Reggaeton",
+  "Реґетон",
+  "Reguetón"
+ ],
+ "Reggae and dancehall": [
+  "Reggae și dancehall",
+  "Реґі та денсхол",
+  "Reggae y dancehall"
+ ],
+ "Afrobeats": [
+  "Afrobeats",
+  "Афробітс",
+  "Afrobeats"
+ ],
+ "Bollywood": [
+  "Bollywood",
+  "Боллівуд",
+  "Bollywood"
+ ],
+ "Indian classical": [
+  "Clasică indiană",
+  "Індійська класична",
+  "Clásica india"
+ ],
+ "K-pop": [
+  "K-pop",
+  "K-поп",
+  "K-pop"
+ ],
+ "J-pop": [
+  "J-pop",
+  "J-поп",
+  "J-pop"
+ ],
+ "Metal": [
+  "Metal",
+  "Метал",
+  "Metal"
+ ],
+ "Ambient": [
+  "Ambient",
+  "Ембієнт",
+  "Ambient"
+ ],
+ "Mandarin Chinese": [
+  "Chineză mandarină",
+  "Мандаринська китайська",
+  "Chino mandarín"
+ ],
+ "Hindi": [
+  "Hindi",
+  "Гінді",
+  "Hindi"
+ ],
+ "Arabic": [
+  "Arabă",
+  "Арабська",
+  "Árabe"
+ ],
+ "French": [
+  "Franceză",
+  "Французька",
+  "Francés"
+ ],
+ "Portuguese": [
+  "Portugheză",
+  "Португальська",
+  "Portugués"
+ ],
+ "Bengali": [
+  "Bengali",
+  "Бенгальська",
+  "Bengalí"
+ ],
+ "Russian": [
+  "Rusă",
+  "Російська",
+  "Ruso"
+ ],
+ "Japanese": [
+  "Japoneză",
+  "Японська",
+  "Japonés"
+ ],
+ "Korean": [
+  "Coreeană",
+  "Корейська",
+  "Coreano"
+ ],
+ "German": [
+  "Germană",
+  "Німецька",
+  "Alemán"
+ ],
+ "Indonesian and Malay": [
+  "Indoneziană și malaeză",
+  "Індонезійська та малайська",
+  "Indonesio y malayo"
+ ],
+ "Italian": [
+  "Italiană",
+  "Італійська",
+  "Italiano"
+ ],
+ "Turkish": [
+  "Turcă",
+  "Турецька",
+  "Turco"
+ ],
+ "Over-ear headphones": [
+  "Căști mari",
+  "Повнорозмірні навушники",
+  "Auriculares de diadema"
+ ],
+ "Earbuds": [
+  "Căști în ureche",
+  "Навушники-вкладиші",
+  "Auriculares de botón"
+ ],
+ "Studio monitors": [
+  "Monitoare de studio",
+  "Студійні монітори",
+  "Monitores de estudio"
+ ],
+ "Home speakers": [
+  "Boxe de casă",
+  "Домашні колонки",
+  "Altavoces de casa"
+ ],
+ "Laptop or phone speakers": [
+  "Difuzoarele laptopului sau telefonului",
+  "Динаміки ноутбука чи телефона",
+  "Altavoces del portátil o del teléfono"
+ ],
  "Choose an MP3, M4A, WAV, FLAC, OGG or AAC file.": [
   "Alege un fișier MP3, M4A, WAV, FLAC, OGG sau AAC.",
   "Виберіть файл MP3, M4A, WAV, FLAC, OGG або AAC.",
   "Elige un archivo MP3, M4A, WAV, FLAC, OGG o AAC."
+ ],
+ "Suno couldn't find a voice in that recording.": [
+  "Suno nu a găsit o voce în acea înregistrare.",
+  "Suno не знайшов голосу в цьому записі.",
+  "Suno no encontró una voz en esa grabación."
+ ],
+ "Suno gave no phrase to record. Try again later.": [
+  "Suno nu a dat nicio frază de înregistrat. Încearcă mai târziu.",
+  "Suno не дав фрази для запису. Спробуйте пізніше.",
+  "Suno no dio ninguna frase para grabar. Inténtalo más tarde."
+ ],
+ "Suno couldn't hear the phrase in that recording. It needs to be a few seconds long.": [
+  "Suno nu a putut auzi fraza în acea înregistrare. Trebuie să aibă câteva secunde.",
+  "Suno не розчув фразу в цьому записі. Він має тривати кілька секунд.",
+  "Suno no pudo oír la frase en esa grabación. Tiene que durar unos segundos."
+ ],
+ "Suno couldn't take the vocals out of your singing.": [
+  "Suno nu a putut extrage vocea din cântecul tău.",
+  "Suno не зміг виділити вокал із вашого співу.",
+  "Suno no pudo separar la voz de tu canto."
  ]
 }
