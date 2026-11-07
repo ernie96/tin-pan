@@ -264,10 +264,11 @@ impl PersonaInfo {
     }
 }
 
-/// How the song is described: by a description Suno writes from, or by your own lyrics.
+/// How the song is described: by a description Suno writes from (its Create form calls that Simple), or by
+/// your own lyrics.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Mode {
-    Inspiration,
+    Simple,
     Custom,
 }
 
@@ -275,9 +276,11 @@ pub enum Mode {
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct GenerateRequest {
     pub model: String,
-    pub inspiration: bool,
-    /// Lyrics in custom mode, the description in inspiration mode.
+    pub simple: bool,
+    /// Your lyrics. Empty in Simple mode: Suno sings whatever is here.
     pub prompt: String,
+    /// Simple mode's description, which Suno writes the lyrics from. Sent as gpt_description_prompt.
+    pub description: Option<String>,
     pub title: String,
     pub tags: String,
     pub negative_tags: String,
@@ -308,7 +311,7 @@ pub struct GenerateRequest {
 
 impl GenerateRequest {
     pub fn new(model: &str, mode: Mode) -> Self {
-        Self { model: model.to_string(), inspiration: mode == Mode::Inspiration, ..Self::default() }
+        Self { model: model.to_string(), simple: mode == Mode::Simple, ..Self::default() }
     }
 
     /// Whether weirdness or influence numbers are set, for models that don't take them.
@@ -322,7 +325,7 @@ impl GenerateRequest {
             "web_client_pathname": "/create",
             "is_max_mode": self.max_mode,
             "is_mumble": false,
-            "create_mode": if self.inspiration { "inspiration" } else if self.cover_clip_id.is_some() { "cover" } else { "custom" },
+            "create_mode": if self.simple { "simple" } else if self.cover_clip_id.is_some() { "cover" } else { "custom" },
             "user_tier": "",
             "create_session_token": uuid::Uuid::new_v4().to_string(),
             "disable_volume_normalization": false,
@@ -363,6 +366,9 @@ impl GenerateRequest {
             "continue_at": self.continue_at,
             "transaction_uuid": uuid::Uuid::new_v4().to_string(),
         });
+        if let Some(description) = &self.description {
+            body["gpt_description_prompt"] = json!(description);
+        }
         if let Some(task) = &self.task {
             body["task"] = json!(task);
         }
@@ -380,8 +386,17 @@ impl GenerateRequest {
 
     /// The same limits the Suno web form applies, counted the same way (UTF-16 units).
     pub fn check_lengths(&self, limits: MaxLengths) -> Option<String> {
-        let (prompt_name, prompt_limit) = if self.inspiration { (t("Description"), limits.description) } else { (t("Lyrics"), limits.prompt) };
-        let checks = [(t("Title"), &self.title, limits.title), (t("Style"), &self.tags, limits.tags), (t("Exclude styles"), &self.negative_tags, limits.negative_tags), (prompt_name, &self.prompt, prompt_limit)];
+        let (prompt_name, prompt_text, prompt_limit) = if self.simple {
+            (t("Description"), self.description.as_deref().unwrap_or(""), limits.description)
+        } else {
+            (t("Lyrics"), self.prompt.as_str(), limits.prompt)
+        };
+        let checks = [
+            (t("Title"), self.title.as_str(), limits.title),
+            (t("Style"), self.tags.as_str(), limits.tags),
+            (t("Exclude styles"), self.negative_tags.as_str(), limits.negative_tags),
+            (prompt_name, prompt_text, prompt_limit),
+        ];
         checks.into_iter().find_map(|(name, value, limit)| {
             let length = value.encode_utf16().count();
             (limit > 0 && length > limit).then(|| tf("{0} is {1} characters. This model allows {2}.", &[&name, &length, &limit]))
@@ -597,6 +612,7 @@ mod tests {
         let body = r.body();
         assert_eq!((body["mv"].as_str(), body["metadata"]["create_mode"].as_str()), (Some("chirp-fenix"), Some("custom")));
         assert!(body.get("cover_clip_id").is_some() && body.get("task").is_none() && body["metadata"].get("control_sliders").is_none());
+        assert!(body.get("gpt_description_prompt").is_none(), "only Simple mode sends a description");
         r.weirdness = Some(40.0);
         r.token = Some("t".into());
         r.token_provider = Some(2);
@@ -605,9 +621,20 @@ mod tests {
     }
 
     #[test]
+    fn a_description_is_not_sent_as_lyrics() {
+        let mut r = GenerateRequest::new("chirp-fenix", Mode::Simple);
+        r.description = Some("a sea shanty".into());
+        let body = r.body();
+        assert_eq!((body["prompt"].as_str(), body["gpt_description_prompt"].as_str()), (Some(""), Some("a sea shanty")));
+        assert_eq!(body["metadata"]["create_mode"].as_str(), Some("simple"));
+        r.prompt = "the description was put here".into();
+        assert_eq!(r.body()["prompt"].as_str(), Some("the description was put here"));
+    }
+
+    #[test]
     fn lengths_count_utf16_and_percent_reads_numbers() {
-        let mut r = GenerateRequest::new("m", Mode::Inspiration);
-        r.prompt = "a".repeat(11);
+        let mut r = GenerateRequest::new("m", Mode::Simple);
+        r.description = Some("a".repeat(11));
         let limits = MaxLengths { description: 10, ..MaxLengths::default() };
         assert_eq!(r.check_lengths(limits).as_deref(), Some("Description is 11 characters. This model allows 10."));
         assert_eq!(percent(" 42,5 ", "Weirdness"), Ok(Some(42.5)));

@@ -141,7 +141,7 @@ impl CreateWindow {
 
         heading(&panel, &s, "Describe a song");
         let description = text_box(&panel, &s, "_Description", 2, false);
-        button(&panel, &s, "_Create from description", |app| app.start_songs(Mode::Inspiration));
+        button(&panel, &s, "_Create from description", |app| app.start_songs(Mode::Simple));
 
         heading(&panel, &s, "Your own lyrics");
         let title = text_box(&panel, &s, "_Title", 1, false);
@@ -284,13 +284,16 @@ impl App {
         let percent = |slider: &Slider, suno_chooses: &CheckBox| (!suno_chooses.get_value()).then(|| f64::from(slider.get_value()));
         let weirdness = percent(&window.weirdness, &window.suno_weirdness);
         let influence = percent(&window.influence, &window.suno_influence);
-        let inspiration = mode == Mode::Inspiration;
+        let simple = mode == Mode::Simple;
         let instrumental = window.instrumental.get_value();
         let voice = create::voice_tag(window.voice.get_selection().unwrap_or(0) as usize);
         let tags = [window.style.get_value().trim().to_string(), voice.to_string()].into_iter().filter(|s| !s.is_empty()).collect::<Vec<_>>().join(", ");
         let mut request = GenerateRequest::new(&model.external_key, mode);
-        request.prompt = if inspiration { window.description.get_value().trim().to_string() } else if instrumental { String::new() } else { window.lyrics.get_value().trim().to_string() };
-        request.title = if inspiration { String::new() } else { window.title.get_value().trim().to_string() };
+        // Suno sings whatever `prompt` holds, so a description goes in gpt_description_prompt instead, as Suno's
+        // own Create form sends it; a description left in prompt comes back as lyrics.
+        request.prompt = if simple || instrumental { String::new() } else { window.lyrics.get_value().trim().to_string() };
+        request.description = simple.then(|| window.description.get_value().trim().to_string());
+        request.title = if simple { String::new() } else { window.title.get_value().trim().to_string() };
         request.tags = tags;
         request.negative_tags = window.exclude.get_value().trim().to_string();
         request.instrumental = instrumental;
@@ -319,7 +322,7 @@ impl App {
             return;
         }
         match mode {
-            Mode::Inspiration if window.description.get_value().trim().is_empty() => {
+            Mode::Simple if window.description.get_value().trim().is_empty() => {
                 speech::say(&t("Describe the song first."));
                 window.description.set_focus();
                 return;
