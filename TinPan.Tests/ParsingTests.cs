@@ -134,13 +134,15 @@ namespace TinPan.Tests
         [Fact]
         public void V2_web_request_has_every_field_the_server_requires()
         {
-            var req = new GenerateRequest("chirp-fenix", GenerateRequest.Modes.Inspiration) { Prompt = "a sea shanty" };
+            var req = new GenerateRequest("chirp-fenix", GenerateRequest.Modes.Simple) { GptDescriptionPrompt = "a sea shanty" };
             using var doc = JsonDocument.Parse(JsonSerializer.Serialize(req));
             var root = doc.RootElement;
 
             Assert.Equal("chirp-fenix", root.GetProperty("mv").GetString());
-            Assert.Equal("a sea shanty", root.GetProperty("prompt").GetString());
-            Assert.Equal("inspiration", root.GetProperty("metadata").GetProperty("create_mode").GetString());
+            // The description must not ride in prompt, where Suno would sing it as lyrics.
+            Assert.Equal("", root.GetProperty("prompt").GetString());
+            Assert.Equal("a sea shanty", root.GetProperty("gpt_description_prompt").GetString());
+            Assert.Equal("simple", root.GetProperty("metadata").GetProperty("create_mode").GetString());
             Assert.Equal(JsonValueKind.Null, root.GetProperty("token").ValueKind);
             Assert.Equal(JsonValueKind.Null, root.GetProperty("continue_clip_id").ValueKind);
             Assert.Equal(JsonValueKind.Null, root.GetProperty("cover_clip_id").ValueKind);
@@ -170,10 +172,13 @@ namespace TinPan.Tests
             var req = new GenerateRequest("m", GenerateRequest.Modes.Custom) { Prompt = new string('a', 11), Title = "ok" };
             var limits = new MaxLengths { Title = 100, Prompt = 10, Tags = 100, NegativeTags = 100, Description = 5 };
 
-            Assert.Equal("Lyrics is 11 characters. This model allows 10.", SunoPanelViewModel.CheckLengths(req, limits, inspiration: false));
-            Assert.Equal("Description is 11 characters. This model allows 5.", SunoPanelViewModel.CheckLengths(req, limits, inspiration: true));
+            Assert.Equal("Lyrics is 11 characters. This model allows 10.", SunoPanelViewModel.CheckLengths(req, limits, simple: false));
+
+            var description = new GenerateRequest("m", GenerateRequest.Modes.Simple) { GptDescriptionPrompt = new string('a', 11) };
+            Assert.Equal("Description is 11 characters. This model allows 5.", SunoPanelViewModel.CheckLengths(description, limits, simple: true));
+
             req.Prompt = "short";
-            Assert.Null(SunoPanelViewModel.CheckLengths(req, limits, inspiration: false));
+            Assert.Null(SunoPanelViewModel.CheckLengths(req, limits, simple: false));
         }
     }
 

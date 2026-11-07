@@ -13,7 +13,13 @@ namespace TinPan.Models
         public static class Modes
         {
             public const string Custom = "custom";
-            public const string Inspiration = "inspiration";
+
+            /// <summary>
+            /// Describe a song: Suno writes the words. Suno's Create form calls this Simple; the description
+            /// goes in GptDescriptionPrompt and Prompt stays empty.
+            /// </summary>
+            public const string Simple = "simple";
+
             public const string Cover = "cover";
         }
 
@@ -44,8 +50,18 @@ namespace TinPan.Models
         [JsonPropertyName("negative_tags")] public string NegativeTags { get; set; } = "";
         [JsonPropertyName("mv")] public string Model { get; set; }
 
-        /// <summary>Lyrics in custom mode, the description in inspiration mode.</summary>
+        /// <summary>
+        /// Your lyrics. Empty in Simple mode: Suno sings whatever is here, so the description goes in
+        /// GptDescriptionPrompt instead.
+        /// </summary>
         [JsonPropertyName("prompt")] public string Prompt { get; set; } = "";
+
+        /// <summary>
+        /// Simple mode's description, which Suno writes the lyrics from. Left out in every other mode.
+        /// </summary>
+        [JsonPropertyName("gpt_description_prompt")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? GptDescriptionPrompt { get; set; }
 
         [JsonPropertyName("make_instrumental")] public bool MakeInstrumental { get; set; }
         [JsonPropertyName("user_uploaded_images_b64")] public string? UploadedImages { get; set; }

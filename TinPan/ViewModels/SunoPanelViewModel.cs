@@ -184,7 +184,7 @@ namespace TinPan.ViewModels
                 Announcer.Announce(T("Describe the song first."));
                 return Task.CompletedTask;
             }
-            return StartSongsAsync(GenerateRequest.Modes.Inspiration);
+            return StartSongsAsync(GenerateRequest.Modes.Simple);
         }
 
         [RelayCommand]
@@ -211,13 +211,16 @@ namespace TinPan.ViewModels
             var influence = ParsePercent(StyleInfluence, T("Style influence"));
             if (double.IsNaN(weird ?? 0) || double.IsNaN(influence ?? 0)) return null;
 
-            var inspiration = mode == GenerateRequest.Modes.Inspiration;
+            var simple = mode == GenerateRequest.Modes.Simple;
             var tags = string.Join(", ", new[] { Style.Trim(), Vocal == VocalChoices[1] ? "male vocals" : Vocal == VocalChoices[2] ? "female vocals" : "" }
                 .Where(s => s.Length > 0));
             var request = new GenerateRequest(SelectedModel.ExternalKey, mode)
             {
-                Prompt = inspiration ? Description.Trim() : IsInstrumental ? "" : Lyrics.Trim(),
-                Title = inspiration ? "" : SongTitle.Trim(),
+                // Suno sings whatever Prompt holds, so a description goes in gpt_description_prompt, as Suno's
+                // own Create form sends it; a description left in Prompt comes back as lyrics.
+                Prompt = simple || IsInstrumental ? "" : Lyrics.Trim(),
+                GptDescriptionPrompt = simple ? Description.Trim() : null,
+                Title = simple ? "" : SongTitle.Trim(),
                 Tags = tags,
                 NegativeTags = ExcludeStyles.Trim(),
                 MakeInstrumental = IsInstrumental,
@@ -227,7 +230,7 @@ namespace TinPan.ViewModels
             request.Metadata.ControlSliders = ControlSliders.FromPercent(weird, influence, null);
             request.Metadata.IsMaxMode = IsMaxMode;
 
-            var problem = CheckLengths(request, SelectedModel.MaxLengths ?? MaxLengths.Fallback, inspiration);
+            var problem = CheckLengths(request, SelectedModel.MaxLengths ?? MaxLengths.Fallback, simple);
             if (problem != null)
             {
                 Announcer.Announce(problem);
@@ -237,14 +240,15 @@ namespace TinPan.ViewModels
         }
 
         /// <summary>Same limits the Suno web form applies, counted the same way (UTF-16 units).</summary>
-        public static string? CheckLengths(GenerateRequest r, MaxLengths limits, bool inspiration)
+        public static string? CheckLengths(GenerateRequest r, MaxLengths limits, bool simple)
         {
             var checks = new (string Name, string Value, int Limit)[]
             {
                 (T("Title"), r.Title, limits.Title),
                 (T("Style"), r.Tags, limits.Tags),
                 (T("Exclude styles"), r.NegativeTags, limits.NegativeTags),
-                (inspiration ? T("Description") : T("Lyrics"), r.Prompt, inspiration ? limits.Description : limits.Prompt)
+                (simple ? T("Description") : T("Lyrics"), simple ? r.GptDescriptionPrompt ?? "" : r.Prompt,
+                    simple ? limits.Description : limits.Prompt)
             };
             foreach (var (name, value, limit) in checks)
                 if (limit > 0 && value.Length > limit)
