@@ -20,6 +20,33 @@ const REFRESH_MARGIN: chrono::TimeDelta = chrono::TimeDelta::seconds(15);
 
 const USER_AGENT: &str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
 
+/// What a refusal from Clerk, Suno's sign-in service, means: a wait when it's busy (429 or 430, with
+/// Retry-After when it says), a sign-in that has to be done again for the codes that mean so, or `fallback`.
+fn refusal(response: reqwest::blocking::Response, fallback: String) -> Error {
+    let status = response.status().as_u16();
+    let wait = response.headers().get("retry-after").and_then(|v| v.to_str().ok()).and_then(|v| v.trim().parse::<i64>().ok());
+    let body = response.text().unwrap_or_default();
+    refusal_of(status, wait, &body, fallback)
+}
+
+fn refusal_of(status: u16, wait: Option<i64>, body: &str, fallback: String) -> Error {
+    if matches!(status, 429 | 430) {
+        let message = match wait.filter(|s| *s > 0) {
+            Some(seconds) => crate::i18n::plural(seconds, "Suno's sign-in is busy. Try again in {0} second.", "Suno's sign-in is busy. Try again in {0} seconds."),
+            None => t("Suno's sign-in is busy. Try again in a minute."),
+        };
+        return Error::api_status(message, status);
+    }
+    let code = serde_json::from_str::<Value>(body).ok().and_then(|v| v.get("errors")?.get(0)?.get("code")?.as_str().map(str::to_string)).unwrap_or_default();
+    match code.as_str() {
+        "session_not_found" | "client_not_found" | "resource_not_found" | "form_identifier_not_found" | "form_password_incorrect" | "verification_failed" => {
+            Error::SignInRequired(t("Suno no longer accepts this sign-in. Sign in again."))
+        }
+        "requires_captcha" | "captcha_missing_token" => Error::SignInRequired(t("Suno wants you to sign in again in its sign-in window, where it can show its check.")),
+        _ => Error::api_status(fallback, status),
+    }
+}
+
 /// The HTTP client every Suno call shares: one connection pool, a browser's user agent, no cookie jar
 /// of its own (Tin Pan sends its cookies itself).
 pub fn http_client() -> Client {
@@ -80,7 +107,11 @@ impl ClerkSession {
             }
             if !status.is_success() {
                 log::warn!("Clerk client lookup on {base} returned {status}");
-                last = Some(Error::api_status(tf("Suno sign-in check failed ({0}).", &[&status.as_u16()]), status.as_u16()));
+                let fallback = tf("Suno sign-in check failed ({0}).", &[&status.as_u16()]);
+                match refusal(response, fallback) {
+                    e @ Error::SignInRequired(_) => return Err(e),
+                    e => last = Some(e),
+                }
                 continue;
             }
             let Ok(root) = response.json::<Value>() else {
@@ -121,7 +152,11 @@ impl ClerkSession {
             return Err(Error::SignInRequired(t("Not signed in to Suno.")));
         }
         if !response.status().is_success() {
-            return Err(Error::api_status(tf("Couldn't refresh the Suno sign-in ({0}).", &[&status]), status));
+            let error = refusal(response, tf("Couldn't refresh the Suno sign-in ({0}).", &[&status]));
+            if matches!(error, Error::SignInRequired(_)) {
+                self.session_id = None;
+            }
+            return Err(error);
         }
         let body: Value = response.json().map_err(|_| Error::api(t("Suno's sign-in service sent a reply this app doesn't understand.")))?;
         let jwt = body.get("jwt").and_then(Value::as_str).filter(|j| !j.is_empty()).ok_or_else(|| Error::api(t("Suno sign-in returned no token.")))?;
@@ -170,6 +205,16 @@ fn user_name(client: &Value, sid: &str) -> Option<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn refusals_say_what_to_do() {
+        let busy = refusal_of(429, Some(12), "", "x".into());
+        assert_eq!((busy.to_string(), busy.status()), ("Suno's sign-in is busy. Try again in 12 seconds.".to_string(), Some(429)));
+        assert_eq!(refusal_of(430, None, "", "x".into()).to_string(), "Suno's sign-in is busy. Try again in a minute.");
+        assert!(matches!(refusal_of(400, None, r#"{"errors":[{"code":"session_not_found","long_message":"secret"}]}"#, "x".into()), Error::SignInRequired(_)));
+        assert!(matches!(refusal_of(422, None, r#"{"errors":[{"code":"requires_captcha"}]}"#, "x".into()), Error::SignInRequired(_)));
+        assert_eq!(refusal_of(500, None, "not json", "Fallback".into()).to_string(), "Fallback");
+    }
 
     #[test]
     fn reads_the_username_or_the_full_name() {

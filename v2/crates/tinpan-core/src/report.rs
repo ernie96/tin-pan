@@ -38,10 +38,9 @@ fn clip(text: &str, max: usize) -> String {
 /// doesn't cut into other words.
 pub fn anonymize(log: &str, user_name: Option<&str>) -> String {
     let mut out = String::with_capacity(log.len());
-    let lower = log.to_lowercase();
     let mut i = 0;
     while i < log.len() {
-        let marker = ["\\users\\", "/users/", "/home/"].iter().find(|m| lower[i..].starts_with(*m));
+        let marker = ["\\users\\", "/users/", "/home/"].iter().find(|m| log.as_bytes()[i..].get(..m.len()).is_some_and(|b| b.eq_ignore_ascii_case(m.as_bytes())));
         match marker {
             Some(m) => {
                 out.push_str(&log[i..i + m.len()]);
@@ -80,6 +79,15 @@ pub fn anonymize(log: &str, user_name: Option<&str>) -> String {
     result
 }
 
+/// The end of `text`, at most `max` bytes, starting on a whole character.
+fn last_bytes(text: &str, max: usize) -> &str {
+    let mut start = text.len().saturating_sub(max);
+    while !text.is_char_boundary(start) {
+        start += 1;
+    }
+    &text[start..]
+}
+
 /// Sends the report; its reference number, or what to say.
 pub fn send(http: &Client, report: &Report) -> Result<i64, String> {
     if report.description.trim().is_empty() {
@@ -88,7 +96,7 @@ pub fn send(http: &Client, report: &Report) -> Result<i64, String> {
     let report = Report {
         description: clip(report.description.trim(), MAX_DESCRIPTION),
         contact: report.contact.as_deref().map(str::trim).filter(|c| !c.is_empty()).map(|c| clip(c, MAX_CONTACT)),
-        log: report.log.as_ref().map(|l| if l.len() > MAX_LOG { l[l.len() - MAX_LOG..].to_string() } else { l.clone() }),
+        log: report.log.as_ref().map(|l| last_bytes(l, MAX_LOG).to_string()),
         ..report.clone()
     };
     let response = http
@@ -125,5 +133,9 @@ mod tests {
         let log = "Opened C:\\Users\\Ana Maria\\Music\\a.mp3 and /home/ana/x; Ana said hi; Banana stays";
         assert_eq!(anonymize(log, Some("Ana")), "Opened C:\\Users\\<user>\\Music\\a.mp3 and /home/<user>/x; <user> said hi; Banana stays");
         assert_eq!(anonymize("Al was here", Some("Al")), "Al was here");
+        // Characters whose lowercase is longer must not shift or split anything.
+        assert_eq!(anonymize("İİİ C:\\Users\\Ana\\x and İ", None), "İİİ C:\\Users\\<user>\\x and İ");
+        assert_eq!(last_bytes("aé", 1), "");
+        assert_eq!(last_bytes("aé", 2), "é");
     }
 }

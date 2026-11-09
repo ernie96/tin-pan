@@ -1,5 +1,20 @@
 # Tin Pan 2 changes
 
+## 2.1.1
+
+- Settings no longer gives every field its own Alt+letter. Tab and Shift+Tab move through it as before.
+- Custom models other people shared with you show up in the Create window's model list, named as shared.
+- When Suno's sign-in service is busy, Tin Pan says how long to wait. When Suno no longer accepts a sign-in,
+  Tin Pan says so and asks you to sign in again.
+
+### Fixed
+
+- Report a problem could close Tin Pan when the log held certain letters, such as the Turkish İ.
+- The Donate window from the update offer could lose its place behind the offer; it opens over Tin Pan now.
+- Sending a rating too early in Listen for Credits now moves to the song still to be heard, not always song A.
+- Make a voice with no recording chosen now says to choose one, and a voice isn't made before Suno has
+  finished taking the vocals out of the singing.
+
 ## 2.1.0
 
 - Help, Contact the author lists Ernesto's email, Mastodon, the Telegram channel for news and updates, and

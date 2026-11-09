@@ -3924,10 +3924,10 @@
   "Copyright (C) 2026 Ernesto Melendez. Tin Pan — вільне програмне забезпечення за Загальною публічною ліцензією GNU, версії 3 або новішої, з умовами, які зберігають видимими цю подяку та присвяту. Воно надається без жодних гарантій. Ліцензію та її умови можна знайти в меню Довідка, Ліцензії та примітки.",
   "Copyright (C) 2026 Ernesto Melendez. Tin Pan es software libre bajo la Licencia Pública General de GNU, versión 3 o posterior, con condiciones que mantienen visibles este crédito y esta dedicatoria. Se ofrece sin ninguna garantía. En Ayuda, Licencias y avisos están la licencia y sus condiciones."
  ],
- "An accessible, unofficial client for Suno. Not affiliated with Suno.": [
-  "Un client accesibil, neoficial, pentru Suno. Nu e afiliat cu Suno.",
-  "Доступний неофіційний клієнт для Suno. Не пов'язаний із Suno.",
-  "Un cliente accesible y no oficial de Suno. No está afiliado a Suno."
+ "An unofficial client for Suno. Not affiliated with Suno.": [
+  "Un client neoficial pentru Suno. Nu e afiliat cu Suno.",
+  "Неофіційний клієнт для Suno. Не пов'язаний із Suno.",
+  "Un cliente no oficial de Suno. No está afiliado a Suno."
  ],
  "Speech goes through {0}.": [
   "Vorbirea trece prin {0}.",
@@ -5109,55 +5109,45 @@
   "Стан облікового запису",
   "Estado de la cuenta"
  ],
- "_Sign in": [
-  "_Conectare",
-  "_Увійти",
-  "_Iniciar sesión"
+ "Sign in": [
+  "Conectare",
+  "Увійти",
+  "Iniciar sesión"
+ ],
+ "Sign out": [
+  "Deconectare",
+  "Вийти",
+  "Cerrar sesión"
  ],
  "Language": [
   "Limba",
   "Мова",
   "Idioma"
  ],
- "Lan_guage (changes the next time Tin Pan starts)": [
-  "_Limba (se schimbă la următoarea pornire)",
-  "_Мова (зміниться під час наступного запуску Tin Pan)",
-  "Idi_oma (cambia la próxima vez que se inicie Tin Pan)"
- ],
- "Tin Pan s_peaks": [
-  "Tin Pan _spune",
-  "Tin Pan _каже",
-  "Tin Pan _dice"
+ "Language (changes the next time Tin Pan starts)": [
+  "Limba (se schimbă la următoarea pornire)",
+  "Мова (зміниться під час наступного запуску Tin Pan)",
+  "Idioma (cambia la próxima vez que se inicie Tin Pan)"
  ],
  "Tin Pan speaks": [
   "Tin Pan spune",
   "Tin Pan каже",
   "Tin Pan dice"
  ],
- "_When a list reaches the playing song": [
-  "Când o listă ajunge la melodia care se _redă",
-  "Ко_ли список доходить до пісні, що грає",
-  "_Cuando una lista llega a la canción que suena"
- ],
  "When a list reaches the playing song": [
   "Când o listă ajunge la melodia care se redă",
   "Коли список доходить до пісні, що грає",
   "Cuando una lista llega a la canción que suena"
  ],
- "Li_ve lyrics: read each line aloud as it is sung (Shift+F3)": [
-  "Versuri _în direct: citește fiecare vers cu voce tare când e cântat (Shift+F3)",
-  "_Живі слова: читати кожен рядок уголос під час співу (Shift+F3)",
-  "Letra en directo: leer cada verso en voz alta mientras se canta (S_hift+F3)"
+ "Live lyrics: read each line aloud as it is sung (Shift+F3)": [
+  "Versuri în direct: citește fiecare vers cu voce tare când e cântat (Shift+F3)",
+  "Живі слова: читати кожен рядок уголос під час співу (Shift+F3)",
+  "Letra en directo: leer cada verso en voz alta mientras se canta (Shift+F3)"
  ],
  "Output device": [
   "Dispozitiv de ieșire",
   "Пристрій виходу",
   "Dispositivo de salida"
- ],
- "_Quick switch output, for Ctrl+Shift+F12": [
-  "Ie_șire pentru comutare rapidă, cu Ctrl+Shift+F12",
-  "Ви_хід для швидкого перемикання, Ctrl+Shift+F12",
-  "Salida de cambio r_ápido, para Ctrl+Mayús+F12"
  ],
  "Quick switch output, for Ctrl+Shift+F12": [
   "Ieșire pentru comutare rapidă, cu Ctrl+Shift+F12",
@@ -5169,35 +5159,35 @@
   "Відтворювати пісні в самому Tin Pan, щоб вони починалися швидше (коли це не вдається, грає плеєр Suno)",
   "Reproducir las canciones en el propio Tin Pan, para que empiecen antes (el reproductor de Suno toma el relevo si falla)"
  ],
- "Check for _new versions when Tin Pan starts": [
-  "Caută _versiuni noi la pornirea Tin Pan",
-  "Перевіряти _нові версії під час запуску Tin Pan",
-  "Buscar versiones _nuevas al iniciar Tin Pan"
+ "Check for new versions when Tin Pan starts": [
+  "Caută versiuni noi la pornirea Tin Pan",
+  "Перевіряти нові версії під час запуску Tin Pan",
+  "Buscar versiones nuevas al iniciar Tin Pan"
  ],
  "Downloads": [
   "Descărcări",
   "Завантаження",
   "Descargas"
  ],
- "_Download folder (empty means Music\\Suno)": [
-  "D_osarul de descărcări (gol înseamnă Muzică\\Suno)",
-  "_Папка завантажень (порожньо — Музика\\Suno)",
-  "Car_peta de descargas (vacía significa Música\\Suno)"
+ "Download folder (empty means Music\\Suno)": [
+  "Dosarul de descărcări (gol înseamnă Muzică\\Suno)",
+  "Папка завантажень (порожньо — Музика\\Suno)",
+  "Carpeta de descargas (vacía significa Música\\Suno)"
  ],
- "_Browse...": [
-  "Răs_foiește...",
-  "_Огляд...",
-  "_Examinar..."
+ "Browse...": [
+  "Răsfoiește...",
+  "Огляд...",
+  "Examinar..."
  ],
  "Download folder": [
   "Dosarul de descărcări",
   "Папка завантажень",
   "Carpeta de descargas"
  ],
- "Download _format for Ctrl+D (WAV needs Pro or Premier)": [
-  "Forma_tul de descărcare pentru Ctrl+D (WAV necesită Pro sau Premier)",
-  "_Формат завантаження для Ctrl+D (для WAV потрібен Pro або Premier)",
-  "_Formato de descarga para Ctrl+D (WAV necesita Pro o Premier)"
+ "Download format for Ctrl+D (WAV needs Pro or Premier)": [
+  "Formatul de descărcare pentru Ctrl+D (WAV necesită Pro sau Premier)",
+  "Формат завантаження для Ctrl+D (для WAV потрібен Pro або Premier)",
+  "Formato de descarga para Ctrl+D (WAV necesita Pro o Premier)"
  ],
  "Download format": [
   "Formatul de descărcare",
@@ -5209,25 +5199,25 @@
   "Також зберігати поруч із кожним завантаженням:",
   "Guardar también junto a cada descarga:"
  ],
- "_Lyrics as text": [
-  "Versuri ca te_xt",
-  "_Текст як файл",
-  "_Letra como texto"
+ "Lyrics as text": [
+  "Versuri ca text",
+  "Текст як файл",
+  "Letra como texto"
  ],
- "_Timed lyrics (LRC)": [
-  "Versuri sincroni_zate (LRC)",
-  "_Синхронізований текст (LRC)",
-  "Letra sincroni_zada (LRC)"
+ "Timed lyrics (LRC)": [
+  "Versuri sincronizate (LRC)",
+  "Синхронізований текст (LRC)",
+  "Letra sincronizada (LRC)"
  ],
- "Song d_etails": [
-  "Detaliile _melodiei",
-  "Подро_биці пісні",
-  "De_talles de la canción"
+ "Song details": [
+  "Detaliile melodiei",
+  "Подробиці пісні",
+  "Detalles de la canción"
  ],
- "_Cover art": [
-  "Co_perta",
-  "Обкла_динка",
-  "Po_rtada"
+ "Cover art": [
+  "Coperta",
+  "Обкладинка",
+  "Portada"
  ],
  "Clean-up (sunscreen)": [
   "Curățare (sunscreen)",
@@ -5239,34 +5229,34 @@
   "Про очищення",
   "Acerca de la limpieza"
  ],
- "Clean _up after Download MP3, Download WAV and Download all": [
-  "Curăță a_utomat după Descarcă MP3, Descarcă WAV și Descarcă tot",
-  "О_чищати після «Завантажити MP3», «Завантажити WAV» і «Завантажити все»",
-  "Limpiar a_utomáticamente tras Descargar MP3, Descargar WAV y Descargar todo"
+ "Clean up after Download MP3, Download WAV and Download all": [
+  "Curăță automat după Descarcă MP3, Descarcă WAV și Descarcă tot",
+  "Очищати після «Завантажити MP3», «Завантажити WAV» і «Завантажити все»",
+  "Limpiar automáticamente tras Descargar MP3, Descargar WAV y Descargar todo"
  ],
- "_Keep the downloaded file next to the cleaned-up WAV": [
-  "Păstr_ează fișierul descărcat lângă WAV-ul curățat",
-  "_Зберігати завантажений файл поруч з очищеним WAV",
-  "Conservar el archi_vo descargado junto al WAV limpio"
+ "Keep the downloaded file next to the cleaned-up WAV": [
+  "Păstrează fișierul descărcat lângă WAV-ul curățat",
+  "Зберігати завантажений файл поруч з очищеним WAV",
+  "Conservar el archivo descargado junto al WAV limpio"
  ],
  "Clean-up steps:": [
   "Pașii de curățare:",
   "Кроки очищення:",
   "Pasos de limpieza:"
  ],
- "Remove the decoder bu_zz": [
-  "Elimină _bâzâitul decodorului",
-  "Прибрати _гудіння декодера",
-  "Quitar el zum_bido del decodificador"
+ "Remove the decoder buzz": [
+  "Elimină bâzâitul decodorului",
+  "Прибрати гудіння декодера",
+  "Quitar el zumbido del decodificador"
  ],
- "Only remove haze you can _hear (hearing model)": [
-  "Elimină doar zgomotul pe care îl poți _auzi (model auditiv)",
-  "Прибирати лише _шум, який можна почути (модель слуху)",
-  "_Quitar solo el ruido que se oye (modelo auditivo)"
+ "Only remove haze you can hear (hearing model)": [
+  "Elimină doar zgomotul pe care îl poți auzi (model auditiv)",
+  "Прибирати лише шум, який можна почути (модель слуху)",
+  "Quitar solo el ruido que se oye (modelo auditivo)"
  ],
- "Stead_y the flutter of what is left": [
-  "Stab_ilizează pâlpâirea care rămâne",
-  "_Вирівняти тремтіння залишку",
+ "Steady the flutter of what is left": [
+  "Stabilizează pâlpâirea care rămâne",
+  "Вирівняти тремтіння залишку",
   "Estabilizar el parpadeo que queda"
  ],
  "Flutter smoothing window, milliseconds (sunscreen uses 85)": [
@@ -5279,10 +5269,10 @@
   "Вікно згладжування, мілісекунди",
   "Ventana de estabilización, milisegundos"
  ],
- "W_iden the highs": [
-  "Lăr_gește frecvențele înalte",
-  "_Розширити високі частоти",
-  "A_mpliar los agudos"
+ "Widen the highs": [
+  "Lărgește frecvențele înalte",
+  "Розширити високі частоти",
+  "Ampliar los agudos"
  ],
  "Widening amount (1 matches the rest of the track, 0.5 is half)": [
   "Cât se lărgește (1 se potrivește cu restul piesei, 0,5 e jumătate)",
@@ -5294,10 +5284,10 @@
   "Міра розширення",
   "Cuánto ampliar"
  ],
- "Rebuild the top octave above the MP3 cut-off (e_xcite)": [
+ "Rebuild the top octave above the MP3 cut-off (excite)": [
   "Reconstruiește octava de sus peste limita MP3 (excite)",
-  "Віднов_ити верхню октаву над зрізом MP3 (excite)",
-  "Reconstruir la octava alta sobre el corte del MP3 (e_xcite)"
+  "Відновити верхню октаву над зрізом MP3 (excite)",
+  "Reconstruir la octava alta sobre el corte del MP3 (excite)"
  ],
  "Top octave level, dB below the natural slope (sunscreen uses -3)": [
   "Nivelul octavei de sus, dB sub panta naturală (sunscreen folosește -3)",
@@ -5309,10 +5299,10 @@
   "Рівень верхньої октави, дБ",
   "Nivel de la octava alta, dB"
  ],
- "_Match the tone of commercial masters": [
+ "Match the tone of commercial masters": [
   "Potrivește tonul cu masterele comerciale",
-  "Підігн_ати тембр під комерційні мастери",
-  "Igu_alar el tono de los másteres comerciales"
+  "Підігнати тембр під комерційні мастери",
+  "Igualar el tono de los másteres comerciales"
  ],
  "Or match this song instead (MP3 or WAV; empty uses the average of 12 pop masters)": [
   "Sau potrivește după această melodie (MP3 sau WAV; gol folosește media a 12 mastere pop)",
@@ -5324,17 +5314,17 @@
   "Очистити",
   "Borrar"
  ],
- "Choose _reference...": [
-  "Alege o referi_nță...",
-  "Вибрати _еталон...",
-  "Ele_gir referencia..."
+ "Choose reference...": [
+  "Alege o referință...",
+  "Вибрати еталон...",
+  "Elegir referencia..."
  ],
  "Reference song to match": [
   "Melodia de referință",
   "Еталонна пісня",
   "Canción de referencia"
  ],
- "M_aster the loudness": [
+ "Master the loudness": [
   "Masterizează nivelul sonor",
   "Мастеринг гучності",
   "Masterizar el volumen"
@@ -6074,6 +6064,11 @@
   "Створити голос зі свого співу",
   "Crear una voz con tu canto"
  ],
+ "Choose the recording of you singing.": [
+  "Alege înregistrarea cu tine cântând.",
+  "Виберіть запис вашого співу.",
+  "Elige la grabación de ti cantando."
+ ],
  "Give the voice a name.": [
   "Dă un nume vocii.",
   "Дайте голосу назву.",
@@ -6119,6 +6114,11 @@
   "Запис вашого _співу",
   "Grabación de ti _cantando"
  ],
+ "_Browse...": [
+  "Răs_foiește...",
+  "_Огляд...",
+  "_Examinar..."
+ ],
  "Choose a recording of you singing": [
   "Alege o înregistrare cu tine cântând",
   "Виберіть запис вашого співу",
@@ -6148,6 +6148,31 @@
   "Tin Pan nu a putut citi acest fișier {0} ca să-l curețe.",
   "Tin Pan не зміг прочитати цей файл {0}, щоб його очистити.",
   "Tin Pan no pudo leer este archivo {0} para limpiarlo."
+ ],
+ "Suno's sign-in is busy. Try again in a minute.": [
+  "Conectarea Suno e ocupată. Încearcă din nou peste un minut.",
+  "Вхід Suno зараз перевантажений. Спробуйте за хвилину.",
+  "El inicio de sesión de Suno está ocupado. Vuelve a intentarlo en un minuto."
+ ],
+ "Suno no longer accepts this sign-in. Sign in again.": [
+  "Suno nu mai acceptă această conectare. Conectează-te din nou.",
+  "Suno більше не приймає цей вхід. Увійдіть знову.",
+  "Suno ya no acepta este inicio de sesión. Vuelve a iniciar sesión."
+ ],
+ "Suno wants you to sign in again in its sign-in window, where it can show its check.": [
+  "Suno vrea să te conectezi din nou în fereastra sa de conectare, unde îți poate arăta verificarea.",
+  "Suno просить увійти знову у його вікні входу, де він може показати свою перевірку.",
+  "Suno quiere que vuelvas a iniciar sesión en su ventana de inicio de sesión, donde puede mostrar su verificación."
+ ],
+ "Suno's sign-in is busy. Try again in {0} second.|Suno's sign-in is busy. Try again in {0} seconds.": [
+  "Conectarea Suno e ocupată. Încearcă din nou peste {0} secundă.|Conectarea Suno e ocupată. Încearcă din nou peste {0} secunde.|Conectarea Suno e ocupată. Încearcă din nou peste {0} de secunde.",
+  "Вхід Suno зараз перевантажений. Спробуйте за {0} секунду.|Вхід Suno зараз перевантажений. Спробуйте за {0} секунди.|Вхід Suno зараз перевантажений. Спробуйте за {0} секунд.",
+  "El inicio de sesión de Suno está ocupado. Vuelve a intentarlo en {0} segundo.|El inicio de sesión de Suno está ocupado. Vuelve a intentarlo en {0} segundos."
+ ],
+ "{0}, shared with you": [
+  "{0}, partajat cu tine",
+  "{0}, спільний з вами",
+  "{0}, compartido contigo"
  ],
  "New: {0}": [
   "Nou: {0}",
@@ -6428,5 +6453,10 @@
   "Suno nu a putut extrage vocea din cântecul tău.",
   "Suno не зміг виділити вокал із вашого співу.",
   "Suno no pudo separar la voz de tu canto."
+ ],
+ "Suno is taking long to take the vocals out of your singing. Try again later.": [
+  "Suno extrage de mult timp vocea din cântecul tău. Încearcă mai târziu.",
+  "Suno довго виділяє вокал із вашого співу. Спробуйте пізніше.",
+  "Suno tarda en separar la voz de tu canto. Inténtalo más tarde."
  ]
 }

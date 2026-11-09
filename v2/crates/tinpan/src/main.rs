@@ -1,4 +1,4 @@
-//! Tin Pan 2: the accessible, unofficial Suno client, rebuilt on wxWidgets (through wxDragon) so the
+//! Tin Pan 2: the unofficial Suno client, rebuilt on wxWidgets (through wxDragon) so the
 //! same app runs on Windows, macOS and Linux with each system's own controls.
 #![windows_subsystem = "windows"]
 

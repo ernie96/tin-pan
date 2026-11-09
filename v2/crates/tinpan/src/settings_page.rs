@@ -135,7 +135,7 @@ pub fn build(notebook: &Notebook, config: &AppConfig) -> SettingsPage {
     let status = TextCtrl::builder(&panel).with_value(&t("Not signed in.")).with_style(TextCtrlStyle::ReadOnly).build();
     b.sizer.add(&status, 0, SizerFlag::Expand | SizerFlag::Left | SizerFlag::Right | SizerFlag::Top, 8);
     let account_row = BoxSizer::builder(Orientation::Horizontal).build();
-    for (label, action) in [("_Sign in", Action::SignIn), ("Sign _out", Action::SignOut)] {
+    for (label, action) in [("Sign in", Action::SignIn), ("Sign out", Action::SignOut)] {
         let button = Button::builder(&panel).with_label(&wx_label(label)).build();
         button.on_click(move |_| with_app(|app| app.run_from_button(action)));
         account_row.add(&button, 0, SizerFlag::Right, 8);
@@ -143,39 +143,39 @@ pub fn build(notebook: &Notebook, config: &AppConfig) -> SettingsPage {
     b.sizer.add_sizer(&account_row, 0, SizerFlag::Left | SizerFlag::Top, 8);
 
     b.group("Language");
-    let language = b.choice("Lan_guage (changes the next time Tin Pan starts)", language_names(), LANGUAGES.iter().position(|(c, ..)| *c == config.language).unwrap_or(0));
+    let language = b.choice("Language (changes the next time Tin Pan starts)", language_names(), LANGUAGES.iter().position(|(c, ..)| *c == config.language).unwrap_or(0));
 
     b.group("Speech");
-    let speech_level = b.choice("Tin Pan s_peaks", SPEECH_LEVELS.iter().map(|(_, l)| t(l)).collect(), SPEECH_LEVELS.iter().position(|(k, _)| *k == config.speech_level).unwrap_or(0));
-    let playing_cue = b.choice("_When a list reaches the playing song", CUES.iter().map(|(_, l)| t(l)).collect(), CUES.iter().position(|(k, _)| *k == config.playing_cue).unwrap_or(0));
-    let live_lyrics = b.check("Li_ve lyrics: read each line aloud as it is sung (Shift+F3)", config.audio.read_lyrics_live);
+    let speech_level = b.choice("Tin Pan speaks", SPEECH_LEVELS.iter().map(|(_, l)| t(l)).collect(), SPEECH_LEVELS.iter().position(|(k, _)| *k == config.speech_level).unwrap_or(0));
+    let playing_cue = b.choice("When a list reaches the playing song", CUES.iter().map(|(_, l)| t(l)).collect(), CUES.iter().position(|(k, _)| *k == config.playing_cue).unwrap_or(0));
+    let live_lyrics = b.check("Live lyrics: read each line aloud as it is sung (Shift+F3)", config.audio.read_lyrics_live);
     let autoplay = b.check("When a list ends, keep playing songs Suno picks", config.audio.autoplay);
 
     b.group("Audio output");
     // Filled from the connected outputs once the app is up (App::settings_show_outputs).
     let main_output = b.choice("Output device", vec![crate::outputs::default_name()], 0);
-    let second_output = b.choice("_Quick switch output, for Ctrl+Shift+F12", vec![t("None")], 0);
+    let second_output = b.choice("Quick switch output, for Ctrl+Shift+F12", vec![t("None")], 0);
     let play_directly = b.check("Play songs in Tin Pan itself, which starts them sooner (the Suno player takes over when that fails)", config.audio.play_directly);
 
     b.group("Updates");
-    let check_updates = b.check("Check for _new versions when Tin Pan starts", config.update.check_at_startup);
+    let check_updates = b.check("Check for new versions when Tin Pan starts", config.update.check_at_startup);
 
     b.group("Downloads");
     let audio = &config.audio;
-    b.label("_Download folder (empty means Music\\Suno)");
+    b.label("Download folder (empty means Music\\Suno)");
     let folder_row = BoxSizer::builder(Orientation::Horizontal).build();
     let folder = TextCtrl::builder(&panel).with_value(&audio.download_dir).build();
     folder.on_text_changed(|_| with_app(App::settings_changed));
     folder_row.add(&folder, 1, SizerFlag::Expand, 0);
-    b.button(&folder_row, "_Browse...", App::browse_download_folder);
+    b.button(&folder_row, "Browse...", App::browse_download_folder);
     b.sizer.add_sizer(&folder_row, 0, SizerFlag::Expand | SizerFlag::Left | SizerFlag::Right | SizerFlag::Top, 4);
-    let format = b.choice("Download _format for Ctrl+D (WAV needs Pro or Premier)", FORMATS.iter().map(ToString::to_string).collect(), FORMATS.iter().position(|f| *f == audio.output_format).unwrap_or(0));
+    let format = b.choice("Download format for Ctrl+D (WAV needs Pro or Premier)", FORMATS.iter().map(ToString::to_string).collect(), FORMATS.iter().position(|f| *f == audio.output_format).unwrap_or(0));
     let also = StaticText::builder(&panel).with_label(&t("Also save next to each download:")).build();
     b.sizer.add(&also, 0, SizerFlag::Left | SizerFlag::Top, 10);
-    let save_lyrics = b.check("_Lyrics as text", audio.save_lyrics);
-    let save_timed = b.check("_Timed lyrics (LRC)", audio.save_timed_lyrics);
-    let save_details = b.check("Song d_etails", audio.save_details);
-    let save_cover = b.check("_Cover art", audio.save_cover);
+    let save_lyrics = b.check("Lyrics as text", audio.save_lyrics);
+    let save_timed = b.check("Timed lyrics (LRC)", audio.save_timed_lyrics);
+    let save_details = b.check("Song details", audio.save_details);
+    let save_cover = b.check("Cover art", audio.save_cover);
 
     b.group("Clean-up (sunscreen)");
     let about = tf(
@@ -185,27 +185,27 @@ pub fn build(notebook: &Notebook, config: &AppConfig) -> SettingsPage {
     let about_box = TextCtrl::builder(&panel).with_value(&about).with_style(TextCtrlStyle::MultiLine | TextCtrlStyle::ReadOnly | TextCtrlStyle::NoVScroll).with_size(Size::new(-1, 70)).build();
     b.sizer.add(&about_box, 0, SizerFlag::Expand | SizerFlag::Left | SizerFlag::Right | SizerFlag::Top, 8);
     let c = &config.cleanup;
-    let after_download = b.check("Clean _up after Download MP3, Download WAV and Download all", c.after_download);
-    let keep_original = b.check("_Keep the downloaded file next to the cleaned-up WAV", c.keep_original);
+    let after_download = b.check("Clean up after Download MP3, Download WAV and Download all", c.after_download);
+    let keep_original = b.check("Keep the downloaded file next to the cleaned-up WAV", c.keep_original);
     let steps = StaticText::builder(&panel).with_label(&t("Clean-up steps:")).build();
     b.sizer.add(&steps, 0, SizerFlag::Left | SizerFlag::Top, 10);
-    let debuzz = b.check("Remove the decoder bu_zz", c.debuzz);
-    let gate = b.check("Only remove haze you can _hear (hearing model)", c.gate);
-    let smooth = b.check("Stead_y the flutter of what is left", c.smooth);
+    let debuzz = b.check("Remove the decoder buzz", c.debuzz);
+    let gate = b.check("Only remove haze you can hear (hearing model)", c.gate);
+    let smooth = b.check("Steady the flutter of what is left", c.smooth);
     let smooth_ms = b.slider("Flutter smoothing window, milliseconds (sunscreen uses 85)", c.smooth_ms, 20, 300);
-    let widen = b.check("W_iden the highs", c.widen);
+    let widen = b.check("Widen the highs", c.widen);
     let widen_tenths = b.slider("Widening amount in tenths (10 matches the rest of the track, 5 is half)", c.widen_amount * 10.0, 0, 20);
-    let excite = b.check("Rebuild the top octave above the MP3 cut-off (e_xcite)", c.excite);
+    let excite = b.check("Rebuild the top octave above the MP3 cut-off (excite)", c.excite);
     let excite_db = b.slider("Top octave level, dB below the natural slope (sunscreen uses -3)", c.excite_db, -12, 0);
-    let matching = b.check("_Match the tone of commercial masters", c.matching);
+    let matching = b.check("Match the tone of commercial masters", c.matching);
     b.label("Or match this song instead (MP3 or WAV; empty uses the average of 12 pop masters)");
     let reference_row = BoxSizer::builder(Orientation::Horizontal).build();
     let reference = TextCtrl::builder(&panel).with_value(&c.match_reference).with_style(TextCtrlStyle::ReadOnly).build();
     reference_row.add(&reference, 1, SizerFlag::Expand, 0);
-    b.button(&reference_row, "Choose _reference...", App::choose_match_reference);
+    b.button(&reference_row, "Choose reference...", App::choose_match_reference);
     b.button(&reference_row, "Clear", App::clear_match_reference);
     b.sizer.add_sizer(&reference_row, 0, SizerFlag::Expand | SizerFlag::Left | SizerFlag::Right | SizerFlag::Top, 4);
-    let master = b.check("M_aster the loudness", c.master);
+    let master = b.check("Master the loudness", c.master);
     let master_lufs = b.slider("Loudness target, LUFS (-14 is the streaming standard, -9 is loud like a single)", c.master_lufs, -23, -6);
     let recommended_row = BoxSizer::builder(Orientation::Horizontal).build();
     b.button(&recommended_row, "Use the recommended clean-up steps", App::recommended_cleanup);

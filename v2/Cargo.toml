@@ -3,7 +3,7 @@ resolver = "3"
 members = ["crates/tinpan-core", "crates/tinpan", "xtask"]
 
 [workspace.package]
-version = "2.1.0"
+version = "2.1.1"
 edition = "2024"
 license = "GPL-3.0-only"
 repository = "https://github.com/ernie96/tin-pan"

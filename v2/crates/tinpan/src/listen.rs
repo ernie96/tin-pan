@@ -124,11 +124,10 @@ fn rate(parent: &Frame, task: &Task, songs: Vec<Vec<u8>>, volume: f32, device: &
     let (min, count, questions) = (task.min_listen_seconds, task.songs.len(), choices.clone());
     // `count` is used again below, once the window has closed.
     let heard = listened.clone();
-    let first_song = song_buttons.first().copied();
     send.on_click(move |_| {
         if let Some(i) = heard.borrow().iter().position(|s| *s < min) {
             speech::say_error(&tf("Listen to song {0} for at least {1} seconds first.", &[&letter(i), &min]));
-            if let Some(button) = first_song {
+            if let Some(button) = song_buttons.get(i) {
                 button.set_focus();
             }
             return;

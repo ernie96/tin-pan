@@ -1,6 +1,6 @@
 # Tin Pan
 
-An accessible, unofficial Windows client for [Suno](https://suno.com), made for screen readers (NVDA, JAWS, Narrator) and braille. Browse and play your library and playlists, make songs, extend, cover and remaster them, and download them, all from the keyboard. Not affiliated with Suno.
+An unofficial Windows client for [Suno](https://suno.com). Browse and play your library and playlists, make songs, extend, cover and remaster them, and download them. Not affiliated with Suno.
 
 Tin Pan, like all my apps, is dedicated to Jenni and Diana.
 

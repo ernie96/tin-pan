@@ -1,6 +1,6 @@
 [package]
 name = "tinpan"
-description = "Tin Pan: an accessible, unofficial Suno client"
+description = "Tin Pan: an unofficial Suno client"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

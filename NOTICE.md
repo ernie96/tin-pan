@@ -1,6 +1,6 @@
 # Tin Pan: copyright, license and additional terms
 
-Tin Pan, an accessible, unofficial client for Suno.
+Tin Pan, an unofficial client for Suno.
 Copyright (C) 2026 Ernesto Melendez.
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version, with the additional terms below.

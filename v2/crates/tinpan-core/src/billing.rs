@@ -216,7 +216,7 @@ impl BillingInfo {
         let raw = self.renews_on.as_deref().map(str::trim).filter(|r| !r.is_empty())?;
         let date = DateTime::parse_from_rfc3339(raw)
             .map(|d| d.with_timezone(&chrono::Local).date_naive())
-            .or_else(|_| chrono::NaiveDate::parse_from_str(&raw[..raw.len().min(10)], "%Y-%m-%d"));
+            .or_else(|_| chrono::NaiveDate::parse_from_str(raw.get(..10).unwrap_or(raw), "%Y-%m-%d"));
         Some(match date {
             Ok(date) => crate::i18n::long_date(date),
             Err(_) => raw.to_string(),

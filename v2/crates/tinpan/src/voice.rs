@@ -38,6 +38,10 @@ impl App {
             return;
         }
         let path = PathBuf::from(fields[0].text().trim());
+        if !path.is_file() {
+            speech::say_error(&t("Choose the recording of you singing."));
+            return;
+        }
         let name = fields[1].text().trim().to_string();
         if name.is_empty() {
             speech::say_error(&t("Give the voice a name."));

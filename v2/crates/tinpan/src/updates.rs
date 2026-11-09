@@ -37,7 +37,7 @@ fn open_page(url: &str) {
 
 /// The update offer: Yes, No, and Donate, which shows how to support Tin Pan and then asks again.
 fn offer(frame: &Frame, message: &str, caption: &str) -> bool {
-    dialogs::confirm_or(frame, message, caption, "_Donate...", crate::contact::show_donate)
+    dialogs::confirm_or(frame, message, caption, "_Donate...", || crate::contact::show_donate(frame))
 }
 
 impl App {

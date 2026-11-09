@@ -43,6 +43,9 @@ pub struct SunoModel {
     pub id: Option<String>,
     /// Which sources can be combined, for example [["cover"], ["persona", "cover"]].
     pub allowed_condition_combinations: Option<Vec<Vec<String>>>,
+    /// Someone else's custom model shared with you (GET /api/custom-model/shared), not one from your plan.
+    #[serde(skip)]
+    pub shared: bool,
 }
 
 fn opt_id<'de, D: serde::Deserializer<'de>>(d: D) -> std::result::Result<Option<String>, D::Error> {
@@ -59,7 +62,8 @@ fn yes() -> bool {
 
 impl SunoModel {
     pub fn display_name(&self) -> String {
-        if self.name.trim().is_empty() { self.external_key.clone() } else { self.name.trim().to_string() }
+        let name = if self.name.trim().is_empty() { self.external_key.clone() } else { self.name.trim().to_string() };
+        if self.shared { tf("{0}, shared with you", &[&name]) } else { name }
     }
 
     /// Whether it can make songs with a voice persona: "all" or "vox" among its capabilities. None when Suno lists none.
@@ -197,6 +201,52 @@ impl RemasterRequest {
 /// The models a billing reply lists, skipping any Suno sends in a shape not understood.
 pub fn read_models(value: &Value) -> Vec<SunoModel> {
     value.as_array().into_iter().flatten().filter_map(|m| serde_json::from_value::<SunoModel>(m.clone()).ok()).collect()
+}
+
+/// GET /api/custom-model/shared: the models shared with you, and what Suno's current generation of models
+/// can do (`generation_config`: its capabilities and which sources may be combined).
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct SharedModels {
+    pub models: Vec<SunoModel>,
+    pub capabilities: Vec<String>,
+    pub combinations: Vec<Vec<String>>,
+}
+
+pub fn read_shared_models(root: &Value) -> SharedModels {
+    let config = root.get("generation_config");
+    let strings = |v: &Value| v.as_array().map(|l| l.iter().filter_map(Value::as_str).map(str::to_string).collect::<Vec<_>>()).unwrap_or_default();
+    SharedModels {
+        models: root.get("items").map(read_models).unwrap_or_default(),
+        capabilities: config.and_then(|c| c.get("capabilities")).map(strings).unwrap_or_default(),
+        combinations: config.and_then(|c| c.get("allowed_condition_combinations")).and_then(Value::as_array).map(|l| l.iter().map(strings).filter(|c| !c.is_empty()).collect()).unwrap_or_default(),
+    }
+}
+
+/// Adds the shared models to the plan's: one the plan already lists only fills in what the plan left out;
+/// a custom model (one with its own id) it doesn't is added, marked as shared; Suno's own models the plan
+/// leaves out stay out, since the plan may not use them. A shared model that says nothing of what it can do takes the
+/// current generation's capabilities and combinations.
+pub fn add_shared_models(models: &mut Vec<SunoModel>, shared: SharedModels) {
+    for mut model in shared.models.into_iter().filter(|m| !m.external_key.is_empty()) {
+        match models.iter_mut().find(|m| m.external_key == model.external_key) {
+            Some(known) => {
+                known.capabilities = known.capabilities.take().or(model.capabilities);
+                known.allowed_condition_combinations = known.allowed_condition_combinations.take().or(model.allowed_condition_combinations);
+                known.max_lengths = known.max_lengths.or(model.max_lengths);
+            }
+            None if model.id.is_some() => {
+                if model.capabilities.as_ref().is_none_or(Vec::is_empty) && !shared.capabilities.is_empty() {
+                    model.capabilities = Some(shared.capabilities.clone());
+                }
+                if model.allowed_condition_combinations.as_ref().is_none_or(Vec::is_empty) && !shared.combinations.is_empty() {
+                    model.allowed_condition_combinations = Some(shared.combinations.clone());
+                }
+                model.shared = true;
+                models.push(model);
+            }
+            None => {}
+        }
+    }
 }
 
 /// The models this plan may use, and the one to start on: the last one used, else Suno's default.
@@ -624,6 +674,22 @@ mod tests {
         assert_eq!((r.task.as_deref(), r.artist_clip_id.as_deref(), r.artist_end), (Some("artist_consistency"), Some("r"), Some(90.5)));
         let none = PersonaInfo::read(&serde_json::json!({ "root_clip_id": EMPTY_CLIP_ID }));
         assert!(GenerateRequest::new("m", Mode::Custom).apply_persona(&none, None).is_err());
+    }
+
+    #[test]
+    fn shared_models_join_the_plan_without_replacing_it() {
+        let mut models = read_models(&json!([{ "external_key": "chirp-v5", "name": "v5", "is_default_model": true }]));
+        let shared = read_shared_models(&json!({
+            "generation_config": { "capabilities": ["generate", "cover"], "allowed_condition_combinations": [["cover"], [], ["persona", "cover"]] },
+            "items": [ { "external_key": "chirp-v5", "name": "Renamed", "capabilities": ["generate", "vox"] }, { "external_key": "ana-model", "id": 7, "name": "Ana's model" }, { "external_key": "chirp-v9", "name": "Not in the plan" }, { "name": "no key" } ]
+        }));
+        assert_eq!(shared.combinations, vec![vec!["cover".to_string()], vec!["persona".to_string(), "cover".to_string()]]);
+        add_shared_models(&mut models, shared);
+        assert_eq!(models.len(), 2);
+        assert_eq!((models[0].name.as_str(), models[0].takes_voice_personas()), ("v5", Some(true)));
+        assert!(models[1].shared && models[1].can_use);
+        assert_eq!(models[1].capabilities.as_deref(), Some(&["generate".to_string(), "cover".to_string()][..]));
+        assert_eq!(models[1].display_name(), "Ana's model, shared with you");
     }
 
     #[test]

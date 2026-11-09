@@ -11,8 +11,8 @@
                 <TextBox Text="{Binding SignInText, Mode=OneWay}" IsReadOnly="True" BorderThickness="0"
                          AutomationProperties.Name="{l:T 'Account status'}" Margin="0,0,0,10"/>
                 <StackPanel Orientation="Horizontal">
-                    <Button Content="{l:T '_Sign in'}" Padding="10,5" Command="{Binding SignInCommand}"/>
-                    <Button Content="{l:T 'Sign _out'}" Padding="10,5" Margin="10,0,0,0" Command="{Binding SignOutCommand}"
+                    <Button Content="{l:T 'Sign in'}" Padding="10,5" Command="{Binding SignInCommand}"/>
+                    <Button Content="{l:T 'Sign out'}" Padding="10,5" Margin="10,0,0,0" Command="{Binding SignOutCommand}"
                             IsEnabled="{Binding IsSignedIn}"/>
                 </StackPanel>
             </StackPanel>
@@ -20,7 +20,7 @@
 
         <GroupBox Header="{l:T 'Language'}" Margin="0,0,0,10" Padding="10">
             <StackPanel>
-                <Label Content="{l:T 'Lan_guage (changes the next time Tin Pan starts)'}" Target="{Binding ElementName=language}" Padding="0,0,0,5"/>
+                <Label Content="{l:T 'Language (changes the next time Tin Pan starts)'}" Target="{Binding ElementName=language}" Padding="0,0,0,5"/>
                 <ComboBox x:Name="language" ItemsSource="{Binding Languages}" SelectedItem="{Binding Language}"
                           HorizontalAlignment="Left" MinWidth="300" AutomationProperties.Name="{l:T 'Language'}"/>
             </StackPanel>
@@ -28,13 +28,13 @@
 
         <GroupBox Header="{l:T 'Speech'}" Margin="0,0,0,10" Padding="10">
             <StackPanel>
-                <Label Content="{l:T 'Tin Pan s_peaks'}" Target="{Binding ElementName=speechLevel}" Padding="0,0,0,5"/>
+                <Label Content="{l:T 'Tin Pan speaks'}" Target="{Binding ElementName=speechLevel}" Padding="0,0,0,5"/>
                 <ComboBox x:Name="speechLevel" ItemsSource="{Binding SpeechLevels}" SelectedItem="{Binding SpeechLevel}"
                           HorizontalAlignment="Left" MinWidth="300" AutomationProperties.Name="{l:T 'Tin Pan speaks'}"/>
-                <Label Content="{l:T '_When a list reaches the playing song'}" Target="{Binding ElementName=playingCue}" Padding="0,10,0,5"/>
+                <Label Content="{l:T 'When a list reaches the playing song'}" Target="{Binding ElementName=playingCue}" Padding="0,10,0,5"/>
                 <ComboBox x:Name="playingCue" ItemsSource="{Binding PlayingCues}" SelectedItem="{Binding PlayingCue}"
                           HorizontalAlignment="Left" MinWidth="300" AutomationProperties.Name="{l:T 'When a list reaches the playing song'}"/>
-                <CheckBox Content="{l:T 'Li_ve lyrics: read each line aloud as it is sung (Shift+F3)'}" IsChecked="{Binding ReadLyricsLive}" Margin="0,10,0,0"/>
+                <CheckBox Content="{l:T 'Live lyrics: read each line aloud as it is sung (Shift+F3)'}" IsChecked="{Binding ReadLyricsLive}" Margin="0,10,0,0"/>
             </StackPanel>
         </GroupBox>
 
@@ -43,7 +43,7 @@
                 <Label Content="{l:T 'Output device'}" Target="{Binding ElementName=mainOutput}" Padding="0,0,0,5"/>
                 <ComboBox x:Name="mainOutput" ItemsSource="{Binding OutputChoices}" SelectedItem="{Binding MainOutput}"
                           HorizontalAlignment="Left" MinWidth="300" AutomationProperties.Name="{l:T 'Output device'}"/>
-                <Label Content="{l:T '_Quick switch output, for Ctrl+Shift+F12'}" Target="{Binding ElementName=secondOutput}" Padding="0,10,0,5"/>
+                <Label Content="{l:T 'Quick switch output, for Ctrl+Shift+F12'}" Target="{Binding ElementName=secondOutput}" Padding="0,10,0,5"/>
                 <ComboBox x:Name="secondOutput" ItemsSource="{Binding SecondOutputChoices}" SelectedItem="{Binding SecondOutput}"
                           HorizontalAlignment="Left" MinWidth="300" AutomationProperties.Name="{l:T 'Quick switch output, for Ctrl+Shift+F12'}"/>
                 <CheckBox Content="{l:T 'Play songs in Tin Pan itself, which starts them sooner (the Suno player takes over when that fails)'}" IsChecked="{Binding PlayDirectly}" Margin="0,10,0,0"/>
@@ -51,24 +51,24 @@
         </GroupBox>
 
         <GroupBox Header="{l:T 'Updates'}" Margin="0,0,0,10" Padding="10">
-            <CheckBox Content="{l:T 'Check for _new versions when Tin Pan starts'}" IsChecked="{Binding CheckUpdatesAtStartup}"/>
+            <CheckBox Content="{l:T 'Check for new versions when Tin Pan starts'}" IsChecked="{Binding CheckUpdatesAtStartup}"/>
         </GroupBox>
 
         <GroupBox Header="{l:T 'Downloads'}" Margin="0,0,0,10" Padding="10">
             <StackPanel>
-                <Label Content="{l:T '_Download folder (empty means Music\Suno)'}" Target="{Binding ElementName=folder}" Padding="0,0,0,5"/>
+                <Label Content="{l:T 'Download folder (empty means Music\Suno)'}" Target="{Binding ElementName=folder}" Padding="0,0,0,5"/>
                 <DockPanel>
-                    <Button DockPanel.Dock="Right" Content="{l:T '_Browse...'}" Padding="10,2" Margin="10,0,0,0" Command="{Binding BrowseCommand}"/>
+                    <Button DockPanel.Dock="Right" Content="{l:T 'Browse...'}" Padding="10,2" Margin="10,0,0,0" Command="{Binding BrowseCommand}"/>
                     <TextBox x:Name="folder" Text="{Binding DownloadDir}" AutomationProperties.Name="{l:T 'Download folder'}"/>
                 </DockPanel>
-                <Label Content="{l:T 'Download _format for Ctrl+D (WAV needs Pro or Premier)'}" Target="{Binding ElementName=format}" Padding="0,10,0,5"/>
+                <Label Content="{l:T 'Download format for Ctrl+D (WAV needs Pro or Premier)'}" Target="{Binding ElementName=format}" Padding="0,10,0,5"/>
                 <ComboBox x:Name="format" ItemsSource="{Binding OutputFormats}" SelectedItem="{Binding OutputFormat}"
                           Width="150" HorizontalAlignment="Left" AutomationProperties.Name="{l:T 'Download format'}"/>
                 <TextBlock Text="{l:T 'Also save next to each download:'}" Margin="0,12,0,4"/>
-                <CheckBox Content="{l:T '_Lyrics as text'}" IsChecked="{Binding SaveLyrics}"/>
-                <CheckBox Content="{l:T '_Timed lyrics (LRC)'}" IsChecked="{Binding SaveTimedLyrics}" Margin="0,4,0,0"/>
-                <CheckBox Content="{l:T 'Song d_etails'}" IsChecked="{Binding SaveDetails}" Margin="0,4,0,0"/>
-                <CheckBox Content="{l:T '_Cover art'}" IsChecked="{Binding SaveCover}" Margin="0,4,0,0"/>
+                <CheckBox Content="{l:T 'Lyrics as text'}" IsChecked="{Binding SaveLyrics}"/>
+                <CheckBox Content="{l:T 'Timed lyrics (LRC)'}" IsChecked="{Binding SaveTimedLyrics}" Margin="0,4,0,0"/>
+                <CheckBox Content="{l:T 'Song details'}" IsChecked="{Binding SaveDetails}" Margin="0,4,0,0"/>
+                <CheckBox Content="{l:T 'Cover art'}" IsChecked="{Binding SaveCover}" Margin="0,4,0,0"/>
             </StackPanel>
         </GroupBox>
 
@@ -77,40 +77,40 @@
             <StackPanel>
                 <TextBox Text="{Binding CleanupAbout, Mode=OneWay}" IsReadOnly="True" BorderThickness="0" TextWrapping="Wrap"
                          AutomationProperties.Name="{l:T 'About clean-up'}" Margin="0,0,0,8"/>
-                <CheckBox Content="{l:T 'Clean _up after Download MP3, Download WAV and Download all'}" IsChecked="{Binding CleanupAfterDownload}"/>
-                <CheckBox Content="{l:T '_Keep the downloaded file next to the cleaned-up WAV'}" IsChecked="{Binding CleanupKeepOriginal}" Margin="0,4,0,0"/>
+                <CheckBox Content="{l:T 'Clean up after Download MP3, Download WAV and Download all'}" IsChecked="{Binding CleanupAfterDownload}"/>
+                <CheckBox Content="{l:T 'Keep the downloaded file next to the cleaned-up WAV'}" IsChecked="{Binding CleanupKeepOriginal}" Margin="0,4,0,0"/>
                 <TextBlock Text="{l:T 'Clean-up steps:'}" Margin="0,12,0,4"/>
-                <CheckBox Content="{l:T 'Remove the decoder bu_zz'}" IsChecked="{Binding CleanupDebuzz}"/>
-                <CheckBox Content="{l:T 'Only remove haze you can _hear (hearing model)'}" IsChecked="{Binding CleanupGate}" Margin="0,4,0,0"/>
+                <CheckBox Content="{l:T 'Remove the decoder buzz'}" IsChecked="{Binding CleanupDebuzz}"/>
+                <CheckBox Content="{l:T 'Only remove haze you can hear (hearing model)'}" IsChecked="{Binding CleanupGate}" Margin="0,4,0,0"/>
 
-                <CheckBox Content="{l:T 'Stead_y the flutter of what is left'}" IsChecked="{Binding CleanupSmooth}" Margin="0,8,0,0"/>
+                <CheckBox Content="{l:T 'Steady the flutter of what is left'}" IsChecked="{Binding CleanupSmooth}" Margin="0,8,0,0"/>
                 <Label Content="{l:T 'Flutter smoothing window, milliseconds (sunscreen uses 85)'}" Target="{Binding ElementName=smoothMs}" Padding="0,4,0,2"/>
                 <Slider x:Name="smoothMs" Minimum="20" Maximum="300" SmallChange="5" LargeChange="20" TickFrequency="5" IsSnapToTickEnabled="True"
                         Value="{Binding CleanupSmoothMs}" IsEnabled="{Binding CleanupSmooth}" Width="250" HorizontalAlignment="Left"
                         AutomationProperties.Name="{l:T 'Flutter smoothing window, milliseconds'}"/>
 
-                <CheckBox Content="{l:T 'W_iden the highs'}" IsChecked="{Binding CleanupWiden}" Margin="0,8,0,0"/>
+                <CheckBox Content="{l:T 'Widen the highs'}" IsChecked="{Binding CleanupWiden}" Margin="0,8,0,0"/>
                 <Label Content="{l:T 'Widening amount (1 matches the rest of the track, 0.5 is half)'}" Target="{Binding ElementName=widenAmount}" Padding="0,4,0,2"/>
                 <Slider x:Name="widenAmount" Minimum="0" Maximum="2" SmallChange="0.1" LargeChange="0.5" TickFrequency="0.1" IsSnapToTickEnabled="True"
                         Value="{Binding CleanupWidenAmount}" IsEnabled="{Binding CleanupWiden}" Width="250" HorizontalAlignment="Left"
                         AutomationProperties.Name="{l:T 'Widening amount'}"/>
 
-                <CheckBox Content="{l:T 'Rebuild the top octave above the MP3 cut-off (e_xcite)'}" IsChecked="{Binding CleanupExcite}" Margin="0,8,0,0"/>
+                <CheckBox Content="{l:T 'Rebuild the top octave above the MP3 cut-off (excite)'}" IsChecked="{Binding CleanupExcite}" Margin="0,8,0,0"/>
                 <Label Content="{l:T 'Top octave level, dB below the natural slope (sunscreen uses -3)'}" Target="{Binding ElementName=exciteDb}" Padding="0,4,0,2"/>
                 <Slider x:Name="exciteDb" Minimum="-12" Maximum="0" SmallChange="1" LargeChange="3" TickFrequency="1" IsSnapToTickEnabled="True"
                         Value="{Binding CleanupExciteDb}" IsEnabled="{Binding CleanupExcite}" Width="250" HorizontalAlignment="Left"
                         AutomationProperties.Name="{l:T 'Top octave level, dB'}"/>
 
-                <CheckBox Content="{l:T '_Match the tone of commercial masters'}" IsChecked="{Binding CleanupMatch}" Margin="0,8,0,0"/>
+                <CheckBox Content="{l:T 'Match the tone of commercial masters'}" IsChecked="{Binding CleanupMatch}" Margin="0,8,0,0"/>
                 <Label Content="{l:T 'Or match this song instead (MP3 or WAV; empty uses the average of 12 pop masters)'}" Target="{Binding ElementName=matchReference}" Padding="0,4,0,2"/>
                 <DockPanel IsEnabled="{Binding CleanupMatch}">
                     <Button DockPanel.Dock="Right" Content="{l:T 'Clear'}" Padding="10,2" Margin="6,0,0,0" Command="{Binding ClearMatchReferenceCommand}"/>
-                    <Button DockPanel.Dock="Right" Content="{l:T 'Choose _reference...'}" Padding="10,2" Margin="10,0,0,0" Command="{Binding ChooseMatchReferenceCommand}"/>
+                    <Button DockPanel.Dock="Right" Content="{l:T 'Choose reference...'}" Padding="10,2" Margin="10,0,0,0" Command="{Binding ChooseMatchReferenceCommand}"/>
                     <TextBox x:Name="matchReference" Text="{Binding CleanupMatchReference, Mode=OneWay}" IsReadOnly="True"
                              AutomationProperties.Name="{l:T 'Reference song to match'}"/>
                 </DockPanel>
 
-                <CheckBox Content="{l:T 'M_aster the loudness'}" IsChecked="{Binding CleanupMaster}" Margin="0,8,0,0"/>
+                <CheckBox Content="{l:T 'Master the loudness'}" IsChecked="{Binding CleanupMaster}" Margin="0,8,0,0"/>
                 <Label Content="{l:T 'Loudness target, LUFS (-14 is the streaming standard, -9 is loud like a single)'}" Target="{Binding ElementName=masterLufs}" Padding="0,4,0,2"/>
                 <Slider x:Name="masterLufs" Minimum="-23" Maximum="-6" SmallChange="1" LargeChange="3" TickFrequency="1" IsSnapToTickEnabled="True"
                         Value="{Binding CleanupMasterLufs}" IsEnabled="{Binding CleanupMaster}" Width="250" HorizontalAlignment="Left"

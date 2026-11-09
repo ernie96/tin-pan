@@ -219,7 +219,13 @@ impl SunoApi {
     // ── Account ─────────────────────────────────────────────────────────
 
     pub fn billing_info(&self) -> Result<crate::billing::BillingInfo> {
-        crate::billing::BillingInfo::read(&self.send(Method::GET, "/api/billing/info/", None)?)
+        let mut info = crate::billing::BillingInfo::read(&self.send(Method::GET, "/api/billing/info/", None)?)?;
+        // Models shared with you join the plan's; the plan's models still work without them.
+        match self.send(Method::GET, "/api/custom-model/shared", None).and_then(|reply| sj::parse(&reply)) {
+            Ok(root) => crate::create::add_shared_models(&mut info.models, crate::create::read_shared_models(&root)),
+            Err(e) => log::warn!("Shared models didn't load: {e}"),
+        }
+        Ok(info)
     }
 
     /// Whether Suno shapes style ideas and boosts to your taste (GET /api/personalization/settings); None if unknown.

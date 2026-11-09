@@ -122,7 +122,7 @@ fn add_close(dialog: &Dialog, sizer: &BoxSizer) {
 
 /// Asks a yes-or-no question with a third button beside them that runs `other` and asks again; true for Yes.
 /// The question is a read-only text, so long release notes can be read line by line; Enter in it says Yes.
-pub fn confirm_or(parent: &impl WxWidget, message: &str, caption: &str, other_label: &str, other: impl Fn(&Dialog)) -> bool {
+pub fn confirm_or(parent: &impl WxWidget, message: &str, caption: &str, other_label: &str, other: impl Fn()) -> bool {
     const OTHER: i32 = 10_001;
     loop {
         let dialog = Dialog::builder(parent, caption).with_style(DialogStyle::DefaultDialogStyle | DialogStyle::ResizeBorder).with_size(640, 480).build();
@@ -161,12 +161,11 @@ pub fn confirm_or(parent: &impl WxWidget, message: &str, caption: &str, other_la
         body.set_insertion_point(0);
         body.set_focus();
         let answer = dialog.show_modal();
+        dialog.destroy();
         if answer == OTHER {
-            other(&dialog);
-            dialog.destroy();
+            other();
             continue;
         }
-        dialog.destroy();
         return answer == ID_YES;
     }
 }

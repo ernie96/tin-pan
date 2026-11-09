@@ -99,13 +99,20 @@ impl SunoApi {
 
     /// Waits for the singing's vocals, then makes the persona; its id.
     pub fn create_voice(&self, singing: &Singing, verification_id: &str, name: &str, description: &str, styles: &str) -> Result<String> {
+        let mut ready = false;
         for _ in 0..120 {
             let reply = sj::parse(&self.send(Method::GET, &format!("/api/processed_clip/{}", escape(&singing.processed_id)), None)?)?;
             match reply.get("status").and_then(Value::as_str) {
-                Some("complete" | "completed") => break,
+                Some("complete" | "completed") => {
+                    ready = true;
+                    break;
+                }
                 Some("failed" | "error") => return Err(Error::api(t("Suno couldn't take the vocals out of your singing."))),
                 _ => thread::sleep(Duration::from_secs(1)),
             }
+        }
+        if !ready {
+            return Err(Error::api(t("Suno is taking long to take the vocals out of your singing. Try again later.")));
         }
         let mut body = json!({
             "is_voice_recording": true, "voice_recording_id": singing.recording_id, "name": name.trim(), "description": description.trim(),

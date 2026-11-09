@@ -369,7 +369,7 @@ namespace TinPan.ViewModels
                 T(Attribution),
                 T(Dedication),
                 T("Copyright (C) 2026 Ernesto Melendez. Tin Pan is free software under the GNU General Public License, version 3 or later, with terms that keep this credit and dedication visible. It comes with no warranty. Help, Licenses and notices has the license and its terms."),
-                T("An accessible, unofficial client for Suno. Not affiliated with Suno."),
+                T("An unofficial client for Suno. Not affiliated with Suno."),
                 T("Speech goes through {0}.", Announcer.OutputName),
                 !_auth.IsAuthenticated ? T("Not signed in.")
                     : string.IsNullOrEmpty(_auth.UserName) ? T("Signed in.") : T("Signed in as {0}.", _auth.UserName),

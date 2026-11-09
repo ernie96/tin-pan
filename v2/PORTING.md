@@ -6,7 +6,7 @@ Built from Tin Pan 1's code itself (every `[RelayCommand]`, every Suno call in `
 
 ## Rules carried over from Tin Pan 1
 
-- **Screen reader first.** Every feature gets F1 help, a menu bar entry with its keys, unique access keys per menu, page and form in every language, and quiet, one-line speech.
+- **Help, menus and speech.** Every feature gets F1 help and a menu bar entry; actions people repeat get keys, and access keys, where used, are unique per menu, page and form in every language. Speech stays quiet, one line per action.
 - **Sighted users too.** Pages are laid out like 1.x's: a heading, buttons with Alt letters, the list, the playback buttons and the volume. Nothing is left as a bare list.
 - **Texts.** Every user-facing text goes through `t()`, `tf()` or `plural()`, with its Romanian, Ukrainian and Spanish in `TinPan/Localization/translations.json` in the same change.
   - Prefer Tin Pan 1's own texts: they are translated and their access keys are checked. Menu texts keep 1.x's "_"; commands.rs turns it into "&".

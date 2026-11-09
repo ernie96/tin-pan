@@ -121,7 +121,7 @@ impl App {
             t(ATTRIBUTION),
             t(DEDICATION),
             t("Copyright (C) 2026 Ernesto Melendez. Tin Pan is free software under the GNU General Public License, version 3 or later, with terms that keep this credit and dedication visible. It comes with no warranty. Help, Licenses and notices has the license and its terms."),
-            t("An accessible, unofficial client for Suno. Not affiliated with Suno."),
+            t("An unofficial client for Suno. Not affiliated with Suno."),
             tf("Speech goes through {0}.", &[&speech::output_name()]),
             account,
             self.billing.as_ref().map_or_else(|| t("Plan not loaded yet."), |b| format!("{}.", b.plan_name())),

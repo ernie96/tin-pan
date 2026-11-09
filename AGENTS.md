@@ -1,7 +1,8 @@
 # Tin Pan: notes for coding agents
 
 - The app is `TinPan/` (C# WPF, .NET 10); tests are in `TinPan.Tests/`. User guide `TinPan/README.md`, history `TinPan/CHANGELOG.md`.
-- It is screen-reader first: every feature needs F1 help, a menu bar entry (built from `MainViewModel.Commands`), unique access keys per page/menu, and quiet, one-line speech.
+- Every feature needs F1 help, a menu bar entry (built from `MainViewModel.Commands`) and quiet, one-line speech. Keys go on actions people repeat (create, cover, download, like), not on every field: the Settings page has no access keys. Where access keys are used they must be unique per page/menu.
+- Write docs, help and changelogs plainly, like a person: no marketing, no "accessible"/"screen-reader first" claims, no emoji headings or slogans.
 - Build in place after every change: `dotnet build TinPan -c Release` (exe at `TinPan/bin/Release/net10.0-windows/TinPan.exe`). Release build: `dotnet publish TinPan -p:PublishProfile=OneFile` (one exe in `TinPan/bin/publish/`).
 - Every user-facing text goes through `T("...")`, `Plural(n, "{0} x", "{0} xs")` or `{l:T '...'}` in XAML (`TinPan/Localization`). Add its Romanian, Ukrainian and Spanish to `TinPan/Localization/translations.json` in the same change, then run `python -I build/translations/check.py` (missing texts, placeholders, plural counts, Alt-letter clashes per page/menu/form in every language). Logs, Suno API values and the license texts stay English.
 - Keep working behaviour (downloads, sign-in, playback) unless asked to change it; add no unrequested prompts or gates.
