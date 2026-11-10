@@ -11,6 +11,7 @@ name = "tinpan"
 path = "src/main.rs"
 
 [dependencies]
+serde_json.workspace = true
 tinpan-core = { path = "../tinpan-core" }
 # wxDragon from crates.io, the version fedra (by the fork's author) builds with.
 wxdragon = { version = "0.9.24", default-features = false, features = ["webview"] }
@@ -59,7 +60,6 @@ level = "warn"
 check-cfg = ['cfg(feature, values("cargo-clippy"))']
 
 [dev-dependencies]
-serde_json.workspace = true
 
 [build-dependencies]
 embed-manifest = "1.4"

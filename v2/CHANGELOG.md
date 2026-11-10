@@ -1,5 +1,15 @@
 # Tin Pan 2 changes
 
+## 2.1.2
+
+### Fixed
+
+- Listen for Credits always said Suno had no songs to rate. Suno now sends its tasks in a newer form, which
+  Tin Pan skipped; it reads both forms now. Questions can be one choice, several choices or typed words, some
+  with an Other answer, and a question that only applies after a certain answer stays greyed out until then.
+  Tasks of kinds Tin Pan still can't show, such as making songs or video, are handed back to Suno.
+- A free account's plan said "Plan unknown, not active". It says "Free plan" now.
+
 ## 2.1.1
 
 - Settings no longer gives every field its own Alt+letter. Tab and Shift+Tab move through it as before.

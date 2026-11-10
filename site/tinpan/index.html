@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tin Pan</title>
+<meta name="description" content="Tin Pan, an unofficial desktop client for Suno on Windows, Mac and Linux.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: a sheet-music cover up top (staff lines, the name set big), then plain reading columns. */
+:root {
+  --paper: #f3f1ec;
+  --panel: #ffffff;
+  --ink: #18202e;
+  --ink-soft: #3d4657;
+  --staff: #c9c4b8;
+  --brass: #8a5a00;
+  --brass-fill: #e9b949;
+  --on-brass: #1a1406;
+  --rule: #d9d4c9;
+  --focus: #0b5cad;
+  --display: "Abril Fatface", "Georgia", "Times New Roman", serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "IBM Plex Mono", "Consolas", "Menlo", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #12161e; --panel: #1b212c; --ink: #eef0f3; --ink-soft: #c3c9d3; --staff: #2f3746;
+    --brass: #f0c35a; --brass-fill: #e9b949; --on-brass: #1a1406; --rule: #2c3442; --focus: #8cc4ff;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #12161e; --panel: #1b212c; --ink: #eef0f3; --ink-soft: #c3c9d3; --staff: #2f3746;
+  --brass: #f0c35a; --brass-fill: #e9b949; --on-brass: #1a1406; --rule: #2c3442; --focus: #8cc4ff;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+.wrap {
+  max-width: 62rem;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+a { color: var(--brass); text-underline-offset: 0.2em; }
+a:focus-visible, .download:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+.skip {
+  position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); top: -4rem;
+  background: var(--panel); color: var(--ink); padding: 0.5rem 1rem; z-index: 5;
+}
+.skip:focus { top: calc(0.5rem + env(safe-area-inset-top, 0px)); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* The cover */
+.cover { position: relative; overflow: hidden; border-bottom: 1px solid var(--rule); }
+.cover svg.staff { position: absolute; inset: 0; width: 100%; height: 100%; }
+.cover .wrap { position: relative; padding-block: clamp(2.5rem, 7vw, 5rem); display: grid; gap: 1.25rem; }
+.eyebrow { font-family: var(--mono); font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); margin: 0; }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(3.5rem, 13vw, 7.5rem); line-height: 0.95; margin: 0; letter-spacing: 0.01em; }
+.lead { font-size: 1.3rem; max-width: 36rem; margin: 0; text-wrap: pretty; }
+.actions { display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem; align-items: center; }
+.download {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  background: var(--brass-fill); color: var(--on-brass);
+  font-weight: 700; font-size: 1.2rem; text-decoration: none;
+  padding: 0.85rem 1.4rem; border-radius: 6px; border: 2px solid var(--on-brass);
+}
+.download:hover { background: #f3c95f; }
+.download svg { width: 1.2em; height: 1.2em; }
+.small { font-size: 0.95rem; color: var(--ink-soft); margin: 0; }
+
+/* Body sections */
+main { padding-block: 2.5rem 1rem; }
+section { padding-block: 1.5rem; border-bottom: 1px solid var(--rule); }
+section:last-of-type { border-bottom: 0; }
+h2 { font-family: var(--display); font-weight: 400; font-size: clamp(1.8rem, 4vw, 2.4rem); line-height: 1.15; margin: 0 0 1rem; text-wrap: balance; }
+h3 { font-size: 1.15rem; margin: 0 0 0.35rem; }
+p { max-width: 65ch; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1.5rem 2rem; }
+.grid > div { min-width: 0; }
+.grid p { margin: 0; }
+ul.plain { padding-left: 1.2rem; margin: 0; display: grid; gap: 0.4rem; max-width: 65ch; }
+
+.systems { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; }
+.system { background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 1rem 1.2rem; min-width: 0; }
+.system h3 { margin-bottom: 0.25rem; }
+.file { font-family: var(--mono); font-size: 0.95rem; }
+.system p { margin: 0.35rem 0 0; font-size: 1rem; }
+
+.keys-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; max-width: 44rem; }
+th, td { text-align: left; padding: 0.55rem 0.8rem 0.55rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-size: 0.95rem; color: var(--ink-soft); font-weight: 700; }
+kbd { font-family: var(--mono); font-size: 0.9rem; background: var(--panel); border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 4px; padding: 0.05rem 0.4rem; white-space: nowrap; }
+
+footer { border-top: 1px solid var(--rule); }
+footer .wrap { padding-block: 1.5rem 2.5rem; display: grid; gap: 0.6rem; }
+footer p { margin: 0; font-size: 1rem; color: var(--ink-soft); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .download { transition: background 120ms ease; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the description</a>
+
+<header class="cover">
+  <svg class="staff" aria-hidden="true" focusable="false" viewBox="0 0 1200 420" preserveAspectRatio="xMidYMid slice">
+    <g stroke="var(--staff)" stroke-width="2">
+      <line x1="0" y1="250" x2="1200" y2="250"/><line x1="0" y1="270" x2="1200" y2="270"/>
+      <line x1="0" y1="290" x2="1200" y2="290"/><line x1="0" y1="310" x2="1200" y2="310"/>
+      <line x1="0" y1="330" x2="1200" y2="330"/>
+    </g>
+    <g fill="var(--staff)" stroke="var(--staff)" stroke-width="3">
+      <ellipse cx="760" cy="320" rx="13" ry="9" transform="rotate(-20 760 320)"/><line x1="772" y1="318" x2="772" y2="240"/>
+      <ellipse cx="840" cy="300" rx="13" ry="9" transform="rotate(-20 840 300)"/><line x1="852" y1="298" x2="852" y2="220"/>
+      <ellipse cx="920" cy="280" rx="13" ry="9" transform="rotate(-20 920 280)"/><line x1="932" y1="278" x2="932" y2="200"/>
+      <ellipse cx="1000" cy="290" rx="13" ry="9" transform="rotate(-20 1000 290)"/><line x1="1012" y1="288" x2="1012" y2="210"/>
+      <line x1="772" y1="240" x2="852" y2="220" stroke-width="7"/><line x1="932" y1="200" x2="1012" y2="210" stroke-width="7"/>
+      <ellipse cx="1090" cy="260" rx="13" ry="9" transform="rotate(-20 1090 260)"/><line x1="1102" y1="258" x2="1102" y2="180"/>
+    </g>
+  </svg>
+  <div class="wrap">
+    <p class="eyebrow">Windows, Mac and Linux. Free.</p>
+    <h1>Tin Pan</h1>
+    <p class="lead">A desktop app for Suno. Play your songs and playlists, make new ones, and download them, with a menu for every command and a key for the ones you use most.</p>
+    <div class="actions">
+      <a class="download" href="https://github.com/ernie96/tin-pan/releases/latest">
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg>
+        Download Tin Pan<span class="sr-only"> from its latest release on GitHub</span>
+      </a>
+      <p class="small">Opens the latest release on GitHub. Not made by or affiliated with Suno.</p>
+    </div>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <div class="wrap">
+
+    <section aria-labelledby="what">
+      <h2 id="what">What it does</h2>
+      <div class="grid">
+        <div>
+          <h3>Your library</h3>
+          <p>Your songs and playlists in one list each, with search, filters and sorting. Like, rename, trash, share, add to playlists and reorder them.</p>
+        </div>
+        <div>
+          <h3>Making songs</h3>
+          <p>Create songs from a description or your own lyrics, then extend, cover, remaster, crop, fade, reverse or change their speed. Personas, custom models and voice personas from your own singing.</p>
+        </div>
+        <div>
+          <h3>Finding music</h3>
+          <p>Trending, Explore, songs from people you follow, contests, a creator's songs, and a search across all of Suno. Paste a Suno link someone sent you and the song opens.</p>
+        </div>
+        <div>
+          <h3>Listening</h3>
+          <p>Songs play in the app and start at once when fetched ahead. Queue songs with Up next, have timed lyrics read aloud as they are sung, and switch between two audio outputs.</p>
+        </div>
+        <div>
+          <h3>Downloads</h3>
+          <p>MP3, WAV (Pro and Premier plans), video, lyrics, timed lyrics and cover art, one song or a whole list. An optional clean-up removes the haze Suno's encoder leaves.</p>
+        </div>
+        <div>
+          <h3>Earning credits</h3>
+          <p>Listen for Credits: rate pairs of songs for Suno in a window that plays each one and asks Suno's questions about them.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="how">
+      <h2 id="how">How it works with your screen reader</h2>
+      <p>Tin Pan uses each system's own controls, so your screen reader reads its lists, menus and forms as it reads any other app. Messages such as "Playing" or "Downloaded" are spoken through your screen reader: NVDA and others on Windows, VoiceOver on Mac, Orca on Linux. In Settings you choose whether you hear everything, only what you ask for, or only errors.</p>
+      <ul class="plain">
+        <li>F1 says where you are and the keys that matter there. Ctrl+F1 lists every command; Enter runs one.</li>
+        <li>Every command is in the menu bar with its key, and in the Applications key menu of a song.</li>
+        <li>English, Romanian, Ukrainian and Spanish.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="keys">
+      <h2 id="keys">A few keys</h2>
+      <p>On a Mac, use Command where these say Ctrl.</p>
+      <div class="keys-wrap">
+        <table>
+          <caption class="sr-only">Keys and what they do</caption>
+          <thead><tr><th scope="col">Key</th><th scope="col">What it does</th></tr></thead>
+          <tbody>
+            <tr><td><kbd>F1</kbd></td><td>Help for where you are</td></tr>
+            <tr><td><kbd>Ctrl+N</kbd></td><td>Make a song</td></tr>
+            <tr><td><kbd>Enter</kbd> / <kbd>F8</kbd></td><td>Play / pause or resume</td></tr>
+            <tr><td><kbd>Ctrl+D</kbd></td><td>Download the selected song</td></tr>
+            <tr><td><kbd>Ctrl+Shift+E</kbd></td><td>Search all of Suno</td></tr>
+            <tr><td><kbd>Ctrl+G</kbd></td><td>Open a Suno link someone shared</td></tr>
+            <tr><td><kbd>Ctrl+Shift+A</kbd></td><td>Add the song to Up next</td></tr>
+            <tr><td><kbd>Ctrl+Shift+B</kbd></td><td>Report a problem</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="get">
+      <h2 id="get">Which file to download</h2>
+      <p>You need a Suno account; Tin Pan signs in to it in a Suno sign-in window. The <a href="https://github.com/ernie96/tin-pan/releases/latest">latest release<span class="sr-only"> on GitHub</span></a> has one file for each system.</p>
+      <div class="systems">
+        <div class="system">
+          <h3>Windows</h3>
+          <p class="file">TinPan.exe</p>
+          <p>One file, nothing to install. Signing in needs the Microsoft Edge WebView2 Runtime, which Windows 10 and 11 usually have. Tin Pan offers its own updates.</p>
+        </div>
+        <div class="system">
+          <h3>Mac</h3>
+          <p class="file">TinPan.dmg</p>
+          <p>Apple silicon, macOS 13 or later. The app isn't signed by Apple yet, so macOS warns the first time you open it. The Mac version is new and has had little testing.</p>
+        </div>
+        <div class="system">
+          <h3>Linux</h3>
+          <p class="file">TinPan.AppImage</p>
+          <p>64-bit Intel or AMD. Needs GTK 3 and WebKitGTK 4.1 from your system. Make the file executable, then run it. The Linux version is new and has had little testing.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="help">
+      <h2 id="help">Problems, ideas and support</h2>
+      <p>In Tin Pan, Help, Report a problem (<kbd>Ctrl+Shift+B</kbd>) and Suggest a feature (<kbd>Ctrl+Shift+F</kbd>) send a message straight to me, with no account needed. Reports from Mac and Linux are especially useful, since I don't have those systems.</p>
+      <ul class="plain">
+        <li>Email: <a href="mailto:ernesto@melendez.land">ernesto@melendez.land</a></li>
+        <li>Mastodon: <a href="https://someplace.social/@ernie">ernie@someplace.social</a></li>
+        <li>News and updates for all my apps: <a href="https://t.me/+-SHI1xTKJugwMzQ5">the Telegram channel</a></li>
+        <li>Code and releases: <a href="https://github.com/ernie96/tin-pan">github.com/ernie96/tin-pan</a></li>
+      </ul>
+      <p>Tin Pan is free. If it's useful to you, you can support it on <a href="https://paypal.me/RefinnejLTD">PayPal</a> or <a href="https://ko-fi.com/ernie96">Ko-fi</a>.</p>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Tin Pan is made by Ernesto Melendez and released under the GNU General Public License, version 3 or later. It is dedicated to Jenni and Diana.</p>
+    <p>Suno is a trademark of its owner. Tin Pan is an unofficial client and is not affiliated with Suno.</p>
+  </div>
+</footer>
+</body>
+</html>

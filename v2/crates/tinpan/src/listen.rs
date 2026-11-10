@@ -8,7 +8,7 @@ use std::collections::BTreeMap;
 use std::rc::Rc;
 
 use tinpan_core::i18n::{t, tf};
-use tinpan_core::listen::{BACKGROUNDS, CREATOR_TYPES, GENRES, LANGUAGES, Profile, SETUPS, Task};
+use tinpan_core::listen::{Answer, BACKGROUNDS, CREATOR_TYPES, GENRES, LANGUAGES, OTHER, Profile, SETUPS, Task, letter};
 use wxdragon::prelude::*;
 
 use crate::form::{self, Field, Value};
@@ -21,31 +21,119 @@ pub const CHECK_PROVIDER: i32 = 3;
 
 /// What was done in a task's window, with the seconds listened to each song by its key.
 pub enum Rated {
-    Send { answers: BTreeMap<String, String>, listened: BTreeMap<String, u32> },
+    Send { answers: BTreeMap<String, serde_json::Value>, listened: BTreeMap<String, u32> },
     Skip { listened: BTreeMap<String, u32> },
     Close,
 }
 
-fn letter(i: usize) -> String {
-    char::from(b'A' + i.min(25) as u8).to_string()
+/// A question's controls in the window.
+enum Asked {
+    /// A list whose first line is "Not answered" and whose last may be "Other".
+    One(Choice),
+    /// A check box per choice, and one for "Other".
+    Many(Vec<CheckBox>),
+    Text(TextCtrl),
+}
+
+struct Control {
+    asked: Asked,
+    /// The words for "Other", when the question has it.
+    other: Option<TextCtrl>,
+    /// Greys out (false) or brings back everything belonging to the question.
+    parts: Vec<Box<dyn Fn(bool)>>,
+}
+
+/// The values chosen or typed for each question, for deciding which questions are asked.
+fn chosen(task: &Task, controls: &[Control]) -> BTreeMap<String, Vec<String>> {
+    task.questions
+        .iter()
+        .zip(controls)
+        .map(|(q, c)| {
+            let values = match (&q.answer, &c.asked) {
+                (Answer::One(choices), Asked::One(list)) => match list.get_selection().unwrap_or(0) as usize {
+                    0 => Vec::new(),
+                    i if i <= choices.len() => vec![choices[i - 1].value.clone()],
+                    _ => vec![OTHER.to_string()],
+                },
+                (Answer::Many(choices), Asked::Many(boxes)) => boxes
+                    .iter()
+                    .enumerate()
+                    .filter(|(_, b)| b.get_value())
+                    .map(|(i, _)| choices.get(i).map_or_else(|| OTHER.to_string(), |c| c.value.clone()))
+                    .collect(),
+                (_, Asked::Text(text)) => Some(text.get_value().trim().to_string()).filter(|t| !t.is_empty()).into_iter().collect(),
+                _ => Vec::new(),
+            };
+            (q.key.clone(), values)
+        })
+        .collect()
+}
+
+/// Greys out the questions not asked for the answers so far.
+fn update_shown(task: &Task, controls: &[Control]) {
+    let answers = chosen(task, controls);
+    for (q, c) in task.questions.iter().zip(controls) {
+        let shown = q.is_shown(&answers);
+        for part in &c.parts {
+            part(shown);
+        }
+        if let Some(other) = &c.other {
+            other.enable(shown && answers.get(&q.key).is_some_and(|v| v.iter().any(|x| x == OTHER)));
+        }
+    }
+}
+
+/// The answers to send, or the question still to answer (its index and what to say).
+fn answers_to_send(task: &Task, controls: &[Control]) -> Result<BTreeMap<String, serde_json::Value>, (usize, String)> {
+    let chosen = chosen(task, controls);
+    let mut out = BTreeMap::new();
+    for (i, (q, c)) in task.questions.iter().zip(controls).enumerate() {
+        if !q.is_shown(&chosen) {
+            continue;
+        }
+        let values = chosen.get(&q.key).cloned().unwrap_or_default();
+        if values.is_empty() {
+            if q.required {
+                return Err((i, tf("Answer {0} first.", &[&q.label])));
+            }
+            continue;
+        }
+        if values.iter().any(|v| v == OTHER) {
+            let words = c.other.as_ref().map(|o| o.get_value().trim().to_string()).unwrap_or_default();
+            if words.is_empty() {
+                return Err((i, tf("Say what Other means for {0} first.", &[&q.label])));
+            }
+            out.insert(format!("{}_other", q.key), serde_json::Value::String(words));
+        }
+        let value = match q.answer {
+            Answer::Many(_) => serde_json::Value::Array(values.into_iter().map(serde_json::Value::String).collect()),
+            _ => serde_json::Value::String(values.into_iter().next().unwrap_or_default()),
+        };
+        out.insert(q.key.clone(), value);
+    }
+    Ok(out)
 }
 
 /// A task's window. Songs play on a player of its own; the main song is paused first by the caller.
 fn rate(parent: &Frame, task: &Task, songs: Vec<Vec<u8>>, volume: f32, device: &str) -> Rated {
     const SEND: i32 = 10_101;
     const SKIP: i32 = 10_102;
-    let dialog = Dialog::builder(parent, &t("Listen for Credits")).with_style(DialogStyle::DefaultDialogStyle | DialogStyle::ResizeBorder).with_size(640, 620).build();
+    let dialog = Dialog::builder(parent, &t("Listen for Credits")).with_style(DialogStyle::DefaultDialogStyle | DialogStyle::ResizeBorder).with_size(640, 680).build();
+    let outer = BoxSizer::builder(Orientation::Vertical).build();
+    let panel = ScrolledWindow::builder(&dialog).build();
+    panel.set_scroll_rate(0, 20);
     let sizer = BoxSizer::builder(Orientation::Vertical).build();
     let mut intro = vec![task.question.clone(), task.instructions.clone()];
-    intro.push(tf("Listen to each song for at least {0} seconds, answer each question, then Send rating.", &[&task.min_listen_seconds]));
+    intro.push(tf("Listen to each song for at least {0} seconds, answer the questions, then Send rating.", &[&task.min_listen_seconds]));
     if let Some(credits) = task.credits {
         intro.push(tf("This one earns {0} credits.", &[&credits]));
     }
-    let about = TextCtrl::builder(&dialog)
-        .with_value(&intro.into_iter().filter(|l| !l.is_empty()).collect::<Vec<_>>().join("\r\n\r\n"))
+    let about = TextCtrl::builder(&panel)
+        .with_value(&intro.into_iter().filter(|l| !l.is_empty()).collect::<Vec<_>>().join("\r\n\r\n").replace('\n', "\r\n").replace("\r\r\n", "\r\n"))
         .with_style(TextCtrlStyle::MultiLine | TextCtrlStyle::ReadOnly | TextCtrlStyle::Rich2)
+        .with_size(Size::new(-1, 160))
         .build();
-    sizer.add(&about, 1, SizerFlag::Expand | SizerFlag::All, 8);
+    sizer.add(&about, 0, SizerFlag::Expand | SizerFlag::All, 8);
 
     let (player, _) = Player::new(volume, device);
     let player = Rc::new(RefCell::new(player));
@@ -55,7 +143,7 @@ fn rate(parent: &Frame, task: &Task, songs: Vec<Vec<u8>>, volume: f32, device: &
     let mut song_buttons = Vec::new();
     let row = BoxSizer::builder(Orientation::Horizontal).build();
     for i in 0..task.songs.len() {
-        let button = Button::builder(&dialog).with_label(&tf("Song _{0}: play or pause", &[&letter(i)]).replacen('_', "&", 1)).build();
+        let button = Button::builder(&panel).with_label(&tf("Song _{0}: play or pause", &[&letter(i)]).replacen('_', "&", 1)).build();
         let (player, playing, songs) = (player.clone(), playing.clone(), songs.clone());
         button.on_click(move |_| {
             let mut player = player.borrow_mut();
@@ -76,20 +164,57 @@ fn rate(parent: &Frame, task: &Task, songs: Vec<Vec<u8>>, volume: f32, device: &
     }
     sizer.add_sizer(&row, 0, SizerFlag::All, 4);
 
-    let mut choices = Vec::new();
+    let mut controls = Vec::new();
     for question in &task.questions {
-        let label = if question.description.is_empty() { question.name.clone() } else { format!("{}: {}", question.name, question.description) };
-        sizer.add(&StaticText::builder(&dialog).with_label(&label).build(), 0, SizerFlag::Left | SizerFlag::Right | SizerFlag::Top, 8);
-        let mut items = vec![t("Not answered")];
-        items.extend((0..task.songs.len()).map(|i| tf("Song {0}", &[&letter(i)])));
-        if question.allow_neither {
-            items.push(t("Neither"));
-        }
-        let choice = Choice::builder(&dialog).with_choices(items).build();
-        choice.set_selection(0);
-        sizer.add(&choice, 0, SizerFlag::Expand | SizerFlag::Left | SizerFlag::Right, 8);
-        choices.push(choice);
+        let label = if question.description.is_empty() { question.label.clone() } else { format!("{}: {}", question.label, question.description) };
+        let heading = StaticText::builder(&panel).with_label(&label).build();
+        sizer.add(&heading, 0, SizerFlag::Left | SizerFlag::Right | SizerFlag::Top, 8);
+        let mut parts: Vec<Box<dyn Fn(bool)>> = vec![Box::new(move |on| heading.enable(on))];
+        let asked = match &question.answer {
+            Answer::One(choices) => {
+                let mut items = vec![t("Not answered")];
+                items.extend(choices.iter().map(|c| c.label.clone()));
+                if question.allow_other {
+                    items.push(t("Other"));
+                }
+                let list = Choice::builder(&panel).with_choices(items).build();
+                list.set_selection(0);
+                sizer.add(&list, 0, SizerFlag::Expand | SizerFlag::Left | SizerFlag::Right, 8);
+                parts.push(Box::new(move |on| list.enable(on)));
+                Asked::One(list)
+            }
+            Answer::Many(choices) => {
+                let mut labels: Vec<String> = choices.iter().map(|c| c.label.clone()).collect();
+                if question.allow_other {
+                    labels.push(t("Other"));
+                }
+                let boxes: Vec<CheckBox> = labels.iter().map(|l| CheckBox::builder(&panel).with_label(l).build()).collect();
+                for b in &boxes {
+                    sizer.add(b, 0, SizerFlag::Left | SizerFlag::Right, 16);
+                    let b = *b;
+                    parts.push(Box::new(move |on| b.enable(on)));
+                }
+                Asked::Many(boxes)
+            }
+            Answer::Text => {
+                let text = TextCtrl::builder(&panel).with_style(TextCtrlStyle::MultiLine).with_size(Size::new(-1, 60)).build();
+                sizer.add(&text, 0, SizerFlag::Expand | SizerFlag::Left | SizerFlag::Right, 8);
+                parts.push(Box::new(move |on| text.enable(on)));
+                Asked::Text(text)
+            }
+        };
+        let other = question.allow_other.then(|| {
+            let label = StaticText::builder(&panel).with_label(&tf("Other, for {0}:", &[&question.label])).build();
+            let text = TextCtrl::builder(&panel).build();
+            sizer.add(&label, 0, SizerFlag::Left | SizerFlag::Right | SizerFlag::Top, 8);
+            sizer.add(&text, 0, SizerFlag::Expand | SizerFlag::Left | SizerFlag::Right, 8);
+            text.enable(false);
+            text
+        });
+        controls.push(Control { asked, other, parts });
     }
+    panel.set_sizer(sizer, true);
+    outer.add(&panel, 1, SizerFlag::Expand, 0);
 
     let buttons = BoxSizer::builder(Orientation::Horizontal).build();
     let send = Button::builder(&dialog).with_id(SEND).with_label(&form::wx_label("_Send rating")).build();
@@ -98,9 +223,34 @@ fn rate(parent: &Frame, task: &Task, songs: Vec<Vec<u8>>, volume: f32, device: &
     for button in [&send, &skip, &close] {
         buttons.add(button, 0, SizerFlag::All, 4);
     }
-    sizer.add_sizer(&buttons, 0, SizerFlag::AlignRight | SizerFlag::All, 4);
-    dialog.set_sizer(sizer, true);
+    outer.add_sizer(&buttons, 0, SizerFlag::AlignRight | SizerFlag::All, 4);
+    dialog.set_sizer(outer, true);
     dialog.set_escape_id(ID_CANCEL);
+
+    // Questions asked only after certain answers are greyed out until then.
+    let task_rc = Rc::new(task.clone());
+    let controls = Rc::new(controls);
+    for c in controls.iter() {
+        let (task, all) = (task_rc.clone(), controls.clone());
+        let refresh = move || update_shown(&task, &all);
+        match &c.asked {
+            Asked::One(list) => {
+                let refresh = refresh.clone();
+                list.on_selection_changed(move |_| refresh());
+            }
+            Asked::Many(boxes) => {
+                for b in boxes {
+                    let refresh = refresh.clone();
+                    b.on_toggled(move |_| refresh());
+                }
+            }
+            Asked::Text(text) => {
+                let refresh = refresh.clone();
+                text.on_text_changed(move |_| refresh());
+            }
+        }
+    }
+    update_shown(&task_rc, &controls);
 
     // Seconds listened, counted while a song plays; each song says once when it's been heard long enough.
     let timer = Timer::new(&dialog);
@@ -121,9 +271,10 @@ fn rate(parent: &Frame, task: &Task, songs: Vec<Vec<u8>>, volume: f32, device: &
     }
     timer.start(1000, false);
 
-    let (min, count, questions) = (task.min_listen_seconds, task.songs.len(), choices.clone());
-    // `count` is used again below, once the window has closed.
+    let min = task.min_listen_seconds;
     let heard = listened.clone();
+    let answers: Rc<RefCell<BTreeMap<String, serde_json::Value>>> = Rc::new(RefCell::new(BTreeMap::new()));
+    let (task_send, controls_send, answers_send) = (task_rc.clone(), controls.clone(), answers.clone());
     send.on_click(move |_| {
         if let Some(i) = heard.borrow().iter().position(|s| *s < min) {
             speech::say_error(&tf("Listen to song {0} for at least {1} seconds first.", &[&letter(i), &min]));
@@ -132,12 +283,25 @@ fn rate(parent: &Frame, task: &Task, songs: Vec<Vec<u8>>, volume: f32, device: &
             }
             return;
         }
-        if let Some(choice) = questions.iter().find(|c| c.get_selection().unwrap_or(0) == 0) {
-            speech::say_error(&t("Answer each question first."));
-            choice.set_focus();
-            return;
+        match answers_to_send(&task_send, &controls_send) {
+            Ok(found) => {
+                *answers_send.borrow_mut() = found;
+                dialog.end_modal(SEND);
+            }
+            Err((i, why)) => {
+                speech::say_error(&why);
+                let c = &controls_send[i];
+                match &c.asked {
+                    Asked::One(list) => list.set_focus(),
+                    Asked::Many(boxes) => {
+                        if let Some(b) = boxes.first() {
+                            b.set_focus();
+                        }
+                    }
+                    Asked::Text(text) => text.set_focus(),
+                }
+            }
         }
-        dialog.end_modal(SEND);
     });
     skip.on_click(move |_| dialog.end_modal(SKIP));
     about.set_insertion_point(0);
@@ -147,18 +311,9 @@ fn rate(parent: &Frame, task: &Task, songs: Vec<Vec<u8>>, volume: f32, device: &
     player.borrow_mut().stop();
 
     let seconds: BTreeMap<String, u32> = task.songs.iter().zip(listened.borrow().iter()).map(|(s, n)| (s.key.clone(), *n)).collect();
-    let answers: BTreeMap<String, String> = task
-        .questions
-        .iter()
-        .zip(&choices)
-        .map(|(q, c)| {
-            let picked = c.get_selection().unwrap_or(0) as usize;
-            (q.key.clone(), if picked >= 1 && picked <= count { task.songs[picked - 1].key.clone() } else { "neither".to_string() })
-        })
-        .collect();
     dialog.destroy();
     match answer {
-        SEND => Rated::Send { answers, listened: seconds },
+        SEND => Rated::Send { answers: answers.take(), listened: seconds },
         SKIP => Rated::Skip { listened: seconds },
         _ => Rated::Close,
     }
@@ -241,7 +396,7 @@ impl App {
     }
 
     /// Suno wants its Turnstile check with this rating: passed here, then the rating goes again with it.
-    pub(crate) fn listen_check(&mut self, task_id: String, answers: BTreeMap<String, String>, listened: BTreeMap<String, u32>) {
+    pub(crate) fn listen_check(&mut self, task_id: String, answers: BTreeMap<String, serde_json::Value>, listened: BTreeMap<String, u32>) {
         captcha::solve(&self.frame, CHECK_PROVIDER, move |result| match result {
             Ok((token, _)) => with_app(|app| app.net.send(Command::ListenSend { task_id, answers, listened, check: Some(token) })),
             Err(why) => speech::say_error(&why),

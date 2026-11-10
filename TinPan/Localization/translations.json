@@ -5699,15 +5699,25 @@
   "Меню «Довідка», «Повідомити про проблему» (Ctrl+Shift+B) і «Запропонувати функцію» (Ctrl+Shift+F) надсилають повідомлення лише авторові Tin Pan; обліковий запис не потрібен. «Зв’язатися з автором» показує електронну пошту Ернесто, Mastodon і канал новин у Telegram, а «Пожертвувати» показує, як підтримати Tin Pan; Enter відкриває вибране. У пропозиції оновлення теж є кнопка «Пожертвувати». Звіт про проблему може містити журнал Tin Pan, у якому немає паролів; ім’я користувача Windows спершу видаляється.",
   "Menú Ayuda, Informar de un problema (Ctrl+Shift+B) y Sugerir una función (Ctrl+Shift+F) envían un mensaje en privado al autor de Tin Pan; no hace falta cuenta. Contactar con el autor muestra el correo de Ernesto, Mastodon y el canal de noticias de Telegram, y Donar muestra formas de apoyar Tin Pan; Intro abre la elegida. La oferta de actualización también tiene un botón Donar. Un informe de problema puede incluir el registro de Tin Pan, que no tiene contraseñas; antes se quita su nombre de usuario de Windows."
  ],
+ "Answer {0} first.": [
+  "Răspunde mai întâi la {0}.",
+  "Спершу дайте відповідь: {0}.",
+  "Primero responde: {0}."
+ ],
+ "Say what Other means for {0} first.": [
+  "Spune mai întâi ce înseamnă Altceva la {0}.",
+  "Спершу напишіть, що означає «Інше» для: {0}.",
+  "Primero di qué significa Otro en: {0}."
+ ],
  "Listen for Credits": [
   "Ascultă pentru credite",
   "Слухати за кредити",
   "Escuchar para ganar créditos"
  ],
- "Listen to each song for at least {0} seconds, answer each question, then Send rating.": [
-  "Ascultă fiecare melodie cel puțin {0} secunde, răspunde la fiecare întrebare, apoi Trimite evaluarea.",
-  "Прослухайте кожну пісню щонайменше {0} секунд, дайте відповідь на кожне запитання, тоді «Надіслати оцінку».",
-  "Escucha cada canción al menos {0} segundos, responde cada pregunta y luego Enviar valoración."
+ "Listen to each song for at least {0} seconds, answer the questions, then Send rating.": [
+  "Ascultă fiecare melodie cel puțin {0} secunde, răspunde la întrebări, apoi Trimite evaluarea.",
+  "Прослухайте кожну пісню щонайменше {0} секунд, дайте відповіді на запитання, тоді «Надіслати оцінку».",
+  "Escucha cada canción al menos {0} segundos, responde las preguntas y luego Enviar valoración."
  ],
  "This one earns {0} credits.": [
   "Aceasta aduce {0} credite.",
@@ -5729,15 +5739,15 @@
   "Без відповіді",
   "Sin responder"
  ],
- "Song {0}": [
-  "Melodia {0}",
-  "Пісня {0}",
-  "Canción {0}"
+ "Other": [
+  "Altceva",
+  "Інше",
+  "Otro"
  ],
- "Neither": [
-  "Niciuna",
-  "Жодна",
-  "Ninguna"
+ "Other, for {0}:": [
+  "Altceva, la {0}:",
+  "Інше, для: {0}:",
+  "Otro, en {0}:"
  ],
  "_Send rating": [
   "_Trimite evaluarea",
@@ -5758,11 +5768,6 @@
   "Ascultă mai întâi melodia {0} cel puțin {1} secunde.",
   "Спершу прослухайте пісню {0} щонайменше {1} секунд.",
   "Primero escucha la canción {0} al menos {1} segundos."
- ],
- "Answer each question first.": [
-  "Răspunde mai întâi la fiecare întrebare.",
-  "Спершу дайте відповідь на кожне запитання.",
-  "Primero responde cada pregunta."
  ],
  "Choose one": [
   "Alege una",
@@ -6144,6 +6149,11 @@
   "Виберіть запис фрази",
   "Elige la grabación de la frase"
  ],
+ "Free plan": [
+  "Planul gratuit",
+  "Безкоштовний план",
+  "Plan gratuito"
+ ],
  "Tin Pan couldn't read this {0} file to clean it up.": [
   "Tin Pan nu a putut citi acest fișier {0} ca să-l curețe.",
   "Tin Pan не зміг прочитати цей файл {0}, щоб його очистити.",
@@ -6178,6 +6188,16 @@
   "Nou: {0}",
   "Нове: {0}",
   "Nuevo: {0}"
+ ],
+ "Song {0}": [
+  "Melodia {0}",
+  "Пісня {0}",
+  "Canción {0}"
+ ],
+ "Neither": [
+  "Niciuna",
+  "Жодна",
+  "Ninguna"
  ],
  "Suno gave a song address this app won't use.": [
   "Suno a dat o adresă de melodie pe care aplicația nu o folosește.",

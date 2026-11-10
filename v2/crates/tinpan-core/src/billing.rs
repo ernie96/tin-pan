@@ -115,12 +115,12 @@ impl BillingInfo {
     }
 
     /// True for paid plans, false for the free plan, None when the reply doesn't say. WAV needs a paid plan.
+    /// A reply that names no plan is the free plan when there's no active subscription either.
     pub fn is_paid(&self) -> Option<bool> {
-        let plan = self.plan.as_ref()?;
-        let key = plan.plan_key.as_deref().unwrap_or("").to_lowercase();
-        let name = plan.name.as_deref().unwrap_or("").to_lowercase();
+        let key = self.plan.as_ref().and_then(|p| p.plan_key.as_deref()).unwrap_or("").trim().to_lowercase();
+        let name = self.plan.as_ref().and_then(|p| p.name.as_deref()).unwrap_or("").trim().to_lowercase();
         if key.is_empty() && name.is_empty() {
-            return None;
+            return if self.is_active { None } else { Some(false) };
         }
         Some(!(key.contains("free") || name.contains("free") || key == "basic" || name == "basic"))
     }
@@ -156,9 +156,12 @@ impl BillingInfo {
     /// Shift+F2: plan, renewal, credits, downloads and the free plan's allowances.
     pub fn subscription_text(&self, style_personalization: Option<bool>) -> String {
         let state = if self.is_active { t("active") } else { t("not active") };
-        let mut parts = vec![match self.renewal() {
-            Some(renews) => tf("{0}, {1}, renews {2}.", &[&self.plan_name(), &state, &renews]),
-            None => tf("{0}, {1}.", &[&self.plan_name(), &state]),
+        // The free plan isn't a subscription, so "not active" says nothing about it.
+        let free = self.is_paid() == Some(false) && !self.is_active;
+        let mut parts = vec![match (self.renewal(), free) {
+            (_, true) => format!("{}.", self.plan_name()),
+            (Some(renews), false) => tf("{0}, {1}, renews {2}.", &[&self.plan_name(), &state, &renews]),
+            (None, false) => tf("{0}, {1}.", &[&self.plan_name(), &state]),
         }];
         parts.push(self.credits_text());
         if let Some(usage) = &self.download_usage
@@ -205,7 +208,7 @@ impl BillingInfo {
     pub fn plan_name(&self) -> String {
         let name = self.plan.as_ref().and_then(|p| p.name.as_deref()).map(str::trim).unwrap_or("");
         if name.is_empty() {
-            return t("Plan unknown");
+            return if self.is_paid() == Some(false) { t("Free plan") } else { t("Plan unknown") };
         }
         let name = if name.to_lowercase().ends_with(" plan") { name[..name.len() - 5].trim_end() } else { name };
         tf("{0} plan", &[&name])
@@ -282,6 +285,10 @@ mod tests {
     fn a_paid_plan_and_odd_values() {
         let info = BillingInfo::read(r#"{"total_credits_left": "12", "plan": {"name": "Pro"}, "accessible_features": [{"name": "studio"}]}"#).unwrap();
         assert_eq!((info.is_paid(), info.has_studio(), info.total_credits_left), (Some(true), true, Some(12)));
-        assert_eq!(BillingInfo::read("{}").unwrap().is_paid(), None);
+        assert_eq!(BillingInfo::read(r#"{"is_active": true}"#).unwrap().is_paid(), None);
+        // A free account: no plan named, no active subscription.
+        let free = BillingInfo::read(r#"{"is_active": false, "plan": null, "total_credits_left": 910, "credits": 810, "monthly_limit": 100, "monthly_usage": 0}"#).unwrap();
+        assert_eq!((free.is_paid(), free.plan_name()), (Some(false), "Free plan".to_string()));
+        assert!(free.subscription_text(None).starts_with("Free plan. 910 credits left."));
     }
 }

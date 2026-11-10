@@ -2510,7 +2510,7 @@ dependencies = [
 
 [[package]]
 name = "tinpan"
-version = "2.1.1"
+version = "2.1.2"
 dependencies = [
  "accesskit",
  "block",
@@ -2537,7 +2537,7 @@ dependencies = [
 
 [[package]]
 name = "tinpan-core"
-version = "2.1.1"
+version = "2.1.2"
 dependencies = [
  "aes",
  "aes-gcm",
@@ -3190,7 +3190,7 @@ dependencies = [
 
 [[package]]
 name = "xtask"
-version = "2.1.1"
+version = "2.1.2"
 dependencies = [
  "shipfitter",
 ]
