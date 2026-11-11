@@ -127,6 +127,9 @@ struct App {
     /// An update check or download is under way; and the timer for the quiet one after startup.
     updating: bool,
     update_timer: Timer<Frame>,
+    /// The update check repeated every 6 hours while Tin Pan stays open, and a version it found that waits
+    /// until nothing would be interrupted.
+    update_schedule: tinpan_core::periodic::PeriodicCheck<tinpan_core::update::UpdateInfo>,
     /// Resume (Ctrl+Shift+F8): the song asked for and the second to start it at.
     resume_at: Option<(String, f64)>,
     /// The song starting on Suno's own player, until it has.
@@ -298,6 +301,7 @@ fn main() {
             output_names: Default::default(),
             updating: false,
             update_timer,
+            update_schedule: tinpan_core::periodic::PeriodicCheck::new(std::time::Instant::now(), tinpan_core::periodic::CHECK_EVERY),
             resume_at: None,
             web_song: None,
             live_for: None,
@@ -310,6 +314,7 @@ fn main() {
         }
         app.start();
         app.after_startup_updates();
+        updates::start_repeat_timer(&app.frame);
         APP.with(|cell| *cell.borrow_mut() = Some(app));
     });
 }

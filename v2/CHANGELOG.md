@@ -1,5 +1,12 @@
 # Tin Pan 2 changes
 
+## Unreleased
+
+- Tin Pan now also checks for a new version every 6 hours while it's open, not only when it starts. It says
+  nothing unless there is one, and it waits to ask until Tin Pan is the window in front and no song is starting,
+  no download is running and no other Tin Pan window is open. Saying No means it isn't offered again by itself.
+  Settings, Check for new versions when Tin Pan starts, turns both checks off.
+
 ## 2.2.0
 
 - You can mark several songs in a list and act on them at once. Ctrl+Space marks or unmarks the selected song,

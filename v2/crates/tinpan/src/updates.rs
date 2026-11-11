@@ -1,5 +1,6 @@
 //! Checking for, offering and installing updates, as Tin Pan 1 does: a quiet check 10 seconds after
-//! startup (when Settings allows it), which speaks only when there's a version you haven't declined; Help,
+//! startup and every 6 hours while Tin Pan stays open (when Settings allows it), which speaks only when there's
+//! a version you haven't declined, and waits to offer it until nothing would be interrupted; Help,
 //! Check for updates always answers. Downloads are verified before anything is installed. On Windows the
 //! helper swaps TinPan.exe and starts it again; elsewhere the release page opens, until those builds can
 //! install themselves.
@@ -8,6 +9,7 @@ use std::path::PathBuf;
 use std::time::Duration;
 
 use tinpan_core::i18n::{t, tf};
+use tinpan_core::periodic::{TICK_EVERY, Tick};
 use tinpan_core::update::{self, UpdateInfo, Version};
 use wxdragon::prelude::*;
 
@@ -90,6 +92,53 @@ impl App {
             self.updating = false;
             return;
         }
+        if !manual && !self.quiet_enough_for_update_offer() {
+            log::info!("Update: Tin Pan {version} is available; it's offered once nothing would be interrupted.");
+            self.updating = false;
+            self.update_schedule.hold(update);
+            return;
+        }
+        self.offer_update(update, manual);
+    }
+
+    /// Every minute: runs the repeated update check when it's due, and offers a version it found earlier once
+    /// nothing would be interrupted.
+    pub(crate) fn update_tick(&mut self) {
+        if self.updating {
+            return;
+        }
+        let enabled = self.config.current.update.check_at_startup;
+        let idle = self.quiet_enough_for_update_offer();
+        match self.update_schedule.tick(std::time::Instant::now(), enabled, idle) {
+            Tick::Nothing => {}
+            Tick::Check => {
+                log::info!("Update: checking again (every 6 hours while open).");
+                self.check_for_updates(false);
+            }
+            Tick::Offer(update) => {
+                // Declined in the meantime (the start-up check's offer, say): stays declined.
+                if self.config.current.update.skipped_version != update.version.short() {
+                    self.updating = true;
+                    self.offer_update(update, false);
+                }
+            }
+        }
+    }
+
+    /// No dialog now if Tin Pan isn't the window in front, another of its windows is open (sign-in, Create,
+    /// a form), or something is starting or running: a song being fetched or started, a download.
+    fn quiet_enough_for_update_offer(&self) -> bool {
+        self.sign_in_window.is_none()
+            && self.shown_create().is_none()
+            && !crate::tool_form::open_forms().iter().any(|d| d.is_shown())
+            && self.wanted.is_none()
+            && self.web_song.is_none()
+            && !crate::net::long_jobs_running()
+            && speech::tin_pan_in_front()
+    }
+
+    fn offer_update(&mut self, update: UpdateInfo, manual: bool) {
+        let version = update.version.short();
         let notes = update::plain_text(&update::changes_only(&update.notes));
         let whats_new = if notes.is_empty() { String::new() } else { format!("{}\n{notes}\n\n", t("What's new:")) };
         let reminder = if manual { String::new() } else { format!("\n\n{}", t("If you choose No, Tin Pan won't remind you about this version. Help, Check for updates still finds it.")) };
@@ -215,6 +264,14 @@ pub fn bring_to_front(frame: &Frame) {
     }
     #[cfg(not(windows))]
     let _ = frame;
+}
+
+/// The one-minute timer behind the check every 6 hours, and the offer that waits until Tin Pan is idle.
+pub fn start_repeat_timer(frame: &Frame) {
+    let timer = Timer::new(frame);
+    timer.on_tick(|_| with_app(App::update_tick));
+    timer.start(TICK_EVERY.as_millis() as i32, false);
+    std::mem::forget(timer);
 }
 
 /// The timer that runs the startup check.

@@ -300,6 +300,30 @@ pub struct Network {
     responses: Receiver<Response>,
 }
 
+/// Long jobs (song fetches, downloads, clean-ups, creating) running on their own threads right now.
+static LONG_JOBS: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+
+/// Counts one long job for as long as it lives, even if it panics.
+struct LongJob;
+
+impl LongJob {
+    fn start() -> Self {
+        LONG_JOBS.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        Self
+    }
+}
+
+impl Drop for LongJob {
+    fn drop(&mut self) {
+        LONG_JOBS.fetch_sub(1, std::sync::atomic::Ordering::Relaxed);
+    }
+}
+
+/// Whether a song is being fetched, a download or clean-up is running, or anything else long is under way.
+pub fn long_jobs_running() -> bool {
+    LONG_JOBS.load(std::sync::atomic::Ordering::Relaxed) > 0
+}
+
 impl Network {
     pub fn start(frame: &Frame) -> Self {
         let (commands, inbox) = mpsc::channel::<Command>();
@@ -312,7 +336,9 @@ impl Network {
                 // never wait behind them.
                 if command.is_long() {
                     let (api, outbox) = (api.clone(), outbox.clone());
+                    let job = LongJob::start();
                     thread::spawn(move || {
+                        let _job = job;
                         let report = |response| {
                             if outbox.send(response).is_ok() {
                                 waker.wake();

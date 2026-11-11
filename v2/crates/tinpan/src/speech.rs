@@ -55,6 +55,15 @@ pub fn say_quietly(text: &str) {
 }
 
 /// What speech goes through, for About: the screen reader prism found, as Tin Pan 1 names it.
+/// Whether a Tin Pan window is the one in front (true when that can't be told), so an update offer doesn't
+/// pop up behind the program the user is working in.
+pub fn tin_pan_in_front() -> bool {
+    #[cfg(all(any(windows, target_os = "macos", target_os = "linux"), feature = "background-speech"))]
+    return background::tin_pan_in_front();
+    #[allow(unreachable_code)]
+    true
+}
+
 pub fn output_name() -> String {
     #[cfg(all(any(windows, target_os = "macos", target_os = "linux"), feature = "background-speech"))]
     if let Some(name) = background::name() {

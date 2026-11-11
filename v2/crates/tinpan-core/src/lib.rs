@@ -18,6 +18,7 @@ pub mod json;
 pub mod link;
 pub mod listen;
 pub mod lyrics;
+pub mod periodic;
 pub mod personas;
 pub mod playlist;
 pub mod report;
