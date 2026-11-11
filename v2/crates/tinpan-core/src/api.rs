@@ -369,9 +369,12 @@ impl SunoApi {
         Ok(())
     }
 
-    /// Moves the song to Suno's trash, or back out of it.
-    pub fn set_trashed(&self, clip_id: &str, trashed: bool) -> Result<()> {
-        self.send(Method::POST, "/api/gen/trash", Some(&json!({ "clip_ids": [clip_id], "trash": trashed }))).map(drop)
+    /// Moves songs to Suno's trash, or back out of it.
+    pub fn set_trashed(&self, clip_ids: &[&str], trashed: bool) -> Result<()> {
+        for chunk in clip_ids.chunks(20) {
+            self.send(Method::POST, "/api/gen/trash", Some(&json!({ "clip_ids": chunk, "trash": trashed })))?;
+        }
+        Ok(())
     }
 
     /// The song's sung words with their times (GET /api/gen/{id}/aligned_lyrics/v2/); empty when Suno has none.

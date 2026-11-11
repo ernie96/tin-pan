@@ -17,6 +17,7 @@ mod help;
 mod instance;
 mod listen;
 mod live;
+mod marks;
 mod logging;
 mod making;
 mod net;
@@ -437,16 +438,14 @@ impl App {
                 let mark = !app.not_interested.contains(&song.id);
                 app.net.send(Command::Change { clip_id: song.id, change: Change::NotInterested(mark) });
             }),
-            Action::DeleteForever => self.with_song(|app, song| {
-                if song.is_trashed != Some(true) {
-                    speech::say(&t("Only songs in the trash can be deleted for good. Move it to the trash first."));
-                    return;
+            Action::DeleteForever => self.delete_forever(),
+            Action::Mark => self.toggle_mark(),
+            Action::MarkAll => self.mark_all(),
+            Action::ClearMarks => {
+                if !self.clear_marks() {
+                    speech::say(&t("No songs are marked."));
                 }
-                let question = tf("Delete \"{0}\" for good? This can't be undone.", &[&song.display_title()]);
-                if dialogs::confirm(&app.frame, &question, &t("Delete forever")) {
-                    app.net.send(Command::Change { clip_id: song.id, change: Change::DeletedForever });
-                }
-            }),
+            }
             Action::Visibility => self.with_song(|app, song| {
                 app.net.send(Command::Change { clip_id: song.id, change: Change::Public(!song.is_public) });
             }),
@@ -674,7 +673,8 @@ impl App {
                 }
             }
             Response::Reacted { clip_id, state, asked } => self.reacted(&clip_id, state.as_deref(), asked),
-            Response::Trashed { clip_id, trashed } => self.trashed(&clip_id, trashed),
+            Response::Trashed { clip_ids, trashed } => self.trashed(&clip_ids, trashed),
+            Response::DeletedForever { clip_ids } => self.deleted_forever(&clip_ids),
             Response::Lyrics { clip, text } => {
                 if text.trim().is_empty() {
                     speech::say(&t("This song has no lyrics."));
@@ -720,7 +720,7 @@ impl App {
                 section.refresh(Select::Start);
                 speech::say(&tf("Moved {0} to trash.", &[&name]));
             }
-            Response::AddedToPlaylist(playlist) => self.added_to_playlist(playlist),
+            Response::AddedToPlaylist { playlist, clip_ids } => self.added_to_playlist(playlist, &clip_ids),
             Response::Following { songs, announce } => self.following_loaded(songs, announce),
             Response::Explore { shelves, announce } => self.explore_loaded(shelves, announce),
             Response::Contests { contests, songs, announce } => self.contests_loaded(contests, songs, announce),
@@ -747,7 +747,7 @@ impl App {
             Response::Cowritten { text, to_form } => self.cowritten(text, to_form),
             Response::LyricsDrafts(drafts) => self.lyrics_drafts_loaded(drafts),
             Response::DraftText { draft, text } => self.draft_text_loaded(draft, text),
-            Response::RemovedFromPlaylist { playlist_id, clip_id } => self.removed_from_playlist(&playlist_id, &clip_id),
+            Response::RemovedFromPlaylist { playlist_id, clip_ids } => self.removed_from_playlist(&playlist_id, &clip_ids),
             // Moved here already, when the key was pressed.
             Response::MovedInPlaylist => {}
             // Saved only while signed in: a rotation that arrives just after signing out mustn't sign you back in.
@@ -1097,13 +1097,6 @@ impl App {
         let Some(song) = self.find_song(clip_id) else { return };
         let title = song.display_title();
         let said = match change {
-            Change::DeletedForever => {
-                if self.playing.as_ref().is_some_and(|p| p.id == clip_id) {
-                    self.stop();
-                }
-                self.remove_everywhere(clip_id);
-                tf("Deleted {0} for good.", &[&title])
-            }
             Change::NotInterested(mark) => {
                 if mark {
                     self.not_interested.insert(clip_id.to_string());
@@ -1137,35 +1130,81 @@ impl App {
         speech::say(&said);
     }
 
-    /// Moves the song to Suno's trash (asking first), or restores one that's in it.
+    /// Moves the song, or the marked songs, to Suno's trash (asking first). Songs already in the trash are
+    /// restored instead, when every one of them is.
     fn trash(&mut self) {
-        self.with_song(|app, song| {
-            if song.is_trashed == Some(true) {
-                app.net.send(Command::Trash { clip_id: song.id, trashed: false });
+        self.with_songs(|app, songs| {
+            let ids = |songs: &[SunoClip]| songs.iter().map(|s| s.id.clone()).collect::<Vec<_>>();
+            if songs.iter().all(|s| s.is_trashed == Some(true)) {
+                app.net.send(Command::Trash { clip_ids: ids(&songs), trashed: false });
                 return;
             }
-            let question = tf("Move \"{0}\" to your Suno trash?", &[&song.display_title()]);
+            let songs: Vec<SunoClip> = songs.into_iter().filter(|s| s.is_trashed != Some(true)).collect();
+            let question = match songs.as_slice() {
+                [one] => tf("Move \"{0}\" to your Suno trash?", &[&one.display_title()]),
+                _ => tf("Move {0} to your Suno trash?", &[&marks::songs_text(&songs)]),
+            };
             if dialogs::confirm(&app.frame, &question, &t("Move to trash")) {
-                app.net.send(Command::Trash { clip_id: song.id, trashed: true });
+                app.net.send(Command::Trash { clip_ids: ids(&songs), trashed: true });
             }
         });
     }
 
-    fn trashed(&mut self, clip_id: &str, trashed: bool) {
-        let Some(song) = self.find_song(clip_id) else { return };
-        let title = song.display_title();
+    /// The songs named, as one title or a count, before they leave the lists.
+    fn songs_named(&self, clip_ids: &[String]) -> String {
+        let songs: Vec<SunoClip> = clip_ids.iter().filter_map(|id| self.find_song(id)).collect();
+        marks::songs_text(&songs)
+    }
+
+    fn trashed(&mut self, clip_ids: &[String], trashed: bool) {
+        let named = self.songs_named(clip_ids);
         if !trashed {
-            self.each_copy(clip_id, |s| s.is_trashed = Some(false));
+            for id in clip_ids {
+                self.each_copy(id, |s| s.is_trashed = Some(false));
+            }
+            self.unmark(clip_ids);
             self.refresh_rows(Select::Keep);
-            speech::say(&tf("Restored {0} from the trash.", &[&title]));
+            speech::say(&tf("Restored {0} from the trash.", &[&named]));
             return;
         }
-        if self.playing.as_ref().is_some_and(|p| p.id == clip_id) {
+        self.remove_songs(clip_ids);
+        speech::say(&tf("Moved {0} to trash.", &[&named]));
+    }
+
+    /// Delete forever (Shift+Delete): the song or the marked songs that are in the trash, asking first.
+    fn delete_forever(&mut self) {
+        self.with_songs(|app, songs| {
+            let songs: Vec<SunoClip> = songs.into_iter().filter(|s| s.is_trashed == Some(true)).collect();
+            let question = match songs.as_slice() {
+                [] => {
+                    speech::say(&t("Only songs in the trash can be deleted for good. Move it to the trash first."));
+                    return;
+                }
+                [one] => tf("Delete \"{0}\" for good? This can't be undone.", &[&one.display_title()]),
+                _ => tf("Delete {0} for good? This can't be undone.", &[&marks::songs_text(&songs)]),
+            };
+            if dialogs::confirm(&app.frame, &question, &t("Delete forever")) {
+                app.net.send(Command::DeleteForever { clip_ids: songs.into_iter().map(|s| s.id).collect() });
+            }
+        });
+    }
+
+    fn deleted_forever(&mut self, clip_ids: &[String]) {
+        let named = self.songs_named(clip_ids);
+        self.remove_songs(clip_ids);
+        speech::say(&tf("Deleted {0} for good.", &[&named]));
+    }
+
+    /// Songs gone from Suno (trashed or deleted): out of every list, stopping one that's playing.
+    fn remove_songs(&mut self, clip_ids: &[String]) {
+        if self.playing.as_ref().is_some_and(|p| clip_ids.contains(&p.id)) {
             self.stop();
         }
-        self.remove_everywhere(clip_id);
+        for id in clip_ids {
+            self.remove_everywhere(id);
+        }
+        self.unmark(clip_ids);
         self.refresh_rows(Select::Keep);
-        speech::say(&tf("Moved {0} to trash.", &[&title]));
     }
 
     // ── Playing ─────────────────────────────────────────────────────────

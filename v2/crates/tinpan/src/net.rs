@@ -28,7 +28,10 @@ pub enum Command {
     FetchSong { clip: Box<SunoClip>, ahead: bool },
     /// Like ("LIKE"), dislike ("DISLIKE") or clear (None).
     React { clip_id: String, reaction: Option<&'static str> },
-    Trash { clip_id: String, trashed: bool },
+    /// Into Suno's trash, or out of it.
+    Trash { clip_ids: Vec<String>, trashed: bool },
+    /// Songs already in the trash, deleted for good.
+    DeleteForever { clip_ids: Vec<String> },
     /// The song's words: its stored lyrics, or its timed words for songs Suno wrote the words for.
     Lyrics { clip: Box<SunoClip> },
     /// Your workspaces, for the filters.
@@ -55,8 +58,8 @@ pub enum Command {
     RenamePlaylist { playlist_id: String, name: String, description: String },
     TrashPlaylist { playlist_id: String, name: String },
     /// Into the playlist given, or a new one with `new_name`.
-    AddToPlaylist { playlist: Option<Playlist>, new_name: String, clip_id: String },
-    RemoveFromPlaylist { playlist_id: String, clip_id: String },
+    AddToPlaylist { playlist: Option<Playlist>, new_name: String, clip_ids: Vec<String> },
+    RemoveFromPlaylist { playlist_id: String, clip_ids: Vec<String> },
     MovePlaylistSong { playlist_id: String, clip_id: String, from: usize, to: usize },
     Following { announce: bool },
     Explore { announce: bool },
@@ -189,7 +192,6 @@ pub enum Change {
     Public(bool),
     RemixAllowed(bool),
     NotInterested(bool),
-    DeletedForever,
 }
 
 pub enum Response {
@@ -204,7 +206,8 @@ pub enum Response {
     AheadFailed { clip_id: String },
     /// Suno's reaction now: "L", "D" or none.
     Reacted { clip_id: String, state: Option<String>, asked: Option<&'static str> },
-    Trashed { clip_id: String, trashed: bool },
+    Trashed { clip_ids: Vec<String>, trashed: bool },
+    DeletedForever { clip_ids: Vec<String> },
     Lyrics { clip: Box<SunoClip>, text: String },
     /// Empty when they didn't load; the filters still open, as in Tin Pan 1.
     Workspaces(Vec<tinpan_core::api::Workspace>),
@@ -228,8 +231,8 @@ pub enum Response {
     PlaylistMade(Playlist),
     PlaylistRenamed,
     PlaylistTrashed { playlist_id: String, name: String },
-    AddedToPlaylist(Playlist),
-    RemovedFromPlaylist { playlist_id: String, clip_id: String },
+    AddedToPlaylist { playlist: Playlist, clip_ids: Vec<String> },
+    RemovedFromPlaylist { playlist_id: String, clip_ids: Vec<String> },
     /// Suno took a move the list had made already.
     MovedInPlaylist,
     Following { songs: Vec<SunoClip>, announce: bool },
@@ -451,6 +454,10 @@ fn download_all(api: &SunoApi, songs: &[(SunoClip, PathBuf)], format: &str, dir:
     Response::Progress(summary)
 }
 
+fn strs(ids: &[String]) -> Vec<&str> {
+    ids.iter().map(String::as_str).collect()
+}
+
 fn run(api: &SunoApi, command: Command, report: &dyn Fn(Response)) -> Vec<Response> {
     use tinpan_core::i18n::{t, tf};
     let mut out = match command {
@@ -479,8 +486,12 @@ fn run(api: &SunoApi, command: Command, report: &dyn Fn(Response)) -> Vec<Respon
             Ok(state) => vec![Response::Reacted { clip_id, state, asked: reaction }],
             Err(e) => vec![Response::Failed(e)],
         },
-        Command::Trash { clip_id, trashed } => match api.set_trashed(&clip_id, trashed) {
-            Ok(()) => vec![Response::Trashed { clip_id, trashed }],
+        Command::Trash { clip_ids, trashed } => match api.set_trashed(&strs(&clip_ids), trashed) {
+            Ok(()) => vec![Response::Trashed { clip_ids, trashed }],
+            Err(e) => vec![Response::Failed(e)],
+        },
+        Command::DeleteForever { clip_ids } => match api.delete_forever(&strs(&clip_ids)) {
+            Ok(()) => vec![Response::DeletedForever { clip_ids }],
             Err(e) => vec![Response::Failed(e)],
         },
         Command::Change { clip_id, change } => {
@@ -489,7 +500,6 @@ fn run(api: &SunoApi, command: Command, report: &dyn Fn(Response)) -> Vec<Respon
                 Change::Public(public) => api.set_public(&clip_id, *public),
                 Change::RemixAllowed(allowed) => api.set_remix_allowed(&clip_id, *allowed),
                 Change::NotInterested(yes) => api.set_not_interested(&clip_id, *yes),
-                Change::DeletedForever => api.delete_forever(&[clip_id.as_str()]),
             };
             match done {
                 Ok(()) => vec![Response::Changed { clip_id, change }],
@@ -589,18 +599,18 @@ fn run(api: &SunoApi, command: Command, report: &dyn Fn(Response)) -> Vec<Respon
             Ok(()) => vec![Response::PlaylistTrashed { playlist_id, name }],
             Err(e) => vec![Response::Failed(e)],
         },
-        Command::AddToPlaylist { playlist, new_name, clip_id } => {
+        Command::AddToPlaylist { playlist, new_name, clip_ids } => {
             let target = match playlist {
                 Some(p) => Ok(p),
                 None => api.create_playlist(&new_name),
             };
-            match target.and_then(|p| api.add_to_playlist(&p.id, &[clip_id.as_str()]).map(|()| p)) {
-                Ok(p) => vec![Response::AddedToPlaylist(p)],
+            match target.and_then(|p| api.add_to_playlist(&p.id, &strs(&clip_ids)).map(|()| p)) {
+                Ok(playlist) => vec![Response::AddedToPlaylist { playlist, clip_ids }],
                 Err(e) => vec![Response::Failed(e)],
             }
         }
-        Command::RemoveFromPlaylist { playlist_id, clip_id } => match api.remove_from_playlist(&playlist_id, &[clip_id.as_str()]) {
-            Ok(()) => vec![Response::RemovedFromPlaylist { playlist_id, clip_id }],
+        Command::RemoveFromPlaylist { playlist_id, clip_ids } => match api.remove_from_playlist(&playlist_id, &strs(&clip_ids)) {
+            Ok(()) => vec![Response::RemovedFromPlaylist { playlist_id, clip_ids }],
             Err(e) => vec![Response::Failed(e)],
         },
         // The song moved in Tin Pan already; if Suno refused, the playlist as Suno has it comes back too.

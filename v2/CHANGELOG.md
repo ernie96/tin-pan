@@ -1,5 +1,13 @@
 # Tin Pan 2 changes
 
+## 2.2.0
+
+- You can mark several songs in a list and act on them at once. Ctrl+Space marks or unmarks the selected song,
+  Shift+Up and Shift+Down mark songs as you move, and Ctrl+A marks the whole list; marked songs say "marked".
+  With songs marked, Delete moves them all to the trash (asking first), or out of a playlist or Up next;
+  Shift+Delete, Add to playlist, Add to queue, Play next and the MP3, WAV and Download commands work on all
+  of them too. Escape clears the marks. Other commands still act on the selected song.
+
 ## 2.1.2
 
 ### Fixed

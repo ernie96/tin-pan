@@ -5409,6 +5409,21 @@
   "_Грати наступною",
   "Escuchar _justo después"
  ],
+ "Mark or _unmark": [
+  "Marc_hează sau demarchează",
+  "Позначит_и або зняти позначку",
+  "Marcar o _quitar la marca"
+ ],
+ "Mark the _whole list": [
+  "Marchează toat_ă lista",
+  "Позначити вс_і пісні",
+  "Marcar toda la lista a la ve_z"
+ ],
+ "Cl_ear marks": [
+  "Șterge marca_jele",
+  "Зн_яти всі позначки",
+  "Des_hacer las marcas"
+ ],
  "About this cr_eator": [
   "Despre acest cr_eator",
   "Про _цього автора",
@@ -5624,6 +5639,16 @@
   "_Посилання на пісню",
   "En_lace de la canción"
  ],
+ "None of the marked songs are finished.": [
+  "Niciuna dintre melodiile marcate nu e gata.",
+  "Жодна з позначених пісень ще не готова.",
+  "Ninguna de las canciones marcadas está terminada."
+ ],
+ "Every marked song is already downloaded.": [
+  "Toate melodiile marcate sunt deja descărcate.",
+  "Усі позначені пісні вже завантажено.",
+  "Todas las canciones marcadas ya están descargadas."
+ ],
  "Fade _in over this many seconds (0 for none)": [
   "Estompare la _început pe atâtea secunde (0 pentru deloc)",
   "Наростання на _початку, стільки секунд (0 — без нього)",
@@ -5649,6 +5674,11 @@
   "Відкриття. Списки ліворуч: «У тренді», «Від тих, за ким ви стежите», Огляд із його полицями, Конкурси та списки, відкриті з пісні. Enter відкриває список; у його піснях Enter відтворює, Пробіл ставить на паузу, стрілки вліво і вправо перемотують. Delete у списках закриває відкритий вами список. Ctrl+G відкриває посилання Suno, Ctrl+Shift+E шукає по всьому Suno, а «Далі» містить пісні, які ви додали в чергу. F5 оновлює.",
   "Descubrir. Listas a la izquierda: Tendencias, De las personas que sigue, Explorar y sus estantes, Concursos y las listas abiertas desde una canción. Intro abre una; en sus canciones Intro reproduce, Espacio pausa, Izquierda y Derecha avanzan o retroceden. Suprimir en las listas cierra una lista que abriste. Ctrl+G abre un enlace de Suno, Ctrl+Shift+E busca en todo Suno y A continuación guarda las canciones que pusiste en cola. F5 actualiza."
  ],
+ "{0} marked; Escape clears the marks.": [
+  "{0} marcate; Escape șterge marcajele.",
+  "Позначено: {0}; Escape прибирає позначки.",
+  "{0} marcadas; Escape quita las marcas."
+ ],
  "Include Tin Pan's _log (it has no passwords, and your user name is taken out)": [
   "Include _jurnalul Tin Pan (nu conține parole, iar numele de utilizator este eliminat)",
   "Додати _журнал Tin Pan (у ньому немає паролів, а ім’я користувача видаляється)",
@@ -5673,6 +5703,16 @@
   "F8 sau tasta media Redare/Pauză: redare sau pauză; când nu se redă nimic, pornește melodia selectată.\nShift+F8 sau tasta media Oprire: oprire.\nF7 și F9, sau tastele media Anterior și Următor: melodia anterioară și următoare.\nShift+F7 și Shift+F9: înapoi și înainte 10 secunde. Stânga și dreapta într-o listă de melodii: 5 secunde.\nCtrl+F7 și Ctrl+F9: înapoi și înainte 10 la sută din melodie.\nCtrl+F8: înapoi la începutul melodiei.\nCtrl+Shift+F8: reia ultima melodie de unde ai rămas, chiar și după ce ai închis Tin Pan.\nF11 și F12: volum mai mic și mai mare.\nMelodiile se redau chiar în Tin Pan, iar următoarea melodie din listă e adusă dinainte, ca să pornească imediat.",
   "F8 або мультимедійна клавіша Відтворення/Пауза: відтворення або пауза; коли нічого не грає, запускає вибрану пісню.\nShift+F8 або мультимедійна клавіша Стоп: зупинка.\nF7 і F9 або мультимедійні клавіші Попередня й Наступна: попередня й наступна пісня.\nShift+F7 і Shift+F9: назад і вперед на 10 секунд. Стрілки вліво і вправо у списку пісень: на 5 секунд.\nCtrl+F7 і Ctrl+F9: назад і вперед на 10 відсотків пісні.\nCtrl+F8: на початок пісні.\nCtrl+Shift+F8: продовжити останню пісню з того місця, де ви зупинилися, навіть після закриття Tin Pan.\nF11 і F12: тихіше й гучніше.\nПісні грають у самому Tin Pan, а наступна пісня списку завантажується заздалегідь, тож починається одразу.",
   "F8 o la tecla multimedia Reproducir/Pausa: reproducir o pausar; si no suena nada, empieza la canción elegida.\nMayús+F8 o la tecla multimedia Detener: detener.\nF7 y F9, o las teclas multimedia Anterior y Siguiente: canción anterior y siguiente.\nMayús+F7 y Mayús+F9: atrás y adelante 10 segundos. Izquierda y Derecha en una lista de canciones: 5 segundos.\nCtrl+F7 y Ctrl+F9: atrás y adelante un 10 por ciento de la canción.\nCtrl+F8: volver al principio de la canción.\nCtrl+Mayús+F8: seguir con la última canción donde la dejaste, incluso después de cerrar Tin Pan.\nF11 y F12: bajar y subir el volumen.\nLas canciones suenan en el propio Tin Pan, y la siguiente de la lista se trae antes, así que empieza enseguida."
+ ],
+ "Marking songs": [
+  "Marcarea melodiilor",
+  "Позначення пісень",
+  "Marcar canciones"
+ ],
+ "Ctrl+Space marks or unmarks the selected song. Shift+Up and Shift+Down mark songs as you move. Ctrl+A marks every song loaded in the list. Marked songs say \"marked\", and each list keeps its own marks.\nWith songs marked, these act on all of them: Delete (to the trash, out of it again, out of a playlist or out of Up next), Shift+Delete, Ctrl+P, Add to queue, Play next, and Ctrl+D, Download MP3 and Download WAV, which download them as Download all does. Other commands act on the selected song.\nEscape clears the marks.": [
+  "Ctrl+Spațiu marchează sau demarchează melodia selectată. Shift+Sus și Shift+Jos marchează melodiile pe măsură ce te miști. Ctrl+A marchează toate melodiile încărcate în listă. Melodiile marcate spun „marcată”, iar fiecare listă își păstrează marcajele.\nCu melodii marcate, acestea se aplică tuturor: Delete (în coș, înapoi din coș, scoase dintr-o listă de redare sau din Urmează), Shift+Delete, Ctrl+P, Adaugă la coadă, Redă următoarea, și Ctrl+D, Descarcă MP3 și Descarcă WAV, care le descarcă la fel ca Descarcă tot. Celelalte comenzi se aplică melodiei selectate.\nEscape șterge marcajele.",
+  "Ctrl+Пробіл позначає вибрану пісню або знімає з неї позначку. Shift+Вгору і Shift+Вниз позначають пісні, поки ви рухаєтеся. Ctrl+A позначає всі пісні, завантажені в списку. Позначені пісні мають слово «позначено», і кожен список зберігає власні позначки.\nКоли пісні позначено, ці команди діють на всі: Delete (у кошик, назад із кошика, зі списку відтворення або з «Далі»), Shift+Delete, Ctrl+P, Додати в чергу, Грати наступною, а також Ctrl+D, Завантажити MP3 і Завантажити WAV, які завантажують їх так само, як «Завантажити все». Інші команди діють на вибрану пісню.\nEscape прибирає позначки.",
+  "Ctrl+Espacio marca o desmarca la canción seleccionada. Mayús+Arriba y Mayús+Abajo marcan canciones mientras te mueves. Ctrl+A marca todas las canciones cargadas en la lista. Las canciones marcadas dicen «marcada», y cada lista guarda sus propias marcas.\nCon canciones marcadas, estas acciones se aplican a todas: Suprimir (a la papelera, fuera de ella, fuera de una lista o fuera de A continuación), Mayús+Suprimir, Ctrl+P, Añadir a la cola, Reproducir a continuación, y Ctrl+D, Descargar MP3 y Descargar WAV, que las descargan como Descargar todo. Las demás órdenes se aplican a la canción seleccionada.\nEscape quita las marcas."
  ],
  "Song menu, Make from it. Each opens a form that stays open until you close it (Escape or Close); its button starts it, and you can change something and start another. The playback keys work in the form, so you can listen while you fine-tune.\nExtend continues a song from a time you choose; Get whole song joins the parts afterwards. Cover keeps the melody in a new style; its lyrics start as the original words, Rewrite the lyrics now changes them the way the How to change box says, and Back to the original words undoes it. Remaster makes a cleaner version with a newer model. Use as inspiration makes a new song that takes after the selected one. Each form only offers the models your plan can use for it.\nWeirdness, style influence and audio influence are sliders, each followed by Let Suno choose, ticked until you move the slider.": [
   "Meniul Melodie, Fă din ea. Fiecare deschide un formular care rămâne deschis până îl închizi (Escape sau Închide); butonul lui pornește lucrul și poți schimba ceva și porni altul. Tastele de redare merg în formular, ca să asculți în timp ce reglezi.\nExtinde continuă o melodie de la un moment ales de tine; Obține melodia întreagă unește apoi părțile. Preluarea păstrează melodia într-un stil nou; versurile ei pornesc de la cuvintele originale, Rescrie versurile acum le schimbă cum spune caseta Cum să schimbi, iar Înapoi la cuvintele originale anulează. Remasterizarea face o versiune mai curată cu un model mai nou. Folosește ca inspirație face o melodie nouă care seamănă cu cea aleasă. Fiecare formular oferă doar modelele pe care planul tău le poate folosi pentru el.\nCiudățenia, influența stilului și influența audio sunt glisoare, fiecare urmat de Lasă Suno să aleagă, bifat până miști glisorul.",
@@ -5839,6 +5879,11 @@
   "Tin Pan уже запущено.",
   "Tin Pan ya está abierto."
  ],
+ "No songs are marked.": [
+  "Nicio melodie nu e marcată.",
+  "Немає позначених пісень.",
+  "No hay canciones marcadas."
+ ],
  "Already signed in. Sign out first to use another account.": [
   "Ești deja conectat. Deconectează-te mai întâi ca să folosești alt cont.",
   "Ви вже ввійшли. Щоб скористатися іншим обліковим записом, спершу вийдіть.",
@@ -5848,6 +5893,16 @@
   "Alege mai întâi o melodie.",
   "Спершу виберіть пісню.",
   "Primero elige una canción."
+ ],
+ "Move {0} to your Suno trash?": [
+  "Muți {0} în coșul Suno?",
+  "Перемістити {0} у кошик Suno?",
+  "¿Mover {0} a tu papelera de Suno?"
+ ],
+ "Delete {0} for good? This can't be undone.": [
+  "Ștergi definitiv {0}? Nu se poate anula.",
+  "Видалити {0} назавжди? Це не можна скасувати.",
+  "¿Eliminar {0} para siempre? No se puede deshacer."
  ],
  "{0} isn't connected, so the song plays on the default output.": [
   "{0} nu e conectat, așa că melodia se aude pe ieșirea implicită.",
@@ -5908,6 +5963,31 @@
   "Lasă Suno să aleagă influența audio",
   "Нехай Suno вибере вплив аудіо",
   "Que Suno elija la influencia del audio"
+ ],
+ "Marked.": [
+  "Marcată.",
+  "Позначено.",
+  "Marcada."
+ ],
+ "Not marked.": [
+  "Nemarcată.",
+  "Позначку знято.",
+  "Sin marca."
+ ],
+ "{0} marked.": [
+  "{0} marcate.",
+  "Позначено: {0}.",
+  "{0} marcadas."
+ ],
+ "Marked all {0}.": [
+  "Am marcat toate cele {0}.",
+  "Позначено всі: {0}.",
+  "Marcadas todas: {0}."
+ ],
+ "Marks cleared.": [
+  "Marcajele au fost șterse.",
+  "Позначки прибрано.",
+  "Marcas quitadas."
  ],
  "You've rated as many songs as Suno takes today. Try again tomorrow.": [
   "Ai evaluat câte melodii acceptă Suno azi. Încearcă din nou mâine.",
@@ -6004,10 +6084,20 @@
   "{0} ще не можна відтворити.",
   "{0} aún no se puede reproducir."
  ],
+ "None of the marked songs can be played yet.": [
+  "Niciuna dintre melodiile marcate nu poate fi redată încă.",
+  "Жодну з позначених пісень ще не можна відтворити.",
+  "Ninguna de las canciones marcadas se puede reproducir todavía."
+ ],
  "{0} plays next.": [
   "{0} se redă următoarea.",
   "{0} гратиме наступною.",
   "{0} suena a continuación."
+ ],
+ "{0} play next.": [
+  "{0} se redau următoarele.",
+  "{0} гратимуть наступними.",
+  "{0} suenan a continuación."
  ],
  "Added {0} to Up next.": [
   "{0} a fost adăugată la Urmează.",
@@ -6058,6 +6148,16 @@
   "Tin Pan nu poate citi fișierul acela ca sunet.",
   "Tin Pan не може прочитати цей файл як аудіо.",
   "Tin Pan no puede leer ese archivo como audio."
+ ],
+ "marked": [
+  "marcată",
+  "позначено",
+  "marcada"
+ ],
+ "Added {0} to {1}.": [
+  "Am adăugat {0} la {1}.",
+  "{0} додано до «{1}».",
+  "Se añadieron {0} a {1}."
  ],
  "Makes a voice persona that sings new songs in your voice. Choose a clear recording of you singing, without music, from about 30 seconds to a few minutes. Suno then asks you to record a short phrase to check the voice is yours. The voice stays private.": [
   "Face o persona care cântă melodii noi cu vocea ta. Alege o înregistrare clară cu tine cântând, fără muzică, de la vreo 30 de secunde la câteva minute. Apoi Suno îți cere să înregistrezi o frază scurtă, ca să verifice că vocea e a ta. Vocea rămâne privată.",

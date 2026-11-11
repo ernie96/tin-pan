@@ -4,7 +4,7 @@
 //! (discover.rs). A song carries on through the view it started from.
 
 use quiet_list::{QuietList, Select};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use tinpan_core::clip::SunoClip;
 use tinpan_core::i18n::{plural, t, tf};
@@ -59,12 +59,14 @@ pub struct View {
     pub labels: HashMap<String, String>,
     /// For a creator's songs: who they are, for About this creator.
     pub creator: Option<tinpan_core::discover::CreatorPage>,
+    /// Songs marked with Ctrl+Space, Shift+arrows or Ctrl+A, by id; Song commands act on them all (marks.rs).
+    pub marked: HashSet<String>,
 }
 
 impl View {
     pub fn new(key: ViewKey, title: String) -> Self {
         let with_creator = !matches!(key, ViewKey::Library | ViewKey::Playlist(_));
-        Self { key, title, songs: Vec::new(), loaded: false, with_creator, playlist: None, labels: HashMap::new(), creator: None }
+        Self { key, title, songs: Vec::new(), loaded: false, with_creator, playlist: None, labels: HashMap::new(), creator: None, marked: HashSet::new() }
     }
 
     fn for_playlist(playlist: Playlist) -> Self {
@@ -84,6 +86,9 @@ impl View {
                 };
                 if CUE.with_borrow(|(playing, says)| *says && playing.as_deref() == Some(s.id.as_str())) {
                     label = format!("{label}, {}", t("playing"));
+                }
+                if self.marked.contains(&s.id) {
+                    label = format!("{label}, {}", t("marked"));
                 }
                 (s.id.clone(), label)
             })
@@ -360,9 +365,9 @@ impl App {
         }
     }
 
-    /// Ctrl+P: the selected song into one of your playlists, or a new one, as in Tin Pan 1.
+    /// Ctrl+P: the selected song, or the marked songs, into one of your playlists or a new one, as in Tin Pan 1.
     pub(crate) fn add_to_playlist(&mut self) {
-        self.with_song(|app, song| {
+        self.with_songs(|app, songs| {
             let playlists: Vec<Playlist> = app.sections[LIBRARY].views.iter().filter_map(|v| v.playlist.clone()).collect();
             let mut choices = vec![t("New playlist")];
             choices.extend(playlists.iter().map(Playlist::spoken_text));
@@ -370,7 +375,7 @@ impl App {
                 form::Field::choice("_Playlist", choices, usize::from(!playlists.is_empty())),
                 form::Field { label: "Name for a _new playlist", value: form::Value::Text { value: String::new(), multiline: false, max_len: 100 } },
             ];
-            let title = tf("Add {0} to a playlist", &[&song.display_title()]);
+            let title = tf("Add {0} to a playlist", &[&crate::marks::songs_text(&songs)]);
             if !form::show(&app.frame, &title, &t("Pick a playlist, or New playlist and give it a name."), &t("Add"), &mut fields) {
                 return;
             }
@@ -380,12 +385,17 @@ impl App {
                 speech::say(&t("Give the new playlist a name."));
                 return;
             }
-            app.net.send(Command::AddToPlaylist { playlist: target, new_name, clip_id: song.id });
+            app.net.send(Command::AddToPlaylist { playlist: target, new_name, clip_ids: songs.into_iter().map(|s| s.id).collect() });
         });
     }
 
-    pub(crate) fn added_to_playlist(&mut self, playlist: Playlist) {
-        speech::say(&tf("Added to {0}.", &[&playlist.display_name()]));
+    pub(crate) fn added_to_playlist(&mut self, playlist: Playlist, clip_ids: &[String]) {
+        if clip_ids.len() == 1 {
+            speech::say(&tf("Added to {0}.", &[&playlist.display_name()]));
+        } else {
+            speech::say(&tf("Added {0} to {1}.", &[&plural(clip_ids.len() as i64, "{0} song", "{0} songs"), &playlist.display_name()]));
+        }
+        self.unmark(clip_ids);
         // Its songs load again next time it's shown; the list of playlists says the new count.
         if let Some(view) = self.find_view_mut(&ViewKey::Playlist(playlist.id.clone())) {
             view.loaded = false;
@@ -393,17 +403,23 @@ impl App {
         self.net.send(Command::Playlists);
     }
 
-    /// Delete in a playlist's songs: out of the playlist (the song stays in your library).
+    /// Delete in a playlist's songs: the song, or the marked songs, out of the playlist (they stay in your library).
     pub(crate) fn remove_from_playlist(&mut self) {
-        let (Some(p), Some(song)) = (self.chosen_playlist(), self.selected()) else { return };
-        self.net.send(Command::RemoveFromPlaylist { playlist_id: p.id, clip_id: song.id });
+        let Some(p) = self.chosen_playlist() else { return };
+        self.with_songs(|app, songs| {
+            app.net.send(Command::RemoveFromPlaylist { playlist_id: p.id, clip_ids: songs.into_iter().map(|s| s.id).collect() });
+        });
     }
 
-    pub(crate) fn removed_from_playlist(&mut self, playlist_id: &str, clip_id: &str) {
+    pub(crate) fn removed_from_playlist(&mut self, playlist_id: &str, clip_ids: &[String]) {
         let key = ViewKey::Playlist(playlist_id.to_string());
         let Some(view) = self.find_view_mut(&key) else { return };
-        let title = view.songs.iter().find(|s| s.id == clip_id).map(SunoClip::display_title).unwrap_or_default();
-        view.songs.retain(|s| s.id != clip_id);
+        let gone: Vec<SunoClip> = view.songs.iter().filter(|s| clip_ids.contains(&s.id)).cloned().collect();
+        let title = crate::marks::songs_text(&gone);
+        view.songs.retain(|s| !clip_ids.contains(&s.id));
+        for id in clip_ids {
+            view.marked.remove(id);
+        }
         let name = view.title_name();
         if let Some(p) = view.playlist.as_mut() {
             p.song_count = Some(view.songs.len() as i64);

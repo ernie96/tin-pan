@@ -6,7 +6,7 @@
 //! and placed by the sizers, so each label's Alt letter moves to its own control and NVDA names each
 //! control after its label.
 
-use quiet_list::QuietList;
+use quiet_list::{QuietList, Step};
 use tinpan_core::i18n::t;
 use wxdragon::prelude::*;
 
@@ -133,12 +133,30 @@ fn attach_song_keys(list: &QuietList<String>) {
     list.on_context_menu(|| with_app(App::song_context_menu));
     list.on_key_down(|event| {
         let WindowEventData::Keyboard(key) = event else { return false };
-        if key.alt_down() || key.shift_down() {
+        if key.alt_down() {
             return false;
         }
         let code = key.get_key_code();
+        if key.shift_down() {
+            // Shift+Up and Shift+Down mark songs as they move (marks.rs).
+            let step = match code {
+                Some(WXK_UP | WXK_NUMPAD_UP) if !key.control_down() => Step::Up,
+                Some(WXK_DOWN | WXK_NUMPAD_DOWN) if !key.control_down() => Step::Down,
+                _ => return false,
+            };
+            with_app(|app| app.mark_step(step));
+            return true;
+        }
         if key.control_down() {
             return match code {
+                Some(WXK_SPACE) => {
+                    with_app(App::toggle_mark);
+                    true
+                }
+                Some(c) if c == i32::from(b'A') => {
+                    with_app(App::mark_all);
+                    true
+                }
                 // A Mac's Delete key is Backspace; Cmd+Delete moves to the trash there, as in the Finder.
                 Some(WXK_BACK) if cfg!(target_os = "macos") => {
                     with_app(App::delete_key);
@@ -165,8 +183,13 @@ fn attach_song_keys(list: &QuietList<String>) {
                 with_app(App::delete_key);
                 return true;
             }
+            // Escape clears the marks first, then goes back to the lists.
             Some(WXK_ESCAPE) => {
-                with_app(|app| app.section().selector.set_focus());
+                with_app(|app| {
+                    if !app.clear_marks() {
+                        app.section().selector.set_focus();
+                    }
+                });
                 return true;
             }
             Some(WXK_LEFT) => -LIST_SEEK_SECONDS,

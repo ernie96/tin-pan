@@ -54,6 +54,10 @@ impl App {
     /// free plan a WAV choice gives an MP3, as in Tin Pan 1.
     pub(crate) fn download(&mut self) {
         let wav = self.config.current.audio.output_format == "wav";
+        if self.shown().marked_count() > 0 {
+            let format = if wav && self.is_paid() != Some(false) { "wav" } else { "mp3" };
+            return self.download_marked(format);
+        }
         if wav && self.is_paid() == Some(false) {
             self.start_download("mp3", Cleanup::Ask, &(t("WAV needs Pro or Premier, so this is an MP3.") + " "));
         } else {
@@ -66,6 +70,9 @@ impl App {
         if format == "wav" && self.is_paid() == Some(false) {
             speech::say(&t("WAV downloads need Pro or Premier."));
             return;
+        }
+        if format != "mp4" && self.shown().marked_count() > 0 {
+            return self.download_marked(format);
         }
         self.start_download(format, if format == "mp4" { Cleanup::Never } else { Cleanup::FromSettings }, "");
     }
@@ -121,17 +128,42 @@ impl App {
             Err(message) => return speech::say(&message),
         };
         let todo: Vec<SunoClip> = self.shown().songs.iter().filter(|c| c.is_complete()).cloned().collect();
+        if todo.is_empty() {
+            return speech::say(&t("No finished songs in this list."));
+        }
+        self.download_songs(&todo, format, dir, &t("Download all"), &t("Every song in this list is already downloaded."));
+    }
+
+    /// Download, Download MP3 or Download WAV with songs marked: the marked songs that are finished, the way
+    /// Download all does it (the free direct download, skipping songs already in the folder).
+    fn download_marked(&mut self, format: &str) {
+        let dir = match folder(&self.config.current.audio.download_dir) {
+            Ok(dir) => dir,
+            Err(message) => return speech::say(&message),
+        };
+        let todo: Vec<SunoClip> = self.shown().marked_songs().into_iter().filter(SunoClip::is_complete).collect();
+        if todo.is_empty() {
+            return speech::say(&t("None of the marked songs are finished."));
+        }
+        let ids: Vec<String> = todo.iter().map(|c| c.id.clone()).collect();
+        if self.download_songs(&todo, format.to_string(), dir, &t("Download"), &t("Every marked song is already downloaded.")) {
+            self.unmark(&ids);
+        }
+    }
+
+    /// Asks, then downloads the songs not in `dir` yet. False when nothing was started.
+    fn download_songs(&mut self, todo: &[SunoClip], format: String, dir: PathBuf, button: &str, already: &str) -> bool {
         let missing: Vec<(SunoClip, PathBuf)> = todo.iter().map(|c| (c.clone(), target(c, &format, &dir))).filter(|(_, path)| !path.exists()).collect();
         if missing.is_empty() {
-            speech::say(&if todo.is_empty() { t("No finished songs in this list.") } else { t("Every song in this list is already downloaded.") });
-            return;
+            speech::say(already);
+            return false;
         }
         let question = tf(
             "Download {0} as {1} into {2}? {3} already there will be skipped.",
             &[&plural(missing.len() as i64, "{0} song", "{0} songs"), &format.to_uppercase(), &dir.display(), &(todo.len() - missing.len())],
         );
-        if !dialogs::confirm(&self.frame, &question, &t("Download all")) {
-            return;
+        if !dialogs::confirm(&self.frame, &question, button) {
+            return false;
         }
         let clean = self.config.current.cleanup.after_download;
         let mut said = tf("Downloading {0}.", &[&plural(missing.len() as i64, "{0} song", "{0} songs")]);
@@ -142,6 +174,7 @@ impl App {
         speech::say(&said);
         let extras = self.extras();
         self.net.send(Command::DownloadAll { songs: missing, format, dir, extras, clean: self.clean_options(clean) });
+        true
     }
 
     fn is_paid(&self) -> Option<bool> {

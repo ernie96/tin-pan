@@ -7,7 +7,7 @@ use tinpan_core::clip::SunoClip;
 use tinpan_core::i18n::{t, tf};
 
 use crate::views::{DISCOVER, ViewKey};
-use crate::{App, speech};
+use crate::{App, marks, speech};
 
 impl App {
     pub(crate) fn up_next(&self) -> &[SunoClip] {
@@ -24,31 +24,44 @@ impl App {
         }
     }
 
-    /// Song menu, Add to queue (`first` false) and Play next (`first` true).
+    /// Song menu, Add to queue (`first` false) and Play next (`first` true): the song, or the marked songs in
+    /// their order. Songs not ready to play are left out.
     pub(crate) fn add_to_queue(&mut self, first: bool) {
-        self.with_song(|app, song| {
-            if !song.can_play() {
-                speech::say(&tf("{0} can't be played yet.", &[&song.display_title()]));
+        self.with_songs(|app, songs| {
+            let asked = marks::songs_text(&songs);
+            let one_asked = songs.len() == 1;
+            let songs: Vec<SunoClip> = songs.into_iter().filter(SunoClip::can_play).collect();
+            if songs.is_empty() {
+                speech::say(&if one_asked { tf("{0} can't be played yet.", &[&asked]) } else { t("None of the marked songs can be played yet.") });
                 return;
             }
-            let title = song.display_title();
+            let ids: Vec<String> = songs.iter().map(|s| s.id.clone()).collect();
+            let named = marks::songs_text(&songs);
+            let one = songs.len() == 1;
             app.change_queue(|queue| {
-                queue.retain(|s| s.id != song.id);
+                queue.retain(|s| !ids.contains(&s.id));
                 if first {
-                    queue.insert(0, song);
+                    queue.splice(0..0, songs);
                 } else {
-                    queue.push(song);
+                    queue.extend(songs);
                 }
             });
-            speech::say(&if first { tf("{0} plays next.", &[&title]) } else { tf("Added {0} to Up next.", &[&title]) });
+            app.unmark(&ids);
+            speech::say(&match (first, one) {
+                (true, true) => tf("{0} plays next.", &[&named]),
+                (true, false) => tf("{0} play next.", &[&named]),
+                (false, _) => tf("Added {0} to Up next.", &[&named]),
+            });
         });
     }
 
-    /// Delete in Up next.
+    /// Delete in Up next: the song, or the marked songs.
     pub(crate) fn remove_from_queue(&mut self) {
-        self.with_song(|app, song| {
-            app.change_queue(|queue| queue.retain(|s| s.id != song.id));
-            speech::say(&tf("Removed {0} from Up next.", &[&song.display_title()]));
+        self.with_songs(|app, songs| {
+            let ids: Vec<String> = songs.iter().map(|s| s.id.clone()).collect();
+            app.change_queue(|queue| queue.retain(|s| !ids.contains(&s.id)));
+            app.unmark(&ids);
+            speech::say(&tf("Removed {0} from Up next.", &[&marks::songs_text(&songs)]));
         });
     }
 

@@ -104,8 +104,10 @@ def v2_keys():
             for m in WORD_PAIRS.finditer(text):
                 keys.append(rust_unescape(m.group(2) or m.group(1)))
             keys += [rust_unescape(m.group(2)) for m in CREATE_SLIDER_BOX.finditer(text)]
-    # Words for the screen reader's ears only: Suno's own values and the like are left out.
-    return [k for k in keys if re.search('[a-z]', k) and not re.fullmatch(r'[a-z_]+', k)]
+    # Words for the screen reader's ears only: Suno's own values and the like are left out, except the
+    # single words Tin Pan 2 says after a song in a list.
+    row_words = {'marked'}
+    return [k for k in keys if k in row_words or (re.search('[a-z]', k) and not re.fullmatch(r'[a-z_]+', k))]
 
 
 # The Create window's headings, labels and buttons: heading(&panel, &s, "...") and the like.

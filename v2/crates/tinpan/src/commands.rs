@@ -72,6 +72,9 @@ pub enum Action {
     AddToPlaylist,
     Trash,
     DeleteForever,
+    Mark,
+    MarkAll,
+    ClearMarks,
     // A playlist's songs (the Applications key menu only)
     RemoveFromPlaylist,
     MoveUp,
@@ -283,6 +286,10 @@ pub const COMMANDS: &[Entry] = &[
     // Delete is the list's own key, so it still deletes text in the search box.
     in_list(entry(G::Song, "Move to tr_ash", "Delete", A::Trash)),
     entry(G::Song, "Delete fo_rever...", "Shift+Delete", A::DeleteForever),
+    // Marks are the song list's own: Ctrl+A still selects all text in a text box.
+    after_line(in_list(entry(G::Song, "Mark or _unmark", "Ctrl+Space", A::Mark))),
+    in_list(entry(G::Song, "Mark the _whole list", "Ctrl+A", A::MarkAll)),
+    in_list(entry(G::Song, "Cl_ear marks", "Escape", A::ClearMarks)),
     in_list(entry(G::PlaylistSong, "Remove from playlist", "Delete", A::RemoveFromPlaylist)),
     in_list(entry(G::PlaylistSong, "Move up", "Ctrl+Up", A::MoveUp)),
     in_list(entry(G::PlaylistSong, "Move down", "Ctrl+Down", A::MoveDown)),
