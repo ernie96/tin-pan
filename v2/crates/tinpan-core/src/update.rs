@@ -103,6 +103,30 @@ pub fn client() -> Client {
     Client::builder().user_agent(format!("TinPan/{}", crate::version())).build().expect("the HTTP client builds")
 }
 
+/// Ernesto's message about Tin Pan, uploaded beside his other apps' messages: a number on its first line, the
+/// message after it. Tin Pan shows it once, at start, if the number is higher than the last one it showed.
+pub const MESSAGE_URL: &str = "https://www.kurnal.tech/tinpan/message.txt";
+
+/// The number and the message from message.txt. None when there's no number, the number is 0 or less, or there's
+/// no message (a raised number with no text takes a message down).
+pub fn read_message_file(text: &str) -> Option<(i64, String)> {
+    let text = text.trim_start_matches('\u{feff}').replace("\r\n", "\n");
+    let (first, rest) = text.trim().split_once('\n')?;
+    let number: i64 = first.trim().parse().ok()?;
+    let message = rest.trim().to_string();
+    (number > 0 && !message.is_empty()).then_some((number, message))
+}
+
+/// Fetches message.txt (30 seconds at most). A missing file is no message; other failures are errors for the log.
+pub fn fetch_message(http: &Client) -> Result<Option<(i64, String)>, String> {
+    let response = http.get(MESSAGE_URL).timeout(Duration::from_secs(30)).send().map_err(|e| e.to_string())?;
+    if response.status() == reqwest::StatusCode::NOT_FOUND {
+        return Ok(None);
+    }
+    let text = response.error_for_status().and_then(|r| r.text()).map_err(|e| e.to_string())?;
+    Ok(read_message_file(&text))
+}
+
 /// The newer release, or None when up to date (or no release yet). Errors are what to say.
 pub fn check(http: &Client, current: &Version) -> Result<Option<UpdateInfo>, String> {
     let url = format!("https://api.github.com/repos/{REPOSITORY}/releases/latest");
@@ -342,6 +366,19 @@ pub fn tidy_after_update() -> bool {
 mod tests {
     use super::*;
     use ed25519_dalek::{Signer, SigningKey};
+
+    #[test]
+    fn the_message_file() {
+        assert_eq!(read_message_file("\u{feff}3\r\nServers are down tonight.\r\nBack tomorrow.\r\n"), Some((3, "Servers are down tonight.\nBack tomorrow.".into())));
+        assert_eq!(read_message_file("12\n\nHello\n"), Some((12, "Hello".into())));
+        assert_eq!(read_message_file("3\n"), None);
+        assert_eq!(read_message_file("4\r\n  \r\n"), None);
+        assert_eq!(read_message_file("0\nHello"), None);
+        assert_eq!(read_message_file("-2\nHello"), None);
+        assert_eq!(read_message_file("<html>not found</html>\nx"), None);
+        assert_eq!(read_message_file("Hello"), None);
+        assert_eq!(read_message_file(""), None);
+    }
 
     #[test]
     fn versions_compare_with_pre_releases_first() {

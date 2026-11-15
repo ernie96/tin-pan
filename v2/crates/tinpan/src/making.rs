@@ -28,7 +28,7 @@ impl App {
         false
     }
 
-    fn plan_models(&self) -> Vec<SunoModel> {
+    pub(crate) fn plan_models(&self) -> Vec<SunoModel> {
         self.billing.as_ref().map(|b| create::usable(&b.models)).unwrap_or_default()
     }
 

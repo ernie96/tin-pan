@@ -9,6 +9,7 @@ mod contact;
 mod create_window;
 mod dialogs;
 mod editing;
+mod extras;
 mod discover;
 mod downloads;
 mod filters;
@@ -130,6 +131,8 @@ struct App {
     /// The update check repeated every 6 hours while Tin Pan stays open, and a version it found that waits
     /// until nothing would be interrupted.
     update_schedule: tinpan_core::periodic::PeriodicCheck<tinpan_core::update::UpdateInfo>,
+    /// Ernesto's message (its number and text), fetched at start and waiting until nothing would be interrupted.
+    pending_message: Option<(i64, String)>,
     /// Resume (Ctrl+Shift+F8): the song asked for and the second to start it at.
     resume_at: Option<(String, f64)>,
     /// The song starting on Suno's own player, until it has.
@@ -302,6 +305,7 @@ fn main() {
             updating: false,
             update_timer,
             update_schedule: tinpan_core::periodic::PeriodicCheck::new(std::time::Instant::now(), tinpan_core::periodic::CHECK_EVERY),
+            pending_message: None,
             resume_at: None,
             web_song: None,
             live_for: None,
@@ -540,6 +544,13 @@ impl App {
             Action::ClearQueue => self.clear_queue(),
             Action::ListenForCredits => self.listen_for_credits(),
             Action::MakeVoice => self.make_voice(),
+            Action::MakeSpeech => self.make_speech(),
+            Action::MakeSounds => self.make_sounds(),
+            Action::ListenHistory => self.listen_history(),
+            Action::YourHooks => self.hooks(false),
+            Action::LikedHooks => self.hooks(true),
+            Action::TrashedPlaylists => self.trashed_playlists(),
+            Action::ListenStats => self.listen_stats(),
             Action::Contests => self.open_discover(&ViewKey::Contests),
             Action::Repeat => speech::repeat_last(),
             Action::History => {
@@ -652,6 +663,7 @@ impl App {
             Response::NotificationsRead => self.notifications_read(),
             Response::VideoReady { clip_id, url } => self.video_ready(&clip_id, url),
             Response::UpdateChecked { result, manual } => self.update_checked(result, manual),
+            Response::MessageChecked(result) => self.message_checked(result),
             Response::ReportSent { kind, number } => self.report_sent(kind, number),
             Response::TimedLyrics { clip_id, words } => self.live_lyrics_loaded(&clip_id, &words),
             Response::PersonaList { list, personas } => self.persona_list_loaded(list, personas),
@@ -725,6 +737,12 @@ impl App {
                 section.refresh(Select::Start);
                 speech::say(&tf("Moved {0} to trash.", &[&name]));
             }
+            Response::TrashedPlaylists(list) => self.trashed_playlists_loaded(list),
+            Response::PlaylistRestored { name } => {
+                speech::say(&tf("Restored {0}.", &[&name]));
+                self.net.send(Command::Playlists);
+            }
+            Response::ListenStats(stats) => self.listen_stats_loaded(&stats),
             Response::AddedToPlaylist { playlist, clip_ids } => self.added_to_playlist(playlist, &clip_ids),
             Response::Following { songs, announce } => self.following_loaded(songs, announce),
             Response::Explore { shelves, announce } => self.explore_loaded(shelves, announce),

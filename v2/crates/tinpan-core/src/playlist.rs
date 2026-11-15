@@ -39,6 +39,13 @@ impl Playlist {
     }
 }
 
+/// The playlists in a GET /api/playlist/me reply made with show_trashed=true. Those Suno marks as not in the
+/// trash are left out; unmarked ones are kept.
+pub fn read_trashed(root: &Value) -> Vec<Playlist> {
+    let Some(list) = root.get("playlists").and_then(Value::as_array) else { return Vec::new() };
+    list.iter().filter(|p| p.is_object() && p.get("is_trashed").and_then(Value::as_bool) != Some(false)).map(Playlist::read).collect()
+}
+
 /// Whether a playlist change failed: Suno lists failures and no successes.
 pub fn change_failed(json: &str) -> bool {
     let Ok(root) = serde_json::from_str::<Value>(if json.trim().is_empty() { "{}" } else { json }) else { return false };
@@ -59,6 +66,14 @@ mod tests {
         let p = Playlist::read(&serde_json::json!({"id": "p1", "name": "Mix", "num_total_results": "12", "is_public": true}));
         assert_eq!((p.id.as_str(), p.spoken_text(), p.is_public), ("p1", "Mix, 12 songs".to_string(), true));
         assert_eq!(Playlist::read(&serde_json::json!({"id": 7, "playlist_clips": [{}, {}]})).spoken_text(), "Untitled playlist, 2 songs");
+    }
+
+    #[test]
+    fn trashed_playlists_leave_out_those_marked_not_trashed() {
+        let root = serde_json::json!({ "playlists": [ { "id": "a", "is_trashed": true }, { "id": "b", "is_trashed": false }, { "id": "c" }, 5 ] });
+        let ids: Vec<String> = read_trashed(&root).into_iter().map(|p| p.id).collect();
+        assert_eq!(ids, ["a", "c"]);
+        assert!(read_trashed(&serde_json::json!({})).is_empty());
     }
 
     #[test]

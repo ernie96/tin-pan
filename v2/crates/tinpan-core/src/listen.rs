@@ -11,7 +11,7 @@ use serde_json::{Value, json};
 
 use crate::api::{SunoApi, escape};
 use crate::error::{Error, Result};
-use crate::i18n::t;
+use crate::i18n::{plural, t, tf};
 use crate::json as sj;
 
 /// The kind of task asked for: rating ready-made songs.
@@ -54,6 +54,58 @@ impl Summary {
 
     pub fn check_due(&self) -> bool {
         self.check_due_in_seconds.is_some_and(|s| s <= 0.0)
+    }
+}
+
+/// Your Listen for Credits numbers: GET /api/preferences/stats (lifetime), /rewards (the daily streak) and
+/// /leaderboard (today's top earners). Each part is None when its reply didn't come.
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct Stats {
+    pub lifetime: Option<Value>,
+    pub rewards: Option<Value>,
+    pub leaderboard: Option<Value>,
+}
+
+impl Stats {
+    /// One line per fact, as the window shows them; the leaderboard's top ten come last.
+    pub fn lines(&self) -> Vec<String> {
+        let mut lines = Vec::new();
+        if let Some(v) = &self.lifetime {
+            let (tasks, credits, minutes) = (int(v, "tasks_completed"), int(v, "credits_earned"), int(v, "listening_seconds") / 60);
+            let (days, longest) = (int(v, "active_days"), int(v, "longest_streak_days"));
+            lines.push(plural(tasks, "{0} rating sent in all.", "{0} ratings sent in all."));
+            lines.push(plural(credits, "{0} credit earned in all.", "{0} credits earned in all."));
+            lines.push(plural(minutes, "{0} minute listened.", "{0} minutes listened."));
+            lines.push(plural(days, "Active on {0} day.", "Active on {0} days."));
+            lines.push(plural(longest, "Longest streak: {0} day.", "Longest streak: {0} days."));
+        }
+        if let Some(v) = &self.rewards {
+            let (streak, today, needed) = (int(v, "current_streak_days"), int(v, "tasks_today"), int(v, "min_tasks_per_streak_day"));
+            lines.push(plural(streak, "Current streak: {0} day.", "Current streak: {0} days."));
+            if needed > 0 {
+                lines.push(tf("Today: {0} of the {1} ratings that count a day for the streak.", &[&today, &needed]));
+            }
+            if let Some(next) = v.get("next_reward").filter(|n| n.is_object()) {
+                let (credits, days) = (int(next, "credits"), int(next, "days_remaining"));
+                lines.push(tf("Next streak reward: {0} in {1}.", &[&plural(credits, "{0} credit", "{0} credits"), &plural(days, "{0} day", "{0} days")]));
+            }
+            let claimable = v.get("claimable").and_then(Value::as_array).map_or(0, Vec::len) as i64;
+            if claimable > 0 {
+                lines.push(plural(claimable, "{0} reward is ready on Suno's Listen for Credits page.", "{0} rewards are ready on Suno's Listen for Credits page."));
+            }
+        }
+        if let Some(entries) = self.leaderboard.as_ref().and_then(|v| v.get("entries")).and_then(Value::as_array).filter(|e| !e.is_empty()) {
+            lines.push(t("Today's leaderboard:"));
+            for e in entries.iter().take(10) {
+                let name = [text(e, "display_name"), text(e, "handle")].into_iter().find(|n| !n.is_empty()).unwrap_or_else(|| t("Someone"));
+                let rank = int(e, "rank");
+                lines.push(match ["credits", "value", "score"].iter().find_map(|k| e.get(*k).and_then(sj::as_int)) {
+                    Some(n) => tf("{0}. {1}, {2}", &[&rank, &name, &plural(n, "{0} credit", "{0} credits")]),
+                    None => tf("{0}. {1}", &[&rank, &name]),
+                });
+            }
+        }
+        lines
     }
 }
 
@@ -464,6 +516,30 @@ impl SunoApi {
         }
     }
 
+    /// Your numbers; a part that fails is left out, and only all three failing is an error.
+    pub fn listen_stats(&self) -> Result<Stats> {
+        let mut parts = Vec::new();
+        let mut first_error = None;
+        for name in ["stats", "rewards", "leaderboard"] {
+            match self.send(Method::GET, &format!("/api/preferences/{name}"), None).and_then(|r| sj::parse(&r)) {
+                Ok(v) if v.is_object() => parts.push(Some(v)),
+                Ok(_) => parts.push(None),
+                Err(e) => {
+                    log::warn!("Listen for Credits {name} didn't load: {e}");
+                    first_error.get_or_insert(e);
+                    parts.push(None);
+                }
+            }
+        }
+        if parts.iter().all(Option::is_none)
+            && let Some(e) = first_error
+        {
+            return Err(e);
+        }
+        let mut parts = parts.into_iter();
+        Ok(Stats { lifetime: parts.next().flatten(), rewards: parts.next().flatten(), leaderboard: parts.next().flatten() })
+    }
+
     /// Hands back tasks claimed and not answered, as Suno's page does when you leave it.
     pub fn release_listen_tasks(&self) {
         if let Err(e) = self.send(Method::POST, "/api/preferences/tasks/release-buffer", None) {
@@ -480,6 +556,21 @@ mod tests {
         json!({ "task_id": "t1", "review_items": [ { "key": "a", "url": "https://suno-data-uploads.s3.amazonaws.com/x/a.mp3" }, { "key": "b", "url": "https://suno-data-uploads.s3.amazonaws.com/x/b.mp3" } ],
             "project": { "media_type": "audio", "layout": layout, "question": "Which fits the prompt?", "instructions": "Listen to both.", "min_review_time_seconds": 20, "credits_per_annotation": 1,
                 "preference_dimensions": [ { "key": "fit", "name": "Prompt fit", "description": "How well it follows the prompt" }, { "key": "vocals", "name": "Vocals", "allow_neither": false } ] } })
+    }
+
+    #[test]
+    fn stats_say_lifetime_streak_and_leaderboard() {
+        let stats = Stats {
+            lifetime: Some(json!({ "tasks_completed": 12, "credits_earned": 30, "listening_seconds": 600, "active_days": 3, "longest_streak_days": 2 })),
+            rewards: Some(json!({ "current_streak_days": 1, "tasks_today": 2, "min_tasks_per_streak_day": 5, "next_reward": { "credits": 10, "days_remaining": 4 }, "claimable": [{}] })),
+            leaderboard: Some(json!({ "entries": [ { "rank": 1, "handle": "ana", "display_name": "", "credits": 50 }, { "rank": 2, "handle": "bo" } ] })),
+        };
+        let lines = stats.lines();
+        assert!(lines.contains(&"12 ratings sent in all.".to_string()) && lines.contains(&"10 minutes listened.".to_string()));
+        assert!(lines.contains(&"Today: 2 of the 5 ratings that count a day for the streak.".to_string()));
+        assert!(lines.contains(&"Next streak reward: 10 credits in 4 days.".to_string()));
+        assert_eq!(lines[lines.len() - 2..], ["1. ana, 50 credits".to_string(), "2. bo".to_string()]);
+        assert!(Stats::default().lines().is_empty());
     }
 
     #[test]

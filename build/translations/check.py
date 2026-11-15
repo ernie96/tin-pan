@@ -90,7 +90,7 @@ def v2_keys():
         if path.endswith('create_window.rs'):
             keys += [rust_unescape(m.group(2)) for m in CREATE_FIELD.finditer(text)]
             keys += [rust_unescape(m.group(1)) for m in CREATE_PAIR.finditer(text)]
-        if path.endswith(('making.rs', 'editing.rs', 'personas.rs')):
+        if path.endswith(('making.rs', 'editing.rs', 'personas.rs', 'extras.rs')):
             keys += [rust_unescape(m.group(1)) for m in TOOL_FIELD.finditer(text)]
             keys += [rust_unescape(m.group(2)) for m in TOOL_SLIDER_BOX.finditer(text)]
             keys += [rust_unescape(m.group(1)) for m in WORD_PAIRS.finditer(text)]

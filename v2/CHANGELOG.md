@@ -1,11 +1,23 @@
 # Tin Pan 2 changes
 
-## Unreleased
+## 2.3.0
 
 - Tin Pan now also checks for a new version every 6 hours while it's open, not only when it starts. It says
   nothing unless there is one, and it waits to ask until Tin Pan is the window in front and no song is starting,
   no download is running and no other Tin Pan window is open. Saying No means it isn't offered again by itself.
   Settings, Check for new versions when Tin Pan starts, turns both checks off.
+- When it starts, Tin Pan looks for a message from Ernesto about Tin Pan, such as a problem with Suno. A new
+  one is shown once, in a window titled "Message about Tin Pan", when Tin Pan is the window in front and
+  nothing is loading. Escape or Close closes it and the keyboard goes back to where it was.
+- Library menu, Make speech: Suno reads words you type in a voice, with music under them or not, in a tone
+  you describe and a male or female voice if you choose one.
+- Library menu, Make sounds: a sound effect, sample or loop from a description, one-shot or loop, with a tempo
+  and key if you want them. Both forms stay open like Cover, and the results join your songs.
+- Discover menu, Listen history: the songs you played on Suno, as a list. Your hooks and Hooks you liked open
+  the songs in your Hooks the same way.
+- Library menu, Playlists in the trash: Enter on one brings it back.
+- Account menu, Listen for credits stats: your ratings and credits earned, your streak and the next streak
+  reward, and today's leaderboard.
 
 ## 2.2.0
 

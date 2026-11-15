@@ -51,6 +51,34 @@ impl App {
         if self.config.current.update.check_at_startup {
             self.update_timer.start(STARTUP_CHECK_AFTER.as_millis() as i32, true);
         }
+        self.net.send(Command::CheckMessage);
+    }
+
+    /// Ernesto's message, when its number is higher than the last one shown. It waits, like the update offer,
+    /// until nothing would be interrupted; failures only go to the log.
+    pub(crate) fn message_checked(&mut self, result: Result<Option<(i64, String)>, String>) {
+        match result {
+            Ok(Some((number, text))) if number > self.config.current.seen_message => {
+                self.pending_message = Some((number, text));
+                self.show_message_when_quiet();
+            }
+            Ok(_) => {}
+            Err(why) => log::warn!("Message check: {why}"),
+        }
+    }
+
+    fn show_message_when_quiet(&mut self) {
+        if self.pending_message.is_none() || !self.quiet_enough_for_update_offer() {
+            return;
+        }
+        let Some((number, text)) = self.pending_message.take() else { return };
+        log::info!("Showing message {number}");
+        // Saved first, so a crash or a second Tin Pan doesn't show it again.
+        self.config.current.seen_message = number;
+        self.save_settings();
+        let focused = focused_window();
+        dialogs::show_document(&self.frame, &t("Message about Tin Pan"), &text);
+        restore_focus(focused);
     }
 
     /// Help, Check for updates (manual), or the quiet one after startup.
@@ -104,6 +132,7 @@ impl App {
     /// Every minute: runs the repeated update check when it's due, and offers a version it found earlier once
     /// nothing would be interrupted.
     pub(crate) fn update_tick(&mut self) {
+        self.show_message_when_quiet();
         if self.updating {
             return;
         }
@@ -227,6 +256,31 @@ fn start_install(file: &std::path::Path) -> Result<(), String> {
 fn start_install(_file: &std::path::Path) -> Result<(), String> {
     Err("installing updates isn't supported here yet".into())
 }
+
+/// The control that has the keyboard, to give it back after a window Tin Pan opened by itself.
+#[cfg(windows)]
+fn focused_window() -> windows::Win32::Foundation::HWND {
+    // SAFETY: a plain Win32 call from the window's thread.
+    unsafe { windows::Win32::UI::Input::KeyboardAndMouse::GetFocus() }
+}
+
+#[cfg(windows)]
+fn restore_focus(window: windows::Win32::Foundation::HWND) {
+    use windows::Win32::UI::WindowsAndMessaging::IsWindow;
+    // SAFETY: the window is checked to still exist; both calls are from the window's thread.
+    unsafe {
+        if !window.is_invalid() && IsWindow(Some(window)).as_bool() {
+            let _ = windows::Win32::UI::Input::KeyboardAndMouse::SetFocus(Some(window));
+        }
+    }
+}
+
+/// Elsewhere wxWidgets gives the focus back when the window closes.
+#[cfg(not(windows))]
+fn focused_window() {}
+
+#[cfg(not(windows))]
+fn restore_focus(_: ()) {}
 
 /// After an update relaunched Tin Pan, its window comes to the front; Windows would otherwise open it behind
 /// whatever you were doing (ship-shape's way).

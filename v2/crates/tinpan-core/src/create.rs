@@ -354,6 +354,13 @@ pub struct GenerateRequest {
     pub artist_end: Option<f64>,
     pub token: Option<String>,
     pub token_provider: Option<i32>,
+    /// Make speech: the words are spoken, with or without music under them, as Suno's Speech page sends it.
+    pub is_speech: bool,
+    pub backing_music: Option<bool>,
+    /// "m" or "f".
+    pub vocal_gender: Option<String>,
+    /// Make sounds (task "sound"): user_tempo, user_key and user_loop.
+    pub sound_configs: Option<Value>,
 }
 
 impl GenerateRequest {
@@ -388,6 +395,16 @@ impl GenerateRequest {
         }
         if self.is_remix {
             metadata["is_remix"] = json!(true);
+        }
+        if let Some(gender) = &self.vocal_gender {
+            metadata["vocal_gender"] = json!(gender);
+        }
+        if self.is_speech {
+            metadata["is_speech"] = json!(true);
+            metadata["backing_music"] = json!(self.backing_music);
+        }
+        if let Some(sound) = &self.sound_configs {
+            metadata["sound_configs"] = sound.clone();
         }
         let mut body = json!({
             "token": self.token,
@@ -480,6 +497,62 @@ pub fn percent(text: &str, name: &str) -> std::result::Result<Option<f64>, Strin
     match text.replace(',', ".").parse::<f64>() {
         Ok(v) if (0.0..=100.0).contains(&v) => Ok(Some(v)),
         _ => Err(tf("{0} must be a number from 0 to 100, or empty.", &[&name])),
+    }
+}
+
+/// The musical keys Suno's Sounds page offers, as it sends them.
+pub const SOUND_KEYS: [&str; 24] = [
+    "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "Cm", "C#m", "Dm", "D#m", "Em", "Fm", "F#m", "Gm", "G#m", "Am", "A#m", "Bm",
+];
+
+/// The model Suno's Speech page uses.
+pub const SPEECH_MODEL: &str = "chirp-goose";
+
+/// The models that can make sounds: those whose capabilities say "sound" or "all". Suno's Sounds page picks
+/// the plan's default among them.
+pub fn sound_models(usable: &[SunoModel]) -> Vec<SunoModel> {
+    usable.iter().filter(|m| m.capabilities.as_ref().is_some_and(|c| c.iter().any(|x| x == "sound" || x == "all"))).cloned().collect()
+}
+
+/// A sound's request, as Suno's Sounds page builds it: the description is the style, the title is the
+/// description with each word capitalised, and there are no lyrics. `tempo` is in beats a minute; `key` is
+/// one of SOUND_KEYS.
+pub fn sound_request(model: &str, description: &str, looped: bool, tempo: Option<u32>, key: Option<&str>) -> GenerateRequest {
+    let description = description.trim();
+    let title: String = description
+        .to_lowercase()
+        .split(' ')
+        .map(|w| {
+            let mut c = w.chars();
+            c.next().map(|f| f.to_uppercase().chain(c).collect::<String>()).unwrap_or_default()
+        })
+        .collect::<Vec<_>>()
+        .join(" ");
+    let mut configs = json!({ "user_loop": looped });
+    if let Some(tempo) = tempo.filter(|t| (1..=300).contains(t)) {
+        configs["user_tempo"] = json!(tempo);
+    }
+    if let Some(key) = key.filter(|k| SOUND_KEYS.contains(k)) {
+        configs["user_key"] = json!(key);
+    }
+    GenerateRequest {
+        task: Some("sound".into()),
+        tags: description.to_string(),
+        title: title.chars().take(80).collect(),
+        sound_configs: Some(configs),
+        ..GenerateRequest::new(model, Mode::Custom)
+    }
+}
+
+/// Speech, as Suno's Speech page sends a script: the words as lyrics, the tone as the style.
+pub fn speech_request(script: &str, tone: &str, music: bool, gender: Option<&str>) -> GenerateRequest {
+    GenerateRequest {
+        prompt: script.trim().to_string(),
+        tags: tone.trim().to_string(),
+        is_speech: true,
+        backing_music: Some(music),
+        vocal_gender: gender.map(str::to_string),
+        ..GenerateRequest::new(SPEECH_MODEL, Mode::Custom)
     }
 }
 
@@ -652,6 +725,31 @@ mod tests {
         r.token_provider = Some(2);
         let body = r.body();
         assert_eq!((body["metadata"]["control_sliders"]["weirdness_constraint"].as_f64(), body["token_provider"].as_i64()), (Some(0.4), Some(2)));
+    }
+
+    #[test]
+    fn speech_and_sounds_send_what_sunos_pages_send() {
+        let body = speech_request(" Hello there ", "calm", false, Some("f")).body();
+        let m = &body["metadata"];
+        assert_eq!((body["mv"].as_str(), body["prompt"].as_str(), body["tags"].as_str()), (Some(SPEECH_MODEL), Some("Hello there"), Some("calm")));
+        assert_eq!((m["is_speech"].as_bool(), m["backing_music"].as_bool(), m["vocal_gender"].as_str()), (Some(true), Some(false), Some("f")));
+        assert!(body.get("task").is_none() && m.get("sound_configs").is_none());
+
+        let body = sound_request("chirp-hawk", "warm VINYL crackle", true, Some(90), Some("F#m")).body();
+        let c = &body["metadata"]["sound_configs"];
+        assert_eq!((body["task"].as_str(), body["title"].as_str(), body["tags"].as_str()), (Some("sound"), Some("Warm Vinyl Crackle"), Some("warm VINYL crackle")));
+        assert_eq!((c["user_loop"].as_bool(), c["user_tempo"].as_i64(), c["user_key"].as_str()), (Some(true), Some(90), Some("F#m")));
+        assert!(body["metadata"].get("is_speech").is_none());
+        let c = sound_request("m", "x", false, Some(0), Some("H")).body()["metadata"]["sound_configs"].clone();
+        assert!(c.get("user_tempo").is_none() && c.get("user_key").is_none());
+    }
+
+    #[test]
+    fn only_sound_models_make_sounds() {
+        let model = |key: &str, caps: Option<Vec<&str>>| SunoModel { external_key: key.into(), capabilities: caps.map(|c| c.into_iter().map(String::from).collect()), ..SunoModel::default() };
+        let all = [model("a", Some(vec!["sound"])), model("b", Some(vec!["all"])), model("c", Some(vec!["cover"])), model("d", None)];
+        let keys: Vec<String> = sound_models(&all).into_iter().map(|m| m.external_key).collect();
+        assert_eq!(keys, ["a", "b"]);
     }
 
     #[test]

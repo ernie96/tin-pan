@@ -5444,10 +5444,25 @@
   "Вида_лити плейлист...",
   "_Eliminar lista..."
  ],
+ "Playl_ists in the trash...": [
+  "Liste _în coș...",
+  "Плейлисти в _кошику...",
+  "Listas en la papele_ra..."
+ ],
  "Make a _voice from your singing...": [
   "Fă o voce _din cântecul tău...",
   "Створити _голос зі свого співу...",
   "Crear una _voz con tu canto..."
+ ],
+ "Make spee_ch...": [
+  "Fă vor_bire...",
+  "Створити мовленн_я...",
+  "Crear _habla..."
+ ],
+ "Ma_ke sounds...": [
+  "Fă s_unete...",
+  "Створити зв_уки...",
+  "Crear soni_dos..."
  ],
  "Open a Suno _link...": [
   "Deschide un _link Suno...",
@@ -5464,6 +5479,21 @@
   "_Далі",
   "_A continuación"
  ],
+ "Listen _history...": [
+  "_Istoric ascultări...",
+  "_Історія прослуховувань...",
+  "_Historial de escucha..."
+ ],
+ "_Your hooks...": [
+  "_Hook-urile tale...",
+  "_Ваші хуки...",
+  "_Tus hooks..."
+ ],
+ "Hooks you li_ked...": [
+  "Hook-uri _apreciate...",
+  "Х_уки, що вам сподобалися...",
+  "Hooks que te _gustaron..."
+ ],
  "_Discover": [
   "_Descoperă",
   "Від_криття",
@@ -5473,6 +5503,11 @@
   "_Ascultă pentru credite...",
   "С_лухати за кредити...",
   "_Escuchar para ganar créditos..."
+ ],
+ "Listen for credits _stats": [
+  "_Statistici Ascultă pentru credite",
+  "Ста_тистика «Слухати за кредити»",
+  "Estadís_ticas de Escuchar para ganar créditos"
  ],
  "_Contact the author...": [
   "Contactea_ză autorul...",
@@ -5669,6 +5704,131 @@
   "Нехай Suno вибере вплив стилю",
   "Que Suno elija la influencia del estilo"
  ],
+ "Make speech": [
+  "Fă vorbire",
+  "Створити мовлення",
+  "Crear habla"
+ ],
+ "Suno reads your words aloud in a voice, with music under them or not. It makes two versions, as with songs.": [
+  "Suno citește cu voce tare cuvintele tale, cu sau fără muzică dedesubt. Face două versiuni, ca la melodii.",
+  "Suno читає ваші слова вголос голосом, з музикою під ними чи без. Створює дві версії, як і з піснями.",
+  "Suno lee tus palabras en voz alta, con música de fondo o sin ella. Hace dos versiones, como con las canciones."
+ ],
+ "Let Suno choose": [
+  "Lasă Suno să aleagă",
+  "Хай Suno вибере",
+  "Que elija Suno"
+ ],
+ "Male": [
+  "Masculină",
+  "Чоловічий",
+  "Masculina"
+ ],
+ "Female": [
+  "Feminină",
+  "Жіночий",
+  "Femenina"
+ ],
+ "Type the words to speak first.": [
+  "Scrie mai întâi cuvintele de rostit.",
+  "Спершу введіть слова, які треба проказати.",
+  "Escribe primero las palabras que se dirán."
+ ],
+ "Making speech.": [
+  "Se face vorbirea.",
+  "Створюю мовлення.",
+  "Creando el habla."
+ ],
+ "Make sounds": [
+  "Fă sunete",
+  "Створити звуки",
+  "Crear sonidos"
+ ],
+ "Makes a sound effect, a sample or a loop from a description, such as rain on a tin roof or a funky drum loop.": [
+  "Face un efect sonor, un sample sau o buclă dintr-o descriere, de exemplu ploaie pe un acoperiș de tablă sau o buclă funky de tobe.",
+  "Створює звуковий ефект, семпл або луп з опису, наприклад дощ по бляшаному даху чи фанковий луп ударних.",
+  "Crea un efecto de sonido, una muestra o un bucle a partir de una descripción, como lluvia sobre un tejado de chapa o un bucle de batería funky."
+ ],
+ "One-shot": [
+  "Un singur sunet",
+  "Одиночний",
+  "Un solo golpe"
+ ],
+ "Loop": [
+  "Buclă",
+  "Луп",
+  "Bucle"
+ ],
+ "Describe the sound first.": [
+  "Descrie mai întâi sunetul.",
+  "Спершу опишіть звук.",
+  "Describe primero el sonido."
+ ],
+ "Beats a minute": [
+  "Bătăi pe minut",
+  "Ударів за хвилину",
+  "Pulsaciones por minuto"
+ ],
+ "Making sounds.": [
+  "Se fac sunetele.",
+  "Створюю звуки.",
+  "Creando los sonidos."
+ ],
+ "No playlists in the trash.": [
+  "Nicio listă în coș.",
+  "У кошику немає плейлистів.",
+  "No hay listas en la papelera."
+ ],
+ "Playlists in the trash ({0}). Enter restores one.": [
+  "Liste în coș ({0}). Enter readuce una.",
+  "Плейлисти в кошику ({0}). Enter відновлює один.",
+  "Listas en la papelera ({0}). Intro restaura una."
+ ],
+ "Suno has no Listen for Credits numbers for you yet.": [
+  "Suno nu are încă cifre Ascultă pentru credite pentru tine.",
+  "У Suno ще немає ваших чисел «Слухати за кредити».",
+  "Suno aún no tiene cifras de Escuchar para ganar créditos para ti."
+ ],
+ "Listen for credits stats": [
+  "Statistici Ascultă pentru credite",
+  "Статистика «Слухати за кредити»",
+  "Estadísticas de Escuchar para ganar créditos"
+ ],
+ "_Words to speak": [
+  "_Cuvinte de rostit",
+  "_Слова, які проказати",
+  "_Palabras que se dirán"
+ ],
+ "_Tone (for example: warm, calm narrator)": [
+  "_Ton (de exemplu: narator cald, calm)",
+  "_Тон (наприклад: теплий, спокійний оповідач)",
+  "_Tono (por ejemplo: narrador cálido y tranquilo)"
+ ],
+ "With _music under the words": [
+  "Cu _muzică sub cuvinte",
+  "З _музикою під словами",
+  "Con _música de fondo"
+ ],
+ "_Sound": [
+  "_Sunet",
+  "_Звук",
+  "_Sonido"
+ ],
+ "_Type": [
+  "_Tip",
+  "_Тип",
+  "_Tipo"
+ ],
+ "_Beats a minute (empty lets Suno choose)": [
+  "_Bătăi pe minut (gol lasă Suno să aleagă)",
+  "_Ударів за хвилину (порожнє — вибирає Suno)",
+  "_Pulsaciones por minuto (vacío deja elegir a Suno)"
+ ],
+ "_Key": [
+  "_Tonalitate",
+  "_Тональність",
+  "_Tonalidad"
+ ],
  "Discover. Lists on the left: Trending, From people you follow, Explore and its shelves, Contests, and the lists you open from a song. Enter opens one; in its songs Enter plays, Space pauses, Left and Right seek. Delete in the lists closes a list you opened. Ctrl+G opens a Suno link, Ctrl+Shift+E searches all of Suno, and Up next holds songs you queued. F5 refreshes.": [
   "Descoperă. Listele din stânga: În tendințe, De la oamenii pe care îi urmăriți, Explorează cu rafturile lui, Concursuri și listele deschise de la o melodie. Enter deschide una; în melodiile ei Enter redă, Spațiu pune pauză, Stânga și dreapta derulează. Delete în liste închide o listă deschisă de tine. Ctrl+G deschide un link Suno, Ctrl+Shift+E caută în tot Suno, iar Urmează păstrează melodiile puse la coadă. F5 reîmprospătează.",
   "Відкриття. Списки ліворуч: «У тренді», «Від тих, за ким ви стежите», Огляд із його полицями, Конкурси та списки, відкриті з пісні. Enter відкриває список; у його піснях Enter відтворює, Пробіл ставить на паузу, стрілки вліво і вправо перемотують. Delete у списках закриває відкритий вами список. Ctrl+G відкриває посилання Suno, Ctrl+Shift+E шукає по всьому Suno, а «Далі» містить пісні, які ви додали в чергу. F5 оновлює.",
@@ -5734,10 +5894,30 @@
   "Обліковий запис, «Слухати за кредити»: Suno платить кредити за оцінювання пісень. Кожне завдання має дві пісні й одне чи кілька запитань. У його вікні кнопки «Пісня A» і «Пісня B» відтворюють або ставлять на паузу кожну пісню; прослухайте кожну стільки, скільки вказано, виберіть відповідь на кожне запитання, тоді «Надіслати оцінку», і приходить наступне. «Пропустити це» пропускає завдання; «Закрити» зупиняє. Першого разу Suno ставить кілька запитань про вас як слухача. Іноді Suno хоче, щоб разом з оцінкою пройшла його перевірка; Tin Pan робить це так само, як під час створення пісень.\nБібліотека, «Створити голос зі свого співу»: персона, яка співає вашим голосом. Виберіть запис, де ви співаєте без музики; тоді Suno дає коротку фразу, яку треба записати своїм голосом, щоб перевірити, що голос ваш, і ви вибираєте й цей запис. Tin Pan не записує звук; скористайтеся будь-яким диктофоном. Голос приватний і з’являється в Персонах.",
   "Cuenta, Escuchar para ganar créditos: Suno paga créditos por valorar canciones. Cada tarea tiene dos canciones y una o más preguntas. En su ventana, los botones Canción A y Canción B reproducen o pausan cada canción; escucha cada una el tiempo que indica, elige una respuesta para cada pregunta y luego Enviar valoración, y llega la siguiente. Omitir esta la salta; Cerrar se detiene. La primera vez, Suno hace unas preguntas sobre ti como oyente. A veces Suno quiere que su verificación pase con una valoración; Tin Pan lo hace igual que al crear canciones.\nBiblioteca, Crear una voz con tu canto: una persona que canta con tu voz. Elige una grabación tuya cantando sin música; luego Suno te da una frase corta para grabar con tu propia voz, para comprobar que la voz es tuya, y eliges también esa grabación. Tin Pan no graba; usa cualquier grabadora. La voz es privada y aparece en Personas."
  ],
+ "Speech, sounds, history and Hooks": [
+  "Vorbire, sunete, istoric și Hook-uri",
+  "Мовлення, звуки, історія та хуки",
+  "Habla, sonidos, historial y Hooks"
+ ],
+ "Library menu, Make speech: Suno reads the words you type in a voice, with music under them or not, and a tone if you give one. Make sounds: a sound effect, sample or loop from a description, with its type (one-shot or loop), and a tempo and key if you want them. Both open a form that stays open, like Cover, and the results join your songs like new songs.\nDiscover menu, Listen history opens the songs you played on Suno as a list in the Discover tab; Your hooks and Hooks you liked open the songs in your Hooks the same way. Library menu, Playlists in the trash lists them; Enter brings one back. Account menu, Listen for credits stats shows your ratings, credits earned, streak and today's leaderboard.": [
+  "Meniul Bibliotecă, Fă vorbire: Suno citește cu o voce cuvintele pe care le scrii, cu sau fără muzică dedesubt, și cu un ton dacă dai unul. Fă sunete: un efect sonor, un sample sau o buclă dintr-o descriere, cu tipul lor (un singur sunet sau buclă) și, dacă vrei, un tempo și o tonalitate. Amândouă deschid un formular care rămâne deschis, ca la Cover, iar rezultatele se adaugă la melodiile tale ca melodiile noi.\nMeniul Descoperă, Istoric ascultări deschide melodiile pe care le-ai ascultat pe Suno ca listă în fila Descoperă; Hook-urile tale și Hook-uri apreciate deschid la fel melodiile din Hook-uri. Meniul Bibliotecă, Liste în coș le arată; Enter readuce una. Meniul Cont, Statistici Ascultă pentru credite arată evaluările, creditele câștigate, seria de zile și clasamentul de azi.",
+  "Меню «Бібліотека», «Створити мовлення»: Suno читає голосом слова, які ви введете, з музикою під ними чи без, і з тоном, якщо ви його вкажете. «Створити звуки»: звуковий ефект, семпл або луп з опису, з типом (одиночний чи луп), а за бажанням і темпом та тональністю. Обидва відкривають форму, яка лишається відкритою, як «Кавер», а результати додаються до ваших пісень, як нові пісні.\nМеню «Відкриття», «Історія прослуховувань» відкриває пісні, які ви слухали на Suno, як список на вкладці «Відкриття»; «Ваші хуки» і «Хуки, що вам сподобалися» так само відкривають пісні з ваших хуків. Меню «Бібліотека», «Плейлисти в кошику» показує їх; Enter відновлює один. Меню «Обліковий запис», «Статистика „Слухати за кредити“» показує ваші оцінки, зароблені кредити, серію днів і сьогоднішню таблицю лідерів.",
+  "Menú Biblioteca, Crear habla: Suno lee con una voz las palabras que escribes, con música de fondo o sin ella, y con un tono si le das uno. Crear sonidos: un efecto de sonido, una muestra o un bucle a partir de una descripción, con su tipo (un solo golpe o bucle) y, si quieres, un tempo y una tonalidad. Los dos abren un formulario que se queda abierto, como Cover, y los resultados se suman a tus canciones como las canciones nuevas.\nMenú Descubrir, Historial de escucha abre las canciones que escuchaste en Suno como una lista en la pestaña Descubrir; Tus hooks y Hooks que te gustaron abren igual las canciones de tus Hooks. Menú Biblioteca, Listas en la papelera las muestra; Intro recupera una. Menú Cuenta, Estadísticas de Escuchar para ganar créditos muestra tus valoraciones, los créditos ganados, tu racha y la clasificación de hoy."
+ ],
  "Help menu, Report a problem (Ctrl+Shift+B) and Suggest a feature (Ctrl+Shift+F) send a message privately to Tin Pan's author; no account is needed. Contact the author lists Ernesto's email, Mastodon and the Telegram news channel, and Donate lists ways to support Tin Pan; Enter opens one. The update offer has a Donate button too. A problem report can include Tin Pan's log, which has no passwords; your Windows user name is taken out first.": [
   "Meniul Ajutor, Raportează o problemă (Ctrl+Shift+B) și Sugerează o funcție (Ctrl+Shift+F) trimit un mesaj doar autorului Tin Pan; nu e nevoie de cont. Contactează autorul arată emailul lui Ernesto, Mastodon și canalul de știri de pe Telegram, iar Donează arată cum poți sprijini Tin Pan; Enter îl deschide pe cel ales. Oferta de actualizare are și ea un buton Donează. Un raport de problemă poate include jurnalul Tin Pan, care nu conține parole; numele de utilizator Windows este eliminat mai întâi.",
   "Меню «Довідка», «Повідомити про проблему» (Ctrl+Shift+B) і «Запропонувати функцію» (Ctrl+Shift+F) надсилають повідомлення лише авторові Tin Pan; обліковий запис не потрібен. «Зв’язатися з автором» показує електронну пошту Ернесто, Mastodon і канал новин у Telegram, а «Пожертвувати» показує, як підтримати Tin Pan; Enter відкриває вибране. У пропозиції оновлення теж є кнопка «Пожертвувати». Звіт про проблему може містити журнал Tin Pan, у якому немає паролів; ім’я користувача Windows спершу видаляється.",
   "Menú Ayuda, Informar de un problema (Ctrl+Shift+B) y Sugerir una función (Ctrl+Shift+F) envían un mensaje en privado al autor de Tin Pan; no hace falta cuenta. Contactar con el autor muestra el correo de Ernesto, Mastodon y el canal de noticias de Telegram, y Donar muestra formas de apoyar Tin Pan; Intro abre la elegida. La oferta de actualización también tiene un botón Donar. Un informe de problema puede incluir el registro de Tin Pan, que no tiene contraseñas; antes se quita su nombre de usuario de Windows."
+ ],
+ "Help, Check for updates looks for a new version now. Tin Pan also checks by itself when it starts and every 6 hours while it's open, and says nothing unless there's a new version (Settings, Check for new versions when Tin Pan starts, turns both off). It asks only while Tin Pan is the window in front, no song is starting, no download is running and no other Tin Pan window is open. When one is out, Tin Pan says what's new and asks; Yes downloads it, checks its signature, closes Tin Pan, swaps in the new TinPan.exe and opens it again. Saying No when Tin Pan asked by itself means that version isn't offered again by itself.": [
+  "Ajutor, Caută actualizări caută acum o versiune nouă. Tin Pan verifică și singur la pornire și la fiecare 6 ore cât timp e deschis, și nu spune nimic dacă nu e o versiune nouă (Setări, Caută versiuni noi la pornirea Tin Pan, le oprește pe amândouă). Întreabă doar cât timp Tin Pan e fereastra din față, nu pornește nicio melodie, nu rulează nicio descărcare și nu e deschisă altă fereastră Tin Pan. Când apare una, Tin Pan spune ce e nou și întreabă; Da o descarcă, îi verifică semnătura, închide Tin Pan, pune noul TinPan.exe în locul celui vechi și îl redeschide. Dacă spui Nu când Tin Pan a întrebat de la sine, versiunea aceea nu mai e oferită de la sine.",
+  "«Довідка», «Перевірити оновлення» шукає нову версію зараз. Tin Pan також перевіряє сам під час запуску і кожні 6 годин, поки відкритий, і нічого не каже, якщо нової версії немає («Налаштування», «Перевіряти нові версії під час запуску Tin Pan» вимикає обидві перевірки). Він запитує лише тоді, коли вікно Tin Pan на передньому плані, жодна пісня не запускається, жодне завантаження не триває і не відкрите інше вікно Tin Pan. Коли вона виходить, Tin Pan розповідає, що нового, і запитує; «Так» завантажує її, перевіряє підпис, закриває Tin Pan, замінює TinPan.exe новим і знову відкриває. Якщо відповісти «Ні», коли Tin Pan запитав сам, цю версію більше не буде запропоновано самостійно.",
+  "Ayuda, Buscar actualizaciones busca ahora una versión nueva. Tin Pan también lo comprueba solo al iniciar y cada 6 horas mientras está abierto, y no dice nada si no hay una versión nueva (Configuración, Buscar versiones nuevas al iniciar Tin Pan, desactiva las dos). Solo pregunta cuando Tin Pan es la ventana de delante, no está empezando ninguna canción, no hay ninguna descarga en curso y no hay otra ventana de Tin Pan abierta. Cuando sale una, Tin Pan dice qué hay de nuevo y pregunta; Sí la descarga, comprueba su firma, cierra Tin Pan, pone el nuevo TinPan.exe en su lugar y lo vuelve a abrir. Si dices No cuando Tin Pan preguntó solo, esa versión no se vuelve a ofrecer sola."
+ ],
+ "When it starts, Tin Pan also looks for a message from Ernesto about Tin Pan, such as a problem with Suno and when it should be fixed. A new one is shown once, in a window to read, at the same quiet moment an update would be offered; Escape or Close closes it.": [
+  "La pornire, Tin Pan caută și un mesaj de la Ernesto despre Tin Pan, de exemplu o problemă cu Suno și când ar trebui rezolvată. Un mesaj nou e arătat o singură dată, într-o fereastră de citit, în același moment liniștit în care ar fi oferită o actualizare; Escape sau Închide o închide.",
+  "Під час запуску Tin Pan також шукає повідомлення від Ернесто про Tin Pan, наприклад про проблему із Suno і коли її мають виправити. Нове повідомлення показується один раз у вікні для читання, у той самий спокійний момент, коли було б запропоновано оновлення; Escape або «Закрити» закриває його.",
+  "Al iniciar, Tin Pan también busca un mensaje de Ernesto sobre Tin Pan, por ejemplo un problema con Suno y cuándo debería arreglarse. Un mensaje nuevo se muestra una sola vez, en una ventana para leer, en el mismo momento tranquilo en que se ofrecería una actualización; Escape o Cerrar la cierra."
  ],
  "Answer {0} first.": [
   "Răspunde mai întâi la {0}.",
@@ -5884,6 +6064,11 @@
   "Немає позначених пісень.",
   "No hay canciones marcadas."
  ],
+ "Restored {0}.": [
+  "Am readus {0}.",
+  "«{0}» відновлено.",
+  "{0} se restauró."
+ ],
  "Already signed in. Sign out first to use another account.": [
   "Ești deja conectat. Deconectează-te mai întâi ca să folosești alt cont.",
   "Ви вже ввійшли. Щоб скористатися іншим обліковим записом, спершу вийдіть.",
@@ -6019,6 +6204,36 @@
   "Пошук Suno: {0}",
   "Búsqueda en Suno: {0}"
  ],
+ "Your listen history is empty.": [
+  "Istoricul ascultărilor e gol.",
+  "Ваша історія прослуховувань порожня.",
+  "Tu historial de escucha está vacío."
+ ],
+ "Listen history": [
+  "Istoric ascultări",
+  "Історія прослуховувань",
+  "Historial de escucha"
+ ],
+ "No songs in the Hooks you liked.": [
+  "Nicio melodie în Hook-urile apreciate.",
+  "У хуках, що вам сподобалися, немає пісень.",
+  "No hay canciones en los Hooks que te gustaron."
+ ],
+ "No songs in your Hooks.": [
+  "Nicio melodie în Hook-urile tale.",
+  "У ваших хуках немає пісень.",
+  "No hay canciones en tus Hooks."
+ ],
+ "Hooks you liked": [
+  "Hook-uri apreciate",
+  "Хуки, що вам сподобалися",
+  "Hooks que te gustaron"
+ ],
+ "Your hooks": [
+  "Hook-urile tale",
+  "Ваші хуки",
+  "Tus hooks"
+ ],
  "Rating sent.": [
   "Evaluarea a fost trimisă.",
   "Оцінку надіслано.",
@@ -6144,6 +6359,11 @@
   "ваш екранний диктор",
   "tu lector de pantalla"
  ],
+ "Message about Tin Pan": [
+  "Mesaj despre Tin Pan",
+  "Повідомлення про Tin Pan",
+  "Mensaje sobre Tin Pan"
+ ],
  "Tin Pan can't read that file as audio.": [
   "Tin Pan nu poate citi fișierul acela ca sunet.",
   "Tin Pan не може прочитати цей файл як аудіо.",
@@ -6249,6 +6469,11 @@
   "Виберіть запис фрази",
   "Elige la grabación de la frase"
  ],
+ "Suno didn't restore the playlist.": [
+  "Suno nu a readus lista.",
+  "Suno не відновив плейлист.",
+  "Suno no restauró la lista."
+ ],
  "Free plan": [
   "Planul gratuit",
   "Безкоштовний план",
@@ -6289,6 +6514,21 @@
   "Нове: {0}",
   "Nuevo: {0}"
  ],
+ "Today: {0} of the {1} ratings that count a day for the streak.": [
+  "Azi: {0} din cele {1} evaluări care fac ca o zi să conteze pentru serie.",
+  "Сьогодні: {0} з {1} оцінок, потрібних, щоб день зарахувався до серії.",
+  "Hoy: {0} de las {1} valoraciones que hacen que un día cuente para la racha."
+ ],
+ "Next streak reward: {0} in {1}.": [
+  "Următoarea recompensă pentru serie: {0} peste {1}.",
+  "Наступна нагорода за серію: {0} через {1}.",
+  "Próxima recompensa por racha: {0} en {1}."
+ ],
+ "Today's leaderboard:": [
+  "Clasamentul de azi:",
+  "Сьогоднішня таблиця лідерів:",
+  "Clasificación de hoy:"
+ ],
  "Song {0}": [
   "Melodia {0}",
   "Пісня {0}",
@@ -6303,6 +6543,51 @@
   "Suno a dat o adresă de melodie pe care aplicația nu o folosește.",
   "Suno дав адресу пісні, якою цей застосунок не користується.",
   "Suno dio una dirección de canción que esta aplicación no usa."
+ ],
+ "{0} rating sent in all.|{0} ratings sent in all.": [
+  "{0} evaluare trimisă în total.|{0} evaluări trimise în total.|{0} de evaluări trimise în total.",
+  "Усього надіслано {0} оцінку.|Усього надіслано {0} оцінки.|Усього надіслано {0} оцінок.",
+  "{0} valoración enviada en total.|{0} valoraciones enviadas en total."
+ ],
+ "{0} credit earned in all.|{0} credits earned in all.": [
+  "{0} credit câștigat în total.|{0} credite câștigate în total.|{0} de credite câștigate în total.",
+  "Усього зароблено {0} кредит.|Усього зароблено {0} кредити.|Усього зароблено {0} кредитів.",
+  "{0} crédito ganado en total.|{0} créditos ganados en total."
+ ],
+ "{0} minute listened.|{0} minutes listened.": [
+  "{0} minut ascultat.|{0} minute ascultate.|{0} de minute ascultate.",
+  "Прослухано {0} хвилину.|Прослухано {0} хвилини.|Прослухано {0} хвилин.",
+  "{0} minuto escuchado.|{0} minutos escuchados."
+ ],
+ "Active on {0} day.|Active on {0} days.": [
+  "Activ în {0} zi.|Activ în {0} zile.|Activ în {0} de zile.",
+  "Активність: {0} день.|Активність: {0} дні.|Активність: {0} днів.",
+  "Activo {0} día.|Activo {0} días."
+ ],
+ "Longest streak: {0} day.|Longest streak: {0} days.": [
+  "Cea mai lungă serie: {0} zi.|Cea mai lungă serie: {0} zile.|Cea mai lungă serie: {0} de zile.",
+  "Найдовша серія: {0} день.|Найдовша серія: {0} дні.|Найдовша серія: {0} днів.",
+  "Racha más larga: {0} día.|Racha más larga: {0} días."
+ ],
+ "Current streak: {0} day.|Current streak: {0} days.": [
+  "Seria de acum: {0} zi.|Seria de acum: {0} zile.|Seria de acum: {0} de zile.",
+  "Поточна серія: {0} день.|Поточна серія: {0} дні.|Поточна серія: {0} днів.",
+  "Racha actual: {0} día.|Racha actual: {0} días."
+ ],
+ "{0} credit|{0} credits": [
+  "{0} credit|{0} credite|{0} de credite",
+  "{0} кредит|{0} кредити|{0} кредитів",
+  "{0} crédito|{0} créditos"
+ ],
+ "{0} day|{0} days": [
+  "{0} zi|{0} zile|{0} de zile",
+  "{0} день|{0} дні|{0} днів",
+  "{0} día|{0} días"
+ ],
+ "{0} reward is ready on Suno's Listen for Credits page.|{0} rewards are ready on Suno's Listen for Credits page.": [
+  "{0} recompensă te așteaptă pe pagina Ascultă pentru credite a lui Suno.|{0} recompense te așteaptă pe pagina Ascultă pentru credite a lui Suno.|{0} de recompense te așteaptă pe pagina Ascultă pentru credite a lui Suno.",
+  "На сторінці «Слухати за кредити» в Suno чекає {0} нагорода.|На сторінці «Слухати за кредити» в Suno чекають {0} нагороди.|На сторінці «Слухати за кредити» в Suno чекають {0} нагород.",
+  "{0} recompensa te espera en la página Escuchar para ganar créditos de Suno.|{0} recompensas te esperan en la página Escuchar para ganar créditos de Suno."
  ],
  "I make songs to share with friends": [
   "Fac melodii ca să le împart cu prietenii",
@@ -6578,10 +6863,5 @@
   "Suno extrage de mult timp vocea din cântecul tău. Încearcă mai târziu.",
   "Suno довго виділяє вокал із вашого співу. Спробуйте пізніше.",
   "Suno tarda en separar la voz de tu canto. Inténtalo más tarde."
- ],
- "Help, Check for updates looks for a new version now. Tin Pan also checks by itself when it starts and every 6 hours while it's open, and says nothing unless there's a new version (Settings, Check for new versions when Tin Pan starts, turns both off). It asks only while Tin Pan is the window in front, no song is starting, no download is running and no other Tin Pan window is open. When one is out, Tin Pan says what's new and asks; Yes downloads it, checks its signature, closes Tin Pan, swaps in the new TinPan.exe and opens it again. Saying No when Tin Pan asked by itself means that version isn't offered again by itself.": [
-  "Ajutor, Caută actualizări caută acum o versiune nouă. Tin Pan verifică și singur la pornire și la fiecare 6 ore cât timp e deschis, și nu spune nimic dacă nu e o versiune nouă (Setări, Caută versiuni noi la pornirea Tin Pan, le oprește pe amândouă). Întreabă doar cât timp Tin Pan e fereastra din față, nu pornește nicio melodie, nu rulează nicio descărcare și nu e deschisă altă fereastră Tin Pan. Când apare una, Tin Pan spune ce e nou și întreabă; Da o descarcă, îi verifică semnătura, închide Tin Pan, pune noul TinPan.exe în locul celui vechi și îl redeschide. Dacă spui Nu când Tin Pan a întrebat de la sine, versiunea aceea nu mai e oferită de la sine.",
-  "«Довідка», «Перевірити оновлення» шукає нову версію зараз. Tin Pan також перевіряє сам під час запуску і кожні 6 годин, поки відкритий, і нічого не каже, якщо нової версії немає («Налаштування», «Перевіряти нові версії під час запуску Tin Pan» вимикає обидві перевірки). Він запитує лише тоді, коли вікно Tin Pan на передньому плані, жодна пісня не запускається, жодне завантаження не триває і не відкрите інше вікно Tin Pan. Коли вона виходить, Tin Pan розповідає, що нового, і запитує; «Так» завантажує її, перевіряє підпис, закриває Tin Pan, замінює TinPan.exe новим і знову відкриває. Якщо відповісти «Ні», коли Tin Pan запитав сам, цю версію більше не буде запропоновано самостійно.",
-  "Ayuda, Buscar actualizaciones busca ahora una versión nueva. Tin Pan también lo comprueba solo al iniciar y cada 6 horas mientras está abierto, y no dice nada si no hay una versión nueva (Configuración, Buscar versiones nuevas al iniciar Tin Pan, desactiva las dos). Solo pregunta cuando Tin Pan es la ventana de delante, no está empezando ninguna canción, no hay ninguna descarga en curso y no hay otra ventana de Tin Pan abierta. Cuando sale una, Tin Pan dice qué hay de nuevo y pregunta; Sí la descarga, comprueba su firma, cierra Tin Pan, pone el nuevo TinPan.exe en su lugar y lo vuelve a abrir. Si dices No cuando Tin Pan preguntó solo, esa versión no se vuelve a ofrecer sola."
  ]
 }

@@ -97,6 +97,8 @@ pub enum Command {
     MakePersona { clip_id: String, name: String, description: String, public: bool },
     /// The latest release on GitHub against this version; `manual` from Help, Check for updates.
     CheckForUpdates { manual: bool },
+    /// Ernesto's message about Tin Pan (update::MESSAGE_URL), fetched once at start.
+    CheckMessage,
     SendReport { report: Box<tinpan_core::report::Report> },
     ExistingStems { clip: Box<SunoClip> },
     Credits { clip: Box<SunoClip> },
@@ -143,6 +145,13 @@ pub enum Command {
     SaveDraft { draft: LyricsDraft, lyrics: String },
     RenameDraft { draft: LyricsDraft, title: String },
     DeleteDraft { draft: LyricsDraft },
+    /// Songs you played on Suno.
+    ListenHistory,
+    /// Your Hooks, or the Hooks you liked.
+    Hooks { liked: bool },
+    TrashedPlaylists,
+    RestorePlaylist { playlist_id: String, name: String },
+    ListenStats,
 }
 
 /// What to do with someone else's playlist.
@@ -231,6 +240,9 @@ pub enum Response {
     PlaylistMade(Playlist),
     PlaylistRenamed,
     PlaylistTrashed { playlist_id: String, name: String },
+    TrashedPlaylists(Vec<Playlist>),
+    PlaylistRestored { name: String },
+    ListenStats(Box<tinpan_core::listen::Stats>),
     AddedToPlaylist { playlist: Playlist, clip_ids: Vec<String> },
     RemovedFromPlaylist { playlist_id: String, clip_ids: Vec<String> },
     /// Suno took a move the list had made already.
@@ -260,6 +272,7 @@ pub enum Response {
     NotificationsRead,
     VideoReady { clip_id: String, url: String },
     UpdateChecked { result: Result<Option<tinpan_core::update::UpdateInfo>, String>, manual: bool },
+    MessageChecked(Result<Option<(i64, String)>, String>),
     ReportSent { kind: &'static str, number: i64 },
     TimedLyrics { clip_id: String, words: Vec<tinpan_core::lyrics::AlignedWord> },
     PersonaList { list: tinpan_core::personas::PersonaList, personas: Vec<tinpan_core::personas::PersonaDetails> },
@@ -332,6 +345,18 @@ impl Network {
         thread::spawn(move || {
             let api = Arc::new(SunoApi::new(clerk::http_client()));
             for command in inbox {
+                // The message check gets a thread of its own too, but doesn't count as something loading.
+                if matches!(command, Command::CheckMessage) {
+                    let (api, outbox) = (api.clone(), outbox.clone());
+                    thread::spawn(move || {
+                        for response in run(&api, command, &|_| {}) {
+                            if outbox.send(response).is_ok() {
+                                waker.wake();
+                            }
+                        }
+                    });
+                    continue;
+                }
                 // Downloads and clean-ups take a while; each gets its own thread, so playing and paging
                 // never wait behind them.
                 if command.is_long() {
@@ -897,6 +922,7 @@ fn run(api: &SunoApi, command: Command, report: &dyn Fn(Response)) -> Vec<Respon
             let result = tinpan_core::update::check(&tinpan_core::update::client(), &crate::updates::current());
             vec![Response::UpdateChecked { result, manual }]
         }
+        Command::CheckMessage => vec![Response::MessageChecked(tinpan_core::update::fetch_message(&tinpan_core::update::client()))],
         Command::DownloadUpdate { update } => {
             let halfway = std::cell::Cell::new(false);
             let progress = |part: f64| {
@@ -983,6 +1009,28 @@ fn run(api: &SunoApi, command: Command, report: &dyn Fn(Response)) -> Vec<Respon
         Command::SearchSuno { term } => vec![match api.search_suno(&term) {
             Ok(songs) if songs.is_empty() => Response::Say(tf("Suno found no songs for {0}.", &[&term])),
             Ok(songs) => Response::ResultList { title: tf("Suno search: {0}", &[&term]), songs, with_creator: true, creator: None },
+            Err(e) => Response::Failed(e),
+        }],
+        Command::ListenHistory => vec![match api.listen_history() {
+            Ok(songs) if songs.is_empty() => Response::Say(t("Your listen history is empty.")),
+            Ok(songs) => Response::ResultList { title: t("Listen history"), songs, with_creator: true, creator: None },
+            Err(e) => Response::Failed(e),
+        }],
+        Command::Hooks { liked } => vec![match api.hooks(liked) {
+            Ok(songs) if songs.is_empty() => Response::Say(if liked { t("No songs in the Hooks you liked.") } else { t("No songs in your Hooks.") }),
+            Ok(songs) => Response::ResultList { title: if liked { t("Hooks you liked") } else { t("Your hooks") }, songs, with_creator: true, creator: None },
+            Err(e) => Response::Failed(e),
+        }],
+        Command::TrashedPlaylists => vec![match api.trashed_playlists() {
+            Ok(list) => Response::TrashedPlaylists(list),
+            Err(e) => Response::Failed(e),
+        }],
+        Command::RestorePlaylist { playlist_id, name } => vec![match api.restore_playlist(&playlist_id) {
+            Ok(()) => Response::PlaylistRestored { name },
+            Err(e) => Response::Failed(e),
+        }],
+        Command::ListenStats => vec![match api.listen_stats() {
+            Ok(stats) => Response::ListenStats(Box::new(stats)),
             Err(e) => Response::Failed(e),
         }],
         Command::Autoplay { seed_id } => vec![Response::Autoplay(api.autoplay(&seed_id))],

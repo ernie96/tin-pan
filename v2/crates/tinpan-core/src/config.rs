@@ -29,6 +29,8 @@ pub struct AppConfig {
     pub last_model: String,
     pub update: UpdateConfig,
     pub cleanup: CleanupConfig,
+    /// The number of the last message about Tin Pan shown (update::MESSAGE_URL); 0 before any.
+    pub seen_message: i64,
     #[serde(flatten)]
     pub extra: Extra,
 }
@@ -46,6 +48,7 @@ impl Default for AppConfig {
             last_model: String::new(),
             update: UpdateConfig::default(),
             cleanup: CleanupConfig::default(),
+            seen_message: 0,
             extra: Extra::new(),
         }
     }

@@ -921,6 +921,18 @@ impl SunoApi {
         sj::find_clips(&self.send(Method::POST, "/api/social/following-feed", Some(&body))?)
     }
 
+    /// GET /api/profiles/listen-history: songs you played on Suno, newest first; each entry's content is the song.
+    pub fn listen_history(&self) -> Result<Vec<SunoClip>> {
+        sj::find_clips(&self.send(Method::GET, "/api/profiles/listen-history?limit=50", None)?)
+    }
+
+    /// Your Hooks (GET /api/video/hooks/user_hooks) or the Hooks you liked (/me/liked/v2), as the Library's tabs
+    /// ask for them; the songs in them. Their reply's shape hasn't been seen yet, so songs are found at any depth.
+    pub fn hooks(&self, liked: bool) -> Result<Vec<SunoClip>> {
+        let path = if liked { "/api/video/hooks/me/liked/v2?start_index=0&page_size=50&user_handle=" } else { "/api/video/hooks/user_hooks?start_index=0&page_size=50&user_handle=" };
+        sj::find_clips(&self.send(Method::GET, path, None)?)
+    }
+
     /// GET /api/clips/get_similar/?id=, without the song itself.
     pub fn similar(&self, clip_id: &str) -> Result<Vec<SunoClip>> {
         let clips = sj::find_clips(&self.send(Method::GET, &format!("/api/clips/get_similar/?id={}", escape(clip_id)), None)?)?;
@@ -1061,6 +1073,22 @@ impl SunoApi {
 
     pub fn trash_playlist(&self, playlist_id: &str) -> Result<()> {
         self.send(Method::POST, "/api/playlist/trash/", Some(&json!({ "playlist_id": playlist_id }))).map(drop)
+    }
+
+    /// Your playlists in the trash: GET /api/playlist/me with show_trashed=true, as Suno's trash page asks. Where
+    /// Suno marks each playlist, only those in the trash are kept.
+    pub fn trashed_playlists(&self) -> Result<Vec<Playlist>> {
+        let root = sj::parse(&self.send(Method::GET, "/api/playlist/me?page=1&show_trashed=true&show_sharelist=false", None)?)?;
+        Ok(playlist::read_trashed(&root))
+    }
+
+    /// POST /api/playlist/v2/{id}/trash with undo: the playlist comes back out of the trash.
+    pub fn restore_playlist(&self, playlist_id: &str) -> Result<()> {
+        let reply = self.send(Method::POST, &format!("/api/playlist/v2/{}/trash", escape(playlist_id)), Some(&json!({ "undo": true })))?;
+        if sj::parse(if reply.trim().is_empty() { "{}" } else { &reply })?.get("success").and_then(Value::as_bool) == Some(false) {
+            return Err(Error::api(t("Suno didn't restore the playlist.")));
+        }
+        Ok(())
     }
 
     pub fn add_to_playlist(&self, playlist_id: &str, clip_ids: &[&str]) -> Result<()> {
