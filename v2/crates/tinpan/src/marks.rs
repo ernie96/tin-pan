@@ -25,7 +25,7 @@ impl View {
     }
 
     pub fn marked_count(&self) -> usize {
-        self.songs.iter().filter(|s| self.marked.contains(&s.id)).count()
+        self.songs.iter().filter(|s| self.marked.contains(&s.id) && !s.id.starts_with(discover::NO_SONG)).count()
     }
 }
 
@@ -71,7 +71,14 @@ impl App {
             _ => Some(index + 1),
         };
         let view = self.shown_mut();
-        let ids: Vec<String> = [Some(index), next].into_iter().flatten().filter_map(|i| view.songs.get(i)).map(|s| s.id.clone()).collect();
+        // A contest without a song can't be marked, as with Ctrl+A.
+        let ids: Vec<String> = [Some(index), next]
+            .into_iter()
+            .flatten()
+            .filter_map(|i| view.songs.get(i))
+            .filter(|s| !s.id.starts_with(discover::NO_SONG))
+            .map(|s| s.id.clone())
+            .collect();
         view.marked.extend(ids);
         self.refresh_rows(Select::Keep);
         if !self.list().step(step) {

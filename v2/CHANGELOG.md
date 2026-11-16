@@ -1,5 +1,21 @@
 # Tin Pan 2 changes
 
+## 2.3.1
+
+### Fixed
+
+- Discover, Following didn't load: Suno stopped accepting how Tin Pan asked for the newest songs first.
+- When the message about Tin Pan was open at start, the update check that should have run then was skipped
+  until 6 hours later. It now runs once the message is closed.
+- Closing Tin Pan, or installing an update, wrote "Unexpected error" to the log as Tin Pan shut down.
+- A song file that came unencrypted, or as WAV, FLAC or Ogg, was taken for a broken file and the song played
+  through Suno's player instead. Some songs still go to Suno's player because their file doesn't decode, and
+  why isn't known yet; those now leave a line in the log that says what Suno sent.
+- When Suno says to wait more than 10 seconds before trying again, Tin Pan no longer asks again at once (only
+  to be refused again) and says to wait a minute.
+- Shift+Up and Shift+Down could mark a contest that has no song, and count it among the marked songs.
+- Report a problem could still close Tin Pan with some rare mixes of letters in the log.
+
 ## 2.3.0
 
 - Tin Pan now also checks for a new version every 6 hours while it's open, not only when it starts. It says

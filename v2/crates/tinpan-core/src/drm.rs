@@ -147,15 +147,26 @@ pub fn unwrap_rights(rights: &SunoRights, clip_id: &str, bearer_token: Option<&s
     Err(Error::api(t("Couldn't unlock this song's free file with your account.")))
 }
 
-/// "m4a", "mp3" or "unknown", from a file's first bytes.
+/// "m4a", "mp3", "wav", "flac", "ogg" or "unknown", from a file's first bytes: the containers the player reads.
 pub fn detect_container(header: &[u8]) -> &'static str {
     if header.len() >= 8 && &header[4..8] == b"ftyp" {
         "m4a"
     } else if header.starts_with(b"ID3") || (header.len() >= 2 && header[0] == 0xFF && header[1] & 0xE0 == 0xE0) {
         "mp3"
+    } else if header.len() >= 12 && header.starts_with(b"RIFF") && &header[8..12] == b"WAVE" {
+        "wav"
+    } else if header.starts_with(b"fLaC") {
+        "flac"
+    } else if header.starts_with(b"OggS") {
+        "ogg"
     } else {
         "unknown"
     }
+}
+
+/// A file's first 8 bytes in hexadecimal, for the log when it isn't a song file.
+pub fn first_bytes(data: &[u8]) -> String {
+    data.iter().take(8).map(|b| format!("{b:02x}")).collect()
 }
 
 /// Decrypts (or encrypts: it's the same) a buffer in place with AES-CTR, a 128-bit big-endian counter.
@@ -265,5 +276,9 @@ mod tests {
         assert_eq!(detect_container(b"ID3\x04\0\0"), "mp3");
         assert_eq!(detect_container(&[0xFF, 0xFB, 0x90, 0x64]), "mp3");
         assert_eq!(detect_container(&[1, 2, 3, 4]), "unknown");
+        assert_eq!(detect_container(b"RIFF\x24\0\0\0WAVEfmt "), "wav");
+        assert_eq!(detect_container(b"RIFF\x24\0\0\0AVI "), "unknown");
+        assert_eq!(detect_container(b"fLaC\0\0\0\x22"), "flac");
+        assert_eq!(first_bytes(b"RIFF\x24\0\0\0WAVE"), "5249464624000000");
     }
 }

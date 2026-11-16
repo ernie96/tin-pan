@@ -201,13 +201,16 @@ impl SunoApi {
             if (200..300).contains(&status) {
                 return Ok(text);
             }
-            log::warn!("{method} {} returned {status}: {}", queryless(path), truncate(&text.replace(['\r', '\n'], " "), 300));
+            let wait_note = retry_after.map(|s| format!(" (retry after {s} s)")).unwrap_or_default();
+            log::warn!("{method} {} returned {status}{wait_note}: {}", queryless(path), truncate(&text.replace(['\r', '\n'], " "), 300));
             // Suno rejects tokens it considers stale even before they expire; one fresh token fixes it.
             if retry_auth && (status == 401 || status == 403 || looks_like_stale_token(&text)) {
                 return self.send_with(method, path, body, false, rate_limited);
             }
-            if status == 429 && rate_limited < RATE_LIMIT_RETRIES && (retryable_rate_limit(&text) || retry_after.is_some()) {
-                let wait = retry_after.filter(|s| *s <= 10).map_or(Duration::from_secs(if rate_limited == 0 { 2 } else { 5 }), Duration::from_secs);
+            // A longer wait than 10 seconds isn't waited out here (it would hold up everything else), and asking
+            // again before it is over only fails again.
+            if status == 429 && rate_limited < RATE_LIMIT_RETRIES && retry_after.is_none_or(|s| s <= 10) && (retryable_rate_limit(&text) || retry_after.is_some()) {
+                let wait = retry_after.map_or(Duration::from_secs(if rate_limited == 0 { 2 } else { 5 }), Duration::from_secs);
                 thread::sleep(wait);
                 return self.send_with(method, path, body, retry_auth, rate_limited + 1);
             }
@@ -917,7 +920,7 @@ impl SunoApi {
 
     /// POST /api/social/following-feed, newest first.
     pub fn following(&self) -> Result<Vec<SunoClip>> {
-        let body = json!({ "page_size": 50, "ranking_method": "most_recent", "result_type": "all" });
+        let body = json!({ "page_size": 50, "ranking_method": "chronological", "result_type": "all" });
         sj::find_clips(&self.send(Method::POST, "/api/social/following-feed", Some(&body))?)
     }
 
@@ -1140,9 +1143,15 @@ impl SunoApi {
             .unwrap_or_else(|| drm::default_media_url(&clip.id));
         let (key, iv) = drm::unwrap_rights(&rights, &clip.id, Some(&token))?;
         let mut data = self.fetch_file(&url)?;
+        // A file sent unencrypted though it was listed as encrypted is used as it is.
+        if drm::detect_container(&data[..data.len().min(32)]) != "unknown" {
+            log::info!("{} came unencrypted", clip.id);
+            return Ok(data);
+        }
+        let sent = drm::first_bytes(&data);
         drm::apply_aes_ctr(&mut data, &key, &iv)?;
         if drm::detect_container(&data[..data.len().min(32)]) == "unknown" {
-            log::warn!("{} decrypted to something that isn't a song file", clip.id);
+            log::warn!("{} decrypted to something that isn't a song file (sent {sent}, decrypted {})", clip.id, drm::first_bytes(&data));
             return Err(Error::api(t("Suno's song file didn't decode.")));
         }
         Ok(data)

@@ -321,6 +321,14 @@ fn main() {
         updates::start_repeat_timer(&app.frame);
         APP.with(|cell| *cell.borrow_mut() = Some(app));
     });
+    // The app is left as it is when Tin Pan ends. Dropped later, at the end of the main thread, it would wait
+    // for its network threads, which Windows has stopped by then: std then panics ("threads should not
+    // terminate unexpectedly") and the windows it would destroy are already gone.
+    APP.with(|cell| {
+        if let Ok(mut app) = cell.try_borrow_mut() {
+            std::mem::forget(app.take());
+        }
+    });
 }
 
 impl App {

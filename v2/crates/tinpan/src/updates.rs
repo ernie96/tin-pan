@@ -132,6 +132,9 @@ impl App {
     /// Every minute: runs the repeated update check when it's due, and offers a version it found earlier once
     /// nothing would be interrupted.
     pub(crate) fn update_tick(&mut self) {
+        if STARTUP_CHECK_MISSED.swap(false, std::sync::atomic::Ordering::Relaxed) {
+            self.update_timer.start(5_000, true);
+        }
         self.show_message_when_quiet();
         if self.updating {
             return;
@@ -332,7 +335,7 @@ pub fn start_repeat_timer(frame: &Frame) {
 pub fn startup_timer(frame: &Frame) -> Timer<Frame> {
     let timer = Timer::new(frame);
     timer.on_tick(|_| {
-        with_app(|app| {
+        let ran = crate::with_app_value(|app| {
             // The offer waits until the sign-in window is closed, so it can't land on top of it (Tin Pan 1.3.0).
             if app.sign_in_window.is_some() {
                 app.update_timer.start(5_000, true);
@@ -340,6 +343,14 @@ pub fn startup_timer(frame: &Frame) -> Timer<Frame> {
                 app.check_for_updates(false);
             }
         });
+        // A window Tin Pan was showing (the message about Tin Pan, say) kept the app busy: the minute timer
+        // starts the check again once it's closed, rather than skipping it until the 6-hour one.
+        if ran.is_none() {
+            STARTUP_CHECK_MISSED.store(true, std::sync::atomic::Ordering::Relaxed);
+        }
     });
     timer
 }
+
+/// The startup check's moment came while Tin Pan was busy with a window of its own.
+static STARTUP_CHECK_MISSED: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
