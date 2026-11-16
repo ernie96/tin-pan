@@ -424,7 +424,7 @@ mod tests {
         assert!(slice1_path.exists());
 
         let slice2_path = temp_dir.join("slice2.wav");
-        let dur2 = decoded.write_slice(44100 * 2, 44100 * 1, &slice2_path).unwrap(); // 1 second
+        let dur2 = decoded.write_slice(44100 * 2, 44100, &slice2_path).unwrap(); // 1 second
         assert!((dur2 - 1.0).abs() < 0.01);
 
         let _ = std::fs::remove_dir_all(temp_dir);

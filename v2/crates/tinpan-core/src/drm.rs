@@ -164,6 +164,16 @@ pub fn detect_container(header: &[u8]) -> &'static str {
     }
 }
 
+/// `path` with the extension of the container found in the file, when it's a known one and a different one.
+pub fn path_for_container(path: &std::path::Path, container: &str) -> std::path::PathBuf {
+    let current = path.extension().and_then(|e| e.to_str()).unwrap_or("").to_ascii_lowercase();
+    if container == "unknown" || current == container {
+        path.to_path_buf()
+    } else {
+        path.with_extension(container)
+    }
+}
+
 /// A file's first 8 bytes in hexadecimal, for the log when it isn't a song file.
 pub fn first_bytes(data: &[u8]) -> String {
     data.iter().take(8).map(|b| format!("{b:02x}")).collect()
@@ -280,5 +290,10 @@ mod tests {
         assert_eq!(detect_container(b"RIFF\x24\0\0\0AVI "), "unknown");
         assert_eq!(detect_container(b"fLaC\0\0\0\x22"), "flac");
         assert_eq!(first_bytes(b"RIFF\x24\0\0\0WAVE"), "5249464624000000");
+        let song = std::path::Path::new("Suno").join("Song (1a2b3c4d).m4a");
+        assert_eq!(path_for_container(&song, "m4a"), song);
+        assert_eq!(path_for_container(&song, "unknown"), song);
+        assert_eq!(path_for_container(&song, "mp3"), std::path::Path::new("Suno").join("Song (1a2b3c4d).mp3"));
+        assert_eq!(path_for_container(std::path::Path::new("A (b).M4A"), "m4a"), std::path::Path::new("A (b).M4A"));
     }
 }

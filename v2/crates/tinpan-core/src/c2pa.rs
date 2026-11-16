@@ -130,7 +130,7 @@ fn strip_id3_jumbf(data: &[u8]) -> (Vec<u8>, bool) {
     }
 
     let version = data[3];
-    if version < 3 || version > 4 {
+    if !(3..=4).contains(&version) {
         return (data.to_vec(), false);
     }
     let is_v4 = version == 4;

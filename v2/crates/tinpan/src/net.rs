@@ -18,6 +18,9 @@ use wxdragon::{ffi, prelude::*};
 
 pub const ID_WAKE: i32 = 10_999;
 
+/// One song's batch edit: its id, new title, new styles and public or not (None leaves each as it is).
+pub type MetadataUpdate = (String, Option<String>, Option<String>, Option<bool>);
+
 pub enum Command {
     /// Signs in with cookies: saved ones, or `fresh` ones from the sign-in window.
     SignIn { cookies: String, device_id: String, fresh: bool },
@@ -154,7 +157,7 @@ pub enum Command {
     /// Searches top community tags
     SearchStyles { term: String },
     /// Batch edits metadata on marked songs: (id, title, tags, public)
-    BatchEditMetadata { updates: Vec<(String, Option<String>, Option<String>, Option<bool>)> },
+    BatchEditMetadata { updates: Vec<MetadataUpdate> },
     /// Songs you played on Suno.
     ListenHistory,
     /// Your Hooks, or the Hooks you liked.
@@ -477,14 +480,13 @@ fn download_all(api: &SunoApi, songs: &[(SunoClip, PathBuf)], format: &str, dir:
     use tinpan_core::i18n::{plural, t, tf};
     let (mut saved, mut cleaned, mut failed) = (0usize, 0usize, Vec::new());
     for (i, (clip, path)) in songs.iter().enumerate() {
-        let path = path.as_path();
-        let done = if format == "wav" { api.wav_url(&clip.id).and_then(|url| api.download_to(&url, path)) } else { api.download_free(clip, path) };
+        let done = if format == "wav" { api.wav_url(&clip.id).and_then(|url| api.download_to(&url, path)).map(|()| path.clone()) } else { api.download_free(clip, path) };
         match done {
-            Ok(()) => {
+            Ok(path) => {
                 saved += 1;
-                save_extras(api, clip, path, extras);
+                save_extras(api, clip, &path, extras);
                 if let Some(options) = options
-                    && tinpan_core::cleanup::clean(path, options, &native_dir(), crate::song_source::decode_to_wav).is_ok()
+                    && tinpan_core::cleanup::clean(&path, options, &native_dir(), crate::song_source::decode_to_wav).is_ok()
                 {
                     cleaned += 1;
                 }
@@ -552,13 +554,16 @@ fn run(api: &SunoApi, command: Command, report: &dyn Fn(Response)) -> Vec<Respon
             Ok(state) => vec![Response::Reacted { clip_id, state, asked: reaction }],
             Err(e) => vec![Response::Failed(e)],
         },
+        // Songs Suno took before a later batch failed are moved (or deleted) in the lists too, then the failure is said.
         Command::Trash { clip_ids, trashed } => match api.set_trashed(&strs(&clip_ids), trashed) {
             Ok(()) => vec![Response::Trashed { clip_ids, trashed }],
-            Err(e) => vec![Response::Failed(e)],
+            Err((0, e)) => vec![Response::Failed(e)],
+            Err((done, e)) => vec![Response::Trashed { clip_ids: clip_ids[..done].to_vec(), trashed }, Response::Failed(e)],
         },
         Command::DeleteForever { clip_ids } => match api.delete_forever(&strs(&clip_ids)) {
             Ok(()) => vec![Response::DeletedForever { clip_ids }],
-            Err(e) => vec![Response::Failed(e)],
+            Err((0, e)) => vec![Response::Failed(e)],
+            Err((done, e)) => vec![Response::DeletedForever { clip_ids: clip_ids[..done].to_vec() }, Response::Failed(e)],
         },
         Command::Change { clip_id, change } => {
             let done = match &change {
@@ -576,15 +581,15 @@ fn run(api: &SunoApi, command: Command, report: &dyn Fn(Response)) -> Vec<Respon
         Command::DownloadAll { songs, format, dir, extras, clean } => vec![download_all(api, &songs, &format, &dir, extras, clean.as_ref(), report)],
         Command::Download { clip, format, path, extras, clean: cleaning } => {
             let saved = match format.as_str() {
-                "wav" => api.wav_url(&clip.id).and_then(|url| api.download_to(&url, &path)),
+                "wav" => api.wav_url(&clip.id).and_then(|url| api.download_to(&url, &path)).map(|()| path.clone()),
                 "mp4" => match clip.video_url.as_deref().filter(|u| !u.is_empty()) {
-                    Some(url) => api.download_to(url, &path),
+                    Some(url) => api.download_to(url, &path).map(|()| path.clone()),
                     None => Err(Error::api(tinpan_core::i18n::t("Suno gave no file address for this song."))),
                 },
                 _ => api.download_free(&clip, &path),
             };
             match saved {
-                Ok(()) => {
+                Ok(path) => {
                     save_extras(api, &clip, &path, extras);
                     let title = clip.display_title();
                     let mut out = vec![Response::Downloaded { clip, through_suno: false }];
@@ -1151,16 +1156,27 @@ fn run(api: &SunoApi, command: Command, report: &dyn Fn(Response)) -> Vec<Respon
         },
         Command::BatchEditMetadata { updates } => {
             let total = updates.len();
+            let (mut updated, mut last_error) = (0, None);
             for (idx, (id, title, tags, public)) in updates.iter().enumerate() {
-                report(Response::Progress(tinpan_core::i18n::tf(
-                    "Updating song {0} of {1}...",
-                    &[&(idx + 1).to_string(), &total.to_string()],
-                )));
-                if let Err(e) = api.set_clip_metadata(id, title.as_deref(), None, tags.as_deref(), *public) {
-                    log::warn!("Batch edit song {id} failed: {e}");
+                // A start line and a halfway line for a long list, not one per song.
+                if total > 5 && (idx == 0 || idx == total / 2) {
+                    report(Response::Progress(tinpan_core::i18n::tf(
+                        "Updating song {0} of {1}...",
+                        &[&(idx + 1).to_string(), &total.to_string()],
+                    )));
+                }
+                match api.set_clip_metadata(id, title.as_deref(), None, tags.as_deref(), *public) {
+                    Ok(()) => updated += 1,
+                    Err(e) => {
+                        log::warn!("Batch edit song {id} failed: {e}");
+                        last_error = Some(e);
+                    }
                 }
             }
-            vec![Response::BatchMetadataEdited { updated: total }]
+            // The songs that changed are said, then why the others didn't.
+            let mut out = vec![Response::BatchMetadataEdited { updated }];
+            out.extend(last_error.map(Response::Failed));
+            out
         }
     };
     if let Some(cookies) = api.rotated_cookies() {
@@ -1229,7 +1245,7 @@ impl<'a> PremierUploadGuard<'a> {
         if !self.parts.is_empty() {
             let part_ids: Vec<&str> = self.parts.iter().map(|(id, _)| id.as_str()).collect();
             log::info!("Moving {} premier upload parts to trash", part_ids.len());
-            if let Err(e) = self.api.set_trashed(&part_ids, true) {
+            if let Err((_, e)) = self.api.set_trashed(&part_ids, true) {
                 log::warn!("Moving upload parts to trash failed: {e}");
             }
             self.parts.clear();

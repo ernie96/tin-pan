@@ -364,18 +364,24 @@ impl SunoApi {
         self.send(method, &format!("/api/recommend/feedback/song/{}", escape(clip_id)), Some(&json!({ "feedback_type": "not_interested" }))).map(drop)
     }
 
-    /// Deletes songs for good (POST /api/clips/delete/); there's no undo.
-    pub fn delete_forever(&self, clip_ids: &[&str]) -> Result<()> {
+    /// Deletes songs for good (POST /api/clips/delete/); there's no undo. On a failure, how many of the songs
+    /// (from the start) were deleted before it.
+    pub fn delete_forever(&self, clip_ids: &[&str]) -> std::result::Result<(), (usize, Error)> {
+        let mut done = 0;
         for chunk in clip_ids.chunks(20) {
-            self.send(Method::POST, "/api/clips/delete/", Some(&json!({ "ids": chunk })))?;
+            self.send(Method::POST, "/api/clips/delete/", Some(&json!({ "ids": chunk }))).map_err(|e| (done, e))?;
+            done += chunk.len();
         }
         Ok(())
     }
 
-    /// Moves songs to Suno's trash, or back out of it.
-    pub fn set_trashed(&self, clip_ids: &[&str], trashed: bool) -> Result<()> {
+    /// Moves songs to Suno's trash, or back out of it. On a failure, how many of the songs (from the start)
+    /// were moved before it.
+    pub fn set_trashed(&self, clip_ids: &[&str], trashed: bool) -> std::result::Result<(), (usize, Error)> {
+        let mut done = 0;
         for chunk in clip_ids.chunks(20) {
-            self.send(Method::POST, "/api/gen/trash", Some(&json!({ "clip_ids": chunk, "trash": trashed })))?;
+            self.send(Method::POST, "/api/gen/trash", Some(&json!({ "clip_ids": chunk, "trash": trashed }))).map_err(|e| (done, e))?;
+            done += chunk.len();
         }
         Ok(())
     }
@@ -470,10 +476,14 @@ impl SunoApi {
     }
 
     /// The song's own file, through the free route Tin Pan 1's downloads use: the unencrypted file as it
-    /// is, or the encrypted one decrypted here. Uses none of the account's downloads.
-    pub fn download_free(&self, clip: &SunoClip, path: &std::path::Path) -> Result<()> {
+    /// is, or the encrypted one decrypted here. Uses none of the account's downloads. The file is named after
+    /// what it turned out to be (an MP3 or WAV, say, where an M4A was expected); the path it was saved at
+    /// comes back.
+    pub fn download_free(&self, clip: &SunoClip, path: &std::path::Path) -> Result<std::path::PathBuf> {
         let data = self.song_audio(clip)?;
-        write_file(path, |file| std::io::Write::write_all(file, &data))
+        let path = drm::path_for_container(path, drm::detect_container(&data[..data.len().min(32)]));
+        write_file(&path, |file| std::io::Write::write_all(file, &data))?;
+        Ok(path)
     }
 
     /// Suno's WAV of the song: asks for it to be made, then waits until it's there (up to 3 minutes).
@@ -557,12 +567,12 @@ impl SunoApi {
                 }
                 let first = beats.first().and_then(|b| b.as_array()).and_then(|a| a.first()).and_then(Value::as_f64);
                 let last = beats.last().and_then(|b| b.as_array()).and_then(|a| a.first()).and_then(Value::as_f64);
-                if let (Some(f), Some(l)) = (first, last) {
-                    if l > f {
-                        let bpm = (60.0 * (beats.len() - 1) as f64 / (l - f)).round() as u32;
-                        if (30..=300).contains(&bpm) {
-                            return Ok(Some(bpm));
-                        }
+                if let (Some(f), Some(l)) = (first, last)
+                    && l > f
+                {
+                    let bpm = (60.0 * (beats.len() - 1) as f64 / (l - f)).round() as u32;
+                    if (30..=300).contains(&bpm) {
+                        return Ok(Some(bpm));
                     }
                 }
             }

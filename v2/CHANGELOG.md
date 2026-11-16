@@ -1,15 +1,29 @@
 # Tin Pan 2 changes
 
-## Unreleased
+## 2.4.0
 
-- Upload dialog offers Premier upload for paid accounts: uploads longer audio files by slicing them into
-  sequential parts, arranging them seamlessly on Suno Studio's timeline, and rendering the full combined song.
-  If Suno rejects a slice during upload, Tin Pan shrinks that slice dynamically to work around the refusal.
-- Create, Cover, Extend, Remaster, and Use as inspiration dialogs have a Lyrics Obfuscator choice: keep
-  original lyrics, or disguise words using homoglyphs (Cyrillic lookalikes), zero-width characters, soft hyphens,
-  word joiners, or a combination when Suno's filter rejects lyrics.
-- Library menu, Export library: export your songs or playlists to a CSV or JSON file.
-- Strip C2PA metadata frame from downloaded audio files.
+- Create window: Takes makes 1, 2, 3 or 5 takes at once (two songs each), and Vary across takes moves the
+  weirdness or the style influence from low to high across them.
+- Create window and the Cover, Extend, Remaster and Use as inspiration forms: Lyrics obfuscation swaps the
+  lyrics' letters for lookalike ones or adds invisible characters, for lyrics Suno's filter turns down. It's
+  off unless you choose it.
+- Upload a song offers Premier upload on the Premier plan: the file goes up in 5-second parts, Suno Studio
+  joins them into one song, and the parts go to the trash. A part Suno refuses is sent again in smaller
+  pieces, and a 1-second piece it still refuses is left out.
+- Library menu, Browse community styles: the styles most used in Suno's songs for a word you type.
+- Library menu, Export catalog to CSV or to JSON: the songs in the list shown, saved to a file.
+- Song menu, Song tempo (BPM), from Suno's beat analysis.
+- Song menu, Batch edit marked songs: a title prefix, more styles, or public or private, for all the marked
+  songs at once.
+- Song menu, Check Suno watermark asks Suno whether a downloaded file carries its content credentials, and
+  Strip Suno watermark saves a copy of the file without them.
+
+### Fixed
+
+- A download whose file turned out to be an MP3, WAV, FLAC or Ogg was still saved with an .m4a name. It's
+  named after what it is now.
+- When moving many songs to the trash, or deleting them for good, failed partway, the songs Suno had already
+  taken stayed in the list as if nothing had happened. They leave the list now, and the failure is said.
 
 ## 2.3.1
 

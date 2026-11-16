@@ -776,9 +776,12 @@ impl App {
                 }
             }
             Response::BatchMetadataEdited { updated } => {
-                let song_word = plural(updated as i64, "{0} song", "{0} songs");
-                speech::say(&tf("Updated {0}.", &[&song_word]));
-                self.load_library(true);
+                // None changed: the failure that follows says why.
+                if updated > 0 {
+                    let song_word = plural(updated as i64, "{0} song", "{0} songs");
+                    speech::say(&tf("Updated {0}.", &[&song_word]));
+                    self.load_library(true);
+                }
             }
             Response::Progress(text) => speech::say_quietly(&text),
             Response::Workspaces(workspaces) => {
