@@ -304,7 +304,9 @@ impl App {
         let influence = percent(&window.influence, &window.suno_influence);
         let inspiration = mode == Mode::Inspiration;
         let instrumental = window.instrumental.get_value();
-        let voice = create::voice_tag(window.voice.get_selection().unwrap_or(0) as usize);
+        // With your own lyrics the voice goes as Suno's own setting; a described song takes it as style words.
+        let voice_choice = window.voice.get_selection().unwrap_or(0) as usize;
+        let voice = if inspiration { create::voice_tag(voice_choice) } else { "" };
         let tags = [window.style.get_value().trim().to_string(), voice.to_string()].into_iter().filter(|s| !s.is_empty()).collect::<Vec<_>>().join(", ");
         let mut request = GenerateRequest::new(&model.external_key, mode);
         request.prompt = if inspiration {
@@ -320,6 +322,7 @@ impl App {
         request.tags = tags;
         request.negative_tags = window.exclude.get_value().trim().to_string();
         request.instrumental = instrumental;
+        request.vocal_gender = if inspiration || instrumental { None } else { create::vocal_gender(voice_choice) };
         request.max_mode = window.max_mode.get_value();
         request.weirdness = weirdness;
         request.style_influence = influence;

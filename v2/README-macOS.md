@@ -8,11 +8,8 @@ goes through VoiceOver; a problem report can include Tin Pan's log, with your us
 
 ## Getting it
 
-There's no macOS download on the releases page yet. Each test build is kept for 30 days on GitHub:
-
-1. Open the repository's Actions page and choose the newest run of "Build 2.x for macOS" that passed.
-2. Under Artifacts, download "TinPan-macOS". You need to be signed in to GitHub for this.
-3. Unzip it, open TinPan.dmg, and drag Tin Pan to your Applications folder.
+Download TinPan.dmg from the newest release on the repository's Releases page, open it, and drag Tin Pan
+to your Applications folder.
 
 Tin Pan isn't signed with an Apple developer certificate yet, so macOS refuses to open it the first time:
 

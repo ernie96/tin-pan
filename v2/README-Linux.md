@@ -23,11 +23,8 @@ Without one, Tin Pan works, but you sign in each time you start it.
 
 ## Getting it
 
-There's no Linux download on the releases page yet. Each test build is kept for 30 days on GitHub:
-
-1. Open the repository's Actions page and choose the newest run of "Build 2.x for Linux" that passed.
-2. Under Artifacts, download "TinPan-Linux". You need to be signed in to GitHub for this.
-3. Unzip it, then make TinPan.AppImage runnable and start it:
+Download TinPan.AppImage from the newest release on the repository's Releases page, then make it runnable
+and start it:
 
 ```sh
 chmod +x TinPan.AppImage
@@ -65,8 +62,9 @@ Signing in with an email code, or another account type, should work.
 
 ## What's not there yet on Linux
 
-- **Updates:** Tin Pan updates itself when it runs as an AppImage, but the releases don't include the
-  AppImage yet. Until they do, new builds come from GitHub as above.
+- **Updates:** Tin Pan updates itself when it runs as an AppImage, from the AppImage and its signature on
+  the Releases page. Nobody has seen that work on a real Linux desktop yet; if it fails, download the new
+  AppImage by hand.
 - **WMA uploads:** WMA files can't be uploaded on Linux. MP3, M4A, WAV, FLAC, OGG and AAC can.
 - **ARM computers** (a Raspberry Pi, say) aren't built yet.
 

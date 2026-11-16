@@ -156,7 +156,9 @@ impl App {
         let mut updates = Vec::new();
         for song in &songs {
             let new_title = if !prefix.is_empty() {
-                Some(format!("{}{}", prefix, song.display_title()))
+                // An untitled song gets the prefix alone, not the words "Untitled song".
+                let title = song.title.as_deref().map(str::trim).unwrap_or("");
+                Some(if title.is_empty() { prefix.trim().to_string() } else { format!("{prefix}{title}") })
             } else {
                 None
             };

@@ -1,5 +1,23 @@
 # Tin Pan 2 changes
 
+## 2.5.0
+
+- The Cover, Extend and Use as inspiration forms have a Voice choice too: any voice, male or female.
+- With your own lyrics, the Create window's Voice choice now goes to Suno as its own male or female setting,
+  as Suno's Create page sends it, instead of as "male vocals" or "female vocals" in the style. A described
+  song still gets those words in its style, since Suno has no voice setting for it.
+
+### Fixed
+
+- Batch edit marked songs: making them public or private didn't change them, though Tin Pan said it had.
+  It now uses the same way as Make public.
+- Batch edit's title prefix gave a song with no title the words "Untitled song" after the prefix. It gets the
+  prefix alone now.
+- Premier upload could wait forever when Suno kept saying to slow down, or keep retrying the same part
+  without end. It stops and says so now.
+- Some Premier upload messages were only in English.
+- The Linux and Mac notes still said to download Tin Pan from GitHub's build pages; it's on the Releases page.
+
 ## 2.4.0
 
 - Create window: Takes makes 1, 2, 3 or 5 takes at once (two songs each), and Vary across takes moves the

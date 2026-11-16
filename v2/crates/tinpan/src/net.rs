@@ -1389,7 +1389,8 @@ fn upload_premier(
             }
         }
 
-        if !slice_done && candidate_frames == default_slice_frames {
+        // Out of tries, at whatever length: stop, rather than try the same part forever.
+        if !slice_done {
             return Err(Error::api(tf("Failed to upload part {0} after multiple attempts.", &[&part_number.to_string()])));
         }
     }

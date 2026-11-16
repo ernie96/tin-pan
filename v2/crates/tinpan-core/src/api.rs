@@ -612,10 +612,13 @@ impl SunoApi {
         if let Some(tags) = tags {
             body["tags"] = json!(tags);
         }
-        if let Some(public) = public {
-            body["is_public"] = json!(public);
+        // Public or private goes through the route Make public uses; set_metadata isn't known to take it.
+        if body.as_object().is_some_and(|b| !b.is_empty()) {
+            self.send(Method::POST, &format!("/api/gen/{}/set_metadata/", escape(clip_id)), Some(&body))?;
         }
-        self.send(Method::POST, &format!("/api/gen/{}/set_metadata/", escape(clip_id)), Some(&body))?;
+        if let Some(public) = public {
+            self.set_public(clip_id, public)?;
+        }
         Ok(())
     }
 

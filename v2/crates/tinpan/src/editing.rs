@@ -64,6 +64,7 @@ impl App {
             let model = form.choice("_Model", models.iter().map(SunoModel::display_name).collect(), at);
             let (weirdness, suno_weirdness) = form.slider("_Weirdness", "Let Suno choose the weirdness", 50);
             let (influence, suno_influence) = form.slider("Style in_fluence", "Let Suno choose the style influence", 50);
+            let voice = form.choice("_Voice", crate::create_window::voice_choices(), 0);
             let max_mode = form.check("Ma_x mode", false);
             form.show(&t("Make song"), move || {
                 with_app(|app| {
@@ -87,6 +88,7 @@ impl App {
                     request.weirdness = tool_form::percent(&weirdness, &suno_weirdness);
                     request.style_influence = tool_form::percent(&influence, &suno_influence);
                     request.max_mode = max_mode.get_value();
+                    request.vocal_gender = if no_words { None } else { tinpan_core::create::vocal_gender(voice.get_selection().unwrap_or(0) as usize) };
                     if Self::sliders_fit(&chosen, &request) {
                         app.start_job(&tf("Making a song inspired by {0}.", &[&song.display_title()]), request, &chosen);
                     }

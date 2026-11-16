@@ -119,6 +119,7 @@ impl App {
             let (influence, suno_influence) = form.slider("Style in_fluence", "Let Suno choose the style influence", 50);
             let (persona_names, persona_ids) = app.persona_items();
             let persona = form.choice("_Persona", persona_names, 0);
+            let voice = form.choice("_Voice", crate::create_window::voice_choices(), 0);
             let max_mode = form.check("Ma_x mode", false);
             let max = if length > 0.0 { length } else { 3600.0 };
             form.show(&t("Extend"), move || {
@@ -143,6 +144,7 @@ impl App {
                     request.weirdness = tool_form::percent(&weirdness, &suno_weirdness);
                     request.style_influence = tool_form::percent(&influence, &suno_influence);
                     request.max_mode = max_mode.get_value();
+                    request.vocal_gender = create::vocal_gender(voice.get_selection().unwrap_or(0) as usize);
                     request.is_remix = true;
                     if Self::sliders_fit(&chosen, &request) {
                         app.start_job(&tf("Extending {0}.", &[&song.display_title()]), request, &chosen);
@@ -204,6 +206,7 @@ impl App {
         let model = form.choice("_Model", models.iter().map(SunoModel::display_name).collect(), at);
         let (persona_names, persona_ids) = self.persona_items();
         let persona = form.choice("_Persona", persona_names, 0);
+        let voice = form.choice("_Voice", crate::create_window::voice_choices(), 0);
         let max_mode = form.check("Ma_x mode", false);
         form.show(&t("Make cover"), move || {
             with_app(|app| {
@@ -233,6 +236,7 @@ impl App {
                 request.weirdness = tool_form::percent(&weirdness, &suno_weirdness);
                 request.style_influence = tool_form::percent(&influence, &suno_influence);
                 request.max_mode = max_mode.get_value();
+                request.vocal_gender = if no_words { None } else { create::vocal_gender(voice.get_selection().unwrap_or(0) as usize) };
                 request.is_remix = true;
                 if Self::sliders_fit(&chosen, &request) {
                     app.start_job(&tf("Covering {0}.", &[&song.display_title()]), request, &chosen);

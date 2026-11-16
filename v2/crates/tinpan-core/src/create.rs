@@ -556,7 +556,16 @@ pub fn speech_request(script: &str, tone: &str, music: bool, gender: Option<&str
     }
 }
 
-/// The voice choice as the style words Suno takes.
+/// The voice choice as Suno's Create page sends it with your own lyrics: metadata.vocal_gender, "m" or "f".
+pub fn vocal_gender(choice: usize) -> Option<String> {
+    match choice {
+        1 => Some("m".into()),
+        2 => Some("f".into()),
+        _ => None,
+    }
+}
+
+/// The voice choice as the style words Suno takes, for a described song, which has no voice setting of its own.
 pub fn voice_tag(choice: usize) -> &'static str {
     match choice {
         1 => "male vocals",
@@ -725,6 +734,15 @@ mod tests {
         r.token_provider = Some(2);
         let body = r.body();
         assert_eq!((body["metadata"]["control_sliders"]["weirdness_constraint"].as_f64(), body["token_provider"].as_i64()), (Some(0.4), Some(2)));
+    }
+
+    #[test]
+    fn the_voice_goes_as_sunos_own_setting_with_lyrics() {
+        assert_eq!((vocal_gender(0), vocal_gender(1).as_deref(), vocal_gender(2).as_deref()), (None, Some("m"), Some("f")));
+        let mut request = GenerateRequest::new("chirp-crow", Mode::Custom);
+        request.vocal_gender = vocal_gender(1);
+        assert_eq!(request.body()["metadata"]["vocal_gender"].as_str(), Some("m"));
+        assert!(GenerateRequest::new("chirp-crow", Mode::Custom).body()["metadata"].get("vocal_gender").is_none());
     }
 
     #[test]

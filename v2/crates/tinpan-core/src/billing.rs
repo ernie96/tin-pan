@@ -217,7 +217,10 @@ impl BillingInfo {
         if name.is_empty() {
             return if self.is_paid() == Some(false) { t("Free plan") } else { t("Plan unknown") };
         }
-        let name = if name.to_lowercase().ends_with(" plan") { name[..name.len() - 5].trim_end() } else { name };
+        let name = match name.len().checked_sub(5).and_then(|cut| name.get(cut..).map(|end| (cut, end))) {
+            Some((cut, end)) if end.eq_ignore_ascii_case(" plan") => name[..cut].trim_end(),
+            _ => name,
+        };
         tf("{0} plan", &[&name])
     }
 

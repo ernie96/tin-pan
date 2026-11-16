@@ -171,7 +171,7 @@ impl SunoApi {
     pub fn upload_part(&self, storage: &Client, path: &Path, file_name: &str) -> Result<String> {
         self.upload_part_slice(storage, path, file_name).map_err(|e| match e {
             PartUploadError::Error(err) => err,
-            PartUploadError::Rejected(reason) => Error::api(format!("Audio slice rejected: {reason}")),
+            PartUploadError::Rejected(reason) => Error::api(crate::i18n::tf("Suno turned down a part of the song: {0}", &[&reason])),
             PartUploadError::RateLimited(_) => Error::api(t("Suno says too many requests. Wait a minute and try again.")),
         })
     }
@@ -212,7 +212,8 @@ impl SunoApi {
             let reply = match self.send(Method::GET, &format!("/api/uploads/audio/{}/", crate::api::escape(&upload_id)), None) {
                 Ok(r) => r,
                 Err(e) => {
-                    if e.status() == Some(429) {
+                    // Asked to wait: waits, but never past the deadline below.
+                    if e.status() == Some(429) && Instant::now() < until {
                         thread::sleep(Duration::from_secs(5));
                         continue;
                     }
@@ -233,7 +234,7 @@ impl SunoApi {
                 if is_upload_rejected(status.as_deref(), err_type.as_deref(), err_msg.as_deref()) {
                     return Err(PartUploadError::Rejected(reason));
                 } else {
-                    return Err(PartUploadError::Error(Error::api(format!("Suno couldn't process upload: {reason}"))));
+                    return Err(PartUploadError::Error(Error::api(crate::i18n::tf("Suno couldn't process the upload: {0}", &[&reason]))));
                 }
             }
 
