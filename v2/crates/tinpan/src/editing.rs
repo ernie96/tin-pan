@@ -56,6 +56,7 @@ impl App {
             let form = ToolForm::new(&app.frame, &tf("Use {0} as inspiration", &[&song.display_title()]), &intro);
             let title = form.text("_Title", "", 1);
             let lyrics = form.text("_Lyrics", "", 6);
+            let lyrics_obf = form.choice("Lyrics obfuscation", tinpan_core::obfuscate::choices(), 0);
             let instrumental = form.check("_Instrumental (no singing)", false);
             let style = form.text("_Style", song.metadata.as_ref().and_then(|m| m.tags.as_deref()).unwrap_or(""), 1);
             Self::form_style_buttons(&form, style, lyrics, Some(instrumental));
@@ -74,8 +75,9 @@ impl App {
                     }
                     let chosen = models[model.get_selection().unwrap_or(0) as usize].clone();
                     let mut request = GenerateRequest::new(&chosen.external_key, Mode::Custom);
+                    let obf_mode = tinpan_core::obfuscate::ObfuscationMode::from_index(lyrics_obf.get_selection().unwrap_or(0) as usize);
                     request.title = title.get_value().trim().to_string();
-                    request.prompt = if no_words { String::new() } else { words };
+                    request.prompt = if no_words { String::new() } else { tinpan_core::obfuscate::obfuscate_lyrics(&words, obf_mode, true) };
                     request.instrumental = no_words;
                     request.tags = style.get_value().trim().to_string();
                     request.negative_tags = exclude.get_value().trim().to_string();

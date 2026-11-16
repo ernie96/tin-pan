@@ -5,6 +5,7 @@
 
 use quiet_list::{QuietList, Select};
 use std::collections::{HashMap, HashSet};
+use std::path::PathBuf;
 
 use tinpan_core::clip::SunoClip;
 use tinpan_core::i18n::{plural, t, tf};
@@ -449,6 +450,54 @@ impl App {
         self.sections[LIBRARY].refresh(Select::Keep);
         speech::say(&tf("{0} of {1}.", &[&(to + 1), &count]));
         self.net.send(Command::MovePlaylistSong { playlist_id: p.id, clip_id: song.id, from, to });
+    }
+
+    /// Exports marked songs or the songs in the current view to CSV or JSON format.
+    pub(crate) fn export_catalog(&mut self, is_json: bool) {
+        let marked = self.shown().marked_songs();
+        let songs = if marked.is_empty() {
+            self.shown().songs.clone()
+        } else {
+            marked
+        };
+        if songs.is_empty() {
+            speech::say(&t("No songs to export."));
+            return;
+        }
+
+        let (wildcard, ext, message) = if is_json {
+            (t("JSON files (*.json)|*.json"), "json", t("Export catalog to JSON"))
+        } else {
+            (t("CSV spreadsheets (*.csv)|*.csv"), "csv", t("Export catalog to CSV"))
+        };
+
+        let picker = FileDialog::builder(&self.frame)
+            .with_message(&message)
+            .with_wildcard(&wildcard)
+            .with_style(FileDialogStyle::Save | FileDialogStyle::OverwritePrompt)
+            .build();
+
+        if picker.show_modal() != ID_OK {
+            return;
+        }
+
+        let Some(mut path) = picker.get_path().map(PathBuf::from) else { return };
+        if path.extension().is_none() {
+            path.set_extension(ext);
+        }
+
+        let file_name = path.file_name().map(|f| f.to_string_lossy().to_string()).unwrap_or_default();
+        let count = songs.len();
+        let res = if is_json {
+            tinpan_core::export::export_json(&songs, &path)
+        } else {
+            tinpan_core::export::export_csv(&songs, &path)
+        };
+
+        match res {
+            Ok(()) => speech::say(&tf("Exported {0} to {1}.", &[&plural(count as i64, "{0} song", "{0} songs"), &file_name])),
+            Err(e) => speech::say_error(&e.to_string()),
+        }
     }
 }
 

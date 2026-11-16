@@ -7,3 +7,8 @@ TestResults/
 
 # wrangler's local cache (Cloudflare account id and email)
 report-relay/.wrangler/
+
+# python
+__pycache__/
+*.pyc
+

@@ -541,6 +541,74 @@ impl SunoApi {
         Ok(discover::read_omnisearch(&sj::parse(&self.send(Method::POST, "/api/unified/search/omnisearch", Some(&json!({ "term": term })))?)?))
     }
 
+    /// Reads downbeats analysis from Suno Studio API and calculates the song's tempo in beats per minute.
+    pub fn downbeats_bpm(&self, clip_id: &str) -> Result<Option<u32>> {
+        for _ in 0..4 {
+            let reply = self.send(Method::GET, &format!("/api/gen/{}/downbeats", escape(clip_id)), None)?;
+            let val: Value = serde_json::from_str(&reply).map_err(|_| Error::api(t("Suno sent a reply this app doesn't understand.")))?;
+            if val.get("state").and_then(Value::as_str) == Some("running") {
+                thread::sleep(Duration::from_millis(1500));
+                continue;
+            }
+            let beats = val.get("downbeats").and_then(Value::as_array);
+            if let Some(beats) = beats {
+                if beats.len() < 2 {
+                    return Ok(None);
+                }
+                let first = beats.first().and_then(|b| b.as_array()).and_then(|a| a.first()).and_then(Value::as_f64);
+                let last = beats.last().and_then(|b| b.as_array()).and_then(|a| a.first()).and_then(Value::as_f64);
+                if let (Some(f), Some(l)) = (first, last) {
+                    if l > f {
+                        let bpm = (60.0 * (beats.len() - 1) as f64 / (l - f)).round() as u32;
+                        if (30..=300).contains(&bpm) {
+                            return Ok(Some(bpm));
+                        }
+                    }
+                }
+            }
+            return Ok(None);
+        }
+        Ok(None)
+    }
+
+    /// Searches top community songs for a keyword and extracts the most frequent and highest-ranked style tags.
+    pub fn search_community_styles(&self, term: &str) -> Result<Vec<String>> {
+        let songs = self.search_suno(term)?;
+        let mut counts: std::collections::HashMap<String, u32> = std::collections::HashMap::new();
+        for song in songs {
+            if let Some(tags) = song.metadata.as_ref().and_then(|m| m.tags.as_deref()) {
+                for tag in tags.split(',') {
+                    let clean = tag.trim().to_lowercase();
+                    if clean.len() >= 2 && clean.len() <= 35 && !clean.chars().all(|c| c.is_ascii_digit()) {
+                        *counts.entry(clean).or_insert(0) += 1;
+                    }
+                }
+            }
+        }
+        let mut ranked: Vec<(String, u32)> = counts.into_iter().collect();
+        ranked.sort_by(|a, b| b.1.cmp(&a.1).then_with(|| a.0.cmp(&b.0)));
+        Ok(ranked.into_iter().take(12).map(|(tag, _)| tag).collect())
+    }
+
+    /// Updates metadata (title, lyrics, style tags, visibility) on a clip.
+    pub fn set_clip_metadata(&self, clip_id: &str, title: Option<&str>, lyrics: Option<&str>, tags: Option<&str>, public: Option<bool>) -> Result<()> {
+        let mut body = json!({});
+        if let Some(title) = title {
+            body["title"] = json!(title);
+        }
+        if let Some(lyrics) = lyrics {
+            body["lyrics"] = json!(lyrics);
+        }
+        if let Some(tags) = tags {
+            body["tags"] = json!(tags);
+        }
+        if let Some(public) = public {
+            body["is_public"] = json!(public);
+        }
+        self.send(Method::POST, &format!("/api/gen/{}/set_metadata/", escape(clip_id)), Some(&body))?;
+        Ok(())
+    }
+
     /// Songs Suno picks to follow `seed_id`, as its player's autoplay asks: POST /api/queue/start with the song
     /// as the seed, then the "autoplay" feed.
     pub fn autoplay(&self, seed_id: &str) -> Result<Vec<SunoClip>> {

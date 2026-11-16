@@ -36,9 +36,12 @@ pub struct CreateWindow {
     suno_influence: CheckBox,
     persona: Choice,
     persona_id: TextCtrl,
+    takes: Choice,
+    vary_takes: Choice,
     description: TextCtrl,
     title: TextCtrl,
     lyrics: TextCtrl,
+    lyrics_obfuscate: Choice,
     topic: TextCtrl,
     generated: TextCtrl,
     cowrite: TextCtrl,
@@ -138,6 +141,17 @@ impl CreateWindow {
         let (influence, suno_influence) = slider(&panel, &s, "Style in_fluence", "Let Suno choose the style influence");
         let persona = choice(&panel, &s, "_Persona", vec![t("No persona")]);
         let persona_id = text_box(&panel, &s, "Or type _a persona ID", 1, false);
+        let takes = choice(&panel, &s, "Takes", vec![
+            t("1 take (2 songs)"),
+            t("2 takes (4 songs)"),
+            t("3 takes (6 songs)"),
+            t("5 takes (10 songs)"),
+        ]);
+        let vary_takes = choice(&panel, &s, "Vary across takes", vec![
+            t("None"),
+            t("Weirdness"),
+            t("Style influence"),
+        ]);
 
         heading(&panel, &s, "Describe a song");
         let description = text_box(&panel, &s, "_Description", 2, false);
@@ -146,6 +160,7 @@ impl CreateWindow {
         heading(&panel, &s, "Your own lyrics");
         let title = text_box(&panel, &s, "_Title", 1, false);
         let lyrics = text_box(&panel, &s, "_Lyrics", 6, false);
+        let lyrics_obfuscate = choice(&panel, &s, "Lyrics obfuscation", tinpan_core::obfuscate::choices());
         button(&panel, &s, "C_reate with my lyrics", |app| app.start_songs(Mode::Custom));
 
         heading(&panel, &s, "Write lyrics for me");
@@ -206,9 +221,12 @@ impl CreateWindow {
             suno_influence,
             persona,
             persona_id,
+            takes,
+            vary_takes,
             description,
             title,
             lyrics,
+            lyrics_obfuscate,
             topic,
             generated,
             cowrite,
@@ -289,7 +307,15 @@ impl App {
         let voice = create::voice_tag(window.voice.get_selection().unwrap_or(0) as usize);
         let tags = [window.style.get_value().trim().to_string(), voice.to_string()].into_iter().filter(|s| !s.is_empty()).collect::<Vec<_>>().join(", ");
         let mut request = GenerateRequest::new(&model.external_key, mode);
-        request.prompt = if inspiration { window.description.get_value().trim().to_string() } else if instrumental { String::new() } else { window.lyrics.get_value().trim().to_string() };
+        request.prompt = if inspiration {
+            window.description.get_value().trim().to_string()
+        } else if instrumental {
+            String::new()
+        } else {
+            let raw = window.lyrics.get_value().trim().to_string();
+            let obf_mode = tinpan_core::obfuscate::ObfuscationMode::from_index(window.lyrics_obfuscate.get_selection().unwrap_or(0) as usize);
+            tinpan_core::obfuscate::obfuscate_lyrics(&raw, obf_mode, true)
+        };
         request.title = if inspiration { String::new() } else { window.title.get_value().trim().to_string() };
         request.tags = tags;
         request.negative_tags = window.exclude.get_value().trim().to_string();
@@ -332,8 +358,30 @@ impl App {
             _ => {}
         }
         let Some((request, takes_voice)) = self.build_request(&window, mode) else { return };
-        speech::say(&t("Sending to Suno."));
-        self.net.send(Command::Generate { request: Box::new(request), model_takes_voice: takes_voice, job: false });
+        let takes_count = match window.takes.get_selection().unwrap_or(0) {
+            1 => 2,
+            2 => 3,
+            3 => 5,
+            _ => 1,
+        };
+        let vary = window.vary_takes.get_selection().unwrap_or(0);
+        if takes_count > 1 {
+            speech::say(&tf("Starting {0} takes ({1} songs).", &[&takes_count.to_string(), &(takes_count * 2).to_string()]));
+            for i in 0..takes_count {
+                let mut req = request.clone();
+                let step = i as f64 / (takes_count - 1) as f64;
+                let val = (15.0 + step * 70.0).round();
+                if vary == 1 {
+                    req.weirdness = Some(val);
+                } else if vary == 2 {
+                    req.style_influence = Some(val);
+                }
+                self.net.send(Command::Generate { request: Box::new(req), model_takes_voice: takes_voice, job: false });
+            }
+        } else {
+            speech::say(&t("Sending to Suno."));
+            self.net.send(Command::Generate { request: Box::new(request), model_takes_voice: takes_voice, job: false });
+        }
     }
 
     /// Suno wants a captcha first: it's passed in a web view here, then the request goes again with its token.

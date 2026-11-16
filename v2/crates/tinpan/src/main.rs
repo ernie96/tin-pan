@@ -442,6 +442,13 @@ impl App {
             Action::DownloadWav => self.download_as("wav"),
             Action::DownloadVideo => self.download_as("mp4"),
             Action::CleanUpDownload => self.clean_up_download(),
+            Action::CheckWatermark => self.check_watermark(),
+            Action::StripWatermark => self.strip_watermark(),
+            Action::DetectBpm => self.detect_bpm(),
+            Action::SearchStyles => self.search_community_styles(),
+            Action::ExportCsv => self.export_catalog(false),
+            Action::ExportJson => self.export_catalog(true),
+            Action::BatchEdit => self.batch_edit_marked(),
             Action::DownloadAll => {
                 if self.signed_in {
                     self.download_all();
@@ -582,6 +589,23 @@ impl App {
         }
     }
 
+    pub(crate) fn detect_bpm(&mut self) {
+        self.with_song(|app, song| {
+            app.net.send(Command::DetectBpm { clip_id: song.id.clone(), title: song.display_title() });
+        });
+    }
+
+    pub(crate) fn search_community_styles(&mut self) {
+        let mut fields = [form::Field { label: "_Search for", value: form::Value::Text { value: String::new(), multiline: false, max_len: 100 } }];
+        if !form::show(&self.frame, &t("Browse community styles"), &t("Search styles for (e.g. rock, synthwave):"), &t("Search"), &mut fields) {
+            return;
+        }
+        let term = fields[0].text().trim().to_string();
+        if !term.is_empty() {
+            self.net.send(Command::SearchStyles { term });
+        }
+    }
+
     /// F5: the view on screen, from Suno again.
     fn refresh_shown(&mut self) {
         if !self.signed_in {
@@ -716,6 +740,46 @@ impl App {
             Response::Downloaded { clip, through_suno } => self.downloaded(&clip, through_suno),
             Response::DownloadFailed { clip, format, path, error, offer, clean } => self.download_failed(*clip, format, path, &error.to_string(), offer, clean),
             Response::Cleaned { title, result } => self.cleaned(&title, result),
+            Response::BpmDetected { title, bpm } => {
+                match bpm {
+                    Some(val) => speech::say(&tf("{0} is about {1} beats per minute.", &[&title, &val.to_string()])),
+                    None => speech::say(&tf("Suno couldn't determine the tempo for {0}.", &[&title])),
+                }
+            }
+            Response::WatermarkChecked { verdict } => {
+                match verdict {
+                    Ok(tinpan_core::c2pa::WatermarkVerdict::VerifiedSuno) => {
+                        speech::say(&t("Made with Suno: Suno's content credentials are present."));
+                    }
+                    Ok(tinpan_core::c2pa::WatermarkVerdict::NoSunoProvenance) => {
+                        speech::say(&t("No Suno watermark found."));
+                    }
+                    Ok(tinpan_core::c2pa::WatermarkVerdict::Inconclusive) => {
+                        speech::say(&t("Suno's checker could not tell if the song has a watermark."));
+                    }
+                    Err(e) => speech::say_error(&e.to_string()),
+                }
+            }
+            Response::WatermarkStripped { title, removed } => {
+                if removed {
+                    speech::say(&tf("Removed Suno watermark from {0}.", &[&title]));
+                } else {
+                    speech::say(&t("No Suno watermark found in that file."));
+                }
+            }
+            Response::CommunityStyles { term, styles } => {
+                if styles.is_empty() {
+                    speech::say(&tf("No community styles found for {0}.", &[&term]));
+                } else {
+                    let list = styles.join(", ");
+                    speech::say(&tf("Community styles for {0}: {1}", &[&term, &list]));
+                }
+            }
+            Response::BatchMetadataEdited { updated } => {
+                let song_word = plural(updated as i64, "{0} song", "{0} songs");
+                speech::say(&tf("Updated {0}.", &[&song_word]));
+                self.load_library(true);
+            }
             Response::Progress(text) => speech::say_quietly(&text),
             Response::Workspaces(workspaces) => {
                 if filters::edit(&self.frame, &mut self.config.current.library, &workspaces) {

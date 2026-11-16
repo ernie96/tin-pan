@@ -1,5 +1,16 @@
 # Tin Pan 2 changes
 
+## Unreleased
+
+- Upload dialog offers Premier upload for paid accounts: uploads longer audio files by slicing them into
+  sequential parts, arranging them seamlessly on Suno Studio's timeline, and rendering the full combined song.
+  If Suno rejects a slice during upload, Tin Pan shrinks that slice dynamically to work around the refusal.
+- Create, Cover, Extend, Remaster, and Use as inspiration dialogs have a Lyrics Obfuscator choice: keep
+  original lyrics, or disguise words using homoglyphs (Cyrillic lookalikes), zero-width characters, soft hyphens,
+  word joiners, or a combination when Suno's filter rejects lyrics.
+- Library menu, Export library: export your songs or playlists to a CSV or JSON file.
+- Strip C2PA metadata frame from downloaded audio files.
+
 ## 2.3.1
 
 ### Fixed

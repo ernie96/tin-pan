@@ -7,6 +7,8 @@ use quiet_list::{Select, Step};
 use tinpan_core::clip::SunoClip;
 use tinpan_core::i18n::{plural, t, tf};
 
+use crate::form::{self, Field, Value};
+use crate::net::Command;
 use crate::views::View;
 use crate::{App, discover, speech};
 
@@ -124,6 +126,54 @@ impl App {
         if changed {
             self.refresh_rows(Select::Keep);
         }
+    }
+    /// Changes titles, styles, or visibility on marked songs in one batch.
+    pub(crate) fn batch_edit_marked(&mut self) {
+        let songs = self.shown().marked_songs();
+        if songs.is_empty() {
+            speech::say_error(&t("Mark at least one song to batch edit."));
+            return;
+        }
+        let vis_choices = vec![t("Keep as is"), t("Make public"), t("Make private")];
+        let mut fields = [
+            Field { label: "_Title prefix (optional)", value: Value::Text { value: String::new(), multiline: false, max_len: 50 } },
+            Field { label: "_Append to styles (optional)", value: Value::Text { value: String::new(), multiline: false, max_len: 100 } },
+            Field::choice("_Visibility", vis_choices, 0),
+        ];
+        let intro = tf("Changes apply to {0}.", &[&plural(songs.len() as i64, "{0} song", "{0} songs")]);
+        if !form::show(&self.frame, &t("Batch edit marked songs"), &intro, &t("Save"), &mut fields) {
+            return;
+        }
+        let prefix = fields[0].text();
+        let append_style = fields[1].text();
+        let vis_sel = fields[2].selected();
+        let public_opt = match vis_sel {
+            1 => Some(true),
+            2 => Some(false),
+            _ => None,
+        };
+
+        let mut updates = Vec::new();
+        for song in &songs {
+            let new_title = if !prefix.is_empty() {
+                Some(format!("{}{}", prefix, song.display_title()))
+            } else {
+                None
+            };
+            let new_tags = if !append_style.is_empty() {
+                let existing = song.metadata.as_ref().and_then(|m| m.tags.as_deref()).unwrap_or("");
+                Some(if existing.is_empty() {
+                    append_style.trim().to_string()
+                } else {
+                    format!("{}, {}", existing, append_style.trim())
+                })
+            } else {
+                None
+            };
+            updates.push((song.id.clone(), new_title, new_tags, public_opt));
+        }
+
+        self.net.send(Command::BatchEditMetadata { updates });
     }
 }
 

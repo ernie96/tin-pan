@@ -3,6 +3,7 @@
 
 pub mod api;
 pub mod billing;
+pub mod c2pa;
 pub mod cleanup;
 pub mod clerk;
 pub mod clip;
@@ -12,12 +13,14 @@ pub mod create;
 pub mod discover;
 pub mod drm;
 pub mod error;
+pub mod export;
 pub mod files;
 pub mod i18n;
 pub mod json;
 pub mod link;
 pub mod listen;
 pub mod lyrics;
+pub mod obfuscate;
 pub mod periodic;
 pub mod personas;
 pub mod playlist;

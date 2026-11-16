@@ -24,6 +24,17 @@ impl App {
             speech::say(&t("Sign in from Settings first."));
             return;
         }
+        let methods = vec![
+            t("Normal upload"),
+            t("Premier upload (requires Suno Premier, takes longer)"),
+        ];
+        let Some(choice) = crate::dialogs::pick(&self.frame, &t("Upload a song"), &methods) else { return };
+        let premier = choice == 1;
+        if premier && self.billing.as_ref().is_some_and(|b| !b.is_premier()) {
+            speech::say_error(&t("Premier upload requires a Suno Premier plan."));
+            return;
+        }
+
         // WMA is converted with Windows' own decoder, so it's offered there only.
         let kinds = if cfg!(windows) { "*.mp3;*.wav;*.m4a;*.flac;*.ogg;*.aac;*.wma" } else { "*.mp3;*.wav;*.m4a;*.flac;*.ogg;*.aac" };
         let wildcard = format!("{} ({kinds})|{kinds}", t("Audio files"));
@@ -43,22 +54,12 @@ impl App {
         } else {
             None
         };
-        // The plan's limits, when Suno says them and the file's length is known.
-        if let (Some(seconds), Some(limits)) = (length, self.billing.as_ref().and_then(|b| b.audio_upload_limits)) {
-            if let Some(min) = limits.min_seconds().filter(|m| seconds < *m) {
-                speech::say_error(&tf("That song is {0}. Suno takes uploads of at least {1}.", &[&format_time(seconds), &format_time(min)]));
-                return;
-            }
-            if let Some(max) = limits.max_seconds().filter(|m| seconds > *m) {
-                speech::say_error(&tf("That song is {0}. Suno takes uploads of up to {1} on this account.", &[&format_time(seconds), &format_time(max)]));
-                return;
-            }
-        }
         let name = path.file_stem().map(|s| s.to_string_lossy().to_string()).unwrap_or_default();
         let file = path.file_name().map(|s| s.to_string_lossy().to_string()).unwrap_or_default();
         let mut fields = [
             Field { label: "_Title", value: Value::Text { value: name.clone(), multiline: false, max_len: 100 } },
             Field { label: "_Lyrics (optional)", value: Value::Text { value: String::new(), multiline: true, max_len: 0 } },
+            Field::choice("Upload _method", methods, choice),
             Field::check("I _own this audio or have the rights to upload it, and I accept Suno's terms for uploads (suno.com/terms)", false),
         ];
         let intro = tf(
@@ -68,14 +69,37 @@ impl App {
         if !form::show(&self.frame, &t("Upload a song"), &intro, &t("Upload"), &mut fields) {
             return;
         }
-        if !fields[2].checked() {
+        if !fields[3].checked() {
             speech::say_error(&t("Nothing was uploaded. Suno needs you to confirm the rights first."));
             return;
         }
+        let premier = fields[2].selected() == 1;
+        if premier {
+            if self.billing.as_ref().is_some_and(|b| !b.is_premier()) {
+                speech::say_error(&t("Premier upload requires a Suno Premier plan."));
+                return;
+            }
+        } else {
+            // The plan's limits, when Suno says them and the file's length is known.
+            if let (Some(seconds), Some(limits)) = (length, self.billing.as_ref().and_then(|b| b.audio_upload_limits)) {
+                if let Some(min) = limits.min_seconds().filter(|m| seconds < *m) {
+                    speech::say_error(&tf("That song is {0}. Suno takes uploads of at least {1}.", &[&format_time(seconds), &format_time(min)]));
+                    return;
+                }
+                if let Some(max) = limits.max_seconds().filter(|m| seconds > *m) {
+                    speech::say_error(&tf("That song is {0}. Suno takes uploads of up to {1} on this account.", &[&format_time(seconds), &format_time(max)]));
+                    return;
+                }
+            }
+        }
         let title = Some(fields[0].text()).filter(|t| !t.is_empty()).unwrap_or(name);
-        speech::say(&tf("Uploading {0}.", &[&title]));
+        if premier {
+            speech::say(&tf("Uploading {0} with Premier upload. This takes a few minutes.", &[&title]));
+        } else {
+            speech::say(&tf("Uploading {0}.", &[&title]));
+        }
         let limits = self.billing.as_ref().and_then(|b| b.audio_upload_limits);
-        self.net.send(Command::UploadSong { path, title, lyrics: fields[1].text(), limits });
+        self.net.send(Command::UploadSong { path, title, lyrics: fields[1].text(), limits, premier });
     }
 
     /// The new song goes to the top of your songs and is followed until Suno has it ready.

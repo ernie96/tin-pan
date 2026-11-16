@@ -44,6 +44,39 @@ pub enum Stage {
     Checking,
 }
 
+/// Granular error classification when uploading an audio slice to Suno.
+#[derive(Debug)]
+pub enum PartUploadError {
+    Rejected(String),
+    RateLimited(Duration),
+    Error(Error),
+}
+
+impl std::fmt::Display for PartUploadError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Rejected(msg) => write!(f, "Audio rejected: {msg}"),
+            Self::RateLimited(dur) => write!(f, "Rate limited: retry in {}s", dur.as_secs()),
+            Self::Error(e) => write!(f, "{e}"),
+        }
+    }
+}
+
+impl std::error::Error for PartUploadError {}
+
+/// Checks whether an upload status, error type or error message indicates content rejection
+/// (copyright, moderation, duplicate, existing recording, catalog match).
+pub fn is_upload_rejected(status: Option<&str>, error_type: Option<&str>, error_message: Option<&str>) -> bool {
+    let combined = format!(
+        "{} {} {}",
+        status.unwrap_or_default(),
+        error_type.unwrap_or_default(),
+        error_message.unwrap_or_default()
+    ).to_lowercase();
+    const REJECTED_WORDS: [&str; 6] = ["rejected", "moderation", "copyright", "duplicate", "existing recording", "catalog"];
+    REJECTED_WORDS.iter().any(|word| combined.contains(word))
+}
+
 /// Only an https address on Suno's storage host, with no port, user or fragment.
 pub fn is_storage(url: &str) -> bool {
     let Some(rest) = url.strip_prefix("https://") else { return false };
@@ -133,6 +166,329 @@ impl SunoApi {
         self.send(Method::POST, &format!("/api/uploads/audio/{}/upload-finish/", crate::api::escape(&upload_id)), Some(&finish))?;
         self.wait_for_processing(&upload_id)?;
         Ok(upload_id)
+    }
+
+    pub fn upload_part(&self, storage: &Client, path: &Path, file_name: &str) -> Result<String> {
+        self.upload_part_slice(storage, path, file_name).map_err(|e| match e {
+            PartUploadError::Error(err) => err,
+            PartUploadError::Rejected(reason) => Error::api(format!("Audio slice rejected: {reason}")),
+            PartUploadError::RateLimited(_) => Error::api(t("Suno says too many requests. Wait a minute and try again.")),
+        })
+    }
+
+    /// Sends a single WAV slice of a track and initializes it as an upload clip, returning granular error classification.
+    pub fn upload_part_slice(&self, storage: &Client, path: &Path, file_name: &str) -> std::result::Result<String, PartUploadError> {
+        let ticket = match self.start_upload("wav", "studio_file_upload") {
+            Ok(t) => t,
+            Err(e) => {
+                if e.status() == Some(429) || e.to_string().contains("too many requests") || e.to_string().contains("rate limit") {
+                    return Err(PartUploadError::RateLimited(Duration::from_secs(15)));
+                }
+                return Err(PartUploadError::Error(e));
+            }
+        };
+
+        if let Err(transient) = post_to_storage(storage, &ticket, path, file_name) {
+            log::warn!("Storage POST failed (transient={transient}), trying one more time with fresh ticket");
+            let ticket2 = self.start_upload("wav", "studio_file_upload").map_err(PartUploadError::Error)?;
+            post_to_storage(storage, &ticket2, path, file_name).map_err(|_| PartUploadError::Error(Error::api(t("The upload didn't go through. Check your internet connection and try again."))))?;
+        }
+
+        let upload_id = ticket.id;
+        let finish = json!({
+            "agreed_to_vip_upload_terms": false,
+            "upload_filename": file_name,
+            "upload_type": "studio_file_upload"
+        });
+        if let Err(e) = self.send(Method::POST, &format!("/api/uploads/audio/{}/upload-finish/", crate::api::escape(&upload_id)), Some(&finish)) {
+            if e.status() == Some(429) || e.to_string().contains("too many requests") {
+                return Err(PartUploadError::RateLimited(Duration::from_secs(15)));
+            }
+            return Err(PartUploadError::Error(e));
+        }
+
+        let until = Instant::now() + Duration::from_secs(3 * 60);
+        loop {
+            let reply = match self.send(Method::GET, &format!("/api/uploads/audio/{}/", crate::api::escape(&upload_id)), None) {
+                Ok(r) => r,
+                Err(e) => {
+                    if e.status() == Some(429) {
+                        thread::sleep(Duration::from_secs(5));
+                        continue;
+                    }
+                    return Err(PartUploadError::Error(e));
+                }
+            };
+
+            let status = sj::try_read_string(&reply, "status");
+            let err_type = sj::try_read_string(&reply, "error_type");
+            let err_msg = sj::try_read_string(&reply, "error_message");
+
+            if status.as_deref() == Some("complete") {
+                break;
+            }
+
+            if status.as_deref() == Some("failed") || status.as_deref() == Some("rejected") || status.as_deref() == Some("error") {
+                let reason = err_msg.clone().or_else(|| err_type.clone()).unwrap_or_else(|| status.clone().unwrap_or_default());
+                if is_upload_rejected(status.as_deref(), err_type.as_deref(), err_msg.as_deref()) {
+                    return Err(PartUploadError::Rejected(reason));
+                } else {
+                    return Err(PartUploadError::Error(Error::api(format!("Suno couldn't process upload: {reason}"))));
+                }
+            }
+
+            if Instant::now() >= until {
+                return Err(PartUploadError::Error(Error::api(t("Suno took too long processing the upload. It may still appear in your library later."))));
+            }
+            thread::sleep(Duration::from_secs(3));
+        }
+
+        let init_reply = match self.send(Method::POST, &format!("/api/uploads/audio/{}/initialize-clip/", crate::api::escape(&upload_id)), Some(&json!({ "user_reviewed_tags": true }))) {
+            Ok(r) => r,
+            Err(e) => {
+                if e.status() == Some(429) {
+                    return Err(PartUploadError::RateLimited(Duration::from_secs(15)));
+                }
+                return Err(PartUploadError::Error(e));
+            }
+        };
+
+        let clip_id = sj::try_read_string(&init_reply, "clip_id")
+            .filter(|c| !c.is_empty())
+            .or_else(|| sj::find_clips_by_id(&init_reply).ok().and_then(|c| c.into_iter().next()).map(|c| c.id))
+            .ok_or_else(|| PartUploadError::Error(Error::api(t("Suno processed the upload but didn't make a song from it. Refresh the library to check."))))?;
+
+        Ok(clip_id)
+    }
+
+    /// Assembles uploaded part clips in Suno Studio, exports the full song, and returns the rendered clip's ID.
+    pub fn assemble_and_render_studio_song(
+        &self,
+        title: &str,
+        _lyrics: &str,
+        parts: &[(String, f64)],
+        on_progress: &dyn Fn(&str),
+    ) -> Result<String> {
+        if parts.is_empty() {
+            return Err(Error::api(t("Suno couldn't render the song in Studio.")));
+        }
+        let seed_clip_id = &parts[0].0;
+        on_progress(&t("Arranging song in Suno Studio..."));
+
+        // 1. Create or load the Studio project for the seed clip
+        let proj_reply = self.send(
+            Method::POST,
+            &format!("/api/studio/create-or-load-project-for-clip/{}", crate::api::escape(seed_clip_id)),
+            None,
+        )?;
+        let project_id = sj::try_read_string(&proj_reply, "id")
+            .ok_or_else(|| Error::api(t("Suno didn't create a Studio project for this upload.")))?;
+
+        // 2. Fetch project arrangement state
+        let get_reply = self.send(
+            Method::GET,
+            &format!("/api/studio/project/{}", crate::api::escape(&project_id)),
+            None,
+        )?;
+        let root: Value = serde_json::from_str(&get_reply)
+            .map_err(|_| Error::api(t("Suno sent a reply this app doesn't understand.")))?;
+        let mut state = root.get("state").and_then(Value::as_object)
+            .ok_or_else(|| Error::api(t("Suno returned a Studio project without arrangement state.")))?
+            .clone();
+
+        let bps = state.get("timing").and_then(|t| t.get("bps")).and_then(Value::as_f64)
+            .or_else(|| state.get("timing").and_then(|t| t.get("fallbackBPS")).and_then(Value::as_f64))
+            .unwrap_or(2.0)
+            .clamp(0.3, 5.0);
+
+        // 3. Find or preserve the existing audio track
+        let mut tracks = state.remove("tracks").and_then(|v| match v {
+            Value::Array(arr) => Some(arr),
+            _ => None,
+        }).unwrap_or_default();
+
+        let track_idx = tracks.iter().position(|t| {
+            t.get("type").and_then(Value::as_str) == Some("audio") && t.get("clips").is_some()
+        });
+
+        let (mut audio_track, is_new_track) = match track_idx {
+            Some(idx) => (tracks.remove(idx), false),
+            None => {
+                let tid = uuid::Uuid::new_v4().to_string();
+                (json!({
+                    "type": "audio",
+                    "id": tid,
+                    "input": null,
+                    "color": "#02AF4A",
+                    "name": "Audio Track",
+                    "clips": [],
+                    "clipCreationIntents": [],
+                    "height": 86,
+                    "solo": false,
+                    "mute": false,
+                    "arm": false,
+                    "amplitude": 1.0,
+                    "balance": 0.0,
+                    "instrument": { "type": "song" },
+                    "soloTakeLaneId": null,
+                    "takeLanesExpanded": false,
+                    "takeLanes": [],
+                    "signalChain": [],
+                    "routingMode": "linear"
+                }), true)
+            }
+        };
+
+        let track_id = audio_track.get("id").and_then(Value::as_str).unwrap_or("default-track").to_string();
+        let track_color = audio_track.get("color").and_then(Value::as_str).unwrap_or("#02AF4A").to_string();
+
+        // 4. Update timing
+        let mut timing = state.remove("timing").and_then(|v| match v {
+            Value::Object(map) => Some(map),
+            _ => None,
+        }).unwrap_or_default();
+
+        if is_new_track {
+            timing.insert("type".to_string(), json!("follow-track"));
+            timing.insert("fallbackBPS".to_string(), json!(bps));
+            timing.insert("trackId".to_string(), json!(track_id));
+        } else if timing.get("type").and_then(Value::as_str) == Some("follow-track") {
+            timing.insert("fallbackBPS".to_string(), json!(bps));
+            timing.insert("trackId".to_string(), json!(track_id));
+        } else {
+            timing.insert("bps".to_string(), json!(bps));
+            timing.insert("type".to_string(), json!("manual"));
+            timing.insert("lockBPS".to_string(), json!(true));
+            timing.entry("bpsAutomation".to_string()).or_insert_with(|| json!([]));
+        }
+        state.insert("timing".to_string(), Value::Object(timing));
+
+        // 5. Place all parts seamlessly in order on the audio track
+        let existing_clips = audio_track.get("clips").and_then(Value::as_array).cloned().unwrap_or_default();
+        let mut existing_map: std::collections::HashMap<String, Value> = std::collections::HashMap::new();
+        let mut other_clips = Vec::new();
+        for clip in existing_clips {
+            if let Some(asset_id) = clip.get("asset").and_then(|a| a.get("id")).and_then(Value::as_str) {
+                existing_map.insert(asset_id.to_string(), clip);
+            } else {
+                other_clips.push(clip);
+            }
+        }
+
+        let mut placed_clips = Vec::new();
+        let mut v = 0.0;
+
+        for (idx, (clip_id, duration_sec)) in parts.iter().enumerate() {
+            let dur_beats = duration_sec * bps;
+            let end_beats = v + dur_beats;
+            let part_name = format!("Part {}", idx + 1);
+
+            let existing = existing_map.get(clip_id);
+            let clip_uuid = existing
+                .and_then(|c| c.get("id").and_then(Value::as_str))
+                .map(|s| s.to_string())
+                .unwrap_or_else(|| uuid::Uuid::new_v4().to_string());
+
+            let clip_obj = json!({
+                "type": "audio",
+                "id": clip_uuid,
+                "asset": { "type": "clip", "id": clip_id },
+                "name": part_name,
+                "color": track_color,
+                "startBeats": v,
+                "endBeats": end_beats,
+                "readStartBeats": 0.0,
+                "loop": { "enabled": false, "startBeats": 0.0, "endBeats": dur_beats },
+                "warp": { "enabled": false, "awaitingAnalysis": false, "markersHash": null },
+                "streaming": false,
+                "mute": false,
+                "reversed": false,
+                "fadeInBeats": 0.0,
+                "fadeOutBeats": 0.0,
+                "fadeInCurve": 1.0,
+                "fadeOutCurve": 1.0,
+                "transposition": 0.0,
+                "formantCorrection": 0.0,
+                "amplitude": 1.0
+            });
+            placed_clips.push(clip_obj);
+            v = end_beats;
+        }
+        let total_beats = v;
+
+        let mut all_clips = other_clips;
+        all_clips.extend(placed_clips);
+        if let Some(obj) = audio_track.as_object_mut() {
+            obj.insert("clips".to_string(), Value::Array(all_clips));
+        }
+
+        tracks.push(audio_track);
+        state.insert("tracks".to_string(), Value::Array(tracks));
+
+        // 6. Save project arrangement
+        let save_body = json!({
+            "project_id": project_id,
+            "state": state,
+            "title": title
+        });
+        self.send(Method::POST, "/api/studio/save-project", Some(&save_body))?;
+
+        // 7. Re-fetch project to get fresh arrangement state and latest_version_id
+        thread::sleep(Duration::from_millis(1000));
+        let fresh_reply = self.send(
+            Method::GET,
+            &format!("/api/studio/project/{}", crate::api::escape(&project_id)),
+            None,
+        )?;
+        let fresh_root: Value = serde_json::from_str(&fresh_reply)
+            .map_err(|_| Error::api(t("Suno sent a reply this app doesn't understand.")))?;
+        let fresh_version_id = fresh_root.get("latest_version_id").and_then(Value::as_str).map(|s| s.to_string());
+        let fresh_state = fresh_root.get("state").cloned().unwrap_or(Value::Object(state));
+
+        // 8. Generate downbeats
+        let mut downbeats = Vec::new();
+        let max_beats = (total_beats.ceil() as usize).min(4 * 3600 * 5);
+        for s in 0..max_beats {
+            downbeats.push(json!([s as f64 / bps, (s % 4) + 1]));
+        }
+
+        // 9. Render full song
+        on_progress(&t("Rendering full song in Suno Studio. This can take a minute or two."));
+        let mut render_body = json!({
+            "title": title,
+            "lyrics": "",
+            "tags": "",
+            "negative_tags": "",
+            "style_summary": "",
+            "caption": "",
+            "state": fresh_state,
+            "start_beats": 0.0,
+            "end_beats": total_beats,
+            "project_id": "default",
+            "studio_project_id": project_id,
+            "web_client_pathname": "/studio",
+            "downbeats": downbeats,
+            "export_mode": "fullsong_export",
+            "generate_midi_preview": false
+        });
+        if let Some(v_id) = fresh_version_id {
+            render_body["studio_project_version_id"] = json!(v_id);
+        }
+
+        let render_reply = self.send(Method::POST, "/api/studio/render-state", Some(&render_body))?;
+        let rendered_clip_id = sj::try_read_string(&render_reply, "id")
+            .ok_or_else(|| Error::api(t("Suno couldn't render the song in Studio.")))?;
+
+        Ok(rendered_clip_id)
+    }
+
+    /// Sets the final metadata (title, lyrics, terms acceptance) on a clip.
+    pub fn set_metadata(&self, clip_id: &str, title: &str, lyrics: &str) -> Result<()> {
+        let mut body = json!({ "title": title, "is_audio_upload_tos_accepted": true });
+        if !lyrics.trim().is_empty() {
+            body["lyrics"] = json!(lyrics);
+        }
+        self.send(Method::POST, &format!("/api/gen/{}/set_metadata/", crate::api::escape(clip_id)), Some(&body)).map(drop)
     }
 
     /// A signed ticket can't be replayed, so a dropped connection or a storage error gets one more try with a fresh one.
@@ -238,5 +594,17 @@ mod tests {
         assert!(read_ticket(&good.replace(r#""policy":"p","#, "")).is_err());
         assert!(!is_storage("http://suno-uploads.s3.amazonaws.com/"));
         assert!(!is_storage("https://suno-uploads.s3.amazonaws.com.evil.com/"));
+    }
+
+    #[test]
+    fn recognizes_upload_rejection_keywords() {
+        assert!(is_upload_rejected(Some("rejected"), None, None));
+        assert!(is_upload_rejected(Some("error"), Some("moderation_blocked"), None));
+        assert!(is_upload_rejected(Some("failed"), None, Some("Detected copyright infringement.")));
+        assert!(is_upload_rejected(None, None, Some("duplicate audio upload")));
+        assert!(is_upload_rejected(Some("error"), None, Some("Matches existing recording in catalog.")));
+        assert!(!is_upload_rejected(Some("complete"), None, None));
+        assert!(!is_upload_rejected(Some("error"), None, Some("network timeout")));
+        assert!(!is_upload_rejected(Some("processing"), None, None));
     }
 }

@@ -116,6 +116,40 @@ impl App {
         }
     }
 
+    /// Check Suno watermark: inspects downloaded audio for C2PA credentials.
+    pub(crate) fn check_watermark(&mut self) {
+        self.with_song(|app, clip| {
+            let dir = match folder(&app.config.current.audio.download_dir) {
+                Ok(dir) => dir,
+                Err(message) => return speech::say(&message),
+            };
+            let downloaded = ["m4a", "mp3", "wav"].iter().map(|e| dir.join(files::for_song(clip.title.as_deref(), &clip.id, e))).find(|p| p.exists());
+            match downloaded {
+                Some(path) => {
+                    app.net.send(Command::CheckWatermark { path });
+                }
+                None => speech::say(&tf("{0} isn't downloaded yet. Download it first, or use Download, which offers to clean it up.", &[&clip.display_title()])),
+            }
+        });
+    }
+
+    /// Strip Suno watermark: losslessly removes C2PA metadata from downloaded audio.
+    pub(crate) fn strip_watermark(&mut self) {
+        self.with_song(|app, clip| {
+            let dir = match folder(&app.config.current.audio.download_dir) {
+                Ok(dir) => dir,
+                Err(message) => return speech::say(&message),
+            };
+            let downloaded = ["m4a", "mp3", "wav"].iter().map(|e| dir.join(files::for_song(clip.title.as_deref(), &clip.id, e))).find(|p| p.exists());
+            match downloaded {
+                Some(path) => {
+                    app.net.send(Command::StripWatermark { title: clip.display_title(), path });
+                }
+                None => speech::say(&tf("{0} isn't downloaded yet. Download it first, or use Download, which offers to clean it up.", &[&clip.display_title()])),
+            }
+        });
+    }
+
     /// Download all (Alt+L): every finished song in the list, through the free route only; songs already in
     /// the folder are skipped. Settings decides the clean-up.
     pub(crate) fn download_all(&mut self) {

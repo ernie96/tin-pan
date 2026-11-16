@@ -127,7 +127,7 @@ pub enum Command {
     /// The playing song's timed lyrics, for reading them as they're sung.
     TimedLyrics { clip_id: String },
     /// `limits` are the plan's, checked again after a file is converted.
-    UploadSong { path: PathBuf, title: String, lyrics: String, limits: Option<tinpan_core::billing::UploadLimits> },
+    UploadSong { path: PathBuf, title: String, lyrics: String, limits: Option<tinpan_core::billing::UploadLimits>, premier: bool },
     /// The saved song for Resume, when it isn't in a list here.
     ResumeSong { clip_id: String },
     /// Downloads the update and checks its signature.
@@ -145,6 +145,16 @@ pub enum Command {
     SaveDraft { draft: LyricsDraft, lyrics: String },
     RenameDraft { draft: LyricsDraft, title: String },
     DeleteDraft { draft: LyricsDraft },
+    /// Detects BPM from downbeats analysis
+    DetectBpm { clip_id: String, title: String },
+    /// Checks C2PA credentials on a file
+    CheckWatermark { path: PathBuf },
+    /// Losslessly strips C2PA credentials from a file
+    StripWatermark { title: String, path: PathBuf },
+    /// Searches top community tags
+    SearchStyles { term: String },
+    /// Batch edits metadata on marked songs: (id, title, tags, public)
+    BatchEditMetadata { updates: Vec<(String, Option<String>, Option<String>, Option<bool>)> },
     /// Songs you played on Suno.
     ListenHistory,
     /// Your Hooks, or the Hooks you liked.
@@ -268,6 +278,11 @@ pub enum Response {
     CaptchaNeeded { request: Box<GenerateRequest>, provider: i32, model_takes_voice: Option<bool>, job: bool },
     SongsStarted { clips: Vec<SunoClip>, job: bool },
     CoverLyrics { clip: Box<SunoClip>, lyrics: String },
+    BpmDetected { title: String, bpm: Option<u32> },
+    WatermarkChecked { verdict: Result<tinpan_core::c2pa::WatermarkVerdict, Error> },
+    WatermarkStripped { title: String, removed: bool },
+    CommunityStyles { term: String, styles: Vec<String> },
+    BatchMetadataEdited { updated: usize },
     Notifications { list: Vec<Notification>, say: bool },
     NotificationsRead,
     VideoReady { clip_id: String, url: String },
@@ -886,17 +901,21 @@ fn run(api: &SunoApi, command: Command, report: &dyn Fn(Response)) -> Vec<Respon
             });
             vec![Response::TimedLyrics { clip_id, words }]
         }
-        Command::UploadSong { path, title, lyrics, limits } => {
-            let stage = |stage: tinpan_core::upload::Stage| {
-                if stage == tinpan_core::upload::Stage::Checking {
-                    report(Response::Progress(tinpan_core::i18n::tf("Suno is checking {0}. This can take a minute or two.", &[&title])));
-                }
-            };
+        Command::UploadSong { path, title, lyrics, limits, premier } => {
             let work = std::env::temp_dir().join("TinPanUpload").join(uuid_like());
-            let ready = uploadable(&path, &work, limits);
-            let uploaded = ready.and_then(|file| api.upload_song(&tinpan_core::update::client(), &file, &title, &lyrics, &stage)).and_then(|id| {
-                api.clips(&[id.as_str()])?.into_iter().find(|c| c.id == id).ok_or_else(|| Error::api(tinpan_core::i18n::t("Suno processed the upload but didn't make a song from it. Refresh the library to check.")))
-            });
+            let uploaded = if premier {
+                upload_premier(api, &path, &title, &lyrics, &work, &report)
+            } else {
+                let stage = |stage: tinpan_core::upload::Stage| {
+                    if stage == tinpan_core::upload::Stage::Checking {
+                        report(Response::Progress(tinpan_core::i18n::tf("Suno is checking {0}. This can take a minute or two.", &[&title])));
+                    }
+                };
+                let ready = uploadable(&path, &work, limits);
+                ready.and_then(|file| api.upload_song(&tinpan_core::update::client(), &file, &title, &lyrics, &stage)).and_then(|id| {
+                    api.clips(&[id.as_str()])?.into_iter().find(|c| c.id == id).ok_or_else(|| Error::api(tinpan_core::i18n::t("Suno processed the upload but didn't make a song from it. Refresh the library to check.")))
+                })
+            };
             if work.exists()
                 && let Err(e) = std::fs::remove_dir_all(&work)
             {
@@ -1109,6 +1128,40 @@ fn run(api: &SunoApi, command: Command, report: &dyn Fn(Response)) -> Vec<Respon
                 }
             }
         }
+        Command::DetectBpm { clip_id, title } => match api.downbeats_bpm(&clip_id) {
+            Ok(bpm) => vec![Response::BpmDetected { title, bpm }],
+            Err(e) => vec![Response::Failed(e)],
+        },
+        Command::CheckWatermark { path } => {
+            let verdict = tinpan_core::c2pa::detect_watermark(&tinpan_core::update::client(), &path);
+            vec![Response::WatermarkChecked { verdict }]
+        }
+        Command::StripWatermark { title, path } => {
+            let stem = path.with_extension("");
+            let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("mp3");
+            let out = PathBuf::from(format!("{} (no watermark).{}", stem.display(), ext));
+            match tinpan_core::c2pa::strip_watermark(&path, &out) {
+                Ok(removed) => vec![Response::WatermarkStripped { title, removed }],
+                Err(e) => vec![Response::Failed(e)],
+            }
+        }
+        Command::SearchStyles { term } => match api.search_community_styles(&term) {
+            Ok(styles) => vec![Response::CommunityStyles { term, styles }],
+            Err(e) => vec![Response::Failed(e)],
+        },
+        Command::BatchEditMetadata { updates } => {
+            let total = updates.len();
+            for (idx, (id, title, tags, public)) in updates.iter().enumerate() {
+                report(Response::Progress(tinpan_core::i18n::tf(
+                    "Updating song {0} of {1}...",
+                    &[&(idx + 1).to_string(), &total.to_string()],
+                )));
+                if let Err(e) = api.set_clip_metadata(id, title.as_deref(), None, tags.as_deref(), *public) {
+                    log::warn!("Batch edit song {id} failed: {e}");
+                }
+            }
+            vec![Response::BatchMetadataEdited { updated: total }]
+        }
     };
     if let Some(cookies) = api.rotated_cookies() {
         out.push(Response::CookiesRotated(cookies));
@@ -1151,6 +1204,227 @@ fn uploadable(path: &Path, work: &Path, limits: Option<tinpan_core::billing::Upl
         }
     }
     Ok(target)
+}
+
+struct PremierUploadGuard<'a> {
+    api: &'a SunoApi,
+    parts: Vec<(String, f64)>,
+    completed: bool,
+}
+
+impl<'a> PremierUploadGuard<'a> {
+    fn new(api: &'a SunoApi) -> Self {
+        Self {
+            api,
+            parts: Vec::new(),
+            completed: false,
+        }
+    }
+
+    fn push(&mut self, clip_id: String, duration: f64) {
+        self.parts.push((clip_id, duration));
+    }
+
+    fn cleanup_to_trash(&mut self) {
+        if !self.parts.is_empty() {
+            let part_ids: Vec<&str> = self.parts.iter().map(|(id, _)| id.as_str()).collect();
+            log::info!("Moving {} premier upload parts to trash", part_ids.len());
+            if let Err(e) = self.api.set_trashed(&part_ids, true) {
+                log::warn!("Moving upload parts to trash failed: {e}");
+            }
+            self.parts.clear();
+        }
+    }
+}
+
+impl<'a> Drop for PremierUploadGuard<'a> {
+    fn drop(&mut self) {
+        if !self.completed {
+            self.cleanup_to_trash();
+        }
+    }
+}
+
+/// Premier upload: slices into parts with dynamic slice shrinking on moderation/rejection,
+/// uploads each part, arranges them in Suno Studio, renders the full song via Studio fullsong_export,
+/// and cleans up the part clips into the trash.
+fn upload_premier(
+    api: &SunoApi,
+    path: &Path,
+    title: &str,
+    lyrics: &str,
+    work: &Path,
+    report: &dyn Fn(Response),
+) -> Result<SunoClip, Error> {
+    use tinpan_core::i18n::{t, tf};
+    use tinpan_core::upload::PartUploadError;
+
+    // If non-standard format (e.g. WMA), convert first
+    let source_path = if !tinpan_core::upload::EXTENSIONS.contains(&path.extension().map(|e| e.to_string_lossy().to_lowercase()).unwrap_or_default().as_str()) {
+        uploadable(path, work, None)?
+    } else {
+        path.to_path_buf()
+    };
+
+    // Load and decode the song for dynamic variable slicing
+    let decoded = crate::song_source::DecodedSong::load(&source_path)
+        .map_err(Error::api)?;
+    let sample_rate = decoded.sample_rate;
+    let total_frames = decoded.total_frames;
+    let min_slice_frames = sample_rate as usize; // 1 second minimum
+    let default_slice_duration = 5.0; // 5.0 seconds
+    let default_slice_frames = (default_slice_duration * sample_rate as f64).round() as usize;
+    let estimated_total_parts = ((total_frames as f64) / (default_slice_frames as f64)).ceil() as usize;
+
+    let slices_dir = work.join("slices");
+    let _ = std::fs::create_dir_all(&slices_dir);
+
+    let client = tinpan_core::update::client();
+    let mut current_frame = 0;
+    let mut candidate_frames = default_slice_frames.min(total_frames);
+    let mut guard = PremierUploadGuard::new(api);
+    let mut part_number = 0;
+    let mut skipped_count = 0;
+
+    while current_frame < total_frames {
+        let remaining_frames = total_frames - current_frame;
+        candidate_frames = candidate_frames.min(remaining_frames);
+        let mut candidate_duration = candidate_frames as f64 / sample_rate as f64;
+        part_number += 1;
+
+        let part_path = slices_dir.join(format!("part_{part_number:03}.wav"));
+        let mut actual_dur = decoded.write_slice(current_frame, candidate_frames, &part_path).map_err(Error::api)?;
+        let part_name = format!("part_{part_number:03}.wav");
+
+        let total_display = part_number.max(estimated_total_parts);
+        report(Response::Progress(tf(
+            "Uploading part {0} of {1}...",
+            &[&part_number.to_string(), &total_display.to_string()],
+        )));
+
+        let mut attempt = 0;
+        let max_retries = 5;
+        let mut slice_done = false;
+
+        while attempt < max_retries {
+            attempt += 1;
+            match api.upload_part_slice(&client, &part_path, &part_name) {
+                Ok(clip_id) => {
+                    guard.push(clip_id, actual_dur);
+                    current_frame += candidate_frames;
+                    candidate_frames = default_slice_frames; // Reset for next segment
+                    slice_done = true;
+                    break;
+                }
+                Err(PartUploadError::RateLimited(delay)) => {
+                    log::warn!("Rate limited on part {part_number}, waiting {}s", delay.as_secs());
+                    report(Response::Progress(tf(
+                        "Suno rate limit reached. Retrying part {0} in {1} seconds...",
+                        &[&part_number.to_string(), &delay.as_secs().to_string()],
+                    )));
+                    thread::sleep(delay);
+                }
+                Err(PartUploadError::Rejected(reason)) => {
+                    log::warn!("Part {part_number} rejected ({candidate_duration:.1}s): {reason}");
+                    if candidate_frames > min_slice_frames {
+                        let next_sec = (candidate_duration / 2.0).max(1.0);
+                        candidate_frames = (next_sec * sample_rate as f64).round() as usize;
+                        candidate_frames = candidate_frames.max(min_slice_frames).min(remaining_frames);
+                        let new_sec = candidate_frames as f64 / sample_rate as f64;
+                        report(Response::Progress(tf(
+                            "Suno rejected slice. Retrying part {0} with {1} second length...",
+                            &[&part_number.to_string(), &format!("{new_sec:.1}")],
+                        )));
+                        // Re-slice with smaller duration and update actual_dur
+                        actual_dur = decoded.write_slice(current_frame, candidate_frames, &part_path).map_err(Error::api)?;
+                        candidate_duration = actual_dur;
+                        attempt = 0; // Fresh attempt cycle for new slice duration
+                    } else {
+                        // Rejected even at 1 second minimum! Skip this 1 second region to keep going
+                        let current_sec = current_frame as f64 / sample_rate as f64;
+                        skipped_count += 1;
+                        report(Response::Progress(tf(
+                            "Suno rejected audio at {0}; skipping this segment to continue upload...",
+                            &[&tinpan_core::clip::format_time(current_sec)],
+                        )));
+                        current_frame += candidate_frames;
+                        candidate_frames = default_slice_frames;
+                        slice_done = true;
+                        break;
+                    }
+                }
+                Err(PartUploadError::Error(e)) => {
+                    if e.status() == Some(429) || e.to_string().contains("too many requests") || e.to_string().contains("rate limit") {
+                        let delay = std::time::Duration::from_secs(10 * attempt as u64);
+                        report(Response::Progress(tf(
+                            "Suno rate limit reached. Retrying part {0} in {1} seconds...",
+                            &[&part_number.to_string(), &delay.as_secs().to_string()],
+                        )));
+                        thread::sleep(delay);
+                        continue;
+                    }
+                    if attempt <= 2 {
+                        log::warn!("Transient upload error on part {part_number}, retrying: {e}");
+                        thread::sleep(std::time::Duration::from_secs(3));
+                        continue;
+                    }
+                    return Err(e);
+                }
+            }
+        }
+
+        if !slice_done && candidate_frames == default_slice_frames {
+            return Err(Error::api(tf("Failed to upload part {0} after multiple attempts.", &[&part_number.to_string()])));
+        }
+    }
+
+    if guard.parts.is_empty() {
+        return Err(Error::api(t("All audio slices were rejected by Suno.")));
+    }
+
+    if skipped_count > 0 {
+        report(Response::Progress(tf(
+            "All parts uploaded ({0} rejected segments skipped). Arranging in Suno Studio...",
+            &[&skipped_count.to_string()],
+        )));
+    }
+
+    // 3. Assemble and render in Suno Studio
+    let progress_callback = |msg: &str| {
+        report(Response::Progress(msg.to_string()));
+    };
+    let rendered_id = api.assemble_and_render_studio_song(title, lyrics, &guard.parts, &progress_callback)?;
+
+    // 4. Poll until the rendered clip is complete
+    let until = std::time::Instant::now() + std::time::Duration::from_secs(10 * 60);
+    let mut finished_clip = None;
+    while std::time::Instant::now() < until {
+        thread::sleep(std::time::Duration::from_secs(4));
+        match api.clips(&[&rendered_id]) {
+            Ok(clips) => {
+                if let Some(clip) = clips.into_iter().find(|c| c.id == rendered_id) {
+                    if clip.status.as_deref() == Some("complete") {
+                        finished_clip = Some(clip);
+                        break;
+                    }
+                    if clip.status.as_deref() == Some("error") || clip.status.as_deref() == Some("failed") {
+                        return Err(Error::api(t("Suno couldn't render the song in Studio.")));
+                    }
+                }
+            }
+            Err(e) => log::warn!("Polling rendered clip {rendered_id}: {e}"),
+        }
+    }
+    let clip = finished_clip.ok_or_else(|| Error::api(t("Suno took too long processing the upload. It may still appear in your library later.")))?;
+
+    // 5. Clean up temporary upload parts into Suno's trash
+    guard.cleanup_to_trash();
+    guard.completed = true;
+
+    // 6. Set final metadata
+    let _ = api.set_metadata(&rendered_id, title, lyrics);
+
+    Ok(clip)
 }
 
 /// Starts the song's video, then asks how it's doing every 6 seconds for up to 10 minutes, as Tin Pan 1 does.

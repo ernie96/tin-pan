@@ -110,6 +110,7 @@ impl App {
             let from = form.time("Extend f_rom (seconds, or minutes:seconds)", (length > 0.0).then_some(length));
             let title = form.text("_Title", song.title.as_deref().unwrap_or(""), 1);
             let lyrics = form.text("_Lyrics for the new part", "", 6);
+            let lyrics_obf = form.choice("Lyrics obfuscation", tinpan_core::obfuscate::choices(), 0);
             let style = form.text("_Style", song.metadata.as_ref().and_then(|m| m.tags.as_deref()).unwrap_or(""), 1);
             Self::form_style_buttons(&form, style, lyrics, None);
             let exclude = form.text("_Exclude styles", "", 1);
@@ -129,8 +130,10 @@ impl App {
                     };
                     let chosen = models[model.get_selection().unwrap_or(0) as usize].clone();
                     let mut request = GenerateRequest::new(&chosen.external_key, Mode::Custom);
+                    let words = lyrics.get_value().trim().to_string();
+                    let obf_mode = tinpan_core::obfuscate::ObfuscationMode::from_index(lyrics_obf.get_selection().unwrap_or(0) as usize);
                     request.title = title.get_value().trim().to_string();
-                    request.prompt = lyrics.get_value().trim().to_string();
+                    request.prompt = tinpan_core::obfuscate::obfuscate_lyrics(&words, obf_mode, true);
                     request.tags = style.get_value().trim().to_string();
                     request.negative_tags = exclude.get_value().trim().to_string();
                     request.continue_clip_id = Some(song.id.clone());
@@ -168,6 +171,7 @@ impl App {
         let start_title = song.title.as_deref().map(str::trim).filter(|t| !t.is_empty()).map(|t| tf("{0} (Cover)", &[&t])).unwrap_or_default();
         let title = form.text("_Title", &start_title, 1);
         let lyrics = form.text("_Lyrics (change them, or keep the original words)", &original, 8);
+        let lyrics_obf = form.choice("Lyrics obfuscation", tinpan_core::obfuscate::choices(), 0);
         let change = form.text("_How to change the lyrics (for example: make the chorus rhyme)", "", 1);
         let style = form.text("New _style", song.metadata.as_ref().and_then(|m| m.tags.as_deref()).unwrap_or(""), 1);
         form.button("_Rewrite the lyrics now", move || {
@@ -216,8 +220,9 @@ impl App {
                     return;
                 }
                 let mut request = GenerateRequest::new(&chosen.cover_key(), Mode::Custom);
+                let obf_mode = tinpan_core::obfuscate::ObfuscationMode::from_index(lyrics_obf.get_selection().unwrap_or(0) as usize);
                 request.title = title.get_value().trim().to_string();
-                request.prompt = if no_words { String::new() } else { words };
+                request.prompt = if no_words { String::new() } else { tinpan_core::obfuscate::obfuscate_lyrics(&words, obf_mode, true) };
                 request.instrumental = no_words;
                 request.tags = style.get_value().trim().to_string();
                 request.negative_tags = exclude.get_value().trim().to_string();

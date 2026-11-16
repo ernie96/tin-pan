@@ -1,7 +1,7 @@
 //! A Suno song ("clip") as its API sends it, and how Tin Pan says it.
 
 use chrono::{DateTime, Utc};
-use serde::{Deserialize, Deserializer};
+use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::i18n::{t, tf};
 
@@ -55,7 +55,7 @@ mod lenient {
     }
 }
 
-#[derive(Debug, Clone, Default, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
 #[serde(default)]
 pub struct SunoClip {
     #[serde(deserialize_with = "lenient::text")]
@@ -299,7 +299,7 @@ impl SunoClip {
     }
 }
 
-#[derive(Debug, Clone, Default, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
 #[serde(default)]
 pub struct MediaUrl {
     pub url: Option<String>,
@@ -317,7 +317,7 @@ impl MediaUrl {
     }
 }
 
-#[derive(Debug, Clone, Default, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
 #[serde(default)]
 pub struct ClipMetadata {
     #[serde(deserialize_with = "lenient::opt_flag")]

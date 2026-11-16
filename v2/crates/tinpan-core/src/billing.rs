@@ -130,6 +130,13 @@ impl BillingInfo {
         self.accessible_features.iter().any(|f| f.name == "studio")
     }
 
+    /// Premier plan accounts have access to Studio export and Premier uploading.
+    pub fn is_premier(&self) -> bool {
+        let key = self.plan.as_ref().and_then(|p| p.plan_key.as_deref()).unwrap_or("").trim().to_lowercase();
+        let name = self.plan.as_ref().and_then(|p| p.name.as_deref()).unwrap_or("").trim().to_lowercase();
+        key.contains("premier") || name.contains("premier")
+    }
+
     /// F2: total credits, then where they come from.
     pub fn credits_text(&self) -> String {
         let total = self.total_credits_left.unwrap_or(0);

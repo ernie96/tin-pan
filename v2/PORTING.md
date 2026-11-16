@@ -172,8 +172,9 @@ Now views in the Library tab (each playlist is one of its lists), not a page of 
 ## Uploading (1.x UploadService)
 
 - [x] Upload a song: MP3, M4A, WAV, FLAC, OGG and AAC as they are; WMA and other files Windows plays converted to AAC M4A with Media Foundation first (to_m4a.rs, as 1.x), then checked against the plan's lengths (upload.rs, uploads.rs).
-  - The form asks for the title and lyrics, and to confirm your rights and Suno's terms.
-  - It checks the plan's length limits, says when Suno is checking the upload, and puts the new song at the top.
+  - The form asks for the title and lyrics, upload method (Normal or Premier upload via Suno Studio slicing), and to confirm your rights and Suno's terms.
+  - Normal upload checks the plan's length limits and sends directly; Premier upload slices audio into 5-second parts, arranges them in Suno Studio, renders the full song via Studio export, and cleans up the part clips into trash.
+  - It says when Suno is checking or rendering the upload, and puts the new song at the top.
 
 ## Checked against 1.x (2026-11-02)
 
@@ -207,3 +208,18 @@ Not checked by hand: all of the above; none of it has been tried with NVDA yet.
 ## Suno calls (ISunoApiService) still to port
 
 Notifications (v3 then v2), personas, generating, the captcha check, remaster, concat, stems, speed, reverse, crop, fade, writing and cowriting lyrics, style boost and ideas, lyrics drafts, aligned lyrics v3, credits, existing stems, show remixes, pictures, video, albums, custom models, mashup, uploads.
+
+## SunoToolkit lightweight features
+
+- BPM / Tempo Detection: GET /api/gen/{clip_id}/downbeats/ in Suno Studio API, calculating beats-per-minute from downbeat timestamps and median intervals.
+- C2PA Watermark Detection & Lossless Stripper: POST /api/c2pa/detect check, and local lossless removal of ID3 GEOB JUMBF frames, MP4/M4A c2pa boxes, and WAV c2pa/jumb chunks without audio re-encoding.
+- Community Style Search: POST /api/unified/search/omnisearch hybrid query aggregating tag occurrences and returning top matching style suggestions.
+- Library Catalog Export: RFC 4180 compliant CSV export with Excel UTF-8 BOM, and formatted JSON export of library or playlist songs.
+- Multi-Take Batch Generation: Create window option for 1..5 takes (2..10 songs) with optional parameter stepping across takes (varying weirdness or style influence).
+- Bulk Metadata Editing: Song menu action to edit marked songs in batch (prefix titles, append style tags, set visibility) via POST /api/gen/{id}/set_metadata/.
+
+## Lyrics obfuscation (suno-lyrics-obfuscator)
+
+- Unicode transformations in Create, Cover, Extend, and Inspire windows/forms to preserve lyric structure and prevent automated moderation or copyright filter blocks.
+- Choice options: None (original lyrics, default), Zero-width characters (U+200B, U+200C, U+200D), Word joiner (U+2060), Soft hyphens (U+00AD), Combined (zero-width and soft hyphens), and Cyrillic homoglyphs.
+- Automatically preserves structural tags (e.g. `[Verse 1]`, `[Chorus]`, `(Hook)`) while transforming words within lyric lines.
