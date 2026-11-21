@@ -176,7 +176,9 @@ impl App {
             _ => false,
         });
         let mut menu = menu;
+        Self::clear_menu_pick();
         self.section().selector.popup_menu(&mut menu, None);
+        self.run_menu_pick();
     }
 
     /// About this creator: who made the list's songs, their numbers and their page.

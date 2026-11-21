@@ -147,6 +147,16 @@ thread_local! {
     static APP: RefCell<Option<App>> = const { RefCell::new(None) };
 }
 
+thread_local! {
+    /// A command chosen in a pop-up menu, waiting for the menu to close.
+    static MENU_PICKED: std::cell::Cell<Option<i32>> = const { std::cell::Cell::new(None) };
+}
+
+/// Whether an event is already being handled, so with_app would skip a new one.
+fn app_busy() -> bool {
+    APP.with(|app| app.try_borrow_mut().is_err())
+}
+
 /// Runs `f` with the app, unless it's already busy (an event raised from inside another handler).
 fn with_app(f: impl FnOnce(&mut App)) {
     with_app_value(f);
@@ -236,7 +246,13 @@ fn main() {
         });
         frame.on_menu_selected(|event| {
             let id = event.get_id();
-            with_app(|app| app.menu(id));
+            // A pop-up menu's choice comes while the app is still busy showing it: it's kept, and the
+            // code that showed the menu runs it once the menu has closed (popup_menu_and_run).
+            if app_busy() {
+                MENU_PICKED.set(Some(id));
+            } else {
+                with_app(|app| app.menu(id));
+            }
         });
 
         // Notices when a song has played to its end, to start the next one.
@@ -1097,7 +1113,20 @@ impl App {
         let marked = self.selected().is_some_and(|s| self.not_interested.contains(&s.id));
         let in_playlist = matches!(self.shown().key, ViewKey::Playlist(_));
         let mut menu = commands::song_menu(self.selected().as_ref(), marked, in_playlist);
+        MENU_PICKED.set(None);
         self.list().popup_menu(&mut menu);
+        self.run_menu_pick();
+    }
+
+    /// Runs the command chosen in a pop-up menu that just closed, if one was.
+    pub(crate) fn run_menu_pick(&mut self) {
+        if let Some(id) = MENU_PICKED.take() {
+            self.menu(id);
+        }
+    }
+
+    pub(crate) fn clear_menu_pick() {
+        MENU_PICKED.set(None);
     }
 
     // ── The account ─────────────────────────────────────────────────────

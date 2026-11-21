@@ -1,5 +1,12 @@
 # Tin Pan 2 changes
 
+## 2.5.1
+
+### Fixed
+
+- Choosing a command in a song's Applications key menu (or Shift+F10), or in a list's, did nothing, though
+  its shortcut key worked. It runs now.
+
 ## 2.5.0
 
 - The Cover, Extend and Use as inspiration forms have a Voice choice too: any voice, male or female.
