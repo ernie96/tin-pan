@@ -20,6 +20,15 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
 
+      # The C++ compiler's version goes in the cache key: wxWidgets' saved CMake build remembers the
+      # compiler's full path, and an updated runner image moves it, which breaks a restored build.
+      - name: Find the compiler version
+        id: msvc
+        run: |
+          $vs = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
+          $version = (Get-Content "$vs\VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.txt").Trim()
+          "version=$version" | Out-File $env:GITHUB_OUTPUT -Append
+
       # Each commit saves its own copy (a saved build is never overwritten), so the newest one is always there
       # for the next release to start from.
       - name: Cache the Rust build
@@ -29,9 +38,9 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             v2/target
-          key: v2-${{ runner.os }}-${{ hashFiles('v2/Cargo.lock') }}-${{ github.sha }}
+          key: v2-${{ runner.os }}-msvc${{ steps.msvc.outputs.version }}-${{ hashFiles('v2/Cargo.lock') }}-${{ github.sha }}
           restore-keys: |
-            v2-${{ runner.os }}-
+            v2-${{ runner.os }}-msvc${{ steps.msvc.outputs.version }}-
 
       # The same commands as the release, so the release finds exactly what it needs already built.
       - name: Test and build

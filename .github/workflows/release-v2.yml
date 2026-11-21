@@ -33,6 +33,15 @@ jobs:
           if ("v$version" -ne "${{ github.ref_name }}") { throw "Tag ${{ github.ref_name }} does not match version $version in v2/Cargo.toml." }
           "VERSION=$version" | Out-File $env:GITHUB_ENV -Append
 
+      # The same compiler-version key as build-v2.yml, so a restored build never points at a compiler the
+      # updated runner image no longer has.
+      - name: Find the compiler version
+        id: msvc
+        run: |
+          $vs = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
+          $version = (Get-Content "$vs\VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.txt").Trim()
+          "version=$version" | Out-File $env:GITHUB_OUTPUT -Append
+
       - name: Cache the Rust build (wxWidgets takes a while the first time)
         uses: actions/cache@v4
         with:
@@ -40,12 +49,12 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             v2/target
-          key: v2-${{ runner.os }}-${{ hashFiles('v2/Cargo.lock') }}
+          key: v2-${{ runner.os }}-msvc${{ steps.msvc.outputs.version }}-${{ hashFiles('v2/Cargo.lock') }}
           # A tag can only reuse builds saved on main, by build-v2.yml. The newest one is close enough: wxWidgets
           # stays built and only what changed is compiled again. Push to main, and let that build finish, before
           # pushing the tag.
           restore-keys: |
-            v2-${{ runner.os }}-
+            v2-${{ runner.os }}-msvc${{ steps.msvc.outputs.version }}-
 
       - name: Test and build
         working-directory: v2
