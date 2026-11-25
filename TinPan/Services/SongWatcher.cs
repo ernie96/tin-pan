@@ -36,7 +36,8 @@ namespace TinPan.Services
             if (!_running && _pending.Count > 0) _ = RunAsync();
         }
 
-        public void Clear() => _pending.Clear();
+        private int _version;
+        public void Clear() { _version++; _pending.Clear(); }
 
         // "streaming" can already be played, but only "complete" is the finished song.
         private static bool IsDone(SunoClip c) => c.Status == "complete" || c.HasFailed;
@@ -52,14 +53,17 @@ namespace TinPan.Services
                     await Task.Delay(Interval);
                     if (_pending.Count == 0) break;
 
+                    var version = _version;
                     IReadOnlyList<SunoClip> clips;
                     try
                     {
                         clips = await _api.GetClipsAsync(_pending.Keys.ToList());
+                        if (version != _version) continue;
                         failures = 0;
                     }
                     catch (SunoApiException ex)
                     {
+                        if (version != _version) continue;
                         Log.Warn($"Checking on new songs failed: {ex.Message}");
                         if (ex is SunoSignInRequiredException || ++failures >= MaxFailuresInARow)
                         {

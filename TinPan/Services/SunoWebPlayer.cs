@@ -114,8 +114,6 @@ namespace TinPan.Services
         private async Task ApplyOutputAsync()
         {
             if (_view?.CoreWebView2 is not { } core) return;
-            // Back on the Windows default, the page no longer needs to see the devices, so that's taken back.
-            await AllowDeviceNamesAsync(core, _output.Length > 0);
             if (CurrentClipId == null) return;
             try
             {
@@ -127,21 +125,16 @@ namespace TinPan.Services
             }
         }
 
-        /// <summary>
-        /// A page only learns which audio outputs exist, by name, with Chromium's microphone permission, so the
-        /// player's suno.com gets it once you pick an output that isn't the Windows default. The page is never
-        /// allowed to record: the start-up script turns getUserMedia off.
-        /// </summary>
-        private static async Task AllowDeviceNamesAsync(CoreWebView2 core, bool allow = true)
+        internal static async Task ClearLegacyMicrophoneGrantAsync(CoreWebView2 core)
         {
             try
             {
                 await core.Profile.SetPermissionStateAsync(CoreWebView2PermissionKind.Microphone, "https://suno.com",
-                    allow ? CoreWebView2PermissionState.Allow : CoreWebView2PermissionState.Default);
+                    CoreWebView2PermissionState.Default);
             }
             catch (Exception ex) when (ex is InvalidOperationException or NotImplementedException or System.Runtime.InteropServices.COMException)
             {
-                Log.Warn($"Couldn't let the player see the audio outputs: {ex.Message}");
+                Log.Warn($"Couldn't clear the player's previous microphone permission: {ex.Message}");
             }
         }
 
@@ -314,7 +307,7 @@ namespace TinPan.Services
             core.Settings.AreDevToolsEnabled = false;
             core.Settings.IsStatusBarEnabled = false;
             await core.AddScriptToExecuteOnDocumentCreatedAsync(BootScript);
-            if (_output.Length > 0) await AllowDeviceNamesAsync(core);
+            await ClearLegacyMicrophoneGrantAsync(core);
             core.WebMessageReceived += OnMessage;
             WebViewEnvironment.KeepOnSuno(core, "player");
         }

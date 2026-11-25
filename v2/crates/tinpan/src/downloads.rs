@@ -35,8 +35,8 @@ fn target(clip: &SunoClip, format: &str, dir: &Path) -> PathBuf {
             let (url, _) = drm::pick_media_url(clip, true);
             let extension = files::extension_of(Some(&url), "m4a");
             let first = in_dir(&extension);
-            let other = in_dir(if extension == "m4a" { "mp3" } else { "m4a" });
-            if !first.exists() && other.exists() { other } else { first }
+            if first.exists() { return first; }
+            ["mp3", "m4a", "flac", "ogg", "wav"].iter().map(|ext| in_dir(ext)).find(|p| p.is_file()).unwrap_or(first)
         }
     }
 }
@@ -98,7 +98,7 @@ impl App {
                 Ok(dir) => dir,
                 Err(message) => return speech::say(&message),
             };
-            let downloaded = ["m4a", "mp3", "wav"].iter().map(|e| dir.join(files::for_song(clip.title.as_deref(), &clip.id, e))).find(|p| p.exists());
+            let downloaded = ["m4a", "mp3", "wav", "flac", "ogg"].iter().map(|e| dir.join(files::for_song(clip.title.as_deref(), &clip.id, e))).find(|p| p.exists());
             match downloaded {
                 Some(path) => {
                     speech::say_quietly(&tf("Cleaning up {0}.", &[&clip.display_title()]));
@@ -123,7 +123,7 @@ impl App {
                 Ok(dir) => dir,
                 Err(message) => return speech::say(&message),
             };
-            let downloaded = ["m4a", "mp3", "wav"].iter().map(|e| dir.join(files::for_song(clip.title.as_deref(), &clip.id, e))).find(|p| p.exists());
+            let downloaded = ["m4a", "mp3", "wav", "flac", "ogg"].iter().map(|e| dir.join(files::for_song(clip.title.as_deref(), &clip.id, e))).find(|p| p.exists());
             match downloaded {
                 Some(path) => {
                     app.net.send(Command::CheckWatermark { path });
@@ -140,7 +140,7 @@ impl App {
                 Ok(dir) => dir,
                 Err(message) => return speech::say(&message),
             };
-            let downloaded = ["m4a", "mp3", "wav"].iter().map(|e| dir.join(files::for_song(clip.title.as_deref(), &clip.id, e))).find(|p| p.exists());
+            let downloaded = ["m4a", "mp3", "wav", "flac", "ogg"].iter().map(|e| dir.join(files::for_song(clip.title.as_deref(), &clip.id, e))).find(|p| p.exists());
             match downloaded {
                 Some(path) => {
                     app.net.send(Command::StripWatermark { title: clip.display_title(), path });

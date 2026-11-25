@@ -66,6 +66,7 @@ impl App {
             let (influence, suno_influence) = form.slider("Style in_fluence", "Let Suno choose the style influence", 50);
             let voice = form.choice("_Voice", crate::create_window::voice_choices(), 0);
             let max_mode = form.check("Ma_x mode", false);
+            let (workspace, workspace_ids) = app.form_workspace(&form);
             form.show(&t("Make song"), move || {
                 with_app(|app| {
                     let no_words = instrumental.get_value();
@@ -89,6 +90,7 @@ impl App {
                     request.style_influence = tool_form::percent(&influence, &suno_influence);
                     request.max_mode = max_mode.get_value();
                     request.vocal_gender = if no_words { None } else { tinpan_core::create::vocal_gender(voice.get_selection().unwrap_or(0) as usize) };
+                    request.workspace_id = crate::making::workspace_at(&workspace_ids, &workspace);
                     if Self::sliders_fit(&chosen, &request) {
                         app.start_job(&tf("Making a song inspired by {0}.", &[&song.display_title()]), request, &chosen);
                     }

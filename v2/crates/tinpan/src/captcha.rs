@@ -40,6 +40,8 @@ struct Check {
     visible: bool,
     step: Step,
     since: Instant,
+    /// Times the captcha script was loaded again after the page dropped it.
+    reloads: u32,
     done: Option<Done>,
 }
 
@@ -70,7 +72,7 @@ pub fn solve(parent: &Frame, provider: i32, done: impl FnOnce(Result<(String, i3
     // The window took focus to be shown; give it back to the window you were in.
     crate::tool_form::back_to_active(parent);
 
-    let check = Rc::new(RefCell::new(Check { frame, view, parent: *parent, provider, visible: false, step: Step::Loading, since: Instant::now(), done: Some(Box::new(done)) }));
+    let check = Rc::new(RefCell::new(Check { frame, view, parent: *parent, provider, visible: false, step: Step::Loading, since: Instant::now(), reloads: 0, done: Some(Box::new(done)) }));
     let timer = Rc::new(Timer::new(&check.borrow().frame));
     let (ticking, me) = (timer.clone(), check.clone());
     timer.on_tick(move |_| {
@@ -103,18 +105,19 @@ impl Check {
         let waited = self.since.elapsed();
         match self.step {
             Step::Loading => {
-                if self.script("document.readyState").as_deref() == Some("complete") || waited > Duration::from_secs(30) {
-                    if self.provider != 1 {
-                        self.script(
-                            "if (!window.turnstile && !document.querySelector('script[src*=\"challenges.cloudflare.com/turnstile\"]')) { const s = document.createElement('script'); s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'; document.head.appendChild(s); } 'ok'",
-                        );
-                    }
+                // On a slower computer WebView2 is still starting, or the blank page it starts on is still up, for
+                // a few seconds: only suno.com itself, fully loaded, counts.
+                let loaded = self.script("location.hostname + '|' + document.readyState").as_deref() == Some("suno.com|complete");
+                if loaded || (waited > Duration::from_secs(30) && crate::page_script::ready(&self.view)) {
+                    self.load_captcha_script();
                     self.next(Step::WaitingForScript);
+                } else if waited > Duration::from_secs(90) {
+                    log::warn!("suno.com/create didn't load for the captcha (provider {})", self.provider);
+                    return self.failed();
                 }
             }
             Step::WaitingForScript => {
-                let ready = if self.provider != 1 { "String(typeof turnstile !== 'undefined' && !!turnstile.render)" } else { "String(typeof hcaptcha !== 'undefined' && !!hcaptcha.render)" };
-                if self.script(ready).as_deref() == Some("true") {
+                if self.captcha_ready() {
                     self.next(Step::Settling);
                 } else if waited > Duration::from_secs(20) {
                     log::warn!("Captcha provider {} never loaded on suno.com/create", self.provider);
@@ -123,6 +126,19 @@ impl Check {
             }
             // Let the captcha script finish wiring itself up.
             Step::Settling if waited > Duration::from_secs(2) => {
+                // The page can be replaced while it settles (Suno's page moving on, or a slow first load), which
+                // takes the captcha script with it: load it again rather than fail on "turnstile is not defined".
+                if !self.captcha_ready() {
+                    self.reloads += 1;
+                    if self.reloads > 3 {
+                        log::warn!("Captcha provider {} kept disappearing from suno.com/create", self.provider);
+                        return self.failed();
+                    }
+                    log::info!("Captcha provider {} went away while settling; loading it again", self.provider);
+                    self.load_captcha_script();
+                    self.next(Step::WaitingForScript);
+                    return false;
+                }
                 self.script("window.__tinpanCaptcha = ''; 'ok'");
                 let solving = match self.provider {
                     1 => hcaptcha(self.visible),
@@ -153,10 +169,24 @@ impl Check {
         self.since = Instant::now();
     }
 
-    /// Runs a script and gives back its result as plain text.
+    /// Runs a script and gives back its result as plain text; None until the web view can run scripts.
     fn script(&self, js: &str) -> Option<String> {
-        let out = self.view.run_script(js)?;
-        Some(out.trim().trim_matches('"').to_string())
+        crate::page_script::run(&self.view, js)
+    }
+
+    /// Adds Turnstile's script to the page if it isn't there (hCaptcha comes with Suno's page).
+    fn load_captcha_script(&self) {
+        if self.provider != 1 {
+            self.script(
+                "if (!window.turnstile && !document.querySelector('script[src*=\"challenges.cloudflare.com/turnstile\"]')) { const s = document.createElement('script'); s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'; document.head.appendChild(s); } 'ok'",
+            );
+        }
+    }
+
+    /// Whether the captcha script is on the page and ready to render.
+    fn captcha_ready(&self) -> bool {
+        let ready = if self.provider != 1 { "String(typeof turnstile !== 'undefined' && !!turnstile.render)" } else { "String(typeof hcaptcha !== 'undefined' && !!hcaptcha.render)" };
+        self.script(ready).as_deref() == Some("true")
     }
 
     /// Not passed: the first, invisible try brings the window on screen for the check box; the second gives up.
@@ -171,6 +201,7 @@ impl Check {
         self.view.set_focus();
         speech::say(&t("Suno wants you to confirm you're a person. A Suno check window is open; press the check box in it if there is one."));
         self.view.load_url("https://suno.com/create");
+        self.reloads = 0;
         self.next(Step::Loading);
         false
     }

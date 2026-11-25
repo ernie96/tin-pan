@@ -25,6 +25,7 @@ mod net;
 mod personas;
 mod out_of_reach;
 mod outputs;
+mod page_script;
 mod pages;
 mod queue;
 mod player;
@@ -113,6 +114,10 @@ struct App {
     /// The Create window once opened (Ctrl+N), your personas for it, and the songs being made.
     create: Option<create_window::CreateWindow>,
     personas: Vec<tinpan_core::create::Persona>,
+    /// Your workspaces as last loaded, for the making forms' Workspace choice.
+    workspaces: Vec<tinpan_core::api::Workspace>,
+    /// The Create window's workspace when it last made songs; None for My Workspace.
+    chosen_workspace: Option<String>,
     watching: create_window::Watching,
     checking_watched: bool,
     watch_failures: u8,
@@ -257,7 +262,7 @@ fn main() {
 
         // Notices when a song has played to its end, to start the next one.
         let timer = Timer::new(&frame);
-        timer.on_tick(|_| with_app(App::check_song_ended));
+        timer.on_tick(|_| with_app(|app| { app.read_network(); app.check_song_ended(); }));
         timer.start(500, false);
         // The timer has to live as long as the window.
         std::mem::forget(timer);
@@ -285,7 +290,7 @@ fn main() {
             volume,
             search: None,
             say_before_count: None,
-            net: Network::start(&frame),
+            net: Network::start(),
             player,
             config,
             next_cursor: None,
@@ -309,6 +314,8 @@ fn main() {
             view_timer,
             create: None,
             personas: Vec::new(),
+            workspaces: Vec::new(),
+            chosen_workspace: None,
             watching: Default::default(),
             checking_watched: false,
             watch_failures: 0,
@@ -503,7 +510,7 @@ impl App {
             Action::ClearSearch => self.clear_search(),
             Action::Filters => {
                 if self.signed_in {
-                    self.net.send(Command::Workspaces);
+                    self.net.send(Command::Workspaces { for_filters: true });
                 } else {
                     speech::say(&t("Not signed in."));
                 }
@@ -649,14 +656,8 @@ impl App {
     }
 
     fn read_network(&mut self) {
-        loop {
-            let responses = self.net.drain();
-            if responses.is_empty() {
-                return;
-            }
-            for response in responses {
-                self.respond(response);
-            }
+        while let Some(response) = self.net.next_response() {
+            self.respond(response);
         }
     }
 
@@ -682,6 +683,7 @@ impl App {
                 self.net.send(Command::Playlists);
                 self.net.send(Command::Account { say: None });
                 self.net.send(Command::Personas);
+                self.net.send(Command::Workspaces { for_filters: false });
             }
             // Cookies from a page that isn't signed in yet: the window keeps waiting.
             Response::SignInFailed { error, fresh: true } => log::info!("Sign-in cookies not accepted yet: {error}"),
@@ -800,8 +802,14 @@ impl App {
                 }
             }
             Response::Progress(text) => speech::say_quietly(&text),
-            Response::Workspaces(workspaces) => {
-                if filters::edit(&self.frame, &mut self.config.current.library, &workspaces) {
+            Response::Workspaces { list, for_filters } => {
+                // A list that didn't load keeps the one already here for the making forms.
+                if !list.is_empty() {
+                    self.remember_create_workspace();
+                    self.workspaces = list.clone();
+                    self.fill_create_choices();
+                }
+                if for_filters && filters::edit(&self.frame, &mut self.config.current.library, &list) {
                     self.save_settings();
                     self.say_before_count = Some(filters::summary(&self.config.current.library));
                     self.load_library(true);

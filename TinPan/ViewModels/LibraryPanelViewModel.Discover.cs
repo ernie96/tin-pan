@@ -146,7 +146,7 @@ namespace TinPan.ViewModels
                     Announcer.Announce(T("{0} has no song to play.", contest.Title));
                     return;
                 }
-                if (await RunAsync(() => _audio.PlayAsync(contest.BaseClipId, contest.Title)))
+                if (await RunAsync(() => _audio.PlayAsync(contest.BaseClipId, contest.Title)) && _audio.CurrentClipId == contest.BaseClipId)
                     Announcer.Announce(T("Playing: {0}.", contest.Title));
             });
         }

@@ -36,11 +36,15 @@ pub fn start() -> Start {
     let server = IPCServer::new(|_topic| {
         Some(
             IPCConnection::builder()
-                .on_execute(|_topic, data, _format| {
-                    if data.starts_with(SHOW.as_bytes()) {
+                .on_execute(|_topic, data, format| {
+                    let show = match format {
+                        wxdragon::ipc::IPCFormat::UnicodeText if cfg!(windows) => data == b"s\0h\0o\0w\0\0\0",
+                        _ => data.strip_suffix(&[0]).unwrap_or(data) == SHOW.as_bytes(),
+                    };
+                    if show {
                         with_app(App::bring_forward);
                     }
-                    true
+                    show
                 })
                 .build(),
         )

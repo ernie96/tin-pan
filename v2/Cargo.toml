@@ -3,7 +3,7 @@ resolver = "3"
 members = ["crates/tinpan-core", "crates/tinpan", "xtask"]
 
 [workspace.package]
-version = "2.5.1"
+version = "2.6.0"
 edition = "2024"
 license = "GPL-3.0-only"
 repository = "https://github.com/ernie96/tin-pan"
@@ -18,3 +18,11 @@ log = "0.4"
 lto = "thin"
 codegen-units = 1
 strip = true
+
+# Test builds keep only line numbers for Tin Pan's own code and no debug data for libraries: backtraces still
+# name the line, and the debug folder stays a few GB instead of 25.
+[profile.dev]
+debug = "line-tables-only"
+
+[profile.dev.package."*"]
+debug = false

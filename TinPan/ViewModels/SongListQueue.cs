@@ -52,7 +52,7 @@ namespace TinPan.ViewModels
             }
             _songs = _pending.Contains(clip) ? _pending : _songs;
             _current = clip;
-            if (await _run(() => _audio.PlayAsync(clip.Id, clip.DisplayTitle, this)))
+            if (await _run(() => _audio.PlayAsync(clip.Id, clip.DisplayTitle, this)) && _audio.CurrentClipId == clip.Id && ReferenceEquals(_audio.CurrentOwner, this))
                 _announcer.Announce(T("Playing: {0}.", clip.DisplayTitle));
         }
 

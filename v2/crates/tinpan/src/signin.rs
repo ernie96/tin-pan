@@ -62,6 +62,7 @@ pub fn prepare_browser_profile() {
 pub struct SignInWindow {
     frame: Frame,
     timer: Rc<Timer<Frame>>,
+    alive: Rc<std::cell::Cell<bool>>,
 }
 
 impl SignInWindow {
@@ -81,24 +82,37 @@ impl SignInWindow {
         let state = Rc::new(Poll { view, last_tried: RefCell::new(None), busy: RefCell::new(false), forget_suno: RefCell::new(forget_suno) });
         let try_cookies: Rc<dyn Fn(String)> = Rc::new(try_cookies);
         let timer = Rc::new(Timer::new(&frame));
-        timer.on_tick(move |_| state.tick(&try_cookies));
+        let alive = Rc::new(std::cell::Cell::new(true));
+        let polling = alive.clone();
+        let mut needs_navigation = forget_suno;
+        timer.on_tick(move |_| {
+            if needs_navigation && !*state.forget_suno.borrow() {
+                state.view.load_url("https://suno.com/sign-in");
+                needs_navigation = false;
+                return;
+            }
+            state.tick(&try_cookies, &polling);
+        });
         timer.start(1500, false);
         let ticking = timer.clone();
+        let closing = alive.clone();
         frame.on_close(move |event| {
             // The page is going; stop reading it before it's gone.
+            closing.set(false);
             ticking.stop();
             closed();
             event.skip(true);
         });
 
-        view.load_url("https://suno.com/sign-in");
+        if !forget_suno { view.load_url("https://suno.com/sign-in"); }
         frame.show(true);
         view.set_focus();
-        Self { frame, timer }
+        Self { frame, timer, alive }
     }
 
     /// Closes the window once the sign-in has worked.
     pub fn close(self) {
+        self.alive.set(false);
         self.timer.stop();
         self.frame.destroy();
     }
@@ -112,17 +126,23 @@ struct Poll {
 }
 
 impl Poll {
-    fn tick(self: &Rc<Self>, try_cookies: &Rc<dyn Fn(String)>) {
+    fn tick(self: &Rc<Self>, try_cookies: &Rc<dyn Fn(String)>, alive: &Rc<std::cell::Cell<bool>>) {
         if *self.busy.borrow() {
             return;
         }
         *self.busy.borrow_mut() = true;
-        let forget = std::mem::take(&mut *self.forget_suno.borrow_mut());
+        let forget = *self.forget_suno.borrow();
         let me = self.clone();
         let try_cookies = try_cookies.clone();
+        let alive = alive.clone();
         browser::read_cookies(&self.view, &COOKIE_SITES, forget, move |jar| {
             *me.busy.borrow_mut() = false;
+            if !alive.get() { return; }
             let Some(jar) = jar else { return };
+            if forget {
+                *me.forget_suno.borrow_mut() = false;
+                return;
+            }
             if !jar.has_client() {
                 return;
             }
@@ -162,12 +182,10 @@ pub(crate) mod browser {
         unsafe { core(view)?.cast::<ICoreWebView2_2>().ok()?.CookieManager().ok() }
     }
 
-    /// A page learns the audio outputs' names only with the microphone permission, so Suno's player gets it while
-    /// an output other than the default is chosen, as in Tin Pan 1. The page is never let record: its start-up
-    /// script turns getUserMedia off.
-    pub fn allow_device_names(view: &WebView, allow: bool) {
+    /// Restore the browser default for profiles used by earlier Tin Pan versions.
+    pub fn clear_legacy_microphone_grant(view: &WebView) {
         use webview2_com::Microsoft::Web::WebView2::Win32::{
-            COREWEBVIEW2_PERMISSION_KIND_MICROPHONE, COREWEBVIEW2_PERMISSION_STATE_ALLOW, COREWEBVIEW2_PERMISSION_STATE_DEFAULT, ICoreWebView2_13, ICoreWebView2Profile4,
+            COREWEBVIEW2_PERMISSION_KIND_MICROPHONE, COREWEBVIEW2_PERMISSION_STATE_DEFAULT, ICoreWebView2_13, ICoreWebView2Profile4,
         };
         use webview2_com::SetPermissionStateCompletedHandler;
         let Some(core) = core(view) else { return };
@@ -178,7 +196,7 @@ pub(crate) mod browser {
                 return;
             };
             let origin = HSTRING::from("https://suno.com");
-            let state = if allow { COREWEBVIEW2_PERMISSION_STATE_ALLOW } else { COREWEBVIEW2_PERMISSION_STATE_DEFAULT };
+            let state = COREWEBVIEW2_PERMISSION_STATE_DEFAULT;
             let handler = SetPermissionStateCompletedHandler::create(Box::new(|_| Ok(())));
             profile.SetPermissionState(COREWEBVIEW2_PERMISSION_KIND_MICROPHONE, PCWSTR(origin.as_ptr()), state, &handler)
         };
@@ -190,24 +208,27 @@ pub(crate) mod browser {
     /// Reads the cookies of `sites` into one jar and hands it to `done` (None if the browser isn't ready).
     /// With `forget_suno`, deletes those sites' cookies instead and hands back an empty jar.
     pub fn read_cookies(view: &WebView, sites: &[&str], forget_suno: bool, done: impl FnOnce(Option<SunoCookies>) + 'static) {
+        clear_legacy_microphone_grant(view);
         let Some(manager) = cookie_manager(view) else {
             done(None);
             return;
         };
         let jar = Rc::new(RefCell::new(SunoCookies::default()));
         let remaining = Rc::new(RefCell::new(sites.len()));
+        let failed = Rc::new(std::cell::Cell::new(false));
         let done = Rc::new(RefCell::new(Some(done)));
         for site in sites {
             let (into, left, finish, deleter) = (jar.clone(), remaining.clone(), done.clone(), manager.clone());
+            let request_failed = failed.clone();
             let handler = GetCookiesCompletedHandler::create(Box::new(move |result, list: Option<ICoreWebView2CookieList>| {
                 if let (Ok(()), Some(list)) = (result, list) {
-                    collect(&list, &mut into.borrow_mut(), forget_suno.then_some(&deleter));
-                }
+                    if collect(&list, &mut into.borrow_mut(), forget_suno.then_some(&deleter)).is_err() { request_failed.set(true); }
+                } else { request_failed.set(true); }
                 *left.borrow_mut() -= 1;
                 if *left.borrow() == 0
                     && let Some(finish) = finish.borrow_mut().take()
                 {
-                    finish(Some(if forget_suno { SunoCookies::default() } else { into.borrow().clone() }));
+                    finish((!request_failed.get()).then(|| into.borrow().clone()));
                 }
                 Ok(())
             }));
@@ -215,6 +236,7 @@ pub(crate) mod browser {
             // SAFETY: uri outlives the call; the handler is called back on this thread.
             let sent = unsafe { manager.GetCookies(PCWSTR(uri.as_ptr()), &handler) };
             if sent.is_err() {
+                failed.set(true);
                 log::warn!("Couldn't ask the sign-in page for its cookies");
                 *remaining.borrow_mut() -= 1;
             }
@@ -223,21 +245,19 @@ pub(crate) mod browser {
         if *remaining.borrow() == 0
             && let Some(done) = done.borrow_mut().take()
         {
-            done(Some(jar.borrow().clone()));
+            done((!failed.get()).then(|| jar.borrow().clone()));
         }
     }
 
-    fn collect(list: &ICoreWebView2CookieList, jar: &mut SunoCookies, delete_with: Option<&ICoreWebView2CookieManager>) {
+    fn collect(list: &ICoreWebView2CookieList, jar: &mut SunoCookies, delete_with: Option<&ICoreWebView2CookieManager>) -> windows::core::Result<()> {
         let mut count = 0u32;
         // SAFETY: COM calls with valid out pointers; strings come back CoTaskMem-allocated and take_pwstr frees them.
         unsafe {
-            if list.Count(&mut count).is_err() {
-                return;
-            }
+            list.Count(&mut count)?;
             for i in 0..count {
-                let Ok(cookie) = list.GetValueAtIndex(i) else { continue };
+                let cookie = list.GetValueAtIndex(i)?;
                 if let Some(manager) = delete_with {
-                    let _ = manager.DeleteCookie(&cookie);
+                    manager.DeleteCookie(&cookie)?;
                     continue;
                 }
                 let (mut name, mut value) = (PWSTR::null(), PWSTR::null());
@@ -246,6 +266,7 @@ pub(crate) mod browser {
                 }
             }
         }
+        Ok(())
     }
 }
 
@@ -296,6 +317,7 @@ pub(crate) mod browser {
         jar: SunoCookies,
         remaining: usize,
         forget: bool,
+        retry: bool,
         manager: *mut c_void,
         done: Option<Box<dyn FnOnce(Option<SunoCookies>)>>,
     }
@@ -320,12 +342,14 @@ pub(crate) mod browser {
         unsafe {
             let list = webkit_cookie_manager_get_cookies_finish(state.manager, result, &mut error);
             if !error.is_null() {
+                state.retry = true;
                 g_error_free(error);
             }
             let mut item = list;
             while !item.is_null() {
                 let cookie = (*item).data;
                 if state.forget {
+                    state.retry = true;
                     // Deleting finishes later, with the cookie; it's left to WebKitGTK rather than freed here.
                     webkit_cookie_manager_delete_cookie(state.manager, cookie, std::ptr::null_mut(), None, std::ptr::null_mut());
                     item = (*item).next;
@@ -349,19 +373,21 @@ pub(crate) mod browser {
             && let Some(done) = state.done.take()
         {
             let jar = if state.forget { SunoCookies::default() } else { std::mem::take(&mut state.jar) };
+            let retry = state.retry;
             drop(state);
-            done(Some(jar));
+            done((!retry).then_some(jar));
         }
     }
 
     /// Reads the cookies of `sites` into one jar and hands it to `done` (None if the page isn't ready). With
     /// `forget_suno`, deletes those sites' cookies instead and hands back an empty jar.
     pub fn read_cookies(view: &WebView, sites: &[&str], forget_suno: bool, done: impl FnOnce(Option<SunoCookies>) + 'static) {
+        clear_legacy_microphone_grant(view);
         let Some(manager) = cookie_manager(view) else {
             done(None);
             return;
         };
-        let reading = Rc::new(RefCell::new(Reading { jar: SunoCookies::default(), remaining: sites.len(), forget: forget_suno, manager, done: Some(Box::new(done)) }));
+        let reading = Rc::new(RefCell::new(Reading { jar: SunoCookies::default(), remaining: sites.len(), forget: forget_suno, retry: false, manager, done: Some(Box::new(done)) }));
         for site in sites {
             let Ok(uri) = CString::new(*site) else { continue };
             let data = Box::into_raw(Box::new(reading.clone())).cast::<c_void>();
@@ -371,7 +397,7 @@ pub(crate) mod browser {
     }
 
     /// The page can see the outputs' names without asking on Linux; nothing to grant.
-    pub fn allow_device_names(_view: &WebView, _allow: bool) {}
+    pub fn clear_legacy_microphone_grant(_view: &WebView) {}
 }
 
 /// On macOS the sign-in page is WebKit's WKWebView (what wxWebView uses there): its website data store's cookie
@@ -388,7 +414,7 @@ pub(crate) mod browser {
     use wxdragon::widgets::WebView;
 
     /// The page can see the outputs' names without asking on macOS; nothing to grant.
-    pub fn allow_device_names(_view: &WebView, _allow: bool) {}
+    pub fn clear_legacy_microphone_grant(_view: &WebView) {}
 
     /// The page's WKHTTPCookieStore, once the web view is there.
     fn cookie_store(view: &WebView) -> Option<*mut Object> {
@@ -431,16 +457,19 @@ pub(crate) mod browser {
         let got = ConcreteBlock::new(move |cookies: *mut Object| {
             let Some(done) = done.borrow_mut().take() else { return };
             let mut jar = SunoCookies::default();
+            let mut retry = cookies.is_null();
             // SAFETY: WebKit hands the block an NSArray of NSHTTPCookie, on the main thread; the store outlives it.
             unsafe {
                 let count: usize = if cookies.is_null() { 0 } else { msg_send![cookies, count] };
                 for i in 0..count {
                     let cookie: *mut Object = msg_send![cookies, objectAtIndex: i];
                     let domain = text(msg_send![cookie, domain]);
-                    if !domain.trim_start_matches('.').ends_with("suno.com") {
+                    let host = domain.trim_start_matches('.');
+                    if host != "suno.com" && !host.ends_with(".suno.com") {
                         continue;
                     }
                     if forget_suno {
+                        retry = true;
                         let nothing: *mut Object = std::ptr::null_mut();
                         let _: () = msg_send![store, deleteCookie: cookie completionHandler: nothing];
                     } else {
@@ -448,7 +477,7 @@ pub(crate) mod browser {
                     }
                 }
             }
-            done(Some(if forget_suno { SunoCookies::default() } else { jar }));
+            done((!retry).then_some(jar));
         })
         .copy();
         // SAFETY: getAllCookies: copies the block and calls it once, on the main thread.
@@ -463,7 +492,7 @@ pub(crate) mod browser {
     use tinpan_core::cookies::SunoCookies;
     use wxdragon::widgets::WebView;
 
-    pub fn allow_device_names(_view: &WebView, _allow: bool) {}
+    pub fn clear_legacy_microphone_grant(_view: &WebView) {}
 
     pub fn read_cookies(_view: &WebView, _sites: &[&str], _forget_suno: bool, done: impl FnOnce(Option<SunoCookies>) + 'static) {
         done(None);

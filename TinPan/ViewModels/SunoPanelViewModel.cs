@@ -17,6 +17,7 @@ namespace TinPan.ViewModels
     {
         public static IReadOnlyList<string> VocalChoices { get; } = new[] { T("Any voice"), T("Male vocals"), T("Female vocals") };
 
+        private int _accountVersion;
         private readonly ISunoApiService _api;
         private readonly IAuthService _auth;
         private readonly IAudioService _audio;
@@ -65,7 +66,9 @@ namespace TinPan.ViewModels
             if (!_auth.IsAuthenticated) return;
             await RunAsync(background, async () =>
             {
+                var version = _accountVersion;
                 await Account.RefreshAsync();
+                if (version != _accountVersion) return;
                 if (!background) Announcer.Announce(Account.CreditsText);
                 await LoadPersonasAsync();
             });
@@ -90,7 +93,9 @@ namespace TinPan.ViewModels
             if (!_auth.IsAuthenticated) return;
             await RunAsync(background, async () =>
             {
+                var version = _accountVersion;
                 var items = await _api.GetNotificationsAsync();
+                if (version != _accountVersion) return;
                 Notifications.Clear();
                 foreach (var n in items) Notifications.Add(n);
                 if (!background) Announcer.Announce(items.Count == 0 ? T("No notifications.") : Plural(items.Count, "{0} notification.", "{0} notifications."));
@@ -101,7 +106,9 @@ namespace TinPan.ViewModels
         {
             try
             {
+                var version = _accountVersion;
                 var list = await _api.GetPersonasAsync();
+                if (version != _accountVersion) return;
                 var keep = SelectedPersona?.Id;
                 Personas.Clear();
                 Personas.Add(NoPersona);
@@ -127,6 +134,13 @@ namespace TinPan.ViewModels
 
         public void Clear()
         {
+            _accountVersion++;
+            Personas.Clear();
+            Personas.Add(NoPersona);
+            SelectedPersona = NoPersona;
+            PersonaId = "";
+            Models.Clear();
+            SelectedModel = null;
             Account.Clear();
             Notifications.Clear();
             Trending.Clear();
@@ -275,7 +289,9 @@ namespace TinPan.ViewModels
             Announcer.Announce(T("Sending to Suno."));
             await RunAsync(async () =>
             {
+                var version = _accountVersion;
                 var clips = await _api.GenerateAsync(request);
+                if (version != _accountVersion) return;
                 SongsStarted?.Invoke(this, clips);
                 _watcher.Watch(clips);
                 Announcer.Announce(clips.Count == 1
@@ -476,7 +492,9 @@ namespace TinPan.ViewModels
             }
             await RunAsync(async () =>
             {
+                var version = _accountVersion;
                 var clips = await _api.GetTrendingAsync();
+                if (version != _accountVersion) return;
                 Trending.Clear();
                 foreach (var clip in clips) Trending.Add(clip);
                 SelectedTrending = Trending.FirstOrDefault();
@@ -499,7 +517,7 @@ namespace TinPan.ViewModels
                 return;
             }
             _currentTrending = clip;
-            if (await RunAsync(() => _audio.PlayAsync(clip.Id, clip.DisplayTitle, this)))
+            if (await RunAsync(() => _audio.PlayAsync(clip.Id, clip.DisplayTitle, this)) && _audio.CurrentClipId == clip.Id && ReferenceEquals(_audio.CurrentOwner, this))
                 Announcer.Announce(T("Playing: {0}.", clip.DisplayTitle));
         }
 

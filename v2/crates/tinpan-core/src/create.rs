@@ -361,6 +361,9 @@ pub struct GenerateRequest {
     pub vocal_gender: Option<String>,
     /// Make sounds (task "sound"): user_tempo, user_key and user_loop.
     pub sound_configs: Option<Value>,
+    /// The workspace the songs go in; None for My Workspace. Not part of the body: once the songs have started
+    /// they're added to it, as Suno's own web client does.
+    pub workspace_id: Option<String>,
 }
 
 impl GenerateRequest {

@@ -435,7 +435,7 @@ namespace TinPan.Services
             if (!url.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
                 throw new SunoApiException(T("Suno gave a download address this app won't use."));
 
-            var temp = destinationPath + ".part";
+            var temp = Path.Combine(Path.GetDirectoryName(destinationPath) ?? "", $"{Guid.NewGuid():N}.part");
             try
             {
                 // CDN files need no sign-in, so no token is sent here.
@@ -498,7 +498,7 @@ namespace TinPan.Services
 
             var (contentKey, contentIv) = SunoDrm.UnwrapRights(rights, clip.Id, token);
 
-            var temp = destinationPath + ".part";
+            var temp = Path.Combine(Path.GetDirectoryName(destinationPath) ?? "", $"{Guid.NewGuid():N}.part");
             try
             {
                 using var response = await _http.GetAsync(targetUrl, HttpCompletionOption.ResponseHeadersRead, ct);

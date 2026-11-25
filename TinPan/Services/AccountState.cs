@@ -70,13 +70,26 @@ namespace TinPan.Services
 
         public async Task<BillingInfo> RefreshAsync()
         {
-            try { StylePersonalization = await _api.GetStylePersonalizationAsync(); }
+            var version = _version;
+            bool? personalization = null;
+            try { personalization = await _api.GetStylePersonalizationAsync(); }
             catch (SunoApiException ex) when (ex is not SunoSignInRequiredException) { Log.Warn($"Personalization setting didn't load: {ex.Message}"); }
-            Billing = await _api.GetBillingInfoAsync();
-            return Billing;
+            var billing = await _api.GetBillingInfoAsync();
+            if (version == _version)
+            {
+                StylePersonalization = personalization;
+                Billing = billing;
+            }
+            return billing;
         }
 
-        public void Clear() => Billing = null;
+        private int _version;
+        public void Clear()
+        {
+            _version++;
+            StylePersonalization = null;
+            Billing = null;
+        }
 
         /// <summary>Label for plan-only actions: plain when allowed, with the requirement otherwise.</summary>
         public string PaidLabel(string label) => IsPaid == true ? label : T("{0} (needs Pro or Premier)", label);

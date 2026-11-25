@@ -27,6 +27,7 @@ pub struct SongSource {
     channels: ChannelCount,
     rate: SampleRate,
     total: Option<Duration>,
+    decode_error: Option<String>,
 }
 
 impl SongSource {
@@ -68,6 +69,7 @@ impl SongSource {
             channels: NonZero::new(params.channels.map_or(2, |c| c.count() as u16).max(1)).unwrap_or(NonZero::<u16>::MIN),
             rate: NonZero::new(params.sample_rate.unwrap_or(48_000)).unwrap_or(NonZero::<u32>::MIN),
             total,
+            decode_error: None,
         };
         // The first audio says the real channels and rate (Opus always decodes at 48 kHz).
         if !source.refill() {
@@ -85,7 +87,8 @@ impl SongSource {
                     self.decoder.reset();
                     continue;
                 }
-                Err(_) => return false, // the end of the file, or a broken one
+                Err(SymphoniaError::IoError(e)) if e.kind() == std::io::ErrorKind::UnexpectedEof => return false,
+                Err(e) => { self.decode_error = Some(e.to_string()); return false; }
             };
             if packet.track_id() != self.track_id {
                 continue;
@@ -110,8 +113,9 @@ impl SongSource {
                     return true;
                 }
                 // A damaged packet: skip it, as players do.
-                Err(SymphoniaError::DecodeError(e)) => log::warn!("Skipped a damaged bit of the song: {e}"),
+                Err(SymphoniaError::DecodeError(e)) => { self.decode_error = Some(e.to_string()); log::warn!("Skipped a damaged bit of the song: {e}"); }
                 Err(e) => {
+                    self.decode_error = Some(e.to_string());
                     log::warn!("The song stopped decoding: {e}");
                     return false;
                 }
@@ -183,12 +187,21 @@ impl Source for SongSource {
 
 /// Decodes a song file to a 24-bit WAV, for sunscreen, which reads only MP3 and WAV.
 pub fn decode_to_wav(input: &std::path::Path, output: &std::path::Path) -> Result<(), String> {
-    let source = SongSource::new(std::fs::read(input).map_err(|e| e.to_string())?)?;
+    let mut source = SongSource::new(std::fs::read(input).map_err(|e| e.to_string())?)?;
     let spec = hound::WavSpec { channels: source.channels().get(), sample_rate: source.sample_rate().get(), bits_per_sample: 24, sample_format: hound::SampleFormat::Int };
     let mut writer = hound::WavWriter::create(output, spec).map_err(|e| e.to_string())?;
     const FULL: f32 = 8_388_607.0;
-    for sample in source {
+    let expected = source.total.map(|duration| duration.as_secs_f64() * f64::from(spec.sample_rate));
+    let mut samples = 0u64;
+    for sample in source.by_ref() {
+        samples += 1;
         writer.write_sample((sample.clamp(-1.0, 1.0) * FULL) as i32).map_err(|e| e.to_string())?;
+    }
+    if let Some(error) = source.decode_error { return Err(error); }
+    let frames = samples / u64::from(spec.channels);
+    // Allow one codec packet of encoder delay and padding.
+    if expected.is_some_and(|n| frames as f64 + 0.12 * f64::from(spec.sample_rate) < n) {
+        return Err("Audio ended before its declared duration".into());
     }
     writer.finalize().map_err(|e| e.to_string())
 }
@@ -328,6 +341,18 @@ mod tests {
         assert!(source.total_duration().is_some_and(|d| d > Duration::from_secs(10)));
         source.try_seek(Duration::from_secs(5)).unwrap();
         assert!(source.next().is_some());
+    }
+
+    #[test]
+    fn truncated_m4a_cannot_replace_the_original_after_cleanup() {
+        let Ok(path) = std::env::var("TINPAN_TEST_SONG") else { return };
+        let data = std::fs::read(path).unwrap();
+        let folder = std::env::temp_dir().join(format!("tinpan-truncated-test-{}", std::process::id()));
+        std::fs::create_dir_all(&folder).unwrap();
+        let input = folder.join("partial.m4a");
+        std::fs::write(&input, &data[..data.len() / 2]).unwrap();
+        assert!(decode_to_wav(&input, &folder.join("partial.wav")).is_err());
+        std::fs::remove_dir_all(folder).unwrap();
     }
 
     #[test]

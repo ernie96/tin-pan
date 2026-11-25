@@ -7233,5 +7233,20 @@
   "Suno extrage de mult timp vocea din cântecul tău. Încearcă mai târziu.",
   "Suno довго виділяє вокал із вашого співу. Спробуйте пізніше.",
   "Suno tarda en separar la voz de tu canto. Inténtalo más tarde."
+ ],
+ "Workspace": [
+  "Spațiu de lucru",
+  "Робочий простір",
+  "Espacio de trabajo"
+ ],
+ "The songs are being made, but Suno didn't put them in the workspace you chose, so they're in My Workspace.": [
+  "Melodiile se fac, dar Suno nu le-a pus în spațiul de lucru ales, așa că sunt în Spațiul meu de lucru.",
+  "Пісні створюються, але Suno не додав їх до вибраного робочого простору, тому вони в «Мій робочий простір».",
+  "Las canciones se están creando, pero Suno no las puso en el espacio de trabajo que elegiste, así que están en Mi espacio de trabajo."
+ ],
+ "The Create window and the Cover, Extend, Remaster, Use as inspiration, Make speech and Make sounds forms have a Workspace choice: My Workspace, where new songs go anyway, or one of your other workspaces. Tin Pan adds the new songs to the one you choose as soon as Suno starts them, and says so if Suno doesn't take them. F5 in the Create window loads your workspaces again.": [
+  "Fereastra Creează și formularele Cover, Extinde, Remasterizează, Folosește ca inspirație, Fă vorbire și Fă sunete au o alegere Spațiu de lucru: Spațiul meu de lucru, unde merg oricum melodiile noi, sau unul dintre celelalte spații ale tale. Tin Pan adaugă melodiile noi în cel ales imediat ce Suno le începe și spune dacă Suno nu le primește. F5 în fereastra Creează reîncarcă spațiile de lucru.",
+  "Вікно «Створити» та форми «Кавер», «Продовжити», «Ремастер», «Використати як натхнення», «Створити мовлення» і «Створити звуки» мають вибір «Робочий простір»: «Мій робочий простір», куди нові пісні потрапляють і так, або один з ваших інших просторів. Tin Pan додає нові пісні до вибраного, щойно Suno їх почне, і повідомляє, якщо Suno їх не прийме. F5 у вікні «Створити» знову завантажує ваші робочі простори.",
+  "La ventana Crear y los formularios Versión, Extender, Remasterizar, Usar como inspiración, Crear habla y Crear sonidos tienen una opción Espacio de trabajo: Mi espacio de trabajo, adonde van de todos modos las canciones nuevas, u otro de tus espacios. Tin Pan añade las canciones nuevas al que elijas en cuanto Suno las empieza, y lo dice si Suno no las acepta. F5 en la ventana Crear vuelve a cargar tus espacios de trabajo."
  ]
 }

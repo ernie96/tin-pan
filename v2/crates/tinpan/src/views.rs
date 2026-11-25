@@ -336,7 +336,7 @@ impl App {
 
     /// The playlist on screen in the Library tab, if a playlist is.
     fn chosen_playlist(&self) -> Option<Playlist> {
-        self.sections[LIBRARY].view().playlist.clone()
+        self.shown().playlist.clone()
     }
 
     pub(crate) fn new_playlist(&mut self) {

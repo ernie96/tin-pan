@@ -155,8 +155,15 @@ pub fn clean(audio: &Path, options: &CleanupConfig, native_dir: &Path, decode: i
 
 /// A rename, or a copy when the work folder and the download folder are on different drives.
 fn move_file(from: &Path, to: &Path) -> std::io::Result<()> {
-    let _ = std::fs::remove_file(to);
-    std::fs::rename(from, to).or_else(|_| std::fs::copy(from, to).map(drop))
+    if std::fs::rename(from, to).is_ok() {
+        return Ok(());
+    }
+    let staged = to.with_file_name(format!(".{}.wav", uuid::Uuid::new_v4()));
+    let result = std::fs::copy(from, &staged).and_then(|_| std::fs::rename(&staged, to));
+    if result.is_err() {
+        let _ = std::fs::remove_file(staged);
+    }
+    result
 }
 
 fn run(exe: &Path, args: &[String], name: &str) -> Result<()> {
@@ -213,6 +220,18 @@ mod tests {
         o.match_reference = "ref.mp3".into();
         let args = arguments(Path::new("in.wav"), Path::new("out"), &o);
         assert_eq!(&args[3..], ["--no-debuzz", "--no-gate", "--widen=0.5", "--excite=-3", "--match=ref.mp3", "--master=-14"]);
+    }
+
+    #[test]
+    fn a_failed_replacement_keeps_the_existing_clean_file() {
+        let folder = std::env::temp_dir().join(uuid::Uuid::new_v4().to_string());
+        std::fs::create_dir(&folder).unwrap();
+        let target = folder.join("clean.wav");
+        std::fs::write(&target, b"prior result").unwrap();
+        assert!(move_file(&folder.join("missing.wav"), &target).is_err());
+        assert_eq!(std::fs::read(&target).unwrap(), b"prior result");
+        assert_eq!(std::fs::read_dir(&folder).unwrap().count(), 1);
+        std::fs::remove_dir_all(folder).unwrap();
     }
 
     #[test]

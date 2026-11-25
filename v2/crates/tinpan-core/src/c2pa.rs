@@ -23,8 +23,6 @@ pub enum WatermarkVerdict {
 #[derive(Deserialize)]
 struct DetectResponse {
     verdict: String,
-    #[serde(default)]
-    manifest_present: bool,
 }
 
 /// Checks whether an audio file carries Suno's C2PA content credentials via Suno's official endpoint.
@@ -60,13 +58,7 @@ pub fn detect_watermark(client: &Client, file_path: &Path) -> Result<WatermarkVe
     match body.verdict.as_str() {
         "verified_suno" => Ok(WatermarkVerdict::VerifiedSuno),
         "no_suno_provenance" => Ok(WatermarkVerdict::NoSunoProvenance),
-        _ => {
-            if body.manifest_present {
-                Ok(WatermarkVerdict::VerifiedSuno)
-            } else {
-                Ok(WatermarkVerdict::Inconclusive)
-            }
-        }
+        _ => Ok(WatermarkVerdict::Inconclusive),
     }
 }
 
@@ -244,38 +236,55 @@ fn strip_m4a_c2pa(data: &[u8]) -> (Vec<u8>, bool) {
         return (data.to_vec(), false);
     }
 
+    // Keep box lengths and positions intact so media chunk offsets remain valid.
+    const MANIFEST_UUID: &[u8] = &[0xd8,0xfe,0xc3,0xd6,0x1b,0x0e,0x48,0x3c,0x92,0x97,0x58,0x28,0x87,0x7e,0xc4,0x81];
+    let mut out = data.to_vec();
     let mut pos = 0;
-    let mut out = Vec::with_capacity(data.len());
-    let mut stripped_any = false;
-
-    while pos + 8 <= data.len() {
-        let box_size = read_u32_be(&data[pos..pos + 4]);
-        let box_type = &data[pos + 4..pos + 8];
-
-        if box_size == 0 {
-            // Box extends to EOF
-            out.extend_from_slice(&data[pos..]);
-            break;
+    let mut found = false;
+    while let Some(header) = data.get(pos..).and_then(|b| b.get(..8)) {
+        let mut size = read_u32_be(header);
+        let mut header_len = 8;
+        if size == 0 {
+            size = data.len() - pos;
+        } else if size == 1 {
+            let Some(bytes) = data[pos..].get(8..16) else { break };
+            let Ok(large) = usize::try_from(u64::from_be_bytes(bytes.try_into().unwrap())) else { break };
+            size = large;
+            header_len = 16;
         }
-        if pos + box_size > data.len() {
-            out.extend_from_slice(&data[pos..]);
-            break;
+        if size < header_len || size > data.len() - pos { break; }
+        let kind = &header[4..8];
+        let payload = &data[pos + header_len..pos + size];
+        if kind == b"c2pa" || kind == b"jumb" || (kind == b"uuid" && payload.starts_with(MANIFEST_UUID)) {
+            out[pos + 4..pos + 8].copy_from_slice(b"free");
+            out[pos + header_len..pos + size].fill(0);
+            found = true;
         }
-
-        if box_type == b"c2pa" || box_type == b"jumb" {
-            stripped_any = true;
-        } else {
-            out.extend_from_slice(&data[pos..pos + box_size]);
-        }
-        pos += box_size;
+        pos += size;
     }
-
-    (out, stripped_any)
+    (out, found)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn manifest_uuid_is_erased_without_changing_media_offsets() {
+        let mut data = vec![0, 0, 0, 1];
+        data.extend_from_slice(b"uuid");
+        data.extend_from_slice(&35u64.to_be_bytes());
+        data.extend_from_slice(&[0xd8, 0xfe, 0xc3, 0xd6, 0x1b, 0x0e, 0x48, 0x3c, 0x92, 0x97, 0x58, 0x28, 0x87, 0x7e, 0xc4, 0x81]);
+        data.extend_from_slice(b"abc");
+        data.extend_from_slice(b"\0\0\0\0mdatmedia");
+        let (clean, found) = strip_m4a_c2pa(&data);
+        assert!(found);
+        assert_eq!(&clean[4..8], b"free");
+        assert!(clean[16..35].iter().all(|byte| *byte == 0));
+        assert_eq!(&clean[35..], &data[35..]);
+        data[16] ^= 1;
+        assert_eq!(strip_m4a_c2pa(&data), (data, false));
+    }
 
     #[test]
     fn strips_id3_jumbf_frame() {

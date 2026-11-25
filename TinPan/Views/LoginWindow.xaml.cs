@@ -55,6 +55,7 @@ namespace TinPan.Views
             webView.CoreWebView2.Settings.IsPasswordAutosaveEnabled = true;
             webView.CoreWebView2.Settings.IsGeneralAutofillEnabled = true;
 
+            await SunoWebPlayer.ClearLegacyMicrophoneGrantAsync(webView.CoreWebView2);
             if (_clearCookies) await WebViewEnvironment.ForgetSunoAsync(webView.CoreWebView2.CookieManager);
 
             webView.CoreWebView2.Navigate("https://suno.com/sign-in");

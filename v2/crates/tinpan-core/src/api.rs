@@ -320,6 +320,14 @@ impl SunoApi {
         Ok(list)
     }
 
+    /// Adds songs to a workspace (POST /api/project/{id}/clips, answered 204), as Suno's web client does.
+    pub fn add_to_workspace(&self, workspace_id: &str, clip_ids: &[&str]) -> Result<()> {
+        for chunk in clip_ids.chunks(100) {
+            self.send(Method::POST, &format!("/api/project/{}/clips", escape(workspace_id)), Some(&workspace_clips_body(chunk)))?;
+        }
+        Ok(())
+    }
+
     /// Likes ("LIKE"), dislikes ("DISLIKE") or clears (None) the song: POST /api/gen/{id}/update_reaction_type/.
     /// Returns Suno's state now: "L", "D", or None once cleared.
     pub fn set_reaction(&self, clip_id: &str, reaction: Option<&str>) -> Result<Option<String>> {
@@ -1284,7 +1292,7 @@ impl SunoApi {
 
 /// Writes a file through path.part, renamed into place when it's whole; the part is removed on failure.
 fn write_file(path: &std::path::Path, write: impl FnOnce(&mut std::fs::File) -> std::io::Result<()>) -> Result<()> {
-    let part = path.with_extension(format!("{}.part", path.extension().and_then(|e| e.to_str()).unwrap_or("")));
+    let part = path.with_file_name(format!(".{}.part", uuid::Uuid::new_v4()));
     let saved = std::fs::File::create(&part).and_then(|mut file| write(&mut file)).and_then(|()| std::fs::rename(&part, path));
     if let Err(e) = saved {
         let _ = std::fs::remove_file(&part);
@@ -1441,6 +1449,11 @@ pub(crate) fn escape(s: &str) -> String {
         .collect()
 }
 
+/// The body Suno's web client sends to add songs to a workspace.
+fn workspace_clips_body(clip_ids: &[&str]) -> Value {
+    json!({ "update_type": "add", "metadata": { "clip_ids": clip_ids } })
+}
+
 fn queryless(path: &str) -> &str {
     path.split('?').next().unwrap_or(path)
 }
@@ -1455,6 +1468,11 @@ fn truncate(s: &str, max: usize) -> &str {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn songs_go_to_a_workspace_in_suno_s_own_body() {
+        assert_eq!(workspace_clips_body(&["a", "b"]), json!({ "update_type": "add", "metadata": { "clip_ids": ["a", "b"] } }));
+    }
 
     #[test]
     fn the_other_host_is_tried_only_when_this_one_did_nothing() {

@@ -253,7 +253,7 @@ namespace TinPan.Services
 
         /// <summary>
         /// Sniffs container format from the initial bytes of decrypted plaintext.
-        /// Returns "m4a", "mp3" or "unknown".
+        /// Returns the recognized audio container or "unknown".
         /// </summary>
         public static string DetectContainer(ReadOnlySpan<byte> header)
         {
@@ -272,6 +272,9 @@ namespace TinPan.Services
                 header[0] == 0xFF && (header[1] & 0xE0) == 0xE0)
                 return "mp3";
 
+            if (header.StartsWith("fLaC"u8)) return "flac";
+            if (header.StartsWith("OggS"u8)) return "ogg";
+            if (header.Length >= 12 && header.StartsWith("RIFF"u8) && header[8..].StartsWith("WAVE"u8)) return "wav";
             return "unknown";
         }
 

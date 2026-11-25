@@ -18,6 +18,22 @@ const PROFILES: [(&str, &str); 3] = [("natural", "Natural"), ("boost", "Boost"),
 /// Suno only remasters songs up to this long.
 const LONGEST_REMASTER: f64 = 960.0;
 
+/// My Workspace first (id "default"), then your others, each with the id behind it.
+pub(crate) fn workspace_lines(workspaces: &[tinpan_core::api::Workspace]) -> (Vec<String>, Vec<String>) {
+    let mut items = vec![t("My Workspace")];
+    let mut ids = vec!["default".to_string()];
+    for w in workspaces.iter().filter(|w| w.id != "default") {
+        items.push(w.name.clone());
+        ids.push(w.id.clone());
+    }
+    (items, ids)
+}
+
+/// The chosen workspace's id; None for My Workspace, where new songs go anyway.
+pub(crate) fn workspace_at(ids: &[String], choice: &Choice) -> Option<String> {
+    choice.get_selection().and_then(|i| ids.get(i as usize)).filter(|id| id.as_str() != "default").cloned()
+}
+
 impl App {
     /// Suno only extends, covers or remasters a song once it's finished.
     pub(crate) fn finished(&self, song: &SunoClip) -> bool {
@@ -59,6 +75,19 @@ impl App {
 
     fn persona_at(ids: &[String], choice: &Choice) -> Option<String> {
         choice.get_selection().and_then(|i| (i as usize).checked_sub(1)).and_then(|i| ids.get(i)).cloned()
+    }
+
+    /// The Workspace list's lines, My Workspace first, and the workspace id behind each, taken when the form
+    /// opens, so workspaces loading again meanwhile can't swap one for another.
+    pub(crate) fn workspace_items(&self) -> (Vec<String>, Vec<String>) {
+        workspace_lines(&self.workspaces)
+    }
+
+    /// The Workspace choice the making forms share, starting on My Workspace, and the ids behind its lines.
+    pub(crate) fn form_workspace(&self, form: &ToolForm) -> (Choice, Vec<String>) {
+        let (items, ids) = self.workspace_items();
+        // No access key: the forms already use most letters (Remaster's K is Kind).
+        (form.choice("Workspace", items, 0), ids)
     }
 
     /// Says so and returns false when numbers were given for sliders the model doesn't take.
@@ -121,6 +150,7 @@ impl App {
             let persona = form.choice("_Persona", persona_names, 0);
             let voice = form.choice("_Voice", crate::create_window::voice_choices(), 0);
             let max_mode = form.check("Ma_x mode", false);
+            let (workspace, workspace_ids) = app.form_workspace(&form);
             let max = if length > 0.0 { length } else { 3600.0 };
             form.show(&t("Extend"), move || {
                 with_app(|app| {
@@ -146,6 +176,7 @@ impl App {
                     request.max_mode = max_mode.get_value();
                     request.vocal_gender = create::vocal_gender(voice.get_selection().unwrap_or(0) as usize);
                     request.is_remix = true;
+                    request.workspace_id = workspace_at(&workspace_ids, &workspace);
                     if Self::sliders_fit(&chosen, &request) {
                         app.start_job(&tf("Extending {0}.", &[&song.display_title()]), request, &chosen);
                     }
@@ -208,6 +239,7 @@ impl App {
         let persona = form.choice("_Persona", persona_names, 0);
         let voice = form.choice("_Voice", crate::create_window::voice_choices(), 0);
         let max_mode = form.check("Ma_x mode", false);
+        let (workspace, workspace_ids) = self.form_workspace(&form);
         form.show(&t("Make cover"), move || {
             with_app(|app| {
                 let no_words = instrumental.get_value();
@@ -238,6 +270,7 @@ impl App {
                 request.max_mode = max_mode.get_value();
                 request.vocal_gender = if no_words { None } else { create::vocal_gender(voice.get_selection().unwrap_or(0) as usize) };
                 request.is_remix = true;
+                request.workspace_id = workspace_at(&workspace_ids, &workspace);
                 if Self::sliders_fit(&chosen, &request) {
                     app.start_job(&tf("Covering {0}.", &[&song.display_title()]), request, &chosen);
                 }
@@ -283,6 +316,7 @@ impl App {
             let clarity = form.plain_slider("_Clarity (Suno uses 50)", 50);
             let fine = form.plain_slider("Stre_ngth (Suno uses 50)", 50);
             let stereo = form.plain_slider("Stereo _width (Suno uses 50)", 50);
+            let (workspace, workspace_ids) = app.form_workspace(&form);
             form.show(&t("Remaster"), move || {
                 let request = RemasterRequest {
                     clip_id: song.id.clone(),
@@ -299,7 +333,7 @@ impl App {
                 let starting = tf("Remastering {0}.", &[&song.display_title()]);
                 with_app(|app| {
                     speech::say(&starting);
-                    app.net.send(Command::Remaster { request: Box::new(request) });
+                    app.net.send(Command::Remaster { request: Box::new(request), workspace_id: workspace_at(&workspace_ids, &workspace) });
                 });
             });
         });
@@ -318,5 +352,24 @@ impl App {
     /// A Style boost, Style ideas or rewrite asked for in a form: its box, while the form is still open.
     pub(crate) fn form_box(&self) -> Option<TextCtrl> {
         self.form_text.filter(|b| b.is_valid())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::workspace_lines;
+    use tinpan_core::api::Workspace;
+
+    #[test]
+    fn my_workspace_comes_first_once_with_the_others_after() {
+        let list = vec![
+            Workspace { id: "default".into(), name: "Mine".into(), songs: Some(3) },
+            Workspace { id: "p1".into(), name: "Demos".into(), songs: None },
+        ];
+        let (items, ids) = workspace_lines(&list);
+        assert_eq!(ids, ["default", "p1"]);
+        assert_eq!(items[1], "Demos");
+        assert_eq!(items.len(), 2);
+        assert_eq!(workspace_lines(&[]).1, ["default"]);
     }
 }

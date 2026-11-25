@@ -78,7 +78,7 @@ namespace TinPan.Services
 
         /// <summary>
         /// tracks/add and tracks/remove answer {successes, failures}, as lists or counts (chadvis 2026-10-26). True when
-        /// something failed and nothing succeeded. Any other reply (an older empty one) counts as done.
+        /// any item failed. Any other reply (an older empty one) counts as done.
         /// </summary>
         public static bool PlaylistChangeFailed(string json)
         {
@@ -89,7 +89,7 @@ namespace TinPan.Services
                 if (root.ValueKind != JsonValueKind.Object) return false;
                 static int Count(JsonElement o, string name) =>
                     !o.TryGetProperty(name, out var v) ? 0 : v.ValueKind == JsonValueKind.Array ? v.GetArrayLength() : AsInt(v) ?? 0;
-                return Count(root, "failures") > 0 && Count(root, "successes") == 0;
+                return Count(root, "failures") > 0;
             }
             catch (JsonException)
             {

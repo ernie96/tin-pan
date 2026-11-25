@@ -59,27 +59,18 @@ pub fn anonymize(log: &str, user_name: Option<&str>) -> String {
         }
     }
     let Some(name) = user_name.map(str::trim).filter(|n| n.chars().count() >= 3) else { return out };
-    // Whole words only.
-    let (name_lower, text_lower) = (name.to_lowercase(), out.to_lowercase());
-    // The positions found in the lowercase text are used in the original, so every letter must keep its
-    // length when lowercased; equal totals aren't enough (İ grows a byte, the Kelvin sign shrinks two).
-    let same_lengths = |s: &str| s.chars().all(|c| c.to_lowercase().map(char::len_utf8).sum::<usize>() == c.len_utf8());
-    if !same_lengths(name) || !same_lengths(&out) {
-        return out;
-    }
-    let mut result = String::with_capacity(out.len());
-    let mut at = 0;
-    while let Some(found) = text_lower[at..].find(&name_lower) {
-        let start = at + found;
-        let end = start + name.len();
-        let before = out[..start].chars().next_back().is_some_and(char::is_alphanumeric);
-        let after = out[end..].chars().next().is_some_and(char::is_alphanumeric);
-        result.push_str(&out[at..start]);
-        result.push_str(if before || after { &out[start..end] } else { "<user>" });
-        at = end;
-    }
-    result.push_str(&out[at..]);
-    result
+    let pattern = format!(r"(?i){}", regex::escape(name));
+    let matcher = regex::Regex::new(&pattern).expect("escaped username");
+    matcher.replace_all(&out, |captures: &regex::Captures<'_>| {
+        let found = captures.get(0).unwrap();
+        let before = out[..found.start()].chars().next_back();
+        let after = out[found.end()..].chars().next();
+        if before.is_some_and(char::is_alphanumeric) || after.is_some_and(char::is_alphanumeric) {
+            found.as_str().to_owned()
+        } else {
+            "<user>".to_owned()
+        }
+    }).into_owned()
 }
 
 /// The end of `text`, at most `max` bytes, starting on a whole character.
@@ -139,8 +130,8 @@ mod tests {
         // Characters whose lowercase is longer must not shift or split anything.
         assert_eq!(anonymize("İİİ C:\\Users\\Ana\\x and İ", None), "İİİ C:\\Users\\<user>\\x and İ");
         // Two letters a byte longer in lowercase and one two bytes shorter (the Kelvin sign) leave the total
-        // the same but move the name; it stays rather than cutting a letter in half.
-        assert_eq!(anonymize("İİ Ana \u{212A}", Some("Ana")), "İİ Ana \u{212A}");
+        // the same but move the name in the lowercased text.
+        assert_eq!(anonymize("İİ Ana \u{212A}", Some("Ana")), "İİ <user> \u{212A}");
         assert_eq!(last_bytes("aé", 1), "");
         assert_eq!(last_bytes("aé", 2), "é");
     }

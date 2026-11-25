@@ -46,7 +46,7 @@ pub fn read_trashed(root: &Value) -> Vec<Playlist> {
     list.iter().filter(|p| p.is_object() && p.get("is_trashed").and_then(Value::as_bool) != Some(false)).map(Playlist::read).collect()
 }
 
-/// Whether a playlist change failed: Suno lists failures and no successes.
+/// Whether a playlist change failed: Suno lists one or more failed items.
 pub fn change_failed(json: &str) -> bool {
     let Ok(root) = serde_json::from_str::<Value>(if json.trim().is_empty() { "{}" } else { json }) else { return false };
     let count = |name: &str| match root.get(name) {
@@ -54,7 +54,7 @@ pub fn change_failed(json: &str) -> bool {
         Some(v) => as_int(v).unwrap_or(0),
         None => 0,
     };
-    count("failures") > 0 && count("successes") == 0
+    count("failures") > 0
 }
 
 #[cfg(test)]
@@ -77,9 +77,9 @@ mod tests {
     }
 
     #[test]
-    fn a_change_failed_only_when_nothing_succeeded() {
+    fn a_change_reports_any_failed_items() {
         assert!(change_failed(r#"{"failures": ["x"], "successes": []}"#));
-        assert!(!change_failed(r#"{"failures": ["x"], "successes": ["y"]}"#));
+        assert!(change_failed(r#"{"failures": ["x"], "successes": ["y"]}"#));
         assert!(!change_failed(""));
     }
 }

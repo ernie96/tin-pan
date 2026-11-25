@@ -1,5 +1,34 @@
 # Tin Pan 2 changes
 
+## 2.6.0
+
+- The Create window and the Cover, Extend, Remaster, Use as inspiration, Make speech and Make sounds forms
+  have a Workspace choice: My Workspace, or one of your other workspaces. Tin Pan adds the new songs to the
+  one you choose as soon as Suno starts them, and says so if Suno doesn't take them. The Create window keeps
+  your choice, and F5 there loads your workspaces again.
+- Suno's player, which Tin Pan uses when it can't fetch a song itself, no longer gets permission to use the
+  microphone. Without it the page can't see the names of your audio outputs, so a song played that way goes
+  to the default output even when another one is chosen in Settings, and Tin Pan says so.
+
+### Fixed
+
+- On some computers, making a song when Suno asked for its check gave "Error running JavaScript" messages
+  and then stopped, and the check failed with "turnstile is not defined". Tin Pan now waits until the hidden
+  page has really loaded before running the check, loads the check again if the page drops it, and no longer
+  shows those error messages.
+- Adding songs to a playlist or taking them out said it worked when Suno turned some of them down. It says
+  so now.
+- Strip Suno watermark on an M4A file could leave a copy that didn't play, and missed credentials stored in
+  another kind of box. The copy keeps the file's layout now, and those credentials go too.
+- Check Suno watermark said a file was verified when Suno's answer wasn't one Tin Pan knew. It says the
+  check was inconclusive now.
+- A clean-up that failed partway could delete the clean copy you already had. It's kept now.
+- Songs downloaded as FLAC or OGG weren't found again for playing, cleaning or other tools.
+- Sign-in took cookies from any site whose name ended in "suno.com". It takes only suno.com and its own
+  sites now, and a cookie read that fails is tried again instead of signing in with part of them.
+- After signing out, answers still on their way for the old account could reach the window.
+- A problem report could miss your Windows user name next to some letters, such as the Turkish dotted I.
+
 ## 2.5.1
 
 ### Fixed

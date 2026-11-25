@@ -25,6 +25,9 @@ namespace TinPan.ViewModels
         // replaces Songs, but Next and the end of the song still carry on through this one.
         private List<SunoClip> _queue = new();
         private int _songsVersion;
+        private int _accountVersion;
+        private string? _queuePlaylist;
+        private int? _removedCurrentIndex;
 
         public ObservableCollection<Playlist> Playlists { get; } = new();
         public ObservableCollection<SunoClip> Songs { get; } = new();
@@ -45,8 +48,12 @@ namespace TinPan.ViewModels
 
         public void Clear()
         {
+            _accountVersion++;
             _songsVersion++;
             _current = null;
+            SelectedPlaylist = null;
+            SelectedSong = null;
+            _queuePlaylist = null;
             _queue = new List<SunoClip>();
             Playlists.Clear();
             Songs.Clear();
@@ -60,8 +67,10 @@ namespace TinPan.ViewModels
             if (!_auth.IsAuthenticated) return;
             await RunAsync(async () =>
             {
+                var version = _accountVersion;
                 var keep = SelectedPlaylist?.Id;
                 var list = await _api.GetPlaylistsAsync();
+                if (version != _accountVersion) return;
                 Playlists.Clear();
                 foreach (var p in list) Playlists.Add(p);
                 SelectedPlaylist = Playlists.FirstOrDefault(p => p.Id == keep) ?? Playlists.FirstOrDefault();
@@ -77,6 +86,7 @@ namespace TinPan.ViewModels
         private async Task LoadSongsAsync(Playlist? playlist, bool announce)
         {
             var version = ++_songsVersion;
+            SelectedSong = null;
             Songs.Clear();
             if (playlist == null) return;
             if (!announce)
@@ -105,7 +115,9 @@ namespace TinPan.ViewModels
             if (!_dialogs.ShowForm(T("New playlist"), "", T("Make playlist"), new FormField[] { name }) || name.Value.Length == 0) return;
             await RunAsync(async () =>
             {
+                var version = _accountVersion;
                 var created = await _api.CreatePlaylistAsync(name.Value);
+                if (version != _accountVersion) return;
                 created.SongCount ??= 0;
                 Playlists.Insert(0, created);
                 SelectedPlaylist = created;
@@ -195,8 +207,13 @@ namespace TinPan.ViewModels
                 return;
             }
             _current = clip;
-            if (Songs.Contains(clip)) _queue = Songs.ToList();
-            if (await RunAsync(() => _audio.PlayAsync(clip.Id, clip.DisplayTitle, this)))
+            _removedCurrentIndex = null;
+            if (Songs.Contains(clip))
+            {
+                _queue = Songs.ToList();
+                _queuePlaylist = SelectedPlaylist?.Id;
+            }
+            if (await RunAsync(() => _audio.PlayAsync(clip.Id, clip.DisplayTitle, this)) && _audio.CurrentClipId == clip.Id && ReferenceEquals(_audio.CurrentOwner, this))
                 Announcer.Announce(T("Playing: {0}.", clip.DisplayTitle));
         }
 
@@ -226,7 +243,7 @@ namespace TinPan.ViewModels
             if (!await StepAsync(+1)) Announcer.Announce(T("End of playlist."));
         }
 
-        public string? UpNextId => SongQueues.After(_queue, _current);
+        public string? UpNextId => QueueCandidates(+1).FirstOrDefault(c => c.CanPlay)?.Id;
 
         public async Task PreviousAsync()
         {
@@ -236,14 +253,19 @@ namespace TinPan.ViewModels
         /// <summary>Plays the next or previous playable song after the current one. False when there is none.</summary>
         private async Task<bool> StepAsync(int direction)
         {
-            var index = _current == null ? -1 : _queue.IndexOf(_current);
-            if (index < 0) return false;
-            var candidates = direction > 0 ? _queue.Skip(index + 1) : _queue.Take(index).Reverse();
-            var next = candidates.FirstOrDefault(c => c.CanPlay);
+            var next = QueueCandidates(direction).FirstOrDefault(c => c.CanPlay);
             if (next == null) return false;
             if (Songs.Contains(next)) SelectedSong = next;
             await StartAsync(next);
             return true;
+        }
+
+        private IEnumerable<SunoClip> QueueCandidates(int direction)
+        {
+            if (_current == null) return Enumerable.Empty<SunoClip>();
+            var index = _removedCurrentIndex ?? _queue.FindIndex(s => s.Id == _current.Id);
+            if (index < 0) return Enumerable.Empty<SunoClip>();
+            return direction < 0 ? _queue.Take(index).Reverse() : _queue.Skip(index + (_removedCurrentIndex.HasValue ? 0 : 1));
         }
 
         [RelayCommand]
@@ -254,6 +276,13 @@ namespace TinPan.ViewModels
             if (p == null || song == null) return;
             if (await RunAsync(() => _api.RemoveFromPlaylistAsync(p.Id, new[] { song.Id })))
             {
+                if (_queuePlaylist == p.Id && _queue.FindIndex(s => s.Id == song.Id) is var queued && queued >= 0)
+                {
+                    if (_current?.Id == song.Id) _removedCurrentIndex = queued;
+                    else if (queued < _removedCurrentIndex) _removedCurrentIndex--;
+                    _queue.RemoveAt(queued);
+                }
+                if (SelectedPlaylist != p) return;
                 var index = Songs.IndexOf(song);
                 Songs.Remove(song);
                 p.SongCount = Songs.Count;
@@ -279,6 +308,13 @@ namespace TinPan.ViewModels
             }
             if (await RunAsync(() => _api.MoveInPlaylistAsync(p.Id, song.Id, to)))
             {
+                if (_queuePlaylist == p.Id && to < _queue.Count && _queue.FindIndex(s => s.Id == song.Id) == from)
+                {
+                    var moving = _queue[from];
+                    _queue.RemoveAt(from);
+                    _queue.Insert(to, moving);
+                }
+                if (SelectedPlaylist != p || Songs.IndexOf(song) != from || to >= Songs.Count) return;
                 Songs.Move(from, to);
                 SelectedSong = song;
                 Announcer.Announce(T("{0} of {1}.", to + 1, Songs.Count));

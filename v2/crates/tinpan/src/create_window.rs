@@ -38,6 +38,7 @@ pub struct CreateWindow {
     persona_id: TextCtrl,
     takes: Choice,
     vary_takes: Choice,
+    workspace: Choice,
     description: TextCtrl,
     title: TextCtrl,
     lyrics: TextCtrl,
@@ -152,6 +153,7 @@ impl CreateWindow {
             t("Weirdness"),
             t("Style influence"),
         ]);
+        let workspace = choice(&panel, &s, "Workspace", vec![t("My Workspace")]);
 
         heading(&panel, &s, "Describe a song");
         let description = text_box(&panel, &s, "_Description", 2, false);
@@ -223,6 +225,7 @@ impl CreateWindow {
             persona_id,
             takes,
             vary_takes,
+            workspace,
             description,
             title,
             lyrics,
@@ -264,6 +267,7 @@ impl App {
     pub(crate) fn refresh_create_choices(&mut self) {
         self.net.send(Command::Account { say: None });
         self.net.send(Command::Personas);
+        self.net.send(Command::Workspaces { for_filters: false });
         speech::say_quietly(&t("Refreshing."));
     }
 
@@ -285,6 +289,17 @@ impl App {
         let mut names = vec![t("No persona")];
         names.extend(self.personas.iter().map(|p| p.name.clone()));
         CreateWindow::set_items(&window.persona, &names, keep);
+        // The workspace stays the one you chose, by id, when the list loads again.
+        let (names, ids) = self.workspace_items();
+        let chosen = self.chosen_workspace.as_deref().and_then(|id| ids.iter().position(|i| i == id)).unwrap_or(0);
+        CreateWindow::set_items(&window.workspace, &names, chosen);
+    }
+
+    /// Notes the Create window's workspace before the list loads again, so the refill keeps it.
+    pub(crate) fn remember_create_workspace(&mut self) {
+        let Some(window) = self.create else { return };
+        let (_, ids) = self.workspace_items();
+        self.chosen_workspace = crate::making::workspace_at(&ids, &window.workspace);
     }
 
     pub(crate) fn personas_loaded(&mut self, personas: Vec<Persona>) {
@@ -329,6 +344,9 @@ impl App {
         let typed = window.persona_id.get_value().trim().to_string();
         let chosen = window.persona.get_selection().and_then(|i| (i as usize).checked_sub(1)).and_then(|i| self.personas.get(i)).map(|p| p.id.clone());
         request.persona_id = if typed.is_empty() { chosen } else { Some(typed) };
+        let (_, workspace_ids) = self.workspace_items();
+        request.workspace_id = crate::making::workspace_at(&workspace_ids, &window.workspace);
+        self.chosen_workspace = request.workspace_id.clone();
         if let Some(problem) = request.check_lengths(model.limits()) {
             speech::say(&problem);
             return None;

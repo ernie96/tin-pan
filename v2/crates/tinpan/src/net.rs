@@ -14,9 +14,7 @@ use tinpan_core::discover::{Comment, Contest, ExploreShelf, Notification};
 use tinpan_core::json::FeedPage;
 use tinpan_core::playlist::Playlist;
 use tinpan_core::{Error, clerk};
-use wxdragon::{ffi, prelude::*};
-
-pub const ID_WAKE: i32 = 10_999;
+use std::cell::Cell;
 
 /// One song's batch edit: its id, new title, new styles and public or not (None leaves each as it is).
 pub type MetadataUpdate = (String, Option<String>, Option<String>, Option<bool>);
@@ -37,8 +35,8 @@ pub enum Command {
     DeleteForever { clip_ids: Vec<String> },
     /// The song's words: its stored lyrics, or its timed words for songs Suno wrote the words for.
     Lyrics { clip: Box<SunoClip> },
-    /// Your workspaces, for the filters.
-    Workspaces,
+    /// Your workspaces: for the filters, which open with them, or quietly for the making forms' Workspace choice.
+    Workspaces { for_filters: bool },
     ShareLink { clip_id: String },
     Change { clip_id: String, change: Change },
     /// Saves a song: the free file for "mp3" (whatever type it is), Suno's WAV, or the video; then the
@@ -88,7 +86,8 @@ pub enum Command {
     /// Starts songs; first asks whether Suno wants a captcha, unless the request already carries its token.
     /// `job` is a song made from another (extend, cover), which says it started differently.
     Generate { request: Box<GenerateRequest>, model_takes_voice: Option<bool>, job: bool },
-    Remaster { request: Box<RemasterRequest> },
+    /// `workspace_id`: the workspace the remaster goes in; None for My Workspace.
+    Remaster { request: Box<RemasterRequest>, workspace_id: Option<String> },
     /// A song's words for the Cover form: stored, or its timed lyrics.
     CoverLyrics { clip: Box<SunoClip> },
     Notifications { say: bool },
@@ -232,7 +231,7 @@ pub enum Response {
     DeletedForever { clip_ids: Vec<String> },
     Lyrics { clip: Box<SunoClip>, text: String },
     /// Empty when they didn't load; the filters still open, as in Tin Pan 1.
-    Workspaces(Vec<tinpan_core::api::Workspace>),
+    Workspaces { list: Vec<tinpan_core::api::Workspace>, for_filters: bool },
     Changed { clip_id: String, change: Change },
     ShareLink(String),
     Downloaded { clip: Box<SunoClip>, through_suno: bool },
@@ -314,21 +313,10 @@ pub enum Response {
     Failed(Error),
 }
 
-/// Wakes the window when there's something to read, by posting it a menu command.
-#[derive(Clone, Copy)]
-struct Waker(usize);
-
-impl Waker {
-    fn wake(self) {
-        // SAFETY: the frame outlives the network thread (the thread ends when the window does, since
-        // its command channel closes then); posting a command is safe from any thread.
-        unsafe { ffi::wxd_Window_PostMenuCommand(self.0 as *mut ffi::wxd_Window_t, ID_WAKE) };
-    }
-}
-
 pub struct Network {
     commands: Sender<Command>,
-    responses: Receiver<Response>,
+    responses: Receiver<(u64, Response)>,
+    generation: Cell<u64>,
 }
 
 /// Long jobs (song fetches, downloads, clean-ups, creating) running on their own threads right now.
@@ -356,21 +344,26 @@ pub fn long_jobs_running() -> bool {
 }
 
 impl Network {
-    pub fn start(frame: &Frame) -> Self {
+    pub fn start() -> Self {
         let (commands, inbox) = mpsc::channel::<Command>();
         let (outbox, responses) = mpsc::channel();
-        let waker = Waker(frame.handle_ptr() as usize);
+        let mut generation = 0u64;
         thread::spawn(move || {
-            let api = Arc::new(SunoApi::new(clerk::http_client()));
+            let client = clerk::http_client();
+            let mut api = Arc::new(SunoApi::new(client.clone()));
             for command in inbox {
+                if matches!(command, Command::SignOut) {
+                    generation += 1;
+                    api.sign_out();
+                    api = Arc::new(SunoApi::new(client.clone()));
+                    continue;
+                }
                 // The message check gets a thread of its own too, but doesn't count as something loading.
                 if matches!(command, Command::CheckMessage) {
                     let (api, outbox) = (api.clone(), outbox.clone());
                     thread::spawn(move || {
                         for response in run(&api, command, &|_| {}) {
-                            if outbox.send(response).is_ok() {
-                                waker.wake();
-                            }
+                            let _ = outbox.send((generation, response));
                         }
                     });
                     continue;
@@ -383,9 +376,7 @@ impl Network {
                     thread::spawn(move || {
                         let _job = job;
                         let report = |response| {
-                            if outbox.send(response).is_ok() {
-                                waker.wake();
-                            }
+                            let _ = outbox.send((generation, response));
                         };
                         for response in run(&api, command, &report) {
                             report(response);
@@ -394,19 +385,18 @@ impl Network {
                     continue;
                 }
                 let report = |response| {
-                    if outbox.send(response).is_ok() {
-                        waker.wake();
-                    }
+                    let _ = outbox.send((generation, response));
                 };
                 for response in run(&api, command, &report) {
                     report(response);
                 }
             }
         });
-        Self { commands, responses }
+        Self { commands, responses, generation: Cell::new(0) }
     }
 
     pub fn send(&self, command: Command) {
+        if matches!(command, Command::SignOut) { self.generation.set(self.generation.get() + 1); }
         let _ = self.commands.send(command);
     }
 
@@ -416,8 +406,11 @@ impl Network {
     }
 
     /// Everything that has come back so far.
-    pub fn drain(&self) -> Vec<Response> {
-        self.responses.try_iter().collect()
+    pub fn next_response(&self) -> Option<Response> {
+        self.responses.try_iter().find_map(|(generation, response)| {
+            let independent = matches!(response, Response::UpdateChecked { .. } | Response::UpdateDownloaded(_) | Response::MessageChecked(_) | Response::ReportSent { .. });
+            (independent || generation == self.generation.get()).then_some(response)
+        })
     }
 }
 
@@ -522,8 +515,33 @@ fn download_all(api: &SunoApi, songs: &[(SunoClip, PathBuf)], format: &str, dir:
     Response::Progress(summary)
 }
 
+fn reload_changed_playlist(api: &SunoApi, playlist_id: String, error: Error) -> Vec<Response> {
+    let mut responses = vec![Response::Failed(error)];
+    if let Ok(list) = api.playlists() { responses.push(Response::Playlists(list)); }
+    if let Ok(songs) = api.playlist_songs(&playlist_id) {
+        responses.push(Response::PlaylistSongs { playlist_id, songs, announce: false });
+    }
+    responses
+}
+
 fn strs(ids: &[String]) -> Vec<&str> {
     ids.iter().map(String::as_str).collect()
+}
+
+/// Songs that have started, added to the chosen workspace first. They're made either way: if Suno doesn't take
+/// them into the workspace, they stay in My Workspace and that's said.
+fn started_in_workspace(api: &SunoApi, clips: Vec<SunoClip>, job: bool, workspace_id: Option<&str>) -> Vec<Response> {
+    let Some(workspace) = workspace_id.filter(|w| !w.is_empty() && *w != "default") else {
+        return vec![Response::SongsStarted { clips, job }];
+    };
+    let ids: Vec<&str> = clips.iter().map(|c| c.id.as_str()).collect();
+    match api.add_to_workspace(workspace, &ids) {
+        Ok(()) => vec![Response::SongsStarted { clips, job }],
+        Err(e) => {
+            log::warn!("Couldn't add new songs to their workspace: {e}");
+            vec![Response::SongsStarted { clips, job }, Response::Say(tinpan_core::i18n::t("The songs are being made, but Suno didn't put them in the workspace you chose, so they're in My Workspace."))]
+        }
+    }
 }
 
 fn run(api: &SunoApi, command: Command, report: &dyn Fn(Response)) -> Vec<Response> {
@@ -638,10 +656,13 @@ fn run(api: &SunoApi, command: Command, report: &dyn Fn(Response)) -> Vec<Respon
             Ok(link) => vec![Response::ShareLink(link)],
             Err(e) => vec![Response::Failed(e)],
         },
-        Command::Workspaces => vec![Response::Workspaces(api.workspaces().unwrap_or_else(|e| {
-            log::warn!("Workspaces didn't load: {e}");
-            Vec::new()
-        }))],
+        Command::Workspaces { for_filters } => {
+            let list = api.workspaces().unwrap_or_else(|e| {
+                log::warn!("Workspaces didn't load: {e}");
+                Vec::new()
+            });
+            vec![Response::Workspaces { list, for_filters }]
+        }
         Command::Playlists => match api.playlists() {
             Ok(list) => vec![Response::Playlists(list)],
             // At sign-in this runs quietly; only the log hears, and F5 on a playlist tries again.
@@ -675,14 +696,17 @@ fn run(api: &SunoApi, command: Command, report: &dyn Fn(Response)) -> Vec<Respon
                 Some(p) => Ok(p),
                 None => api.create_playlist(&new_name),
             };
-            match target.and_then(|p| api.add_to_playlist(&p.id, &strs(&clip_ids)).map(|()| p)) {
-                Ok(playlist) => vec![Response::AddedToPlaylist { playlist, clip_ids }],
+            match target {
+                Ok(p) => match api.add_to_playlist(&p.id, &strs(&clip_ids)) {
+                    Ok(()) => vec![Response::AddedToPlaylist { playlist: p, clip_ids }],
+                    Err(e) => reload_changed_playlist(api, p.id, e),
+                },
                 Err(e) => vec![Response::Failed(e)],
             }
         }
         Command::RemoveFromPlaylist { playlist_id, clip_ids } => match api.remove_from_playlist(&playlist_id, &strs(&clip_ids)) {
             Ok(()) => vec![Response::RemovedFromPlaylist { playlist_id, clip_ids }],
-            Err(e) => vec![Response::Failed(e)],
+            Err(e) => reload_changed_playlist(api, playlist_id, e),
         },
         // The song moved in Tin Pan already; if Suno refused, the playlist as Suno has it comes back too.
         Command::MovePlaylistSong { playlist_id, clip_id, from, to } => match api.move_in_playlist(&playlist_id, &clip_id, to) {
@@ -707,10 +731,13 @@ fn run(api: &SunoApi, command: Command, report: &dyn Fn(Response)) -> Vec<Respon
             let provider = if request.token.is_some() { Ok(None) } else { api.captcha_needed() };
             vec![match provider {
                 Ok(Some(provider)) => Response::CaptchaNeeded { request, provider, model_takes_voice, job },
-                Ok(None) => match api.generate(*request, model_takes_voice) {
-                    Ok(clips) => Response::SongsStarted { clips, job },
-                    Err(e) => Response::Failed(e),
-                },
+                Ok(None) => {
+                    let workspace_id = request.workspace_id.clone();
+                    match api.generate(*request, model_takes_voice) {
+                        Ok(clips) => return started_in_workspace(api, clips, job, workspace_id.as_deref()),
+                        Err(e) => Response::Failed(e),
+                    }
+                }
                 Err(e) => Response::Failed(e),
             }]
         }
@@ -730,10 +757,10 @@ fn run(api: &SunoApi, command: Command, report: &dyn Fn(Response)) -> Vec<Respon
             Ok(text) => Response::Cowritten { text, to_form },
             Err(e) => Response::Failed(e),
         }],
-        Command::Remaster { request } => vec![match api.remaster(&request) {
-            Ok(clips) => Response::SongsStarted { clips, job: true },
-            Err(e) => Response::Failed(e),
-        }],
+        Command::Remaster { request, workspace_id } => match api.remaster(&request) {
+            Ok(clips) => started_in_workspace(api, clips, true, workspace_id.as_deref()),
+            Err(e) => vec![Response::Failed(e)],
+        },
         Command::CoverLyrics { clip } => {
             let lyrics = match clip.lyrics() {
                 Some(words) => words.trim().to_string(),

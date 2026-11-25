@@ -128,10 +128,10 @@ impl WebPlayer {
         self.output = name.to_string();
         self.output_failed_for = None;
         // Back on the default, the page no longer needs to see the outputs, so that's taken back.
-        crate::signin::browser::allow_device_names(&self.view, !name.is_empty());
+
         if self.clip_id.is_some() {
             let quoted = js_string(name);
-            let _ = self.view.run_script(&format!("window.__tinpanSink ? window.__tinpanSink({quoted}) : 'none'"));
+            let _ = self.script(&format!("window.__tinpanSink ? window.__tinpanSink({quoted}) : 'none'"));
         }
     }
 
@@ -156,6 +156,7 @@ impl WebPlayer {
         let Some(id) = &self.clip_id else { return };
         self.since = Instant::now();
         let output = if self.output.is_empty() { String::new() } else { format!("&co={}", percent_encode(&self.output)) };
+        crate::signin::browser::clear_legacy_microphone_grant(&self.view);
         self.view.load_url(&format!("https://suno.com/song/{id}#cv={volume:.2}{output}"));
         // Loading a page can take the focus; give it back.
         self.parent.raise();
@@ -172,14 +173,15 @@ impl WebPlayer {
         self.clip_id.is_some()
     }
 
+    /// Runs a script on the page; None until the web view can run scripts. No wxWidgets error box if it fails.
     fn script(&self, js: &str) -> Option<String> {
-        Some(self.view.run_script(js)?.trim().trim_matches('"').to_string())
+        crate::page_script::run(&self.view, js)
     }
 
     /// Runs a statement on the page's audio element, if there is one.
     fn on_audio(&self, statement: &str) {
         if self.clip_id.is_some() {
-            let _ = self.view.run_script(&format!("(() => {{ const a = document.getElementById('active-audio-play'); if (a) {{ {statement} }} return 'ok'; }})()"));
+            let _ = self.script(&format!("(() => {{ const a = document.getElementById('active-audio-play'); if (a) {{ {statement} }} return 'ok'; }})()"));
         }
     }
 

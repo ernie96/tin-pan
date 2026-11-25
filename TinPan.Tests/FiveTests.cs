@@ -65,10 +65,10 @@ namespace TinPan.Tests
         [InlineData("{\"successes\":[],\"failures\":[\"c1\"]}", true)]
         [InlineData("{\"successes\":0,\"failures\":2}", true)]
         [InlineData("{\"successes\":[\"c1\"],\"failures\":[]}", false)]
-        [InlineData("{\"successes\":[\"c1\"],\"failures\":[\"c2\"]}", false)]
+        [InlineData("{\"successes\":[\"c1\"],\"failures\":[\"c2\"]}", true)]
         [InlineData("", false)]
         [InlineData("{}", false)]
-        public void A_playlist_change_fails_only_when_nothing_went_in(string reply, bool failed) =>
+        public void A_playlist_change_reports_any_failed_items(string reply, bool failed) =>
             Assert.Equal(failed, SunoJson.PlaylistChangeFailed(reply));
 
         [Fact]

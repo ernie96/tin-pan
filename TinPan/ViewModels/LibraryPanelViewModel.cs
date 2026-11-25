@@ -353,7 +353,7 @@ namespace TinPan.ViewModels
             }
 
             _current = clip;
-            if (await RunAsync(() => _audio.PlayAsync(clip.Id, clip.DisplayTitle, this)))
+            if (await RunAsync(() => _audio.PlayAsync(clip.Id, clip.DisplayTitle, this)) && _audio.CurrentClipId == clip.Id && ReferenceEquals(_audio.CurrentOwner, this))
             {
                 Announcer.Announce(T("Playing: {0}.", clip.DisplayTitle));
             }
@@ -381,8 +381,9 @@ namespace TinPan.ViewModels
         [RelayCommand]
         private void Stop()
         {
-            if (_audio.CurrentClipId == null) return;
+            var playing = _audio.CurrentClipId != null;
             _audio.Stop();
+            if (!playing) return;
             Announcer.Announce(T("Stopped."));
         }
 

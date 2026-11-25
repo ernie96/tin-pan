@@ -72,7 +72,7 @@ namespace TinPan.ViewModels
         {
             var folder = DownloadFolder();
             var stem = Path.GetFileNameWithoutExtension(FileNames.ForSong(clip.Title, clip.Id, "x"));
-            return new[] { ".m4a", ".mp3", ".wav" }.Select(e => Path.Combine(folder, stem + e)).FirstOrDefault(File.Exists);
+            return new[] { ".m4a", ".mp3", ".wav", ".flac", ".ogg" }.Select(e => Path.Combine(folder, stem + e)).FirstOrDefault(File.Exists);
         }
 
         /// <summary>The question Download asks every time: what clean-up does and what it costs in space.</summary>
@@ -205,11 +205,7 @@ namespace TinPan.ViewModels
             var primaryPath = Path.Combine(folder, FileNames.ForSong(clip.Title, clip.Id, ext));
             if (File.Exists(primaryPath)) return primaryPath;
 
-            var altExt = ext == "m4a" ? "mp3" : "m4a";
-            var altPath = Path.Combine(folder, FileNames.ForSong(clip.Title, clip.Id, altExt));
-            if (File.Exists(altPath)) return altPath;
-
-            return primaryPath;
+            return DownloadedFile(clip) ?? primaryPath;
         }
 
         private async Task DownloadDirectAsync(SunoClip clip, string format, string path)

@@ -33,6 +33,7 @@ impl App {
         let tone = form.text("_Tone (for example: warm, calm narrator)", "", 1);
         let music = form.check("With _music under the words", true);
         let voice = form.choice("_Voice", vec![t("Let Suno choose"), t("Male"), t("Female")], 0);
+        let (workspace, workspace_ids) = self.form_workspace(&form);
         form.show(&t("Make speech"), move || {
             with_app(|app| {
                 let words = script.get_value().trim().to_string();
@@ -46,7 +47,8 @@ impl App {
                     Some(2) => Some("f"),
                     _ => None,
                 };
-                let request = create::speech_request(&words, &tone.get_value(), music.get_value(), gender);
+                let mut request = create::speech_request(&words, &tone.get_value(), music.get_value(), gender);
+                request.workspace_id = crate::making::workspace_at(&workspace_ids, &workspace);
                 let model = model.clone().unwrap_or_else(|| SunoModel { external_key: create::SPEECH_MODEL.to_string(), ..SunoModel::default() });
                 app.start_job(&t("Making speech."), request, &model);
             });
@@ -77,6 +79,7 @@ impl App {
         keys.extend(create::SOUND_KEYS.iter().map(|k| k.to_string()));
         let key = form.choice("_Key", keys, 0);
         let model = form.choice("_Model", models.iter().map(SunoModel::display_name).collect(), at);
+        let (workspace, workspace_ids) = self.form_workspace(&form);
         form.show(&t("Make sounds"), move || {
             with_app(|app| {
                 let text = description.get_value().trim().to_string();
@@ -100,7 +103,8 @@ impl App {
                 };
                 let chosen_key = key.get_selection().and_then(|i| (i as usize).checked_sub(1)).map(|i| create::SOUND_KEYS[i]);
                 let chosen = models[model.get_selection().unwrap_or(0) as usize].clone();
-                let request = create::sound_request(&chosen.external_key, &text, kind.get_selection() == Some(1), bpm, chosen_key);
+                let mut request = create::sound_request(&chosen.external_key, &text, kind.get_selection() == Some(1), bpm, chosen_key);
+                request.workspace_id = crate::making::workspace_at(&workspace_ids, &workspace);
                 app.start_job(&t("Making sounds."), request, &chosen);
             });
         });

@@ -61,6 +61,7 @@ namespace TinPan.Tests
             public List<string> Played { get; } = new();
             public bool Playing { get; set; }
             public bool PausedCalled { get; private set; }
+            private IPlaybackQueue? _owner;
             private EventHandler<TrackEndedEventArgs>? _ended;
 
             public void End(string id, IPlaybackQueue owner) => _ended?.Invoke(this, new TrackEndedEventArgs(id, owner));
@@ -70,7 +71,12 @@ namespace TinPan.Tests
                 switch (method!.Name)
                 {
                     case "add_TrackEnded": _ended += (EventHandler<TrackEndedEventArgs>)args![0]!; return null;
-                    case nameof(IAudioService.PlayAsync): Played.Add((string)args![0]!); return Task.CompletedTask;
+                    case nameof(IAudioService.PlayAsync):
+                        Played.Add((string)args![0]!);
+                        _owner = (IPlaybackQueue?)args[2];
+                        return Task.CompletedTask;
+                    case "get_" + nameof(IAudioService.CurrentClipId): return Played.LastOrDefault();
+                    case "get_" + nameof(IAudioService.CurrentOwner): return _owner;
                     case "get_" + nameof(IAudioService.IsPlaying): return Playing;
                     case "get_" + nameof(IAudioService.IsPaused): return false;
                     case nameof(IAudioService.Pause): PausedCalled = true; return null;
