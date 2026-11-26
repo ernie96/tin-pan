@@ -37,6 +37,7 @@ pub struct SettingsPage {
     speech_level: Choice,
     playing_cue: Choice,
     live_lyrics: CheckBox,
+    all_lyric_lines: CheckBox,
     main_output: Choice,
     second_output: Choice,
     play_directly: CheckBox,
@@ -149,6 +150,7 @@ pub fn build(notebook: &Notebook, config: &AppConfig) -> SettingsPage {
     let speech_level = b.choice("Tin Pan speaks", SPEECH_LEVELS.iter().map(|(_, l)| t(l)).collect(), SPEECH_LEVELS.iter().position(|(k, _)| *k == config.speech_level).unwrap_or(0));
     let playing_cue = b.choice("When a list reaches the playing song", CUES.iter().map(|(_, l)| t(l)).collect(), CUES.iter().position(|(k, _)| *k == config.playing_cue).unwrap_or(0));
     let live_lyrics = b.check("Live lyrics: read each line aloud as it is sung (Shift+F3)", config.audio.read_lyrics_live);
+    let all_lyric_lines = b.check("Live lyrics: also read hums, \"ooh\"s and backing vocals Suno didn't time (Shift+F4)", config.audio.read_all_lyric_lines);
     let autoplay = b.check("When a list ends, keep playing songs Suno picks", config.audio.autoplay);
 
     b.group("Audio output");
@@ -219,6 +221,7 @@ pub fn build(notebook: &Notebook, config: &AppConfig) -> SettingsPage {
         speech_level,
         playing_cue,
         live_lyrics,
+        all_lyric_lines,
         main_output,
         second_output,
         play_directly,
@@ -284,6 +287,8 @@ impl App {
         config.playing_cue = cue.to_string();
         let live = p.live_lyrics.get_value();
         let live_changed = config.audio.read_lyrics_live != live;
+        let all_lines = p.all_lyric_lines.get_value();
+        let all_lines_changed = config.audio.read_all_lyric_lines != all_lines;
         config.update.check_at_startup = p.check_updates.get_value();
         let audio = &mut config.audio;
         audio.play_directly = p.play_directly.get_value();
@@ -313,6 +318,9 @@ impl App {
         if cue_changed {
             self.show_playing_cue();
         }
+        if all_lines_changed {
+            self.set_all_lyric_lines(all_lines);
+        }
         if live_changed {
             self.set_live_lyrics(live);
         }
@@ -333,9 +341,10 @@ impl App {
         }
     }
 
-    /// Shift+F3 changed Live lyrics: the box shows it.
+    /// Shift+F3 or Shift+F4 changed Live lyrics: the boxes show it.
     pub(crate) fn settings_show_live_lyrics(&self) {
         self.settings.live_lyrics.set_value(self.config.current.audio.read_lyrics_live);
+        self.settings.all_lyric_lines.set_value(self.config.current.audio.read_all_lyric_lines);
     }
 
     /// Tin Pan speaks, set from the Help menu's Speech submenu.

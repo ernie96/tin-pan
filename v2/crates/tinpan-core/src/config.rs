@@ -114,6 +114,9 @@ pub struct AudioConfig {
     pub second_output_device: String,
     /// Read timed lyrics aloud as they're sung.
     pub read_lyrics_live: bool,
+    /// Live lyrics also reads the written lines Suno didn't time (hums, "ooh"s, backing vocals), placed between
+    /// the timed lines around them.
+    pub read_all_lyric_lines: bool,
     /// Play songs in Tin Pan itself, which starts them sooner; Suno's own player takes over when that fails.
     /// Off, every song plays through Suno's player.
     pub play_directly: bool,
@@ -136,6 +139,7 @@ impl Default for AudioConfig {
             output_device: String::new(),
             second_output_device: String::new(),
             read_lyrics_live: false,
+            read_all_lyric_lines: false,
             play_directly: true,
             autoplay: false,
             save_lyrics: false,

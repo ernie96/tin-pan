@@ -2,7 +2,7 @@
 //! playing-song cue in song lists (a click, "playing", both, or nothing), as in Tin Pan 1.
 
 use tinpan_core::i18n::t;
-use tinpan_core::lyrics::{AlignedWord, LyricsCursor, lines_from};
+use tinpan_core::lyrics::{AlignedWord, LyricsCursor, lines_from, with_untimed_lines};
 
 use crate::net::Command;
 use crate::{App, speech, views};
@@ -39,6 +39,27 @@ impl App {
         }
     }
 
+    /// Shift+F4, and Settings' box for it: live lyrics also reads the written lines Suno didn't time.
+    pub(crate) fn toggle_all_lyric_lines(&mut self) {
+        let on = !self.config.current.audio.read_all_lyric_lines;
+        self.set_all_lyric_lines(on);
+        self.settings_show_live_lyrics();
+        if on {
+            speech::say_error(&t("Hums and backing vocals will be read too."));
+        } else {
+            speech::say_error(&t("Only the lines Suno timed will be read."));
+        }
+    }
+
+    /// Reads the playing song's lines again, with or without the untimed ones.
+    pub(crate) fn set_all_lyric_lines(&mut self, on: bool) {
+        self.config.current.audio.read_all_lyric_lines = on;
+        self.save_settings();
+        self.live_cursor = None;
+        self.live_for = None;
+        self.load_live_lyrics(false);
+    }
+
     pub(crate) fn set_live_lyrics(&mut self, on: bool) {
         self.config.current.audio.read_lyrics_live = on;
         self.save_settings();
@@ -70,7 +91,14 @@ impl App {
         if self.live_for.as_deref() != Some(clip_id) || !self.config.current.audio.read_lyrics_live {
             return;
         }
-        let cursor = LyricsCursor::new(lines_from(words));
+        let mut lines = lines_from(words);
+        if self.config.current.audio.read_all_lyric_lines
+            && let Some(clip) = self.playing.as_ref().filter(|c| c.id == clip_id)
+            && let Some(written) = clip.lyrics()
+        {
+            lines = with_untimed_lines(lines, written, clip.duration());
+        }
+        let cursor = LyricsCursor::new(lines);
         if cursor.is_empty() && self.live_say_none {
             speech::say_quietly(&t("This song has no timed lyrics."));
         }

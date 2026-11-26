@@ -537,6 +537,7 @@ impl App {
             Action::About => self.about(),
             Action::Resume => self.resume(),
             Action::LiveLyrics => self.toggle_live_lyrics(),
+            Action::AllLyricLines => self.toggle_all_lyric_lines(),
             Action::UploadSong => self.upload_song(),
             Action::Personas => self.personas(),
             Action::ItsStems => self.its_stems(),

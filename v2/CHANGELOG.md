@@ -1,5 +1,13 @@
 # Tin Pan 2 changes
 
+## 2.7.0
+
+- Live lyrics can also read the lines Suno doesn't time, such as hums ("hmm hmm hmm"), "ooh"s and backing
+  vocals. Shift+F4 (Playback menu, Read hums and backing vocals too) or Settings turns it on and off; it's
+  off to start with. Tin Pan takes those lines from the song's written lyrics and reads each one between the
+  timed lines around it, so it can come a little early or late. A song whose lyrics Suno didn't time at all
+  still has nothing to read.
+
 ## 2.6.0
 
 - The Create window and the Cover, Extend, Remaster, Use as inspiration, Make speech and Make sounds forms

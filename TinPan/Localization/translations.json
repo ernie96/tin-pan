@@ -5399,6 +5399,11 @@
   "_Очистити «Далі»",
   "Eli_minar todo de A continuación"
  ],
+ "Read hu_ms and backing vocals too, on or off": [
+  "Citește și murmurele și vocile de _fundal, pornit sau oprit",
+  "Читати й _мугикання та бек-вокал, увімкнути чи вимкнути",
+  "Leer también tarareos y coros de _fondo, activar o desactivar"
+ ],
  "Add to _queue": [
   "Adau_gă la coadă",
   "Додати в _чергу",
@@ -5673,6 +5678,11 @@
   "Variază între duble",
   "Змінювати між дублями",
   "Variar entre tomas"
+ ],
+ "Workspace": [
+  "Spațiu de lucru",
+  "Робочий простір",
+  "Espacio de trabajo"
  ],
  "Lyrics obfuscation": [
   "Ofuscare versuri",
@@ -5954,6 +5964,11 @@
   "Меню «Пісня», «Зробити з неї». Кожна команда відкриває форму, що лишається відкритою, доки ви її не закриєте (Escape або «Закрити»); її кнопка запускає роботу, і ви можете щось змінити й запустити ще раз. Клавіші відтворення працюють у формі, тож можна слухати, поки налаштовуєте.\nПродовження продовжує пісню з вибраного моменту; «Отримати всю пісню» потім об'єднує частини. Кавер зберігає мелодію в новому стилі; його текст спершу — оригінальні слова, «Переписати текст зараз» змінює його так, як каже поле «Як змінити», а «Повернути оригінальні слова» скасовує це. Ремастер робить чистішу версію новішою моделлю. «Використати як натхнення» створює нову пісню, схожу на вибрану. Кожна форма пропонує лише моделі, які ваш план може для неї використати.\nДивність, вплив стилю й вплив аудіо — повзунки, за кожним іде «Нехай Suno вибере», позначене, доки ви не зрушите повзунок.",
   "Menú Canción, Hacer a partir de ella. Cada uno abre un formulario que sigue abierto hasta que lo cierras (Escape o Cerrar); su botón lo empieza, y puedes cambiar algo y empezar otro. Las teclas de reproducción funcionan en el formulario, así que puedes escuchar mientras ajustas.\nExtender continúa una canción desde el momento que elijas; Obtener la canción completa une luego las partes. Versión conserva la melodía en un estilo nuevo; su letra empieza siendo la original, Reescribir la letra ahora la cambia como dice el cuadro Cómo cambiar, y Volver a la letra original lo deshace. Remasterizar hace una versión más limpia con un modelo más nuevo. Usar como inspiración hace una canción nueva que se parece a la elegida. Cada formulario solo ofrece los modelos que tu plan puede usar para él.\nLa rareza, la influencia del estilo y la del audio son deslizadores, cada uno seguido de Que Suno elija, marcado hasta que mueves el deslizador."
  ],
+ "Shift+F4, or Settings: live lyrics also reads the lines of the song's lyrics that Suno didn't time, such as hums, \"ooh\"s and backing vocals. Each is read between the timed lines around it, so it can come a little early or late. Off to start with.": [
+  "Shift+F4 sau Setări: versurile în direct citesc și rândurile din versuri pe care Suno nu le-a sincronizat, de exemplu murmure, „ooh”-uri și voci de fundal. Fiecare e citit între rândurile sincronizate din jurul lui, așa că poate veni puțin mai devreme sau mai târziu. Oprit la început.",
+  "Shift+F4 або Налаштування: під час співу читаються також рядки слів пісні, які Suno не розмітив у часі, як-от мугикання, «у-у» та бек-вокал. Кожен читається між розміченими рядками навколо нього, тож може прозвучати трохи раніше чи пізніше. Спочатку вимкнено.",
+  "Shift+F4, o Configuración: la letra en directo también lee las líneas de la letra que Suno no sincronizó, como tarareos, «uh» y coros. Cada una se lee entre las líneas sincronizadas que la rodean, así que puede llegar un poco antes o después. Desactivado al principio."
+ ],
  "Library menu, Upload a song (Alt+U on the Library page), sends an audio file from this computer to your Suno account, where it becomes a song you can play, extend, cover and remaster. MP3, M4A, WAV, FLAC, OGG and AAC files can be uploaded, and you can add its lyrics. You confirm you have the rights to it and accept Suno's upload terms. Suno checks each upload, which can take a minute or two, and may refuse copyrighted music. The length limits are your plan's.": [
   "Meniul Bibliotecă, Încarcă o melodie (Alt+U pe pagina Bibliotecă), trimite un fișier audio de pe acest calculator în contul tău Suno, unde devine o melodie pe care o poți reda, extinde, prelua și remasteriza. Se pot încărca fișiere MP3, M4A, WAV, FLAC, OGG și AAC, iar tu poți adăuga versurile. Confirmi că ai drepturile asupra lui și accepți termenii Suno pentru încărcări. Suno verifică fiecare încărcare, ceea ce poate dura un minut sau două, și poate refuza muzica protejată de drepturi de autor. Limitele de lungime sunt cele ale planului tău.",
   "Меню «Бібліотека», «Надіслати пісню» (Alt+U на сторінці Бібліотека), надсилає аудіофайл із цього комп'ютера до вашого облікового запису Suno, де він стає піснею, яку можна відтворювати, продовжувати, робити кавер і ремастер. Можна надсилати файли MP3, M4A, WAV, FLAC, OGG і AAC, а також додати текст. Ви підтверджуєте, що маєте на нього права, і приймаєте умови Suno для надсилань. Suno перевіряє кожне надсилання, що може тривати хвилину-дві, і може відмовити музиці, захищеній авторським правом. Обмеження тривалості — ті, що у вашому плані.",
@@ -5988,6 +6003,11 @@
   "În fereastra Creează, Duble face 1, 2, 3 sau 5 duble deodată (câte două melodii fiecare), iar Variază între duble mută ciudățenia sau influența stilului de la mic la mare între ele. Ofuscare versuri, în fereastra Creează și în formularele Cover, Extinde, Remasterizează și Folosește ca inspirație, schimbă literele versurilor cu altele asemănătoare sau adaugă caractere invizibile, ca să se citească la fel, pentru versurile pe care filtrul Suno le refuză.",
   "У вікні «Створити» поле «Дублі» робить 1, 2, 3 або 5 дублів одразу (по дві пісні кожен), а «Змінювати між дублями» змінює дивакуватість або вплив стилю від низького до високого між ними. «Обфускація тексту пісні» у вікні «Створити» та у формах «Кавер», «Продовжити», «Ремастер» і «Взяти за натхнення» замінює літери тексту на схожі або додає невидимі символи, щоб текст читався так само, для текстів, які фільтр Suno відхиляє.",
   "En la ventana Crear, Tomas hace 1, 2, 3 o 5 tomas a la vez (dos canciones cada una), y Variar entre tomas mueve la rareza o la influencia del estilo de baja a alta entre ellas. Ofuscación de letra, en la ventana Crear y en los formularios Cover, Extender, Remasterizar y Usar de inspiración, cambia las letras por otras parecidas o añade caracteres invisibles, para que se lea igual, en letras que el filtro de Suno rechaza."
+ ],
+ "The Create window and the Cover, Extend, Remaster, Use as inspiration, Make speech and Make sounds forms have a Workspace choice: My Workspace, where new songs go anyway, or one of your other workspaces. Tin Pan adds the new songs to the one you choose as soon as Suno starts them, and says so if Suno doesn't take them. F5 in the Create window loads your workspaces again.": [
+  "Fereastra Creează și formularele Cover, Extinde, Remasterizează, Folosește ca inspirație, Fă vorbire și Fă sunete au o alegere Spațiu de lucru: Spațiul meu de lucru, unde merg oricum melodiile noi, sau unul dintre celelalte spații ale tale. Tin Pan adaugă melodiile noi în cel ales imediat ce Suno le începe și spune dacă Suno nu le primește. F5 în fereastra Creează reîncarcă spațiile de lucru.",
+  "Вікно «Створити» та форми «Кавер», «Продовжити», «Ремастер», «Використати як натхнення», «Створити мовлення» і «Створити звуки» мають вибір «Робочий простір»: «Мій робочий простір», куди нові пісні потрапляють і так, або один з ваших інших просторів. Tin Pan додає нові пісні до вибраного, щойно Suno їх почне, і повідомляє, якщо Suno їх не прийме. F5 у вікні «Створити» знову завантажує ваші робочі простори.",
+  "La ventana Crear y los formularios Versión, Extender, Remasterizar, Usar como inspiración, Crear habla y Crear sonidos tienen una opción Espacio de trabajo: Mi espacio de trabajo, adonde van de todos modos las canciones nuevas, u otro de tus espacios. Tin Pan añade las canciones nuevas al que elijas en cuanto Suno las empieza, y lo dice si Suno no las acepta. F5 en la ventana Crear vuelve a cargar tus espacios de trabajo."
  ],
  "Library menu, Browse community styles lists the styles most used in Suno's songs for a word you type. Export catalog to CSV or to JSON saves the songs in the list shown to a file. Song menu, Song tempo (BPM) asks Suno for the song's tempo. Batch edit marked songs adds a title prefix or styles to the marked songs, or makes them public or private. Check Suno watermark asks Suno whether a downloaded file carries its content credentials, and Strip Suno watermark saves a copy of the file without them.": [
   "Meniul Bibliotecă, Stiluri comunitare arată stilurile cele mai folosite în melodiile Suno pentru un cuvânt pe care îl scrii. Exportă catalogul în CSV sau în JSON salvează într-un fișier melodiile din lista afișată. Meniul Melodie, Tempo melodie (BPM) îi cere lui Suno tempoul melodiei. Editare în serie a melodiilor marcate adaugă un prefix la titlu sau stiluri melodiilor marcate, ori le face publice sau private. Verifică watermark Suno îl întreabă pe Suno dacă un fișier descărcat are datele lui de proveniență, iar Scoate watermark Suno salvează o copie a fișierului fără ele.",
@@ -6148,6 +6168,16 @@
   "Alte _limbi",
   "Інші м_ови",
   "Otros _idiomas"
+ ],
+ "Hums and backing vocals will be read too.": [
+  "Vor fi citite și murmurele și vocile de fundal.",
+  "Мугикання та бек-вокал теж читатимуться.",
+  "También se leerán los tarareos y los coros."
+ ],
+ "Only the lines Suno timed will be read.": [
+  "Vor fi citite doar versurile sincronizate de Suno.",
+  "Читатимуться лише рядки, які Suno розмітив у часі.",
+  "Solo se leerán las líneas que Suno sincronizó."
  ],
  "Tin Pan is already running.": [
   "Tin Pan rulează deja.",
@@ -6384,6 +6414,11 @@
   "Зараз у Suno немає пісень для оцінювання. Спробуйте пізніше.",
   "Suno no tiene canciones para valorar ahora. Inténtalo más tarde."
  ],
+ "The songs are being made, but Suno didn't put them in the workspace you chose, so they're in My Workspace.": [
+  "Melodiile se fac, dar Suno nu le-a pus în spațiul de lucru ales, așa că sunt în Spațiul meu de lucru.",
+  "Пісні створюються, але Suno не додав їх до вибраного робочого простору, тому вони в «Мій робочий простір».",
+  "Las canciones se están creando, pero Suno no las puso en el espacio de trabajo que elegiste, así que están en Mi espacio de trabajo."
+ ],
  "That song isn't on Suno anymore.": [
   "Melodia aceea nu mai e pe Suno.",
   "Цієї пісні вже немає на Suno.",
@@ -6578,6 +6613,11 @@
   "Urmează a fost golit.",
   "«Далі» очищено.",
   "A continuación vaciada."
+ ],
+ "Live lyrics: also read hums, \"ooh\"s and backing vocals Suno didn't time (Shift+F4)": [
+  "Versuri în direct: citește și murmurele, „ooh”-urile și vocile de fundal nesincronizate de Suno (Shift+F4)",
+  "Слова під час співу: читати також мугикання, «у-у» та бек-вокал, які Suno не розмітив у часі (Shift+F4)",
+  "Letra en directo: leer también tarareos, «uh» y coros que Suno no sincronizó (Shift+F4)"
  ],
  "When a list ends, keep playing songs Suno picks": [
   "Când se termină o listă, continuă cu melodii alese de Suno",
@@ -7233,20 +7273,5 @@
   "Suno extrage de mult timp vocea din cântecul tău. Încearcă mai târziu.",
   "Suno довго виділяє вокал із вашого співу. Спробуйте пізніше.",
   "Suno tarda en separar la voz de tu canto. Inténtalo más tarde."
- ],
- "Workspace": [
-  "Spațiu de lucru",
-  "Робочий простір",
-  "Espacio de trabajo"
- ],
- "The songs are being made, but Suno didn't put them in the workspace you chose, so they're in My Workspace.": [
-  "Melodiile se fac, dar Suno nu le-a pus în spațiul de lucru ales, așa că sunt în Spațiul meu de lucru.",
-  "Пісні створюються, але Suno не додав їх до вибраного робочого простору, тому вони в «Мій робочий простір».",
-  "Las canciones se están creando, pero Suno no las puso en el espacio de trabajo que elegiste, así que están en Mi espacio de trabajo."
- ],
- "The Create window and the Cover, Extend, Remaster, Use as inspiration, Make speech and Make sounds forms have a Workspace choice: My Workspace, where new songs go anyway, or one of your other workspaces. Tin Pan adds the new songs to the one you choose as soon as Suno starts them, and says so if Suno doesn't take them. F5 in the Create window loads your workspaces again.": [
-  "Fereastra Creează și formularele Cover, Extinde, Remasterizează, Folosește ca inspirație, Fă vorbire și Fă sunete au o alegere Spațiu de lucru: Spațiul meu de lucru, unde merg oricum melodiile noi, sau unul dintre celelalte spații ale tale. Tin Pan adaugă melodiile noi în cel ales imediat ce Suno le începe și spune dacă Suno nu le primește. F5 în fereastra Creează reîncarcă spațiile de lucru.",
-  "Вікно «Створити» та форми «Кавер», «Продовжити», «Ремастер», «Використати як натхнення», «Створити мовлення» і «Створити звуки» мають вибір «Робочий простір»: «Мій робочий простір», куди нові пісні потрапляють і так, або один з ваших інших просторів. Tin Pan додає нові пісні до вибраного, щойно Suno їх почне, і повідомляє, якщо Suno їх не прийме. F5 у вікні «Створити» знову завантажує ваші робочі простори.",
-  "La ventana Crear y los formularios Versión, Extender, Remasterizar, Usar como inspiración, Crear habla y Crear sonidos tienen una opción Espacio de trabajo: Mi espacio de trabajo, adonde van de todos modos las canciones nuevas, u otro de tus espacios. Tin Pan añade las canciones nuevas al que elijas en cuanto Suno las empieza, y lo dice si Suno no las acepta. F5 en la ventana Crear vuelve a cargar tus espacios de trabajo."
  ]
 }
